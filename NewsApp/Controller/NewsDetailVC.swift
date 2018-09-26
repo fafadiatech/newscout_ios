@@ -35,6 +35,9 @@ class NewsDetailVC: UIViewController, UICollectionViewDelegate, UICollectionView
     }
     
     
+    @IBAction func btnBackAction(_ sender: Any) {
+         self.dismiss(animated: false)
+    }
     //collection view methods
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
        return 6

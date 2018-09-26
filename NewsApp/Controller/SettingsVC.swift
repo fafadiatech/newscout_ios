@@ -10,22 +10,25 @@ import UIKit
 
 class SettingsVC: UIViewController {
 //outlets
-    @IBOutlet weak var searchResultTV: UITableView!
-    @IBOutlet weak var btnSearch: UIButton!
-    @IBOutlet weak var searchView: UIView!
-    @IBOutlet weak var txtSearch: UITextField!
+   
+    @IBOutlet weak var lblTextSize: UILabel!
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        lblTextSize.font = lblTextSize.font.withSize(50)
         
     }
-
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
     
-
+    @IBAction func ChangeSizeActn(_ sender: Any) {
+      
+       // lblTextSize.//appearance().font = UIFont(name: "System", size: 50)
+    }
+    
     /*
     // MARK: - Navigation
 
