@@ -26,7 +26,10 @@ class NewsDetailVC: UIViewController, UICollectionViewDelegate, UICollectionView
     override func viewDidLoad() {
         super.viewDidLoad()
     }
-
+    //HIde status bar
+    override var prefersStatusBarHidden: Bool {
+        return true
+    }
     @IBAction func btnLikeActn(_ sender: Any) {
     }
     @IBAction func btnDislikeActn(_ sender: Any) {
@@ -46,10 +49,12 @@ class NewsDetailVC: UIViewController, UICollectionViewDelegate, UICollectionView
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "SuggestedNewsID", for: indexPath) as! SuggestedNewsCVCell
         return cell
-        
     }
     
-    
+    //btn Back Action
+    @IBAction func btnBAckAction(_ sender: Any) {
+          self.dismiss(animated: false)
+    }
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.

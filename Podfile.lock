@@ -1,4 +1,5 @@
 PODS:
+  - Floaty (4.0.1)
   - GoogleSignIn (4.1.2):
     - "GoogleToolboxForMac/NSDictionary+URLArguments (~> 2.1)"
     - "GoogleToolboxForMac/NSString+URLArguments (~> 2.1)"
@@ -21,21 +22,24 @@ PODS:
     - GTMSessionFetcher/Core (= 1.2.0)
 
 DEPENDENCIES:
+  - Floaty
   - GoogleSignIn
 
 SPEC REPOS:
-  https://github.com/cocoapods/specs.git:
+  https://github.com/CocoaPods/Specs.git:
+    - Floaty
     - GoogleSignIn
     - GoogleToolboxForMac
     - GTMOAuth2
     - GTMSessionFetcher
 
 SPEC CHECKSUMS:
+  Floaty: 82854e1a5ef4fa208281ebd4da2f3d1e51ba67a6
   GoogleSignIn: d9ef55b10f0aa401a5de2747f59b725e4b9732ac
   GoogleToolboxForMac: 91c824d21e85b31c2aae9bb011c5027c9b4e738f
   GTMOAuth2: c77fe325e4acd453837e72d91e3b5f13116857b2
   GTMSessionFetcher: 0c4baf0a73acd0041bf9f71ea018deedab5ea84e
 
-PODFILE CHECKSUM: 7d302bd6a25da79d7ae9bde1e74403d64934057d
+PODFILE CHECKSUM: 8c3724d6975c6851bfc3bc566154b694a16b267f
 
-COCOAPODS: 1.5.3
+COCOAPODS: 1.5.0

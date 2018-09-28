@@ -7,7 +7,7 @@ target 'NewsApp' do
 
   # Pods for NewsApp
 	pod 'GoogleSignIn'
-
+	pod "Floaty"
   target 'NewsAppTests' do
     inherit! :search_paths
     # Pods for testing

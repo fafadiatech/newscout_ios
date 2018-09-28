@@ -10,15 +10,28 @@ import UIKit
 
 class SettingsVC: UIViewController {
 //outlets
-   
     @IBOutlet weak var lblTextSize: UILabel!
+    @IBOutlet weak var viewTitle: UIView!
+    //variables and constants
+     var border = CALayer()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        lblTextSize.font = lblTextSize.font.withSize(50)
-        
-    }
+       // lblTextSize.font = lblTextSize.font.withSize(50)
+        //bottom border to title view
+        border.backgroundColor = UIColor.lightGray.cgColor
+        border.frame = CGRect(x: 0, y: view.frame.height - 1, width: view.frame.width, height: 1)
+        viewTitle.layer.addSublayer(border)
+        }
     
+    //HIde status bar
+    override var prefersStatusBarHidden: Bool {
+        return true
+    }
+    //btn Back Action
+    @IBAction func btnBackAction(_ sender: Any) {
+          self.dismiss(animated: false)
+    }
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.

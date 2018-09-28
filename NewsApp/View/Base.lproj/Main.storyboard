@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="zy9-as-rs1">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -128,7 +128,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="pm3-HD-Vbj">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="f1" translatesAutoresizingMaskIntoConstraints="NO" id="pm3-HD-Vbj">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="202"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
@@ -255,10 +255,11 @@
                                 <color key="backgroundColor" cocoaTouchSystemColor="lightTextColor"/>
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hzz-HH-x4b">
-                                <rect key="frame" x="8" y="7" width="50" height="41"/>
+                                <rect key="frame" x="8" y="7" width="31" height="29"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" backgroundImage="back"/>
+                                <state key="normal" backgroundImage="backArrow"/>
                                 <connections>
+                                    <action selector="btnBAckAction:" destination="yxW-qj-gIF" eventType="touchUpInside" id="y66-TM-csh"/>
                                     <action selector="btnBackAction:" destination="yxW-qj-gIF" eventType="touchUpInside" id="PqB-5n-a9h"/>
                                 </connections>
                             </button>
@@ -287,7 +288,7 @@
         <!--SearchVC-->
         <scene sceneID="DKc-Hy-Vjp">
             <objects>
-                <viewController id="qXz-sr-ZlW" customClass="SearchVC" customModule="NewsApp" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="SearchID" id="qXz-sr-ZlW" customClass="SearchVC" customModule="NewsApp" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="bTt-c8-vo4">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -297,12 +298,15 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8fG-ZB-PXn">
-                                        <rect key="frame" x="331" y="9" width="36" height="30"/>
+                                        <rect key="frame" x="8" y="12" width="36" height="30"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <state key="normal" backgroundImage="search"/>
+                                        <state key="normal" backgroundImage="backArrow"/>
+                                        <connections>
+                                            <action selector="btnSearchAction:" destination="qXz-sr-ZlW" eventType="touchUpInside" id="ZAG-6v-NK3"/>
+                                        </connections>
                                     </button>
                                     <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Search here" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Dnl-Te-tOb">
-                                        <rect key="frame" x="8" y="9" width="300" height="30"/>
+                                        <rect key="frame" x="58" y="12" width="300" height="30"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <nil key="textColor"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
@@ -398,27 +402,35 @@
         <!--SettingsVC-->
         <scene sceneID="t27-oD-ATK">
             <objects>
-                <viewController id="zy9-as-rs1" customClass="SettingsVC" customModule="NewsApp" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="SettingsID" id="zy9-as-rs1" customClass="SettingsVC" customModule="NewsApp" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="MaE-1A-Tb5">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="5en-7I-6wm">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="50"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="55"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Setings" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TI7-1H-Wtx">
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Settings" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TI7-1H-Wtx">
                                         <rect key="frame" x="132" y="15" width="89" height="21"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Z9M-oy-uch">
+                                        <rect key="frame" x="17" y="13" width="32" height="34"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <state key="normal" backgroundImage="backArrow"/>
+                                        <connections>
+                                            <action selector="btnBackAction:" destination="zy9-as-rs1" eventType="touchUpInside" id="1f6-G6-icc"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </view>
                             <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="dKd-Al-pmy">
-                                <rect key="frame" x="0.0" y="50" width="375" height="617"/>
+                                <rect key="frame" x="0.0" y="55" width="375" height="617"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Text Size" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9w3-7w-Xt0">
@@ -445,6 +457,7 @@
                     </view>
                     <connections>
                         <outlet property="lblTextSize" destination="9w3-7w-Xt0" id="IiV-ZA-KwT"/>
+                        <outlet property="viewTitle" destination="5en-7I-6wm" id="gyR-Sd-U62"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="7EC-SX-Q2x" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -531,14 +544,14 @@
         </scene>
     </scenes>
     <resources>
-        <image name="back" width="50" height="50"/>
+        <image name="backArrow" width="256" height="256"/>
         <image name="bookmark" width="225" height="225"/>
         <image name="dislike" width="50" height="50"/>
+        <image name="f1" width="550" height="596"/>
         <image name="facebook-48" width="48" height="48"/>
         <image name="google-plus-40" width="40" height="40"/>
         <image name="icon" width="512" height="512"/>
         <image name="like" width="50" height="50"/>
-        <image name="search" width="50" height="50"/>
         <image name="share" width="50" height="50"/>
     </resources>
 </document>
