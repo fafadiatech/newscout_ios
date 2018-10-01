@@ -28,8 +28,7 @@ class HomeVC: UIViewController, UITableViewDelegate, UITableViewDataSource, Floa
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             let searchvc:SearchVC = storyboard.instantiateViewController(withIdentifier: "SearchID") as! SearchVC
             self.present(searchvc, animated: true, completion: nil)
-            
-        }
+          }
         floaty.addItem("Settings", icon: UIImage(named: "settings")!) { item in
             floaty.autoCloseOnTap = true
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
@@ -39,11 +38,13 @@ class HomeVC: UIViewController, UITableViewDelegate, UITableViewDataSource, Floa
         }
        
         self.view.addSubview(floaty)
-      
         // Do any additional setup after loading the view, typically from a nib.
     }
 
-    
+    func changeFont()
+    {
+        //lblHeading.font = UIFont.mySmallBoldFont()
+    }
     //HIde status bar
     override var prefersStatusBarHidden: Bool {
         return true

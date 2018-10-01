@@ -28,6 +28,11 @@ class SettingsVC: UIViewController {
     override var prefersStatusBarHidden: Bool {
         return true
     }
+    @IBAction func btnLargeFont(_ sender: Any) {
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let homevc:HomeVC = storyboard.instantiateViewController(withIdentifier: "HomeID") as! HomeVC
+        homevc.changeFont()
+    }
     //btn Back Action
     @IBAction func btnBackAction(_ sender: Any) {
           self.dismiss(animated: false)
