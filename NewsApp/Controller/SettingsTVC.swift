@@ -25,6 +25,7 @@ class SettingsTVC: UITableViewController {
         headerView.textLabel?.textColor = UIColor(red: 151.0/255, green: 193.0/255, blue: 100.0/255, alpha: 1)
        // let font = UIFont(name: "System", size: 18.0)
         headerView.textLabel?.font = UIFont.systemFont(ofSize: 25.0, weight: .regular)
+         headerView.textLabel?.textAlignment = NSTextAlignment.right
     }
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()

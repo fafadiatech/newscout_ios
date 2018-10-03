@@ -70,8 +70,6 @@ class HomeVC: UIViewController, UITableViewDelegate, UITableViewDataSource, Floa
             lblHeading.font = UIFont.smallFont(fontSize: Int(currentFont))
             }
         }
-      
-
         }
     }
     //HIde status bar
