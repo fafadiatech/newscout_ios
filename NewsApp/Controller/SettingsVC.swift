@@ -29,9 +29,13 @@ class SettingsVC: UIViewController {
         return true
     }
     @IBAction func btnLargeFont(_ sender: Any) {
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        let homevc:HomeVC = storyboard.instantiateViewController(withIdentifier: "HomeID") as! HomeVC
-        homevc.changeFont()
+       textSizeSelected = "large"
+    }
+    @IBAction func btnMediumFont(_ sender: Any) {
+        textSizeSelected = "medium"
+    }
+    @IBAction func btnSmallFont(_ sender: Any) {
+        textSizeSelected = "small"
     }
     //btn Back Action
     @IBAction func btnBackAction(_ sender: Any) {

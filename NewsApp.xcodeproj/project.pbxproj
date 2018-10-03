@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		263421EF216230F900C8510F /* SignUpVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 263421EE216230F900C8510F /* SignUpVC.swift */; };
+		263421F12162310D00C8510F /* LoginVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 263421F02162310D00C8510F /* LoginVC.swift */; };
+		263421F321624AD200C8510F /* SettingsTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 263421F221624AD200C8510F /* SettingsTVC.swift */; };
 		266C6B2E2158B1C7009A0A9D /* SettingsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 266C6B2D2158B1C7009A0A9D /* SettingsVC.swift */; };
 		266C6B302158C2B6009A0A9D /* SearchResultTVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 266C6B2F2158C2B6009A0A9D /* SearchResultTVCell.swift */; };
 		40DAD2A94E0870B8278E705F /* Pods_NewsAppUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53DC2E5EA9235D86628350C7 /* Pods_NewsAppUITests.framework */; };
@@ -48,6 +51,9 @@
 /* Begin PBXFileReference section */
 		20D6E38B73AE2ADA8716870E /* Pods_NewsApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_NewsApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		25A121A35B86B7FFE6946B9D /* Pods-NewsAppTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NewsAppTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-NewsAppTests/Pods-NewsAppTests.debug.xcconfig"; sourceTree = "<group>"; };
+		263421EE216230F900C8510F /* SignUpVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpVC.swift; sourceTree = "<group>"; };
+		263421F02162310D00C8510F /* LoginVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginVC.swift; sourceTree = "<group>"; };
+		263421F221624AD200C8510F /* SettingsTVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTVC.swift; sourceTree = "<group>"; };
 		266C6B2D2158B1C7009A0A9D /* SettingsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsVC.swift; sourceTree = "<group>"; };
 		266C6B2F2158C2B6009A0A9D /* SearchResultTVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultTVCell.swift; sourceTree = "<group>"; };
 		2F9C18092C8836EA83BB9B53 /* Pods-NewsAppTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NewsAppTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-NewsAppTests/Pods-NewsAppTests.release.xcconfig"; sourceTree = "<group>"; };
@@ -185,6 +191,9 @@
 		421ADFEA2156553500C00F6F /* Controller */ = {
 			isa = PBXGroup;
 			children = (
+				263421F221624AD200C8510F /* SettingsTVC.swift */,
+				263421EE216230F900C8510F /* SignUpVC.swift */,
+				263421F02162310D00C8510F /* LoginVC.swift */,
 				266C6B2D2158B1C7009A0A9D /* SettingsVC.swift */,
 				421ADFBA2156407400C00F6F /* HomeVC.swift */,
 				421ADFEF21566FE000C00F6F /* NewsDetailVC.swift */,
@@ -461,8 +470,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				421ADFBB2156407400C00F6F /* HomeVC.swift in Sources */,
+				263421F321624AD200C8510F /* SettingsTVC.swift in Sources */,
 				421ADFB92156407400C00F6F /* AppDelegate.swift in Sources */,
+				263421F12162310D00C8510F /* LoginVC.swift in Sources */,
 				266C6B302158C2B6009A0A9D /* SearchResultTVCell.swift in Sources */,
+				263421EF216230F900C8510F /* SignUpVC.swift in Sources */,
 				42D12BF2215A0AEB0085EF12 /* SearchVC.swift in Sources */,
 				421ADFC12156407400C00F6F /* NewsApp.xcdatamodeld in Sources */,
 				42D12BF4215A0FA60085EF12 /* common.swift in Sources */,
@@ -646,7 +658,10 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = FHCLSYM87Q;
 				INFOPLIST_FILE = NewsApp/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.fafadiatech.fairbridge.NewsApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
@@ -662,7 +677,10 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = FHCLSYM87Q;
 				INFOPLIST_FILE = NewsApp/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.fafadiatech.fairbridge.NewsApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
@@ -679,7 +697,11 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = FHCLSYM87Q;
 				INFOPLIST_FILE = NewsAppTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.fafadiatech.fairbridge.NewsAppTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
@@ -697,7 +719,11 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = FHCLSYM87Q;
 				INFOPLIST_FILE = NewsAppTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.fafadiatech.fairbridge.NewsAppTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
@@ -714,7 +740,11 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = FHCLSYM87Q;
 				INFOPLIST_FILE = NewsAppUITests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.fafadiatech.fairbridge.NewsAppUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
@@ -731,7 +761,11 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = FHCLSYM87Q;
 				INFOPLIST_FILE = NewsAppUITests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.fafadiatech.fairbridge.NewsAppUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;

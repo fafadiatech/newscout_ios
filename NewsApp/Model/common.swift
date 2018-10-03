@@ -6,16 +6,20 @@
 //  Copyright © 2018 Fafadia Tech. All rights reserved.
 //
 import UIKit
+var textSizeSelected = ""
 extension UIFont {
     
     class func myFontName() -> String { return "System" }
-    class func myBoldFontName() -> String { return "System" }
-    
+    class func myBoldFontName() -> String { return "System"}
+    class func smallFont(fontSize :Int) -> UIFont {
+        return UIFont.systemFont(ofSize: CGFloat(fontSize - 10))
+      
+    }
     class func myNormalFont() -> UIFont {
-        return UIFont(name: UIFont.myFontName(), size: 12)!
+        return UIFont.systemFont(ofSize: 20)
     }
     
-    class func mySmallBoldFont() -> UIFont {
-        return UIFont(name: UIFont.myBoldFontName(), size: 70)!
+    class func largeFont(fontSize :Int) -> UIFont {
+        return UIFont.systemFont(ofSize: CGFloat(fontSize + 10))
     }
 }
