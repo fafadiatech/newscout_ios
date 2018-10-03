@@ -25,6 +25,7 @@ class HomeVC: UIViewController, UITableViewDelegate, UITableViewDataSource, Floa
        // floaty.buttonImage = UIImage(named: "floatingMenu")
         floaty.addItem("Search", icon: UIImage(named: "search")!) { item in
             floaty.autoCloseOnTap = true
+            isSearch = true
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             let searchvc:SearchVC = storyboard.instantiateViewController(withIdentifier: "SearchID") as! SearchVC
             self.present(searchvc, animated: true, completion: nil)
@@ -32,14 +33,15 @@ class HomeVC: UIViewController, UITableViewDelegate, UITableViewDataSource, Floa
         floaty.addItem("Settings", icon: UIImage(named: "settings")!) { item in
             floaty.autoCloseOnTap = true
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
-            let settingvc:SettingsTVC = storyboard.instantiateViewController(withIdentifier: "SettingsTVID") as! SettingsTVC
+            let settingvc:SettingsVC = storyboard.instantiateViewController(withIdentifier: "SettingsID") as! SettingsVC
             self.present(settingvc, animated: true, completion: nil)
             
         }
-        floaty.addItem("Bookmark", icon: nil) { item in
+        floaty.addItem("Bookmark", icon: UIImage(named: "bookmark")!) { item in
             floaty.autoCloseOnTap = true
+            isSearch = false
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
-            let settingvc:SettingsTVC = storyboard.instantiateViewController(withIdentifier: "SettingsTVID") as! SettingsTVC
+            let settingvc:SearchVC = storyboard.instantiateViewController(withIdentifier: "SearchID") as! SearchVC
             self.present(settingvc, animated: true, completion: nil)
             
         }
@@ -48,28 +50,23 @@ class HomeVC: UIViewController, UITableViewDelegate, UITableViewDataSource, Floa
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-       
             changeFont()
+            HomeNewsTV.reloadData() //for tableview
         
     }
-
+    //change font on text size change
     func changeFont()
     {
         print(textSizeSelected)
-        var currentFont = lblHeading.font.pointSize
-        if textSizeSelected == "large"
-        {
-        if currentFont < 30
-        {
-                lblHeading.font = UIFont.largeFont(fontSize: Int(currentFont))
+        
+        if textSizeSelected == 0{
+        lblHeading.font = .systemFont(ofSize: Constants.fontSmallTitle)
         }
-        else if textSizeSelected == "small"
-        {
-            if currentFont > 10
-            {
-            lblHeading.font = UIFont.smallFont(fontSize: Int(currentFont))
-            }
+        else if textSizeSelected == 2{
+            lblHeading.font = .systemFont(ofSize: Constants.fontLargeTitle)
         }
+        else{
+            lblHeading.font = .systemFont(ofSize: Constants.fontNormalTitle)
         }
     }
     //HIde status bar
@@ -91,7 +88,24 @@ class HomeVC: UIViewController, UITableViewDelegate, UITableViewDataSource, Floa
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "HomeNewsTVCellID", for:indexPath) as! HomeNewsTVCell
-      
+        if textSizeSelected == 0{
+            cell.lblSource.font = .systemFont(ofSize: Constants.fontSmallTitle)
+             cell.lblNewsHeading.font = .systemFont(ofSize: Constants.fontSmallContent)
+             cell.lblCategory.font = .systemFont(ofSize: Constants.fontSmallContent)
+             cell.lblTimesAgo.font = .systemFont(ofSize: Constants.fontSmallContent)
+            }
+        else if textSizeSelected == 2{
+            cell.lblSource.font = .systemFont(ofSize: Constants.fontLargeTitle)
+            cell.lblNewsHeading.font = .systemFont(ofSize: Constants.fontLargeContent)
+            cell.lblCategory.font = .systemFont(ofSize: Constants.fontLargeContent)
+            cell.lblTimesAgo.font = .systemFont(ofSize: Constants.fontLargeContent)
+        }
+        else{
+            cell.lblSource.font = .systemFont(ofSize: Constants.fontNormalTitle)
+            cell.lblNewsHeading.font = .systemFont(ofSize: Constants.fontNormalContent)
+            cell.lblCategory.font = .systemFont(ofSize: Constants.fontNormalContent)
+            cell.lblTimesAgo.font = .systemFont(ofSize: Constants.fontNormalContent)
+        }
         return cell
     }
     

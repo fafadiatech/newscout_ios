@@ -10,4 +10,6 @@ import UIKit
 
 class SuggestedNewsCVCell: UICollectionViewCell {
     
+    @IBOutlet weak var lblSuggestedSource: UILabel!
+    @IBOutlet weak var lblSuggestedDesc: UILabel!
 }

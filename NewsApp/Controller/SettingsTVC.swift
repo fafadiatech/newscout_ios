@@ -9,10 +9,12 @@
 import UIKit
 
 class SettingsTVC: UITableViewController {
-
+//outlet
+    @IBOutlet weak var segmentTextSize: UISegmentedControl!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        segmentTextSize.selectedSegmentIndex = textSizeSelected
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
 
@@ -20,13 +22,35 @@ class SettingsTVC: UITableViewController {
         // self.navigationItem.rightBarButtonItem = self.editButtonItem
     }
 
+    @IBAction func TextSizeAction(_ sender: Any) {
+        switch segmentTextSize.selectedSegmentIndex
+        {
+        case 0:
+            print("small Segment Selected")
+            textSizeSelected = 0
+        case 1:
+            print("normal Segment Selected")
+            textSizeSelected = 1
+        case 2:
+            print("large Segment Selected")
+            textSizeSelected = 2
+        default:
+            textSizeSelected = 1
+            break
+        }
+    }
+    func tableView(tableView: UITableView,
+                            didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        
+    }
     override func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
         let headerView = view as! UITableViewHeaderFooterView
         headerView.textLabel?.textColor = UIColor(red: 151.0/255, green: 193.0/255, blue: 100.0/255, alpha: 1)
        // let font = UIFont(name: "System", size: 18.0)
-        headerView.textLabel?.font = UIFont.systemFont(ofSize: 25.0, weight: .regular)
-         headerView.textLabel?.textAlignment = NSTextAlignment.right
+        headerView.textLabel?.font = UIFont.systemFont(ofSize: 20.0, weight: .regular)
+         
     }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.

@@ -22,6 +22,7 @@ class NewsDetailVC: UIViewController, UICollectionViewDelegate, UICollectionView
     @IBOutlet weak var btnShare: UIButton!
     @IBOutlet weak var suggestedView: UIView!
     @IBOutlet weak var suggestedCV: UICollectionView!
+    @IBOutlet weak var lblSuggested: UILabel!
     @IBOutlet weak var WKWebView: WKWebView!
     @IBOutlet weak var viewWebTitle: UIView!
     @IBOutlet weak var ViewWebContainer: UIView!
@@ -53,7 +54,37 @@ class NewsDetailVC: UIViewController, UICollectionViewDelegate, UICollectionView
     override var prefersStatusBarHidden: Bool {
         return true
     }
-    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        changeFont()
+        }
+    func changeFont()
+    {
+        print(textSizeSelected)
+        
+        if textSizeSelected == 0{
+            lblNewsHeading.font = .systemFont(ofSize: Constants.fontSmallTitle)
+            lblSource.font = .systemFont(ofSize: Constants.fontSmallTitle)
+            lblTimeAgo.font = .systemFont(ofSize: Constants.fontSmallTitle)
+            lblSuggested.font = .systemFont(ofSize: Constants.fontSmallTitle)
+            newsDetailTxtView.font = .systemFont(ofSize: Constants.fontSmallContent)
+        }
+        else if textSizeSelected == 2{
+            lblNewsHeading.font = .systemFont(ofSize: Constants.fontLargeTitle)
+            lblSource.font = .systemFont(ofSize: Constants.fontLargeTitle)
+            lblTimeAgo.font = .systemFont(ofSize: Constants.fontLargeTitle)
+            lblSuggested.font = .systemFont(ofSize: Constants.fontLargeTitle)
+            newsDetailTxtView.font = .systemFont(ofSize: Constants.fontLargeContent)
+
+        }
+        else{
+            lblNewsHeading.font = .systemFont(ofSize: Constants.fontNormalTitle)
+            lblSource.font = .systemFont(ofSize: Constants.fontNormalTitle)
+            lblTimeAgo.font = .systemFont(ofSize: Constants.fontNormalTitle)
+            lblSuggested.font = .systemFont(ofSize: Constants.fontNormalTitle)
+            newsDetailTxtView.font = .systemFont(ofSize: Constants.fontNormalContent)
+        }
+    }
     //response to swipe gestures
     @objc func respondToSwipeGesture(gesture: UIGestureRecognizer) {
         
@@ -115,6 +146,18 @@ class NewsDetailVC: UIViewController, UICollectionViewDelegate, UICollectionView
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "SuggestedNewsID", for: indexPath) as! SuggestedNewsCVCell
+        if textSizeSelected == 0{
+            cell.lblSuggestedSource.font = .systemFont(ofSize: Constants.fontSmallTitle)
+            cell.lblSuggestedDesc.font = .systemFont(ofSize: Constants.fontSmallContent)
+        }
+        else if textSizeSelected == 2{
+            cell.lblSuggestedSource.font = .systemFont(ofSize: Constants.fontLargeTitle)
+            cell.lblSuggestedDesc.font = .systemFont(ofSize: Constants.fontLargeContent)
+        }
+        else{
+            cell.lblSuggestedSource.font = .systemFont(ofSize: Constants.fontNormalTitle)
+            cell.lblSuggestedDesc.font = .systemFont(ofSize: Constants.fontNormalContent)
+        }
         return cell
     }
     
