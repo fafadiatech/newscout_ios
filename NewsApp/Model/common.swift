@@ -21,14 +21,15 @@ struct Constants{
 }
 extension UIFont {
     
-    class func myFontName() -> String { return "System" }
+    class func myFontName() -> String { return "HelveticaNeue" }
     class func myBoldFontName() -> String { return "System"}
     class func smallFont(fontSize :Int) -> UIFont {
         return UIFont.systemFont(ofSize: CGFloat(fontSize - 10))
       
     }
     class func myNormalFont() -> UIFont {
-        return UIFont.systemFont(ofSize: 20)
+       return UIFont(name: "HelveticaNeue-Thin", size: 20)!
+        //return UIFont.systemFont(ofSize: 20)
     }
     
     class func largeFont(fontSize :Int) -> UIFont {

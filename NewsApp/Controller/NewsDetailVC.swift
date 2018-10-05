@@ -96,13 +96,12 @@ class NewsDetailVC: UIViewController, UICollectionViewDelegate, UICollectionView
             switch swipeGesture.direction {
             case UISwipeGestureRecognizerDirection.right:
                 ViewWebContainer.isHidden = true
-                transition.type = kCATransitionPush
-                transition.subtype = kCATransitionFromLeft
-                view.window!.layer.add(transition, forKey: kCATransition)
-
                 print("Swiped right")
                 
             case UISwipeGestureRecognizerDirection.down:
+                transition.type = kCATransitionPush
+                transition.subtype = kCATransitionFromBottom
+                view.window!.layer.add(transition, forKey: kCATransition)
                 print("swipe down")
             case UISwipeGestureRecognizerDirection.left:
                
@@ -116,6 +115,9 @@ class NewsDetailVC: UIViewController, UICollectionViewDelegate, UICollectionView
                 WKWebView.load(myRequest)
                 
             case UISwipeGestureRecognizerDirection.up:
+                transition.type = kCATransitionPush
+                transition.subtype = kCATransitionFromTop
+                view.window!.layer.add(transition, forKey: kCATransition)
                  print("Swiped up")
               
             default:
