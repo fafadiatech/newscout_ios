@@ -14,9 +14,11 @@ class SearchVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     @IBOutlet weak var searchView: UIView!
     @IBOutlet weak var txtSearch: UITextField!
     @IBOutlet weak var lblTitle: UILabel!
-    
+    //variables
+     var ArticleData = [Article]()
     override func viewDidLoad() {
         super.viewDidLoad()
+         ArticleData = loadJson(filename: "newsDetail")!
         //check whether search or bookmark is selected
         if isSearch == true{
            lblTitle.isHidden = true
@@ -38,26 +40,44 @@ class SearchVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     override var prefersStatusBarHidden: Bool {
         return true
     }
+    //Load data to be displayed from json file
+    func loadJson(filename fileName: String) -> [Article]?
+    {
+        if let url = Bundle.main.url(forResource: fileName, withExtension: "json") {
+            do {
+                let data = try Data(contentsOf: url)
+                let decoder = JSONDecoder()
+                let jsonData = try decoder.decode(ArticleStatus.self, from: data)
+                
+                print("jsondata: \(jsonData)")
+                
+                return jsonData.articles
+            } catch {
+                print("error:\(error)")
+            }
+        }
+        return nil
+    }
     func changeFont()
     {
         print(textSizeSelected)
         
         if textSizeSelected == 0{
-            lblTitle.font = .systemFont(ofSize: Constants.fontSmallTitle)
-            txtSearch.font = .systemFont(ofSize: Constants.fontSmallTitle)
+            lblTitle.font = smallFont
+            txtSearch.font = smallFont
         }
         else if textSizeSelected == 2{
-            lblTitle.font = .systemFont(ofSize: Constants.fontLargeTitle)
-             txtSearch.font = .systemFont(ofSize: Constants.fontLargeTitle)
+            lblTitle.font = LargeFont
+             txtSearch.font = LargeFont
         }
         else{
-            lblTitle.font = .systemFont(ofSize: Constants.fontNormalTitle)
-            txtSearch.font = .systemFont(ofSize: Constants.fontNormalTitle)
+            lblTitle.font = NormalFont
+            txtSearch.font = NormalFont
         }
     }
     //Tableview methods
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 6
+       return ArticleData.count
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         print("This cell  was selected: \(indexPath.row)")
@@ -70,23 +90,30 @@ class SearchVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "searchResultID", for:indexPath) as! SearchResultTVCell
+         var currentArticle = ArticleData[indexPath.row]
+        cell.lblSource.text = currentArticle.source
+        cell.lbltimeAgo.text = currentArticle.publishedAt
+        cell.lblNewsDescription.text = currentArticle.title
+        cell.lblCategory.text = currentArticle.categories
+        cell.imgNews.downloadedFrom(link: "\(currentArticle.urlToImage!)")
+        
         if textSizeSelected == 0{
-            cell.lblSource.font = .systemFont(ofSize: Constants.fontSmallTitle)
-            cell.lblNewsDescription.font = .systemFont(ofSize: Constants.fontSmallContent)
-            cell.lblCategory.font = .systemFont(ofSize: Constants.fontSmallContent)
-            cell.lbltimeAgo.font = .systemFont(ofSize: Constants.fontSmallContent)
+            cell.lblSource.font = smallFont
+            cell.lblNewsDescription.font = smallFont
+            cell.lblCategory.font = smallFont
+            cell.lbltimeAgo.font = smallFont
         }
         else if textSizeSelected == 2{
-            cell.lblSource.font = .systemFont(ofSize: Constants.fontLargeTitle)
-            cell.lblNewsDescription.font = .systemFont(ofSize: Constants.fontLargeContent)
-            cell.lblCategory.font = .systemFont(ofSize: Constants.fontLargeContent)
-            cell.lbltimeAgo.font = .systemFont(ofSize: Constants.fontLargeContent)
+            cell.lblSource.font = LargeFont
+            cell.lblNewsDescription.font = LargeFont
+            cell.lblCategory.font = LargeFont
+            cell.lbltimeAgo.font = LargeFont
         }
         else{
-            cell.lblSource.font = .systemFont(ofSize: Constants.fontNormalTitle)
-            cell.lblNewsDescription.font = .systemFont(ofSize: Constants.fontNormalContent)
-            cell.lblCategory.font = .systemFont(ofSize: Constants.fontNormalContent)
-            cell.lbltimeAgo.font = .systemFont(ofSize: Constants.fontNormalContent)
+            cell.lblSource.font = NormalFont
+            cell.lblNewsDescription.font = NormalFont
+            cell.lblCategory.font = NormalFont
+            cell.lbltimeAgo.font = NormalFont
         }
         return cell
     }

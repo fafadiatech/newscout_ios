@@ -14,7 +14,8 @@ class NewsDetailVC: UIViewController, UICollectionViewDelegate, UICollectionView
     @IBOutlet weak var imgNews: UIImageView!
     @IBOutlet var newsView: UIView!
     @IBOutlet weak var lblNewsHeading: UILabel!
-    @IBOutlet weak var newsDetailTxtView: UITextView!
+    
+    @IBOutlet weak var txtViewNewsDesc: UITextView!
     @IBOutlet weak var lblTimeAgo: UILabel!
     @IBOutlet weak var lblSource: UILabel!
     @IBOutlet weak var btnLike: UIButton!
@@ -27,9 +28,13 @@ class NewsDetailVC: UIViewController, UICollectionViewDelegate, UICollectionView
     @IBOutlet weak var viewWebTitle: UIView!
     @IBOutlet weak var ViewWebContainer: UIView!
     @IBOutlet weak var lblWebSource: UILabel!
-    
+    //variables
+    var ArticleData = [Article]()
+ 
     override func viewDidLoad() {
         super.viewDidLoad()
+       ArticleData = loadJson(filename: "newsDetail")!
+        ShowNews(currentNews: currentIndex)
         //initially hide webview
         ViewWebContainer.isHidden = true
         //swipe gestures
@@ -58,31 +63,50 @@ class NewsDetailVC: UIViewController, UICollectionViewDelegate, UICollectionView
         super.viewWillAppear(animated)
         changeFont()
         }
+    
+    //Load data to be displayed from json file
+    func loadJson(filename fileName: String) -> [Article]?
+    {
+        if let url = Bundle.main.url(forResource: fileName, withExtension: "json") {
+            do {
+                let data = try Data(contentsOf: url)
+                let decoder = JSONDecoder()
+                let jsonData = try decoder.decode(ArticleStatus.self, from: data)
+    
+                print("jsondata: \(jsonData)")
+    
+                return jsonData.articles
+                } catch {
+                        print("error:\(error)")
+                    }
+                }
+        return nil
+    }
     func changeFont()
     {
         print(textSizeSelected)
         
         if textSizeSelected == 0{
-            lblNewsHeading.font = .systemFont(ofSize: Constants.fontSmallTitle)
-            lblSource.font = .systemFont(ofSize: Constants.fontSmallTitle)
-            lblTimeAgo.font = .systemFont(ofSize: Constants.fontSmallTitle)
-            lblSuggested.font = .systemFont(ofSize: Constants.fontSmallTitle)
-            newsDetailTxtView.font = .systemFont(ofSize: Constants.fontSmallContent)
+            lblNewsHeading.font = smallFont
+            lblSource.font = smallFont
+            lblTimeAgo.font = smallFont
+            lblSuggested.font = smallFont
+            txtViewNewsDesc.font = smallFont
         }
         else if textSizeSelected == 2{
-            lblNewsHeading.font = .systemFont(ofSize: Constants.fontLargeTitle)
-            lblSource.font = .systemFont(ofSize: Constants.fontLargeTitle)
-            lblTimeAgo.font = .systemFont(ofSize: Constants.fontLargeTitle)
-            lblSuggested.font = .systemFont(ofSize: Constants.fontLargeTitle)
-            newsDetailTxtView.font = .systemFont(ofSize: Constants.fontLargeContent)
+            lblNewsHeading.font = LargeFont
+            lblSource.font = LargeFont
+            lblTimeAgo.font = LargeFont
+            lblSuggested.font = LargeFont
+            txtViewNewsDesc.font = LargeFont
 
         }
         else{
-            lblNewsHeading.font = .systemFont(ofSize: Constants.fontNormalTitle)
-            lblSource.font = .systemFont(ofSize: Constants.fontNormalTitle)
-            lblTimeAgo.font = .systemFont(ofSize: Constants.fontNormalTitle)
-            lblSuggested.font = .systemFont(ofSize: Constants.fontNormalTitle)
-            newsDetailTxtView.font = .systemFont(ofSize: Constants.fontNormalContent)
+            lblNewsHeading.font = NormalFont
+            lblSource.font = NormalFont
+            lblTimeAgo.font = NormalFont
+            lblSuggested.font = NormalFont
+            txtViewNewsDesc.font = NormalFont
         }
     }
     //response to swipe gestures
@@ -99,10 +123,15 @@ class NewsDetailVC: UIViewController, UICollectionViewDelegate, UICollectionView
                 print("Swiped right")
                 
             case UISwipeGestureRecognizerDirection.down:
+                if currentIndex > 0
+                {
+                currentIndex = currentIndex - 1
+                ShowNews(currentNews : currentIndex)
                 transition.type = kCATransitionPush
                 transition.subtype = kCATransitionFromBottom
                 view.window!.layer.add(transition, forKey: kCATransition)
                 print("swipe down")
+                }
             case UISwipeGestureRecognizerDirection.left:
                
                 ViewWebContainer.isHidden = false
@@ -115,15 +144,31 @@ class NewsDetailVC: UIViewController, UICollectionViewDelegate, UICollectionView
                 WKWebView.load(myRequest)
                 
             case UISwipeGestureRecognizerDirection.up:
+                if currentIndex < ArticleData.count
+                {
+                currentIndex = currentIndex + 1
+                
+                ShowNews(currentNews : currentIndex)
                 transition.type = kCATransitionPush
                 transition.subtype = kCATransitionFromTop
                 view.window!.layer.add(transition, forKey: kCATransition)
                  print("Swiped up")
-              
+                }
             default:
                 break
             }
         }
+        
+    }
+    func ShowNews(currentNews: Int)
+    {
+       
+        var currentArticle = ArticleData[currentNews]
+        lblNewsHeading.text = currentArticle.title
+        txtViewNewsDesc.text = currentArticle.description
+       lblSource.text = currentArticle.source
+        lblTimeAgo.text = currentArticle.publishedAt
+        imgNews.downloadedFrom(link: "\(currentArticle.urlToImage!)")
         
     }
     @IBAction func btnLikeActn(_ sender: Any) {
@@ -143,23 +188,24 @@ class NewsDetailVC: UIViewController, UICollectionViewDelegate, UICollectionView
     }
     //collection view methods
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-       return 6
+       return ArticleData.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "SuggestedNewsID", for: indexPath) as! SuggestedNewsCVCell
-        if textSizeSelected == 0{
-            cell.lblSuggestedSource.font = .systemFont(ofSize: Constants.fontSmallTitle)
-            cell.lblSuggestedDesc.font = .systemFont(ofSize: Constants.fontSmallContent)
-        }
-        else if textSizeSelected == 2{
-            cell.lblSuggestedSource.font = .systemFont(ofSize: Constants.fontLargeTitle)
-            cell.lblSuggestedDesc.font = .systemFont(ofSize: Constants.fontLargeContent)
-        }
-        else{
-            cell.lblSuggestedSource.font = .systemFont(ofSize: Constants.fontNormalTitle)
-            cell.lblSuggestedDesc.font = .systemFont(ofSize: Constants.fontNormalContent)
-        }
+        var currentArticle = ArticleData[indexPath.row]
+        cell.lblTitle.text = currentArticle.title
+        cell.imgNews.downloadedFrom(link: "\(currentArticle.urlToImage!)")
+//        if textSizeSelected == 0{
+//            cell.lblTitle.font = smallFont
+//
+//        }
+//        else if textSizeSelected == 2{
+//            cell.lblTitle.font = LargeFont
+//        }
+//        else{
+//            cell.lblTitle.font = NormalFont
+//        }
         return cell
     }
     
