@@ -15,6 +15,7 @@ var NormalFont = UIFont(name: AppFontName.regular, size: Constants.fontNormalTit
 var smallFontMedium = UIFont(name: AppFontName.medium, size: Constants.fontSmallTitle)
 var LargeFontMedium = UIFont(name: AppFontName.medium, size: Constants.fontLargeTitle)
 var NormalFontMedium = UIFont(name: AppFontName.medium, size: Constants.fontNormalTitle)
+
 struct Constants{
     static let isPhone = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.phone)
     static let fontSize:CGFloat = isPhone ? 12 :20
@@ -26,8 +27,9 @@ struct Constants{
     static let fontSmallContent:CGFloat = isPhone ? 10 :20
     
 }
+
 struct AppFontName {
-     static let regular = "HelveticaNeue"
+    static let regular = "HelveticaNeue"
     static let medium = "HelveticaNeue-Medium"
 
 }

@@ -94,7 +94,7 @@ class SearchVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         cell.lblSource.text = currentArticle.source
         cell.lbltimeAgo.text = currentArticle.publishedAt
         cell.lblNewsDescription.text = currentArticle.title
-        cell.lblCategory.text = currentArticle.categories
+        cell.lblCategory.text = currentArticle.categories.first
         cell.imgNews.downloadedFrom(link: "\(currentArticle.urlToImage!)")
         
         if textSizeSelected == 0{

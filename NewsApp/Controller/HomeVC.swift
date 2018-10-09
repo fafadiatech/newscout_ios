@@ -8,8 +8,11 @@
 
 import UIKit
 import Floaty
+import XLPagerTabStrip
 
-class HomeVC: UIViewController, UITableViewDelegate, UITableViewDataSource, FloatyDelegate {
+class HomeVC: UIViewController, UITableViewDelegate, UITableViewDataSource, FloatyDelegate, IndicatorInfoProvider{
+    
+    
 
     //outlets
     @IBOutlet weak var HomeNewsTV: UITableView!
@@ -20,7 +23,7 @@ class HomeVC: UIViewController, UITableViewDelegate, UITableViewDataSource, Floa
    
     override func viewDidLoad() {
         super.viewDidLoad()
-        ArticleData = loadJson(filename: "newsDetail")!
+        ArticleData = loadJson(filename: "news")!
         let floaty = Floaty()
         floaty.itemTitleColor = UIColor.blue
        // floaty.buttonImage = UIImage(named: "floatingMenu")
@@ -49,12 +52,18 @@ class HomeVC: UIViewController, UITableViewDelegate, UITableViewDataSource, Floa
         self.view.addSubview(floaty)
         // Do any additional setup after loading the view, typically from a nib.
     }
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
             changeFont()
             HomeNewsTV.reloadData() //for tableview
         
     }
+    
+    func indicatorInfo(for pagerTabStripController: PagerTabStripViewController) -> IndicatorInfo {
+        return IndicatorInfo(title: "Child")
+    }
+    
     //Load data to be displayed from json file
     func loadJson(filename fileName: String) -> [Article]?
     {
@@ -73,25 +82,28 @@ class HomeVC: UIViewController, UITableViewDelegate, UITableViewDataSource, Floa
         }
         return nil
     }
+    
     //change font on text size change
     func changeFont()
     {
         print(textSizeSelected)
         
-        if textSizeSelected == 0{
-        lblHeading.font = smallFont
-        }
-        else if textSizeSelected == 2{
-            lblHeading.font = LargeFont
-        }
-        else{
-            lblHeading.font = NormalFont
-        }
+//        if textSizeSelected == 0{
+//        lblHeading.font = smallFont
+//        }
+//        else if textSizeSelected == 2{
+//            lblHeading.font = LargeFont
+//        }
+//        else{
+//            lblHeading.font = NormalFont
+//        }
     }
+    
     //HIde status bar
     override var prefersStatusBarHidden: Bool {
         return true
     }
+    
     //Tableview methods
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return ArticleData.count
@@ -111,7 +123,7 @@ class HomeVC: UIViewController, UITableViewDelegate, UITableViewDataSource, Floa
         var currentArticle = ArticleData[indexPath.row]
         cell.lblNewsHeading.text = currentArticle.title
         cell.lblSource.text = currentArticle.source
-        cell.lblCategory.text = currentArticle.categories
+        cell.lblCategory.text = currentArticle.categories.first
         cell.lblTimesAgo.text = currentArticle.publishedAt
         cell.imgNews.downloadedFrom(link: "\(currentArticle.urlToImage!)")
         
