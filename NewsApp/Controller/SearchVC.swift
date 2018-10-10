@@ -63,16 +63,16 @@ class SearchVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         print(textSizeSelected)
         
         if textSizeSelected == 0{
-            lblTitle.font = smallFont
+            lblTitle.font = smallFontMedium
             txtSearch.font = smallFont
         }
         else if textSizeSelected == 2{
-            lblTitle.font = LargeFont
+            lblTitle.font = LargeFontMedium
              txtSearch.font = LargeFont
         }
         else{
-            lblTitle.font = NormalFont
-            txtSearch.font = NormalFont
+            lblTitle.font = LargeFont
+            txtSearch.font = LargeFont
         }
     }
     //Tableview methods

@@ -22,7 +22,8 @@ class HomeVC: UIViewController, UITableViewDelegate, UITableViewDataSource, Floa
         super.viewDidLoad()
         ArticleData = loadJson(filename: "newsDetail")!
         let floaty = Floaty()
-        floaty.itemTitleColor = UIColor.blue
+        floaty.itemTitleColor = .blue
+       
        // floaty.buttonImage = UIImage(named: "floatingMenu")
         floaty.addItem("Search", icon: UIImage(named: "search")!) { item in
             floaty.autoCloseOnTap = true
@@ -79,13 +80,13 @@ class HomeVC: UIViewController, UITableViewDelegate, UITableViewDataSource, Floa
         print(textSizeSelected)
         
         if textSizeSelected == 0{
-        lblHeading.font = smallFont
+        lblHeading.font = smallFontMedium
         }
         else if textSizeSelected == 2{
-            lblHeading.font = LargeFont
+            lblHeading.font = LargeFontMedium
         }
         else{
-            lblHeading.font = NormalFont
+            lblHeading.font = NormalFontMedium
         }
     }
     //HIde status bar
