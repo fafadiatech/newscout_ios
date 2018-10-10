@@ -96,7 +96,7 @@ class HomeVC: UIViewController, UITableViewDelegate, UITableViewDataSource, Floa
             lblHeading.font = LargeFontMedium
         }
         else{
-            lblHeading.font = NormalFontMedium
+           // lblHeading.font = NormalFontMedium
         }
 
     }
@@ -148,6 +148,9 @@ class HomeVC: UIViewController, UITableViewDelegate, UITableViewDataSource, Floa
             cell.lblCategory.font = NormalFont
             cell.lblTimesAgo.font = NormalFont
             print(cell.lblSource.font.fontName)
+            print(cell.lblNewsHeading.font.fontName)
+            print(cell.lblCategory.font.fontName)
+            print(cell.lblTimesAgo.font.fontName)
         }
         return cell
     }

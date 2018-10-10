@@ -20,7 +20,7 @@ struct Constants{
     static let isPhone = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.phone)
     static let fontSize:CGFloat = isPhone ? 12 :20
     static let fontLargeTitle:CGFloat = isPhone ? 21:20
-    static let fontNormalTitle:CGFloat = isPhone ? 17 :20
+    static let fontNormalTitle:CGFloat = isPhone ? 18 :20
     static let fontSmallTitle:CGFloat = isPhone ? 14 :20
     static let fontLargeContent:CGFloat = isPhone ? 18 :20
     static let fontNormalContent:CGFloat = isPhone ? 14 :20
@@ -29,8 +29,8 @@ struct Constants{
 }
 
 struct AppFontName {
-    static let regular = "HelveticaNeue"
-    static let medium = "HelveticaNeue-Medium"
+    static let regular = "HelveticaNeue-Light"
+    static let medium = "HelveticaNeue-Bold"
 
 }
 extension UIFont {
