@@ -33,7 +33,7 @@ class NewsDetailVC: UIViewController, UICollectionViewDelegate, UICollectionView
  
     override func viewDidLoad() {
         super.viewDidLoad()
-       ArticleData = loadJson(filename: "newsDetail")!
+       ArticleData = loadJson(filename: "news")!
         ShowNews(currentNews: currentIndex)
         //initially hide webview
         ViewWebContainer.isHidden = true

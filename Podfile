@@ -8,6 +8,7 @@ target 'NewsApp' do
   # Pods for NewsApp
 	pod 'GoogleSignIn'
 	pod "Floaty"
+    pod 'XLPagerTabStrip'
   target 'NewsAppTests' do
     inherit! :search_paths
     # Pods for testing

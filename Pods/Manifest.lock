@@ -20,10 +20,12 @@ PODS:
   - GTMSessionFetcher/Core (1.2.0)
   - GTMSessionFetcher/Full (1.2.0):
     - GTMSessionFetcher/Core (= 1.2.0)
+  - XLPagerTabStrip (8.0.1)
 
 DEPENDENCIES:
   - Floaty
   - GoogleSignIn
+  - XLPagerTabStrip
 
 SPEC REPOS:
   https://github.com/CocoaPods/Specs.git:
@@ -32,6 +34,7 @@ SPEC REPOS:
     - GoogleToolboxForMac
     - GTMOAuth2
     - GTMSessionFetcher
+    - XLPagerTabStrip
 
 SPEC CHECKSUMS:
   Floaty: 82854e1a5ef4fa208281ebd4da2f3d1e51ba67a6
@@ -39,7 +42,8 @@ SPEC CHECKSUMS:
   GoogleToolboxForMac: 91c824d21e85b31c2aae9bb011c5027c9b4e738f
   GTMOAuth2: c77fe325e4acd453837e72d91e3b5f13116857b2
   GTMSessionFetcher: 0c4baf0a73acd0041bf9f71ea018deedab5ea84e
+  XLPagerTabStrip: c908b17cbf42fcd2598ee1adfc49bae25444d88a
 
-PODFILE CHECKSUM: 8c3724d6975c6851bfc3bc566154b694a16b267f
+PODFILE CHECKSUM: 8246a81b6ab917b44d7d3384b6a69f4707f564e0
 
 COCOAPODS: 1.5.0
