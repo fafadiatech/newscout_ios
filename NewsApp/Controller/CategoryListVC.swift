@@ -8,12 +8,12 @@
 
 import UIKit
 import XLPagerTabStrip
-protocol categoryUpdated {
+protocol categoryListProtocol {
     func updateCategoryList(catName: String)
-    func deleteCategory(catIndex: Int)
+    func deleteCategory(currentCategory: String)
 }
 class CategoryListVC: UIViewController, UITableViewDelegate, UITableViewDataSource, IndicatorInfoProvider {
-    var protocolObj : categoryUpdated?
+    var protocolObj : categoryListProtocol?
     
     func indicatorInfo(for pagerTabStripController: PagerTabStripViewController) -> IndicatorInfo {
         return IndicatorInfo(title: "MORE")
@@ -22,7 +22,7 @@ class CategoryListVC: UIViewController, UITableViewDelegate, UITableViewDataSour
     //outlet
     @IBOutlet weak var tableCategoryLIst: UITableView!
     
-    var catArr = ["NEWS", "TECHNOLOGY", "SPORTS", "POLITICS", "BUSINESS", "CELEBRITY", "NEWS", "INDIAN PARLIAMENT", "INDIAN RELIGION","ALL NEWS", "TRENDING", "TOP STORIES"]
+    var catArr = ["ALL NEWS", "TRENDING", "TOP STORIES","NEWS", "TECHNOLOGY", "SPORTS", "POLITICS", "BUSINESS", "CELEBRITY", "NEWS", "INDIAN PARLIAMENT", "INDIAN RELIGION"]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -43,18 +43,40 @@ class CategoryListVC: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     let cell = tableCategoryLIst.dequeueReusableCell(withIdentifier: "CategoryListID", for:indexPath) as! CategoryListTVCell
         cell.lblCategoryName.text = catArr[indexPath.row]
+        cell.btnDelete.tag = indexPath.row
+          cell.btnDelete.addTarget(self, action: #selector(deleteCat), for: .touchUpInside)
         return cell
     }
   
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let cell = tableView.dequeueReusableCell(withIdentifier: "CategoryListID", for: indexPath) as! CategoryListTVCell
         var selectedCat = catArr[indexPath.row]
-        print("selectedCat: \(selectedCat)")
+        if !ParentCatArr.contains(selectedCat)
+        {
         protocolObj?.updateCategoryList(catName: selectedCat)
-       //  cell.btnDelete.addTarget(self, action: #selector(deleteCat), for: .touchUpInside)
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let vc:HomeParentVC = storyboard.instantiateViewController(withIdentifier: "HomeParentID") as! HomeParentVC
+            present(vc, animated: true, completion: nil)
+        }
+    else{
+            let alertController = UIAlertController(title: "Category is already added..", message: "", preferredStyle: .alert)
+            
+            let action1 = UIAlertAction(title: "OK", style: .default) { (action:UIAlertAction) in }
+            
+            alertController.addAction(action1)
+            
+            self.present(alertController, animated: true, completion: nil)
+    }
+    }
+    @objc func deleteCat(sender: UIButton)
+    {
+        let indexPath = sender.tag
+        var selectedCategory = catArr[indexPath]
+        protocolObj?.deleteCategory(currentCategory: selectedCategory)
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let vc:HomeParentVC = storyboard.instantiateViewController(withIdentifier: "HomeParentID") as! HomeParentVC
         present(vc, animated: true, completion: nil)
+        
     }
    
     override func didReceiveMemoryWarning() {

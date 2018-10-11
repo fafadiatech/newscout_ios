@@ -42,7 +42,7 @@ public enum ButtonBarItemSpec<CellType: UICollectionViewCell> {
 public struct ButtonBarPagerTabStripSettings {
 
     public struct Style {
-        public var buttonBarBackgroundColor: UIColor?
+        public var buttonBarBackgroundColor : UIColor?
         public var buttonBarMinimumInteritemSpacing: CGFloat?
         public var buttonBarMinimumLineSpacing: CGFloat?
         public var buttonBarLeftContentInset: CGFloat?
@@ -75,8 +75,7 @@ public struct ButtonBarPagerTabStripSettings {
 open class ButtonBarPagerTabStripViewController: PagerTabStripViewController, PagerTabStripDataSource, PagerTabStripIsProgressiveDelegate, UICollectionViewDelegate, UICollectionViewDataSource {
 
     public var settings = ButtonBarPagerTabStripSettings()
-   // public var titleArr = ["All News", "Trending", "Top stories", "Technology", "Business", "Science", "Weather", "Travel", "More"]
-
+ 
     public var buttonBarItemSpec: ButtonBarItemSpec<ButtonBarViewCell>!
   
     public var changeCurrentIndex: ((_ oldCell: ButtonBarViewCell?, _ newCell: ButtonBarViewCell?, _ animated: Bool) -> Void)?
@@ -154,7 +153,7 @@ open class ButtonBarPagerTabStripViewController: PagerTabStripViewController, Pa
 
         buttonBarView.showsHorizontalScrollIndicator = false
         buttonBarView.backgroundColor = settings.style.buttonBarBackgroundColor ?? buttonBarView.backgroundColor
-        buttonBarView.selectedBar.backgroundColor = settings.style.selectedBarBackgroundColor
+        buttonBarView.selectedBar.backgroundColor =  settings.style.selectedBarBackgroundColor
 
         buttonBarView.selectedBarHeight = settings.style.selectedBarHeight
         buttonBarView.selectedBarVerticalAlignment = settings.style.selectedBarVerticalAlignment

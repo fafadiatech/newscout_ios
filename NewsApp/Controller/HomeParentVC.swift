@@ -10,12 +10,13 @@ import UIKit
 import XLPagerTabStrip
 import Floaty
 
-class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate,categoryUpdated {
+class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate,categoryListProtocol {
     var vc = [UIViewController]()
     
     override func viewDidLoad() {
         settings.style.buttonBarItemsShouldFillAvailiableWidth = false
        super.viewDidLoad()
+        buttonBarView.backgroundColor = .gray
         let floaty = Floaty()
         floaty.itemTitleColor = .blue
         
@@ -56,8 +57,12 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate,categor
         ParentCatArr.append(catName)
         print("ParentCatArr: \(ParentCatArr)")
     }
-    func deleteCategory(catIndex: Int) {
-      //  ParentCatArr.remove(at:catIndex)
+    
+    func deleteCategory(currentCategory: String) {
+       // ParentCatArr.remove(at:currentCategory)
+        ParentCatArr = ParentCatArr.filter{$0 != currentCategory}
+        
+        print(ParentCatArr)
     }
     override func viewControllers(for pagerTabStripController: PagerTabStripViewController) -> [UIViewController] {
         var i = 0
