@@ -8,17 +8,21 @@
 
 import UIKit
 import XLPagerTabStrip
+protocol categoryUpdated {
+    func updateCategoryList(catName: String)
+    func deleteCategory(catIndex: Int)
+}
 class CategoryListVC: UIViewController, UITableViewDelegate, UITableViewDataSource, IndicatorInfoProvider {
+    var protocolObj : categoryUpdated?
     
     func indicatorInfo(for pagerTabStripController: PagerTabStripViewController) -> IndicatorInfo {
-        return IndicatorInfo(title: "home")
-        //return IndicatorInfo(title: "home")
+        return IndicatorInfo(title: "MORE")
     }
     
     //outlet
     @IBOutlet weak var tableCategoryLIst: UITableView!
     
-    var catArr = ["NEWS", "TECHNOLOGY", "SPORTS", "POLITICS", "BUSINESS", "CELEBRITY", "NEWS", "INDIAN PARLIAMENT", "INDIAN RELIGION"]
+    var catArr = ["NEWS", "TECHNOLOGY", "SPORTS", "POLITICS", "BUSINESS", "CELEBRITY", "NEWS", "INDIAN PARLIAMENT", "INDIAN RELIGION","ALL NEWS", "TRENDING", "TOP STORIES"]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -41,22 +45,18 @@ class CategoryListVC: UIViewController, UITableViewDelegate, UITableViewDataSour
         cell.lblCategoryName.text = catArr[indexPath.row]
         return cell
     }
+  
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-       
+        let cell = tableView.dequeueReusableCell(withIdentifier: "CategoryListID", for: indexPath) as! CategoryListTVCell
         var selectedCat = catArr[indexPath.row]
         print("selectedCat: \(selectedCat)")
-        
-        var obj = ButtonBarPagerTabStripViewController()
-        VCcount = VCcount + 1
-        isCategoryAdded = 1
-        obj.titleArr.append(selectedCat)
-        print(obj.titleArr)
+        protocolObj?.updateCategoryList(catName: selectedCat)
+       //  cell.btnDelete.addTarget(self, action: #selector(deleteCat), for: .touchUpInside)
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let vc:HomeParentVC = storyboard.instantiateViewController(withIdentifier: "HomeParentID") as! HomeParentVC
         present(vc, animated: true, completion: nil)
-    
-        
     }
+   
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.

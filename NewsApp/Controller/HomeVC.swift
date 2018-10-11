@@ -16,7 +16,7 @@ class HomeVC: UIViewController, UITableViewDelegate, UITableViewDataSource, Floa
 
     //variables
     var ArticleData = [Article]()
-     var tabBarTitle: String = "Initial value"
+     var tabBarTitle: String = ""
   
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -29,7 +29,7 @@ class HomeVC: UIViewController, UITableViewDelegate, UITableViewDataSource, Floa
     }
   
     func indicatorInfo(for pagerTabStripController: PagerTabStripViewController) -> IndicatorInfo {
-        return IndicatorInfo(title: "home")
+        return IndicatorInfo(title: tabBarTitle)
 
     }
     
@@ -97,10 +97,6 @@ class HomeVC: UIViewController, UITableViewDelegate, UITableViewDataSource, Floa
             cell.lblNewsHeading.font = NormalFont
             cell.lblCategory.font = NormalFont
             cell.lblTimesAgo.font = NormalFont
-            print(cell.lblSource.font.fontName)
-            print(cell.lblNewsHeading.font.fontName)
-            print(cell.lblCategory.font.fontName)
-            print(cell.lblTimesAgo.font.fontName)
         }
         return cell
     }

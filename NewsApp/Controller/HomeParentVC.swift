@@ -10,14 +10,12 @@ import UIKit
 import XLPagerTabStrip
 import Floaty
 
-class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate {
+class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate,categoryUpdated {
     var vc = [UIViewController]()
     
-       var isReload = false
     override func viewDidLoad() {
         settings.style.buttonBarItemsShouldFillAvailiableWidth = false
-       
-        super.viewDidLoad()
+       super.viewDidLoad()
         let floaty = Floaty()
         floaty.itemTitleColor = .blue
         
@@ -48,38 +46,32 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate {
         // Do any additional setup after loading the view.
         buttonBarView.selectedBar.backgroundColor = .orange
         buttonBarView.backgroundColor = UIColor(red: 7/255, green: 185/255, blue: 155/255, alpha: 1)
+        
     }
-    override func reloadPagerTabStripView() {
-        isReload = true
-        if arc4random() % 2 == 0 {
-            pagerBehaviour = .progressive(skipIntermediateViewControllers: arc4random() % 2 == 0, elasticIndicatorLimit: arc4random() % 2 == 0 )
-        } else {
-            pagerBehaviour = .common(skipIntermediateViewControllers: arc4random() % 2 == 0)
-        }
-        super.reloadPagerTabStripView()
-    }
+   
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        //reloadPagerTabStripView()
-
+    }
+    func updateCategoryList(catName: String) {
+        ParentCatArr.append(catName)
+        print("ParentCatArr: \(ParentCatArr)")
+    }
+    func deleteCategory(catIndex: Int) {
+      //  ParentCatArr.remove(at:catIndex)
     }
     override func viewControllers(for pagerTabStripController: PagerTabStripViewController) -> [UIViewController] {
         var i = 0
-        while i < VCcount - 1
+        while i < ParentCatArr.count
         {
-            let child_1 = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "HomeVC")
-            i = i + 1
-            vc.append(child_1)
+            let child_1 = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "HomeVC") as! HomeVC
+           vc.append(child_1)
+            child_1.tabBarTitle = ParentCatArr[i]
+             i = i + 1
         }
-        var childMore = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "CategoryListID")
+       
+        var childMore = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "CategoryListID") as! CategoryListVC
+        childMore.protocolObj = self
          vc.append(childMore)
-    
-//        let child_1 = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "HomeVC")
-//        let child_2 = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "HomeVC")
-//        let child_3 = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "HomeVC")
-//        let child_4 = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "HomeVC")
-//        let cat = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "HomeVC")
-//  return [child_1, child_2, child_3, child_4, cat]
         print(vc)
         return vc
       

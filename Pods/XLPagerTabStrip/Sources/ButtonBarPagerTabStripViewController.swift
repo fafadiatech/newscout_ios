@@ -75,7 +75,8 @@ public struct ButtonBarPagerTabStripSettings {
 open class ButtonBarPagerTabStripViewController: PagerTabStripViewController, PagerTabStripDataSource, PagerTabStripIsProgressiveDelegate, UICollectionViewDelegate, UICollectionViewDataSource {
 
     public var settings = ButtonBarPagerTabStripSettings()
-    public var titleArr = ["All News", "Trending", "Top stories", "Technology", "Business", "Science", "Weather", "Travel", "More"]
+   // public var titleArr = ["All News", "Trending", "Top stories", "Technology", "Business", "Science", "Weather", "Travel", "More"]
+
     public var buttonBarItemSpec: ButtonBarItemSpec<ButtonBarViewCell>!
   
     public var changeCurrentIndex: ((_ oldCell: ButtonBarViewCell?, _ newCell: ButtonBarViewCell?, _ animated: Bool) -> Void)?
@@ -329,8 +330,7 @@ open class ButtonBarPagerTabStripViewController: PagerTabStripViewController, Pa
         collectionViewDidLoad = true
         let childController = viewControllers[indexPath.item] as! IndicatorInfoProvider // swiftlint:disable:this force_cast
         let indicatorInfo = childController.indicatorInfo(for: self)
-        print(titleArr)
-        cell.label.text = titleArr[indexPath.row] //indicatorInfo.title
+        cell.label.text = indicatorInfo.title//titleArr[indexPath.row] //
         print(cell.label.text)
         cell.accessibilityLabel = indicatorInfo.accessibilityLabel
         cell.label.font = settings.style.buttonBarItemFont
@@ -392,9 +392,9 @@ open class ButtonBarPagerTabStripViewController: PagerTabStripViewController, Pa
                 print(collectionViewContentWidth)
             case .nibFile(_, _, let widthCallback):
                 let width = widthCallback(indicatorInfo)
-                //minimumCellWidths.append(width)
+                minimumCellWidths.append(width)
                 collectionViewContentWidth += width
-                 minimumCellWidths.append(120)
+                // minimumCellWidths.append(130)
                 print(collectionViewContentWidth)
             }
         }

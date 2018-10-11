@@ -84,8 +84,7 @@ class NewsDetailVC: UIViewController, UICollectionViewDelegate, UICollectionView
     }
     func changeFont()
     {
-        print(textSizeSelected)
-        
+       
         if textSizeSelected == 0{
             lblNewsHeading.font = smallFont
             lblSource.font = smallFont

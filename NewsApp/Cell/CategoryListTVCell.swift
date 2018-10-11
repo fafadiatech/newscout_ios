@@ -11,6 +11,7 @@ import UIKit
 class CategoryListTVCell: UITableViewCell {
 
     @IBOutlet weak var lblCategoryName: UILabel!
+    @IBOutlet weak var btnDelete: UIButton!
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code

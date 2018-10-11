@@ -10,8 +10,8 @@ import XLPagerTabStrip
 var isCategoryAdded = 0
 var textSizeSelected = 1
 var currentIndex = 0
-var obj = ButtonBarPagerTabStripViewController()
-var VCcount = obj.titleArr.count
+var ParentCatArr = ["ALL NEWS", "TRENDING", "TOP STORIES"]
+var obj = HomeParentVC()
 var isSearch = false
 var smallFont = UIFont(name: AppFontName.regular, size: Constants.fontSmallTitle)
 var LargeFont = UIFont(name: AppFontName.regular, size: Constants.fontLargeTitle)
