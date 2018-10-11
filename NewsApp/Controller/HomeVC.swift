@@ -11,58 +11,26 @@ import Floaty
 import XLPagerTabStrip
 
 class HomeVC: UIViewController, UITableViewDelegate, UITableViewDataSource, FloatyDelegate, IndicatorInfoProvider{
-    
-    
-
     //outlets
     @IBOutlet weak var HomeNewsTV: UITableView!
-    @IBOutlet weak var lblHeading: UILabel!
-    
+
     //variables
     var ArticleData = [Article]()
-   
+     var tabBarTitle: String = "Initial value"
+  
     override func viewDidLoad() {
         super.viewDidLoad()
         ArticleData = loadJson(filename: "news")!
-        let floaty = Floaty()
-        floaty.itemTitleColor = .blue
-       
-       // floaty.buttonImage = UIImage(named: "floatingMenu")
-        floaty.addItem("Search", icon: UIImage(named: "search")!) { item in
-            floaty.autoCloseOnTap = true
-            isSearch = true
-            let storyboard = UIStoryboard(name: "Main", bundle: nil)
-            let searchvc:SearchVC = storyboard.instantiateViewController(withIdentifier: "SearchID") as! SearchVC
-            self.present(searchvc, animated: true, completion: nil)
-          }
-        floaty.addItem("Settings", icon: UIImage(named: "settings")!) { item in
-            floaty.autoCloseOnTap = true
-            let storyboard = UIStoryboard(name: "Main", bundle: nil)
-            let settingvc:SettingsVC = storyboard.instantiateViewController(withIdentifier: "SettingsID") as! SettingsVC
-            self.present(settingvc, animated: true, completion: nil)
-            
-        }
-        floaty.addItem("Bookmark", icon: UIImage(named: "bookmark")!) { item in
-            floaty.autoCloseOnTap = true
-            isSearch = false
-            let storyboard = UIStoryboard(name: "Main", bundle: nil)
-            let settingvc:SearchVC = storyboard.instantiateViewController(withIdentifier: "SearchID") as! SearchVC
-            self.present(settingvc, animated: true, completion: nil)
-            
-        }
-        self.view.addSubview(floaty)
-        // Do any additional setup after loading the view, typically from a nib.
-    }
-    
+     }
+  
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-            changeFont()
-            HomeNewsTV.reloadData() //for tableview
-        
+        HomeNewsTV.reloadData() //for tableview
     }
-    
+  
     func indicatorInfo(for pagerTabStripController: PagerTabStripViewController) -> IndicatorInfo {
-        return IndicatorInfo(title: "Child")
+        return IndicatorInfo(title: "home")
+
     }
     
     //Load data to be displayed from json file
@@ -73,9 +41,6 @@ class HomeVC: UIViewController, UITableViewDelegate, UITableViewDataSource, Floa
                 let data = try Data(contentsOf: url)
                 let decoder = JSONDecoder()
                 let jsonData = try decoder.decode(ArticleStatus.self, from: data)
-                
-                print("jsondata: \(jsonData)")
-                
                 return jsonData.articles
             } catch {
                 print("error:\(error)")
@@ -84,22 +49,6 @@ class HomeVC: UIViewController, UITableViewDelegate, UITableViewDataSource, Floa
         return nil
     }
     
-    //change font on text size change
-    func changeFont()
-    {
-        print(textSizeSelected)
-        
-        if textSizeSelected == 0{
-        lblHeading.font = smallFontMedium
-        }
-        else if textSizeSelected == 2{
-            lblHeading.font = LargeFontMedium
-        }
-        else{
-           // lblHeading.font = NormalFontMedium
-        }
-
-    }
     
     //HIde status bar
     override var prefersStatusBarHidden: Bool {
@@ -117,6 +66,7 @@ class HomeVC: UIViewController, UITableViewDelegate, UITableViewDataSource, Floa
         currentIndex = indexPath.row
         print("currentIndex: \(currentIndex)")
         present(vc, animated: true, completion: nil)
+     
         
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {

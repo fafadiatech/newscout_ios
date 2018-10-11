@@ -234,7 +234,7 @@ open class BaseButtonBarPagerTabStripViewController<ButtonBarCellType: UICollect
         }
         let childController = viewControllers[indexPath.item] as! IndicatorInfoProvider // swiftlint:disable:this force_cast
         let indicatorInfo = childController.indicatorInfo(for: self)
-
+        print(indicatorInfo)
         configure(cell: cell, for: indicatorInfo)
 
         if pagerBehaviour.isProgressiveIndicator {

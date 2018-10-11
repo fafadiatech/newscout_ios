@@ -7,8 +7,14 @@
 //
 
 import UIKit
-
-class CategoryListVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
+import XLPagerTabStrip
+class CategoryListVC: UIViewController, UITableViewDelegate, UITableViewDataSource, IndicatorInfoProvider {
+    
+    func indicatorInfo(for pagerTabStripController: PagerTabStripViewController) -> IndicatorInfo {
+        return IndicatorInfo(title: "home")
+        //return IndicatorInfo(title: "home")
+    }
+    
     //outlet
     @IBOutlet weak var tableCategoryLIst: UITableView!
     
@@ -34,6 +40,22 @@ class CategoryListVC: UIViewController, UITableViewDelegate, UITableViewDataSour
     let cell = tableCategoryLIst.dequeueReusableCell(withIdentifier: "CategoryListID", for:indexPath) as! CategoryListTVCell
         cell.lblCategoryName.text = catArr[indexPath.row]
         return cell
+    }
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+       
+        var selectedCat = catArr[indexPath.row]
+        print("selectedCat: \(selectedCat)")
+        
+        var obj = ButtonBarPagerTabStripViewController()
+        VCcount = VCcount + 1
+        isCategoryAdded = 1
+        obj.titleArr.append(selectedCat)
+        print(obj.titleArr)
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let vc:HomeParentVC = storyboard.instantiateViewController(withIdentifier: "HomeParentID") as! HomeParentVC
+        present(vc, animated: true, completion: nil)
+    
+        
     }
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
