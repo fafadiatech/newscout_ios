@@ -16,6 +16,9 @@ class SignUpVC: UIViewController {
         // Do any additional setup after loading the view.
     }
 
+    @IBAction func btnBackActn(_ sender: Any) {
+        self.dismiss(animated: true)
+    }
     //HIde status bar
     override var prefersStatusBarHidden: Bool {
         return true

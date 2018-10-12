@@ -10,7 +10,7 @@ import XLPagerTabStrip
 var isCategoryAdded = 0
 var textSizeSelected = 1
 var currentIndex = 0
-var ParentCatArr = ["FOR YOU", "ALL NEWS", "TRENDING", "TOP STORIES"]
+var ParentCatArr = ["FOR YOU"]
 var obj = HomeParentVC()
 var isSearch = false
 var smallFont = UIFont(name: AppFontName.regular, size: Constants.fontSmallTitle)

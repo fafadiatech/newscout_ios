@@ -30,6 +30,15 @@ class SearchVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         }
         // Do any additional setup after loading the view.
     }
+//    public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+//
+//        let cell = self.tableView.dequeueReusableCell(withIdentifier: "cell") as? MyTableViewCell
+//
+//        cell?.textLabel?.text = self.source[indexPath.row]
+//        cell?.backgroundColor = UIColor.clear
+//
+//        return cell ?? UITableViewCell()
+//    }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         changeFont()
@@ -115,7 +124,8 @@ class SearchVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
             cell.lblCategory.font = NormalFont
             cell.lbltimeAgo.font = NormalFont
         }
-        return cell
+        //return cell
+        return cell 
     }
     @IBAction func btnSearchAction(_ sender: Any) {
        self.dismiss(animated: false)

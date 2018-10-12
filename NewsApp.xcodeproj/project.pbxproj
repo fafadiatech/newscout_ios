@@ -38,6 +38,7 @@
 		421ADFEE2156575300C00F6F /* HomeNewsTVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 421ADFED2156575300C00F6F /* HomeNewsTVCell.swift */; };
 		421ADFF021566FE000C00F6F /* NewsDetailVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 421ADFEF21566FE000C00F6F /* NewsDetailVC.swift */; };
 		421ADFF22156755100C00F6F /* SuggestedNewsCVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 421ADFF12156755100C00F6F /* SuggestedNewsCVCell.swift */; };
+		423F0A502170CF19001D52B5 /* ForgotPasswordVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 423F0A4F2170CF18001D52B5 /* ForgotPasswordVC.swift */; };
 		42D12BF2215A0AEB0085EF12 /* SearchVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42D12BF1215A0AEB0085EF12 /* SearchVC.swift */; };
 		42D12BF4215A0FA60085EF12 /* common.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42D12BF3215A0FA60085EF12 /* common.swift */; };
 		42D12BF6215A21E10085EF12 /* credentials.plist in Resources */ = {isa = PBXBuildFile; fileRef = 42D12BF5215A21E10085EF12 /* credentials.plist */; };
@@ -104,6 +105,7 @@
 		421ADFED2156575300C00F6F /* HomeNewsTVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = HomeNewsTVCell.swift; path = NewsApp/Cell/HomeNewsTVCell.swift; sourceTree = SOURCE_ROOT; };
 		421ADFEF21566FE000C00F6F /* NewsDetailVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = NewsDetailVC.swift; path = NewsApp/Controller/NewsDetailVC.swift; sourceTree = SOURCE_ROOT; };
 		421ADFF12156755100C00F6F /* SuggestedNewsCVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuggestedNewsCVCell.swift; sourceTree = "<group>"; };
+		423F0A4F2170CF18001D52B5 /* ForgotPasswordVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForgotPasswordVC.swift; sourceTree = "<group>"; };
 		42D12BF1215A0AEB0085EF12 /* SearchVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchVC.swift; sourceTree = "<group>"; };
 		42D12BF3215A0FA60085EF12 /* common.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = common.swift; sourceTree = "<group>"; };
 		42D12BF5215A21E10085EF12 /* credentials.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = credentials.plist; sourceTree = "<group>"; };
@@ -257,6 +259,7 @@
 		421ADFEA2156553500C00F6F /* Controller */ = {
 			isa = PBXGroup;
 			children = (
+				423F0A4F2170CF18001D52B5 /* ForgotPasswordVC.swift */,
 				263F2D9B216B7FC700764C45 /* ProfileVC.swift */,
 				26ACEA93216733BA000EF3C7 /* CategoryListVC.swift */,
 				263421F221624AD200C8510F /* SettingsTVC.swift */,
@@ -568,6 +571,7 @@
 				263F2D8F216B2DEE00764C45 /* DataModel.swift in Sources */,
 				263F2D9C216B7FC700764C45 /* ProfileVC.swift in Sources */,
 				421ADFF22156755100C00F6F /* SuggestedNewsCVCell.swift in Sources */,
+				423F0A502170CF19001D52B5 /* ForgotPasswordVC.swift in Sources */,
 				7E1D1399216CC79000FE342A /* HomeParentVC.swift in Sources */,
 				421ADFEE2156575300C00F6F /* HomeNewsTVCell.swift in Sources */,
 				421ADFF021566FE000C00F6F /* NewsDetailVC.swift in Sources */,

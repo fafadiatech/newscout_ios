@@ -17,12 +17,14 @@ class ProfileVC: UIViewController {
     @IBOutlet weak var lblEmail: UILabel!
     @IBOutlet weak var txtName: UITextField!
     @IBOutlet weak var txtEmail: UITextField!
+    @IBOutlet weak var btnSignUp: UIButton!
     @IBOutlet weak var btnForgotPswd: UIButton!
     @IBOutlet weak var btnDeleteAcnt: UIButton!
     override func viewDidLoad() {
         super.viewDidLoad()
        // btnImgProfile.frame = CGRect(x: 160, y: 100, width: 50, height: 50)
         //round border corner of forgot pswd and delete acnt btn
+
         btnForgotPswd.layer.cornerRadius = 15
         btnForgotPswd.layer.borderWidth = 0
         btnDeleteAcnt.layer.cornerRadius = 15
@@ -42,8 +44,12 @@ class ProfileVC: UIViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+
     
     @IBAction func btnForgotPswdActn(_ sender: Any) {
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let vc:ForgotPasswordVC = storyboard.instantiateViewController(withIdentifier: "ForgotID") as! ForgotPasswordVC
+        present(vc, animated: true, completion: nil)
     }
 
     @IBAction func btnDeleteAcntActn(_ sender: Any) {

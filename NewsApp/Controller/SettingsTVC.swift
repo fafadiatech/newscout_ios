@@ -50,6 +50,16 @@ class SettingsTVC: UITableViewController {
         headerView.textLabel?.font = UIFont.systemFont(ofSize: 20.0, weight: .regular)
          
     }
+    override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
+        if indexPath.section == 2 && indexPath.row == 0{
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let vc:LoginVC = storyboard.instantiateViewController(withIdentifier: "LoginID") as! LoginVC
+            print(indexPath.section)
+            present(vc, animated: true, completion: nil)
+        }
+        return indexPath
+    }
+        
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()

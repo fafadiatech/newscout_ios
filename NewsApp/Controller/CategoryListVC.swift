@@ -44,6 +44,12 @@ class CategoryListVC: UIViewController, UITableViewDelegate, UITableViewDataSour
     let cell = tableCategoryLIst.dequeueReusableCell(withIdentifier: "CategoryListID", for:indexPath) as! CategoryListTVCell
         cell.lblCategoryName.text = catArr[indexPath.row]
         cell.btnDelete.tag = indexPath.row
+        if ParentCatArr.contains(catArr[indexPath.row]){
+            cell.btnDelete.isHidden = false
+        }
+        else{
+             cell.btnDelete.isHidden = true
+        }
           cell.btnDelete.addTarget(self, action: #selector(deleteCat), for: .touchUpInside)
         return cell
     }
