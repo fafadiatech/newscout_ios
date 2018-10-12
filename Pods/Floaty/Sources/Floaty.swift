@@ -290,6 +290,7 @@ open class Floaty: UIView {
         if isCustomFrame == false {
             setBottomFrameAccordingToRTL()
         } else {
+        
             size = min(frame.size.width, frame.size.height)
         }
         
@@ -425,7 +426,8 @@ open class Floaty: UIView {
     @objc open func addItem(item: FloatyItem) {
         let big = size > item.size ? size : item.size
         let small = size <= item.size ? size : item.size
-        item.frame.origin = CGPoint(x: big/2-small/2, y: big/2-small/2)
+    
+       item.frame.origin = CGPoint(x: big/2-small/2, y: big/2-small/2)
         item.alpha = 0
         item.actionButton = self
         items.append(item)
@@ -647,12 +649,13 @@ open class Floaty: UIView {
         buttonImageView.removeFromSuperview()
         buttonImageView = UIImageView(image: buttonImage)
         buttonImageView.tintColor = plusColor
-        buttonImageView.frame = CGRect(
-            x: circleLayer.frame.origin.x + (size / 2 - buttonImageView.frame.size.width / 2),
-            y: circleLayer.frame.origin.y + (size / 2 - buttonImageView.frame.size.height / 2),
-            width: buttonImageView.frame.size.width,
-            height: buttonImageView.frame.size.height
-        )
+        buttonImageView.frame = CGRect(x: 0, y: 0, width: size, height: size)
+//            x: circleLayer.frame.origin.x + (size / 2 - buttonImageView.frame.size.width / 2),
+//            y: circleLayer.frame.origin.y + (size / 2 - buttonImageView.frame.size.height / 2),
+          
+//            width: buttonImageView.frame.size.width,
+//            height: buttonImageView.frame.size.height
+//        )
         
         addSubview(buttonImageView)
     }

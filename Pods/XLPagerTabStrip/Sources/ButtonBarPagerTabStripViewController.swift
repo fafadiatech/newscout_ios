@@ -306,13 +306,8 @@ open class ButtonBarPagerTabStripViewController: PagerTabStripViewController, Pa
                 changeCurrentIndex(cells.first!, cells.last!, true)
             }
         }
-        if indexPath.row == 8
-        {
-             moveToViewController(at: 8)
-        }
-        else{
         moveToViewController(at: indexPath.item)
-        }
+       
     }
 
     // MARK: - UICollectionViewDataSource
@@ -335,7 +330,7 @@ open class ButtonBarPagerTabStripViewController: PagerTabStripViewController, Pa
         cell.label.font = settings.style.buttonBarItemFont
         cell.label.textColor = settings.style.buttonBarItemTitleColor ?? cell.label.textColor
         cell.contentView.backgroundColor = settings.style.buttonBarItemBackgroundColor ?? cell.contentView.backgroundColor
-        cell.backgroundColor = settings.style.buttonBarItemBackgroundColor ?? cell.backgroundColor
+        cell.backgroundColor = .gray ?? .gray//settings.style.buttonBarItemBackgroundColor ?? cell.backgroundColor
         if let image = indicatorInfo.image {
             cell.imageView.image = image
         }

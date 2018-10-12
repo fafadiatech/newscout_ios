@@ -18,7 +18,7 @@ class SearchVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
      var ArticleData = [Article]()
     override func viewDidLoad() {
         super.viewDidLoad()
-         ArticleData = loadJson(filename: "newsDetail")!
+         ArticleData = loadJson(filename: "news")!
         //check whether search or bookmark is selected
         if isSearch == true{
            lblTitle.isHidden = true

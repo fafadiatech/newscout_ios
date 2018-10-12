@@ -16,12 +16,22 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate,categor
     override func viewDidLoad() {
         settings.style.buttonBarItemsShouldFillAvailiableWidth = false
        super.viewDidLoad()
-        buttonBarView.backgroundColor = .gray
         let floaty = Floaty()
         floaty.itemTitleColor = .blue
-        
-        // floaty.buttonImage = UIImage(named: "floatingMenu")
+       // floaty.itemButtonColor = .gray
+      // print(floaty.buttonImage?.alignmentRectInsets)
+       floaty.buttonImage = UIImage(named: "if_Menu_green_1891031")
+        floaty.addItem("Profile", icon: UIImage(named: "profile")!) { item in
+            
+            floaty.autoCloseOnTap = true
+            isSearch = true
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let searchvc:ProfileVC
+                = storyboard.instantiateViewController(withIdentifier: "ProfileID") as! ProfileVC
+            self.present(searchvc, animated: true, completion: nil)
+        }
         floaty.addItem("Search", icon: UIImage(named: "search")!) { item in
+
             floaty.autoCloseOnTap = true
             isSearch = true
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
@@ -29,6 +39,7 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate,categor
             self.present(searchvc, animated: true, completion: nil)
         }
         floaty.addItem("Settings", icon: UIImage(named: "settings")!) { item in
+    
             floaty.autoCloseOnTap = true
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             let settingvc:SettingsVC = storyboard.instantiateViewController(withIdentifier: "SettingsID") as! SettingsVC
@@ -36,6 +47,7 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate,categor
             
         }
         floaty.addItem("Bookmark", icon: UIImage(named: "bookmark")!) { item in
+            item.backgroundColor = .orange
             floaty.autoCloseOnTap = true
             isSearch = false
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
@@ -45,11 +57,15 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate,categor
         }
         self.view.addSubview(floaty)
         // Do any additional setup after loading the view.
-        buttonBarView.selectedBar.backgroundColor = .orange
-        buttonBarView.backgroundColor = UIColor(red: 7/255, green: 185/255, blue: 155/255, alpha: 1)
+        buttonBarView.selectedBar.backgroundColor = .black
+        buttonBarView.backgroundColor = .gray
+        //UIColor(red: 7/255, green: 185/255, blue: 155/255, alpha: 1)
         
     }
-   
+    //HIde status bar
+    override var prefersStatusBarHidden: Bool {
+        return true
+    }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
     }
