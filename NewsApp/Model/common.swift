@@ -12,6 +12,7 @@ var textSizeSelected = 1
 var currentIndex = 0
 var ParentCatArr = ["FOR YOU"]
 var obj = HomeParentVC()
+ var ArticleData = [ArticleStatus]()
 var isSearch = false
 var smallFont = UIFont(name: AppFontName.regular, size: Constants.fontSmallTitle)
 var LargeFont = UIFont(name: AppFontName.regular, size: Constants.fontLargeTitle)

@@ -29,11 +29,11 @@ class NewsDetailVC: UIViewController, UICollectionViewDelegate, UICollectionView
     @IBOutlet weak var ViewWebContainer: UIView!
     @IBOutlet weak var lblWebSource: UILabel!
     //variables
-    var ArticleData = [Article]()
+   // var ArticleData = [Article]()
  
     override func viewDidLoad() {
         super.viewDidLoad()
-       ArticleData = loadJson(filename: "news")!
+      // ArticleData = loadJson(filename: "news")!
         ShowNews(currentNews: currentIndex)
         //initially hide webview
         ViewWebContainer.isHidden = true
@@ -162,7 +162,7 @@ class NewsDetailVC: UIViewController, UICollectionViewDelegate, UICollectionView
     func ShowNews(currentNews: Int)
     {
        
-        var currentArticle = ArticleData[currentNews]
+        var currentArticle = ArticleData[0].articles[currentNews]
         lblNewsHeading.text = currentArticle.title
         txtViewNewsDesc.text = currentArticle.description
        lblSource.text = currentArticle.source
@@ -187,12 +187,12 @@ class NewsDetailVC: UIViewController, UICollectionViewDelegate, UICollectionView
     }
     //collection view methods
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-       return ArticleData.count
+       return ArticleData[0].articles.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "SuggestedNewsID", for: indexPath) as! SuggestedNewsCVCell
-        var currentArticle = ArticleData[indexPath.row]
+        var currentArticle = ArticleData[0].articles[indexPath.row]
         cell.lblTitle.text = currentArticle.title
         cell.imgNews.downloadedFrom(link: "\(currentArticle.urlToImage!)")
 //        if textSizeSelected == 0{

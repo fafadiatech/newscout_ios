@@ -6,7 +6,8 @@ target 'NewsApp' do
   use_frameworks!
 
   # Pods for NewsApp
-	pod 'GoogleSignIn'
+	#pod 'GoogleSignIn'
+	pod 'Alamofire'
 	pod "Floaty"
     pod 'XLPagerTabStrip'
   target 'NewsAppTests' do

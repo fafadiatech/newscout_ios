@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Alamofire
 
 class SearchVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     @IBOutlet weak var searchResultTV: UITableView!
@@ -16,9 +17,13 @@ class SearchVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     @IBOutlet weak var lblTitle: UILabel!
     //variables
      var ArticleData = [Article]()
+    var count = 0
+       var SearchData = [ArticleStatus]()
     override func viewDidLoad() {
         super.viewDidLoad()
-         ArticleData = loadJson(filename: "news")!
+        loadSearchAPI()
+        
+         //ArticleData = loadJson(filename: "news")!
         //check whether search or bookmark is selected
         if isSearch == true{
            lblTitle.isHidden = true
@@ -67,6 +72,34 @@ class SearchVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         }
         return nil
     }
+    func loadSearchAPI()
+    {
+        let url = "https://api.myjson.com/bins/q2kdg"
+        
+        Alamofire.request(url,method: .get).responseJSON{
+            response in
+            if(response.result.isSuccess){
+                if let data = response.data {
+                    let jsonDecoder = JSONDecoder()
+                    do {
+                        //let jsonData
+                        let jsonData = try jsonDecoder.decode(ArticleStatus.self, from: data)
+                        self.SearchData = [jsonData]
+                        self.count = jsonData.totalResults!                        //self.ArticleData = try [jsonDecodeç.decode(ArticleStatus.self, from: data)]
+                        // print("self.AData: \(self.ArticleData)")
+                        // print("self.AData: \(self.ArticleData.count)")
+                        self.searchResultTV.reloadData()
+                        print("jsonData: \(jsonData)")
+                        
+                    }
+                    catch {
+                        print("Error: \(error)")
+                    }
+                }
+            }
+        }
+        
+    }
     func changeFont()
     {
         print(textSizeSelected)
@@ -86,7 +119,7 @@ class SearchVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     }
     //Tableview methods
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-       return ArticleData.count
+       return count
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         print("This cell  was selected: \(indexPath.row)")
@@ -99,11 +132,11 @@ class SearchVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "searchResultID", for:indexPath) as! SearchResultTVCell
-         var currentArticle = ArticleData[indexPath.row]
+         var currentArticle = SearchData[0].articles[indexPath.row]
         cell.lblSource.text = currentArticle.source
         cell.lbltimeAgo.text = currentArticle.publishedAt
         cell.lblNewsDescription.text = currentArticle.title
-        cell.lblCategory.text = currentArticle.categories.first
+        cell.lblCategory.text = currentArticle.categories?.first
         cell.imgNews.downloadedFrom(link: "\(currentArticle.urlToImage!)")
         
         if textSizeSelected == 0{

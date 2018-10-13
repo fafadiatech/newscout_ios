@@ -10,14 +10,14 @@ import Foundation
 struct ArticleStatus : Decodable
 {
     let status : String
-    let totalResults : Int
+    let totalResults : Int?
     let articles : [Article]
 }
 
 struct Article: Decodable
 {
-    let topics: [String]
-    let categories: [String]
+    let topics: [String]?
+    let categories: [String]?
     let source: String?
     let author: String?
     let description : String?

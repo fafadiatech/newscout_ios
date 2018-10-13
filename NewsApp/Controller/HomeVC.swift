@@ -9,18 +9,21 @@
 import UIKit
 import Floaty
 import XLPagerTabStrip
+import Alamofire
 
 class HomeVC: UIViewController, UITableViewDelegate, UITableViewDataSource, FloatyDelegate, IndicatorInfoProvider{
     //outlets
     @IBOutlet weak var HomeNewsTV: UITableView!
 
     //variables
-    var ArticleData = [Article]()
+   // var ArticleData = [Article]()
      var tabBarTitle: String = ""
-  
+   
+    var count = 0
     override func viewDidLoad() {
         super.viewDidLoad()
-        ArticleData = loadJson(filename: "news")!
+         loadNewsAPI()
+        //ArticleData = loadJson(filename: "news")!
      }
   
     override func viewWillAppear(_ animated: Bool) {
@@ -49,7 +52,34 @@ class HomeVC: UIViewController, UITableViewDelegate, UITableViewDataSource, Floa
         return nil
     }
     
-    
+    func loadNewsAPI()
+    {
+        let url = "https://api.myjson.com/bins/q2kdg"
+        
+        Alamofire.request(url,method: .get).responseJSON{
+            response in
+            if(response.result.isSuccess){
+                if let data = response.data {
+                    let jsonDecoder = JSONDecoder()
+                    do {
+                         //let jsonData
+                        let jsonData = try jsonDecoder.decode(ArticleStatus.self, from: data)
+                        ArticleData = [jsonData]
+                        self.count = jsonData.totalResults!                        //self.ArticleData = try [jsonDecodeç.decode(ArticleStatus.self, from: data)]
+                       // print("self.AData: \(self.ArticleData)")
+                       // print("self.AData: \(self.ArticleData.count)")
+                        self.HomeNewsTV.reloadData()
+                        print("jsonData: \(jsonData)")
+                        
+                    }
+                    catch {
+                        print("Error: \(error)")
+                    }
+                }
+            }
+        }
+       
+    }
     //HIde status bar
     override var prefersStatusBarHidden: Bool {
         return true
@@ -57,7 +87,8 @@ class HomeVC: UIViewController, UITableViewDelegate, UITableViewDataSource, Floa
     
     //Tableview methods
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return ArticleData.count
+        return count
+        
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         print("This cell  was selected: \(indexPath.row)")
@@ -72,10 +103,11 @@ class HomeVC: UIViewController, UITableViewDelegate, UITableViewDataSource, Floa
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "HomeNewsTVCellID", for:indexPath) as! HomeNewsTVCell
-        var currentArticle = ArticleData[indexPath.row]
+        var currentArticle = ArticleData[0].articles[indexPath.row]
+        print(currentArticle)
         cell.lblNewsHeading.text = currentArticle.title
         cell.lblSource.text = currentArticle.source
-        cell.lblCategory.text = currentArticle.categories.first
+        cell.lblCategory.text = currentArticle.categories?.first
         cell.lblTimesAgo.text = currentArticle.publishedAt
         cell.imgNews.downloadedFrom(link: "\(currentArticle.urlToImage!)")
         
