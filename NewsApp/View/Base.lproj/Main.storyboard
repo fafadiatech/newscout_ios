@@ -1,23 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="SXV-EA-KWG">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14313.18" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="SXV-EA-KWG">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14283.14"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
-    <customFonts key="customFonts">
-        <array key="HelveticaNeue.ttc">
-            <string>HelveticaNeue</string>
-            <string>HelveticaNeue-Medium</string>
-        </array>
-        <array key="Menlo.ttc">
-            <string>Menlo-Regular</string>
-        </array>
-    </customFonts>
     <scenes>
         <!--Home ParentVC-->
         <scene sceneID="ccR-LI-GQ1">
@@ -92,7 +83,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ped-Xd-m0V" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-2231.1999999999998" y="35.532233883058474"/>
+            <point key="canvasLocation" x="1870" y="-663"/>
         </scene>
         <!--HomeVC-->
         <scene sceneID="tne-QT-ifu">
@@ -192,7 +183,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-799.20000000000005" y="37.331334332833585"/>
+            <point key="canvasLocation" x="3182" y="-663"/>
         </scene>
         <!--Forgot PasswordVC-->
         <scene sceneID="nIk-Zg-xN0">
@@ -277,7 +268,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="bK0-2A-bus" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1788" y="27.436281859070466"/>
+            <point key="canvasLocation" x="1871" y="27"/>
         </scene>
         <!--Sign UpVC-->
         <scene sceneID="wEn-r3-PIS">
@@ -415,7 +406,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="XH4-cA-Y3e" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3276" y="48.125937031484263"/>
+            <point key="canvasLocation" x="3204" y="27"/>
         </scene>
         <!--SettingsTVC-->
         <scene sceneID="BST-1o-Suh">
@@ -553,7 +544,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="mPr-b7-zuf" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4213.6000000000004" y="27.886056971514247"/>
+            <point key="canvasLocation" x="3857" y="2"/>
         </scene>
         <!--Category ListVC-->
         <scene sceneID="bBP-v0-xFF">
@@ -610,7 +601,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="mmx-er-e1X" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="5540" y="72"/>
+            <point key="canvasLocation" x="2534" y="731"/>
         </scene>
         <!--ProfileVC-->
         <scene sceneID="fVr-A7-lG0">
@@ -716,7 +707,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="noT-rJ-ndA" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="6223" y="72"/>
+            <point key="canvasLocation" x="3204" y="731"/>
         </scene>
         <!--News DetailVC-->
         <scene sceneID="KvS-be-s0a">
@@ -924,7 +915,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="HEF-wc-mJk" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-111.2" y="8.5457271364317844"/>
+            <point key="canvasLocation" x="3825" y="-663"/>
         </scene>
         <!--SearchVC-->
         <scene sceneID="DKc-Hy-Vjp">
@@ -992,46 +983,7 @@
                                                                 <fragment content="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum">
                                                                     <attributes>
                                                                         <font key="NSFont" size="14" name="HelveticaNeue-Medium"/>
-                                                                        <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" lineSpacing="4" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO">
-                                                                            <tabStops>
-                                                                                <textTab alignment="left" location="28">
-                                                                                    <options/>
-                                                                                </textTab>
-                                                                                <textTab alignment="left" location="56">
-                                                                                    <options/>
-                                                                                </textTab>
-                                                                                <textTab alignment="left" location="84">
-                                                                                    <options/>
-                                                                                </textTab>
-                                                                                <textTab alignment="left" location="112">
-                                                                                    <options/>
-                                                                                </textTab>
-                                                                                <textTab alignment="left" location="140">
-                                                                                    <options/>
-                                                                                </textTab>
-                                                                                <textTab alignment="left" location="168">
-                                                                                    <options/>
-                                                                                </textTab>
-                                                                                <textTab alignment="left" location="196">
-                                                                                    <options/>
-                                                                                </textTab>
-                                                                                <textTab alignment="left" location="224">
-                                                                                    <options/>
-                                                                                </textTab>
-                                                                                <textTab alignment="left" location="252">
-                                                                                    <options/>
-                                                                                </textTab>
-                                                                                <textTab alignment="left" location="280">
-                                                                                    <options/>
-                                                                                </textTab>
-                                                                                <textTab alignment="left" location="308">
-                                                                                    <options/>
-                                                                                </textTab>
-                                                                                <textTab alignment="left" location="336">
-                                                                                    <options/>
-                                                                                </textTab>
-                                                                            </tabStops>
-                                                                        </paragraphStyle>
+                                                                        <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" lineSpacing="4" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO"/>
                                                                     </attributes>
                                                                 </fragment>
                                                             </attributedString>
@@ -1047,7 +999,7 @@
                                                     </subviews>
                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                 </view>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="icon" translatesAutoresizingMaskIntoConstraints="NO" id="95G-me-9y5">
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="icon" translatesAutoresizingMaskIntoConstraints="NO" id="95G-me-9y5">
                                                     <rect key="frame" x="255" y="10" width="85" height="76"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 </imageView>
@@ -1095,7 +1047,7 @@
                     </connections>
                 </searchDisplayController>
             </objects>
-            <point key="canvasLocation" x="-1414" y="37"/>
+            <point key="canvasLocation" x="2530" y="-663"/>
         </scene>
         <!--LoginVC-->
         <scene sceneID="9gu-En-2dP">
@@ -1196,19 +1148,19 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="aha-dM-hTD" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4884" y="59.820089955022496"/>
+            <point key="canvasLocation" x="1870" y="731"/>
         </scene>
     </scenes>
     <resources>
         <image name="backArrow" width="256" height="256"/>
         <image name="bookmark" width="225" height="225"/>
         <image name="cross" width="512" height="512"/>
-        <image name="dislike" width="50" height="50"/>
+        <image name="dislike" width="37.5" height="37.5"/>
         <image name="f1" width="550" height="596"/>
-        <image name="facebook-48" width="48" height="48"/>
-        <image name="google-plus-40" width="40" height="40"/>
+        <image name="facebook-48" width="36" height="36"/>
+        <image name="google-plus-40" width="32" height="32"/>
         <image name="icon" width="512" height="512"/>
-        <image name="like" width="50" height="50"/>
-        <image name="share" width="50" height="50"/>
+        <image name="like" width="37.5" height="37.5"/>
+        <image name="share" width="37.5" height="37.5"/>
     </resources>
 </document>

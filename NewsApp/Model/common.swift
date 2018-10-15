@@ -7,13 +7,14 @@
 //
 import UIKit
 import XLPagerTabStrip
+
 var isCategoryAdded = 0
 var textSizeSelected = 1
 var currentIndex = 0
 var TotalResultcount = 0
-var ParentCatArr = ["FOR YOU"]
+var categories = ["FOR YOU"]
 var obj = HomeParentVC()
- var ArticleData = [ArticleStatus]()
+var ArticleData = [ArticleStatus]()
 var isSearch = false
 var commonColor = UIColor.gray
 var xsmallFont = UIFont(name: AppFontName.regular, size: Constants.fontxSmall)
@@ -44,14 +45,13 @@ struct Constants{
     static let fontLargeContent:CGFloat = isPhone ? 18 :20
     static let fontNormalContent:CGFloat = isPhone ? 14 :20
     static let fontSmallContent:CGFloat = isPhone ? 10 :20
-    
 }
 
 struct AppFontName {
     static let regular = "HelveticaNeue-Light"
     static let bold = "HelveticaNeue-Bold"
     static let medium = "HelveticaNeue-Medium"
-
+    
 }
 extension UIFont {
     
@@ -59,10 +59,10 @@ extension UIFont {
     class func myBoldFontName() -> String { return "System"}
     class func smallFont(fontSize :Int) -> UIFont {
         return UIFont.systemFont(ofSize: CGFloat(fontSize - 10))
-      
+        
     }
     class func myNormalFont() -> UIFont {
-       return UIFont(name: "HelveticaNeue-Thin", size: 20)!
+        return UIFont(name: "HelveticaNeue-Thin", size: 20)!
         //return UIFont.systemFont(ofSize: 20)
     }
     
@@ -70,6 +70,7 @@ extension UIFont {
         return UIFont.systemFont(ofSize: CGFloat(fontSize + 10))
     }
 }
+
 //show an image from url
 extension UIImageView {
     func downloadedFrom(url: URL, contentMode mode: UIViewContentMode = .scaleAspectFit) {

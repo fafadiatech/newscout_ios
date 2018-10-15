@@ -132,7 +132,7 @@ extension SearchVC: UITableViewDelegate, UITableViewDataSource{
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "searchResultID", for:indexPath) as! SearchResultTVCell
-        var currentArticle = SearchData[0].articles[indexPath.row]
+        let currentArticle = SearchData[0].articles[indexPath.row]
         cell.lblSource.text = currentArticle.source
         cell.lbltimeAgo.text = currentArticle.publishedAt
         cell.lblNewsDescription.text = currentArticle.title

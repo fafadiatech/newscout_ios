@@ -9,7 +9,7 @@
 import UIKit
 import XLPagerTabStrip
 
-protocol categoryListProtocol {
+protocol CategoryListProtocol {
     func updateCategoryList(catName: String)
     func deleteCategory(currentCategory: String)
 }
@@ -17,9 +17,9 @@ protocol categoryListProtocol {
 class CategoryListVC: UIViewController {
     
     @IBOutlet weak var tableCategoryLIst: UITableView!
-    var protocolObj : categoryListProtocol?
+    var protocolObj : CategoryListProtocol?
     var catArr = ["ALL NEWS", "TRENDING", "TOP STORIES","NEWS", "TECHNOLOGY", "SPORTS", "POLITICS", "BUSINESS", "CELEBRITY", "NEWS", "INDIAN PARLIAMENT", "INDIAN RELIGION"]
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
     }
@@ -32,10 +32,9 @@ class CategoryListVC: UIViewController {
         self.dismiss(animated:false)
     }
     
-    @objc func deleteCat(sender: UIButton)
-    {
+    @objc func deleteCat(sender: UIButton){
         let indexPath = sender.tag
-        var selectedCategory = catArr[indexPath]
+        let selectedCategory = catArr[indexPath]
         protocolObj?.deleteCategory(currentCategory: selectedCategory)
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let vc:HomeParentVC = storyboard.instantiateViewController(withIdentifier: "HomeParentID") as! HomeParentVC
@@ -49,6 +48,7 @@ class CategoryListVC: UIViewController {
 }
 
 extension CategoryListVC:UITableViewDelegate, UITableViewDataSource{
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return catArr.count
     }
@@ -58,7 +58,7 @@ extension CategoryListVC:UITableViewDelegate, UITableViewDataSource{
         let cell = tableCategoryLIst.dequeueReusableCell(withIdentifier: "CategoryListID", for:indexPath) as! CategoryListTVCell
         cell.lblCategoryName.text = catArr[indexPath.row]
         cell.btnDelete.tag = indexPath.row
-        if ParentCatArr.contains(catArr[indexPath.row]){
+        if categories.contains(catArr[indexPath.row]){
             cell.btnDelete.isHidden = false
         }
         else{
@@ -70,27 +70,22 @@ extension CategoryListVC:UITableViewDelegate, UITableViewDataSource{
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let cell = tableView.dequeueReusableCell(withIdentifier: "CategoryListID", for: indexPath) as! CategoryListTVCell
-        var selectedCat = catArr[indexPath.row]
-        if !ParentCatArr.contains(selectedCat)
+        let selectedCat = catArr[indexPath.row]
+        if !categories.contains(selectedCat)
         {
             protocolObj?.updateCategoryList(catName: selectedCat)
-            let storyboard = UIStoryboard(name: "Main", bundle: nil)
-            let vc:HomeParentVC = storyboard.instantiateViewController(withIdentifier: "HomeParentID") as! HomeParentVC
-            present(vc, animated: true, completion: nil)
         }
         else{
             let alertController = UIAlertController(title: "Category is already added..", message: "", preferredStyle: .alert)
-            
             let action1 = UIAlertAction(title: "OK", style: .default) { (action:UIAlertAction) in }
-            
             alertController.addAction(action1)
-            
             self.present(alertController, animated: true, completion: nil)
         }
     }
 }
 
 extension CategoryListVC:IndicatorInfoProvider{
+    
     func indicatorInfo(for pagerTabStripController: PagerTabStripViewController) -> IndicatorInfo {
         return IndicatorInfo(title: "MORE")
     }

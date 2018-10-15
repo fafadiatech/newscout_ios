@@ -12,22 +12,19 @@ import Floaty
 
 class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
     
-    var vc = [UIViewController]()
+    var childrenVC = [UIViewController]()
     
     override func viewDidLoad() {
         settings.style.buttonBarItemsShouldFillAvailiableWidth = false
         super.viewDidLoad()
         let floaty = Floaty()
         floaty.itemTitleColor = .blue
-        // floaty.itemButtonColor = .gray
-        // print(floaty.buttonImage?.alignmentRectInsets)
-        //floaty.buttonImage = UIImage(named: "if_Menu_green_1891031")
         floaty.buttonColor = commonColor
         floaty.plusColor = .black
+        
         floaty.addItem("Profile", icon: UIImage(named: "profile")!) { item in
             
             floaty.autoCloseOnTap = true
-            isSearch = true
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             let searchvc:ProfileVC
                 = storyboard.instantiateViewController(withIdentifier: "ProfileID") as! ProfileVC
@@ -36,7 +33,6 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
         floaty.addItem("Search", icon: UIImage(named: "search")!) { item in
             
             floaty.autoCloseOnTap = true
-            isSearch = true
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             let searchvc:SearchVC = storyboard.instantiateViewController(withIdentifier: "SearchID") as! SearchVC
             self.present(searchvc, animated: true, completion: nil)
@@ -52,7 +48,6 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
         
         floaty.addItem("Bookmark", icon: UIImage(named: "bookmark")!) { item in
             floaty.autoCloseOnTap = true
-            isSearch = false
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             let settingvc:SearchVC = storyboard.instantiateViewController(withIdentifier: "SearchID") as! SearchVC
             self.present(settingvc, animated: true, completion: nil)
@@ -66,37 +61,44 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
     override var prefersStatusBarHidden: Bool {
         return true
     }
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
     }
    
     override func viewControllers(for pagerTabStripController: PagerTabStripViewController) -> [UIViewController] {
-        var i = 0
-        while i < ParentCatArr.count
+        
+        //Clear children viewcontrollers
+        childrenVC.removeAll()
+        
+        //Create children viewcontrolles based on categories passed from CategoryListVC
+        for cat in categories
         {
-            let child_1 = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "HomeVC") as! HomeVC
-            vc.append(child_1)
-            child_1.tabBarTitle = ParentCatArr[i]
-            i = i + 1
+            let childVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "HomeVC") as! HomeVC
+            childVC.tabBarTitle = cat
+            childrenVC.append(childVC)
         }
         
-        var childMore = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "CategoryListID") as! CategoryListVC
+        //Append CategoryListVC in the end
+        let childMore = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "CategoryListID") as! CategoryListVC
         childMore.protocolObj = self
-        vc.append(childMore)
-        print(vc)
-        return vc
+        childrenVC.append(childMore)
+        
+        return childrenVC
     }
 }
 
-extension HomeParentVC:categoryListProtocol{
+extension HomeParentVC:CategoryListProtocol{
+    
     func updateCategoryList(catName: String) {
-        ParentCatArr.append(catName)
-        print("ParentCatArr: \(ParentCatArr)")
+        categories.append(catName)
+        print("ParentCatArr: \(categories)")
+        self.reloadPagerTabStripView()
     }
     
     func deleteCategory(currentCategory: String) {
         // ParentCatArr.remove(at:currentCategory)
-        ParentCatArr = ParentCatArr.filter{$0 != currentCategory}
-        print(ParentCatArr)
+        categories = categories.filter{$0 != currentCategory}
+        print(categories)
     }
 }

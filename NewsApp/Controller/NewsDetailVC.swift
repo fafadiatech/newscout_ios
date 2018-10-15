@@ -156,7 +156,7 @@ class NewsDetailVC: UIViewController {
     }
     
     func ShowNews(currentIndex: Int){
-        var currentArticle = ArticleData[0].articles[currentIndex]
+        let currentArticle = ArticleData[0].articles[currentIndex]
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
         dateFormatter.timeZone = NSTimeZone(name: "UTC")! as TimeZone
@@ -205,7 +205,7 @@ extension NewsDetailVC:UICollectionViewDelegate, UICollectionViewDataSource{
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "SuggestedNewsID", for: indexPath) as! SuggestedNewsCVCell
-        var currentArticle = ArticleData[0].articles[indexPath.row]
+        let currentArticle = ArticleData[0].articles[indexPath.row]
         cell.lblTitle.text = currentArticle.title
         cell.imgNews.downloadedFrom(link: "\(currentArticle.urlToImage!)")
         return cell

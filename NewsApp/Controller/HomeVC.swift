@@ -168,7 +168,7 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource{
         cell.ViewCellBackground.layer.cornerRadius = 10.0
          cell.imgNews.layer.cornerRadius = 10.0
         cell.imgNews.clipsToBounds = true
-        var currentArticle = ArticleData[0].articles[indexPath.row]
+        let currentArticle = ArticleData[0].articles[indexPath.row]
         print(currentArticle)
         //timestamp conversion
         let dateFormatter = DateFormatter()
