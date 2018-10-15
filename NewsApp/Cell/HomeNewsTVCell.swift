@@ -9,22 +9,24 @@
 import UIKit
 
 class HomeNewsTVCell: UITableViewCell {
-
+    
+    @IBOutlet weak var ViewCellBackground: UIView!
     @IBOutlet weak var lblSource: UILabel!
     @IBOutlet weak var lblNewsHeading: UILabel!
-    @IBOutlet weak var lblCategory: UILabel!
     @IBOutlet weak var lblTimesAgo: UILabel!
     @IBOutlet weak var imgNews: UIImageView!
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        // Initialization code
     }
-
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        ViewCellBackground.frame = UIEdgeInsetsInsetRect(contentView.frame, UIEdgeInsetsMake(15, 16, 15, 16))
+    }
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
-
+        
         // Configure the view for the selected state
     }
-
+    
 }

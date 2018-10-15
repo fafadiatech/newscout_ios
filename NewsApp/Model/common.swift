@@ -10,13 +10,21 @@ import XLPagerTabStrip
 var isCategoryAdded = 0
 var textSizeSelected = 1
 var currentIndex = 0
+var TotalResultcount = 0
 var ParentCatArr = ["FOR YOU"]
 var obj = HomeParentVC()
  var ArticleData = [ArticleStatus]()
 var isSearch = false
+var commonColor = UIColor.gray
+var xsmallFont = UIFont(name: AppFontName.regular, size: Constants.fontxSmall)
+var xLargeFont = UIFont(name: AppFontName.regular, size: Constants.fontxLarge)
+var xNormalFont = UIFont(name: AppFontName.regular, size: Constants.fontxNormal)
 var smallFont = UIFont(name: AppFontName.regular, size: Constants.fontSmallTitle)
 var LargeFont = UIFont(name: AppFontName.regular, size: Constants.fontLargeTitle)
 var NormalFont = UIFont(name: AppFontName.regular, size: Constants.fontNormalTitle)
+var smallFontHeading = UIFont(name: AppFontName.regular, size: Constants.fontSmallTitle)
+var LargeFontHeading = UIFont(name: AppFontName.regular, size: Constants.fontLargeTitle)
+var NormalFontHeading = UIFont(name: AppFontName.regular, size: Constants.fontNormalTitle)
 var smallFontMedium = UIFont(name: AppFontName.medium, size: Constants.fontSmallTitle)
 var LargeFontMedium = UIFont(name: AppFontName.medium, size: Constants.fontLargeTitle)
 var NormalFontMedium = UIFont(name: AppFontName.medium, size: Constants.fontNormalTitle)
@@ -24,6 +32,12 @@ var NormalFontMedium = UIFont(name: AppFontName.medium, size: Constants.fontNorm
 struct Constants{
     static let isPhone = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.phone)
     static let fontSize:CGFloat = isPhone ? 12 :20
+    static let fontxLarge:CGFloat = isPhone ? 16:20
+    static let fontxNormal:CGFloat = isPhone ? 14 :20
+    static let fontxSmall:CGFloat = isPhone ? 12 :20
+    static let fontLargeHeading:CGFloat = isPhone ? 25:20
+    static let fontNormalHeading:CGFloat = isPhone ? 22 :20
+    static let fontSmallHeading:CGFloat = isPhone ? 18 :20
     static let fontLargeTitle:CGFloat = isPhone ? 21:20
     static let fontNormalTitle:CGFloat = isPhone ? 18 :20
     static let fontSmallTitle:CGFloat = isPhone ? 14 :20

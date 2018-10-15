@@ -9,12 +9,11 @@
 import UIKit
 
 class LoginVC: UIViewController {
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
     }
-
-    //HIde status bar
+    
     override var prefersStatusBarHidden: Bool {
         return true
     }
@@ -22,16 +21,19 @@ class LoginVC: UIViewController {
     @IBAction func btnBackActn(_ sender: Any) {
         self.dismiss(animated: true)
     }
+    
     @IBAction func btnSignUpActn(_ sender: Any) {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let vc:SignUpVC = storyboard.instantiateViewController(withIdentifier: "SignUpID") as! SignUpVC
         present(vc, animated: true, completion: nil)
     }
+    
     @IBAction func btnLoginActn(_ sender: Any) {
     }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-
+    
 }

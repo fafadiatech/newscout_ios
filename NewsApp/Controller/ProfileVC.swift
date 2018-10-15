@@ -9,7 +9,7 @@
 import UIKit
 
 class ProfileVC: UIViewController {
-
+    
     @IBOutlet weak var viewImage: UIView!
     @IBOutlet weak var btnImgProfile: UIButton!
     @IBOutlet weak var viewProfileDetails: UIView!
@@ -20,11 +20,10 @@ class ProfileVC: UIViewController {
     @IBOutlet weak var btnSignUp: UIButton!
     @IBOutlet weak var btnForgotPswd: UIButton!
     @IBOutlet weak var btnDeleteAcnt: UIButton!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-       // btnImgProfile.frame = CGRect(x: 160, y: 100, width: 50, height: 50)
         //round border corner of forgot pswd and delete acnt btn
-
         btnForgotPswd.layer.cornerRadius = 15
         btnForgotPswd.layer.borderWidth = 0
         btnDeleteAcnt.layer.cornerRadius = 15
@@ -33,9 +32,8 @@ class ProfileVC: UIViewController {
         btnImgProfile.layer.cornerRadius = 0.5 * btnImgProfile.bounds.size.width
         btnImgProfile.clipsToBounds = true
         btnImgProfile.setImage(UIImage(named:"settings"), for: .normal)
-        // Do any additional setup after loading the view.
     }
-    //HIde status bar
+    
     override var prefersStatusBarHidden: Bool {
         return true
     }
@@ -44,14 +42,13 @@ class ProfileVC: UIViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-
     
     @IBAction func btnForgotPswdActn(_ sender: Any) {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let vc:ForgotPasswordVC = storyboard.instantiateViewController(withIdentifier: "ForgotID") as! ForgotPasswordVC
         present(vc, animated: true, completion: nil)
     }
-
+    
     @IBAction func btnDeleteAcntActn(_ sender: Any) {
     }
     

@@ -9,13 +9,11 @@
 import UIKit
 
 class ForgotPasswordVC: UIViewController {
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
     }
-    //HIde status bar
+   
     override var prefersStatusBarHidden: Bool {
         return true
     }
@@ -26,6 +24,5 @@ class ForgotPasswordVC: UIViewController {
     
     @IBAction func btnSubmitActn(_ sender: Any) {
     }
-   
-
+    
 }
