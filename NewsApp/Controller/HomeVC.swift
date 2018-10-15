@@ -162,12 +162,12 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource{
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "HomeNewsTVCellID", for:indexPath) as! HomeNewsTVCell
-        cell.layer.borderWidth = 1
-        cell.layer.cornerRadius = 10.0
-        //cell.layer.masksToBounds = true
+        let borderColor: UIColor = UIColor.lightGray
+        cell.ViewCellBackground.layer.borderColor = borderColor.cgColor
+        cell.ViewCellBackground.layer.borderWidth = 1
+        cell.ViewCellBackground.layer.cornerRadius = 10.0
          cell.imgNews.layer.cornerRadius = 10.0
         cell.imgNews.clipsToBounds = true
-        //cell.imgNews.layer.cornerRadius = 5
         var currentArticle = ArticleData[0].articles[indexPath.row]
         print(currentArticle)
         //timestamp conversion

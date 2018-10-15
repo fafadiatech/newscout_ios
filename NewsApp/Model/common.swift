@@ -49,7 +49,8 @@ struct Constants{
 
 struct AppFontName {
     static let regular = "HelveticaNeue-Light"
-    static let medium = "HelveticaNeue-Bold"
+    static let bold = "HelveticaNeue-Bold"
+    static let medium = "HelveticaNeue-Medium"
 
 }
 extension UIFont {

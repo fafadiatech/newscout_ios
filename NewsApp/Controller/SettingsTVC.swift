@@ -15,6 +15,7 @@ class SettingsTVC: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         segmentTextSize.selectedSegmentIndex = textSizeSelected
+    segmentTextSize.setTitleTextAttributes([NSAttributedStringKey.foregroundColor: UIColor.black], for: UIControlState.normal)
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
         
@@ -47,10 +48,8 @@ class SettingsTVC: UITableViewController {
     
     override func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
         let headerView = view as! UITableViewHeaderFooterView
-        headerView.textLabel?.textColor = UIColor(red: 151.0/255, green: 193.0/255, blue: 100.0/255, alpha: 1)
-        // let font = UIFont(name: "System", size: 18.0)
-        headerView.textLabel?.font = UIFont.systemFont(ofSize: 20.0, weight: .regular)
-        
+        headerView.textLabel?.textColor = .black
+        headerView.textLabel?.font = NormalFontMedium
     }
     
     override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {

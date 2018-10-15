@@ -23,6 +23,7 @@ class SearchVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         loadSearchAPI()
+        lblTitle.font = LargeFontMedium
         //ArticleData = loadJson(filename: "news")!
         //check whether search or bookmark is selected
         if isSearch == true{
@@ -94,16 +95,16 @@ class SearchVC: UIViewController {
         print(textSizeSelected)
         
         if textSizeSelected == 0{
-            lblTitle.font = smallFontMedium
-            txtSearch.font = smallFont
+            lblTitle.font = NormalFontMedium
+            txtSearch.font = NormalFontMedium
         }
         else if textSizeSelected == 2{
             lblTitle.font = LargeFontMedium
-            txtSearch.font = LargeFont
+            txtSearch.font = LargeFontMedium
         }
         else{
-            lblTitle.font = LargeFont
-            txtSearch.font = LargeFont
+            lblTitle.font = LargeFontMedium
+            txtSearch.font = LargeFontMedium
         }
     }
     
@@ -135,25 +136,21 @@ extension SearchVC: UITableViewDelegate, UITableViewDataSource{
         cell.lblSource.text = currentArticle.source
         cell.lbltimeAgo.text = currentArticle.publishedAt
         cell.lblNewsDescription.text = currentArticle.title
-        cell.lblCategory.text = currentArticle.categories?.first
         cell.imgNews.downloadedFrom(link: "\(currentArticle.urlToImage!)")
         
         if textSizeSelected == 0{
             cell.lblSource.font = smallFont
             cell.lblNewsDescription.font = smallFont
-            cell.lblCategory.font = smallFont
             cell.lbltimeAgo.font = smallFont
         }
         else if textSizeSelected == 2{
             cell.lblSource.font = LargeFont
             cell.lblNewsDescription.font = LargeFont
-            cell.lblCategory.font = LargeFont
             cell.lbltimeAgo.font = LargeFont
         }
         else{
             cell.lblSource.font = NormalFont
             cell.lblNewsDescription.font = NormalFont
-            cell.lblCategory.font = NormalFont
             cell.lbltimeAgo.font = NormalFont
         }
         return cell

@@ -21,7 +21,9 @@ class HomeNewsTVCell: UITableViewCell {
     }
     override func layoutSubviews() {
         super.layoutSubviews()
-        ViewCellBackground.frame = UIEdgeInsetsInsetRect(contentView.frame, UIEdgeInsetsMake(15, 16, 15, 16))
+//        ViewCellBackground.frame = UIEdgeInsetsInsetRect(contentView.frame, UIEdgeInsetsMake(15, 16, 15, 16))
+       
+       
     }
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
