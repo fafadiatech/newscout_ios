@@ -132,6 +132,12 @@ extension SearchVC: UITableViewDelegate, UITableViewDataSource{
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "searchResultID", for:indexPath) as! SearchResultTVCell
+        let borderColor: UIColor = UIColor.lightGray
+        cell.ViewCellBackground.layer.borderColor = borderColor.cgColor
+        cell.ViewCellBackground.layer.borderWidth = 1
+        cell.ViewCellBackground.layer.cornerRadius = 10.0
+        cell.imgNews.layer.cornerRadius = 10.0
+        cell.imgNews.clipsToBounds = true
         let currentArticle = SearchData[0].articles[indexPath.row]
         cell.lblSource.text = currentArticle.source
         cell.lbltimeAgo.text = currentArticle.publishedAt
@@ -139,19 +145,19 @@ extension SearchVC: UITableViewDelegate, UITableViewDataSource{
         cell.imgNews.downloadedFrom(link: "\(currentArticle.urlToImage!)")
         
         if textSizeSelected == 0{
-            cell.lblSource.font = smallFont
-            cell.lblNewsDescription.font = smallFont
-            cell.lbltimeAgo.font = smallFont
+            cell.lblSource.font = xsmallFont
+            cell.lblNewsDescription.font = smallFontMedium
+            cell.lbltimeAgo.font = xsmallFont
         }
         else if textSizeSelected == 2{
-            cell.lblSource.font = LargeFont
-            cell.lblNewsDescription.font = LargeFont
-            cell.lbltimeAgo.font = LargeFont
+            cell.lblSource.font = xLargeFont
+            cell.lblNewsDescription.font = LargeFontMedium
+            cell.lbltimeAgo.font = xLargeFont
         }
         else{
-            cell.lblSource.font = NormalFont
-            cell.lblNewsDescription.font = NormalFont
-            cell.lbltimeAgo.font = NormalFont
+            cell.lblSource.font = xNormalFont
+            cell.lblNewsDescription.font = NormalFontMedium
+            cell.lbltimeAgo.font = xNormalFont
         }
         return cell
     }

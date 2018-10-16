@@ -13,7 +13,6 @@ import Floaty
 class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
     
     var childrenVC = [UIViewController]()
-    
     override func viewDidLoad() {
         settings.style.buttonBarItemsShouldFillAvailiableWidth = false
         super.viewDidLoad()
@@ -92,6 +91,7 @@ extension HomeParentVC:CategoryListProtocol{
     
     func updateCategoryList(catName: String) {
         categories.append(catName)
+        let catObj = CategoryListVC()
         print("ParentCatArr: \(categories)")
         self.reloadPagerTabStripView()
     }
