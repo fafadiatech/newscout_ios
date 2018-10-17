@@ -26,10 +26,11 @@ class NewsDetailVC: UIViewController {
     @IBOutlet weak var viewWebTitle: UIView!
     @IBOutlet weak var ViewWebContainer: UIView!
     @IBOutlet weak var lblWebSource: UILabel!
-   
+    var ShowArticle = [NewsArticle]()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-      // ArticleData = loadJson(filename: "news")!
+        // ArticleData = loadJson(filename: "news")!
         ShowNews(currentIndex: currentIndex)
         ViewWebContainer.isHidden = true
         //swipe gestures
@@ -49,7 +50,7 @@ class NewsDetailVC: UIViewController {
         swipeDown.direction = UISwipeGestureRecognizerDirection.down
         self.newsView.addGestureRecognizer(swipeDown)
     }
-   
+    
     override var prefersStatusBarHidden: Bool {
         return true
     }
@@ -57,7 +58,7 @@ class NewsDetailVC: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         changeFont()
-        }
+    }
     
     //Load data to be displayed from json file
     func loadJson(filename fileName: String) -> [Article]?
@@ -67,20 +68,20 @@ class NewsDetailVC: UIViewController {
                 let data = try Data(contentsOf: url)
                 let decoder = JSONDecoder()
                 let jsonData = try decoder.decode(ArticleStatus.self, from: data)
-    
+                
                 print("jsondata: \(jsonData)")
-    
+                
                 return jsonData.articles
-                } catch {
-                        print("error:\(error)")
-                    }
-                }
+            } catch {
+                print("error:\(error)")
+            }
+        }
         return nil
     }
     
     func changeFont()
     {
-       
+        
         if textSizeSelected == 0{
             lblNewsHeading.font = smallFontMedium
             lblSource.font = smallFont
@@ -120,12 +121,12 @@ class NewsDetailVC: UIViewController {
             case UISwipeGestureRecognizerDirection.down:
                 if currentIndex > 0
                 {
-                currentIndex = currentIndex - 1
-                ShowNews(currentIndex : currentIndex)
-                transition.type = kCATransitionPush
-                transition.subtype = kCATransitionFromBottom
-                view.window!.layer.add(transition, forKey: kCATransition)
-                print("swipe down")
+                    currentIndex = currentIndex - 1
+                    ShowNews(currentIndex : currentIndex)
+                    transition.type = kCATransitionPush
+                    transition.subtype = kCATransitionFromBottom
+                    view.window!.layer.add(transition, forKey: kCATransition)
+                    print("swipe down")
                 }
                 
             case UISwipeGestureRecognizerDirection.left:
@@ -139,15 +140,15 @@ class NewsDetailVC: UIViewController {
                 WKWebView.load(myRequest)
                 
             case UISwipeGestureRecognizerDirection.up:
-                if currentIndex < TotalResultcount
+                if currentIndex < ShowArticle.count
                 {
-                currentIndex = currentIndex + 1
-                
-                ShowNews(currentIndex : currentIndex)
-                transition.type = kCATransitionPush
-                transition.subtype = kCATransitionFromTop
-                view.window!.layer.add(transition, forKey: kCATransition)
-                 print("Swiped up")
+                    currentIndex = currentIndex + 1
+                    
+                    ShowNews(currentIndex : currentIndex)
+                    transition.type = kCATransitionPush
+                    transition.subtype = kCATransitionFromTop
+                    view.window!.layer.add(transition, forKey: kCATransition)
+                    print("Swiped up")
                 }
             default:
                 break
@@ -156,19 +157,33 @@ class NewsDetailVC: UIViewController {
     }
     
     func ShowNews(currentIndex: Int){
-        let currentArticle = ArticleData[0].articles[currentIndex]
+        
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
         dateFormatter.timeZone = NSTimeZone(name: "UTC")! as TimeZone
-        let newDate = dateFormatter.date(from: currentArticle.publishedAt!)
-        print("newDAte:\(newDate!)")
-        let agoDate = timeAgoSinceDate(newDate!)
-        lblNewsHeading.text = currentArticle.title
-        txtViewNewsDesc.text = currentArticle.description
-       lblSource.text = currentArticle.source
         
-        lblTimeAgo.text = agoDate
-        imgNews.downloadedFrom(link: "\(currentArticle.urlToImage!)")
+        if ShowArticle.count != 0{
+            let currentArticle =  ShowArticle[currentIndex]
+            let newDate = dateFormatter.date(from: currentArticle.publishedAt!)
+            print("newDAte:\(newDate!)")
+            let agoDate = timeAgoSinceDate(newDate!)
+            lblNewsHeading.text = currentArticle.title
+            txtViewNewsDesc.text = currentArticle.news_description
+            lblSource.text = currentArticle.source
+            lblTimeAgo.text = agoDate
+            imgNews.downloadedFrom(link: "\(currentArticle.imageURL!)")
+        }
+        else{
+            let currentArticle = ArticleData[0].articles[currentIndex]
+            let newDate = dateFormatter.date(from: currentArticle.publishedAt!)
+            print("newDAte:\(newDate!)")
+            let agoDate = timeAgoSinceDate(newDate!)
+            lblNewsHeading.text = currentArticle.title
+            txtViewNewsDesc.text = currentArticle.description
+            lblSource.text = currentArticle.source
+            lblTimeAgo.text = agoDate
+            imgNews.downloadedFrom(link: "\(currentArticle.urlToImage!)")
+        }
     }
     
     @IBAction func btnLikeActn(_ sender: Any) {
@@ -181,16 +196,16 @@ class NewsDetailVC: UIViewController {
     }
     
     @IBAction func btnBackAction(_ sender: Any) {
-    self.dismiss(animated: false)
+        self.dismiss(animated: false)
     }
     
     @IBAction func btnWebBackAction(_ sender: Any) {
-            ViewWebContainer.isHidden = true
+        ViewWebContainer.isHidden = true
     }
-  
+    
     //btn Back Action
     @IBAction func btnBAckAction(_ sender: Any) {
-          self.dismiss(animated: false)
+        self.dismiss(animated: false)
     }
     
     override func didReceiveMemoryWarning() {
@@ -200,14 +215,14 @@ class NewsDetailVC: UIViewController {
 }
 extension NewsDetailVC:UICollectionViewDelegate, UICollectionViewDataSource{
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return ArticleData[0].articles.count
+        return ShowArticle.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "SuggestedNewsID", for: indexPath) as! SuggestedNewsCVCell
-        let currentArticle = ArticleData[0].articles[indexPath.row]
+        let currentArticle =  ShowArticle[indexPath.row] //ArticleData[0].articles[indexPath.row]
         cell.lblTitle.text = currentArticle.title
-        cell.imgNews.downloadedFrom(link: "\(currentArticle.urlToImage!)")
+        cell.imgNews.downloadedFrom(link: "\(currentArticle.imageURL!)")
         return cell
     }
 }

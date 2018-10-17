@@ -81,16 +81,15 @@ class HomeVC: UIViewController{
     // var ArticleData = [Article]()
     var tabBarTitle: String = ""
     var ShowArticle = [NewsArticle]()
-    let appDelegate =
-        UIApplication.shared.delegate as? AppDelegate
+    let appDelegate = UIApplication.shared.delegate as? AppDelegate
     
     override func viewDidLoad() {
         super.viewDidLoad()
         var paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
         print("\(paths[0])")
         
-        var coredataRecord = IsCoreDAtaEmpty()
-        if coredataRecord != 0{
+        var coredataRecordCount = IsCoreDataEmpty()
+        if coredataRecordCount != 0{
             FetchDataFromDB()
             HomeNewsTV.reloadData()
         }
@@ -116,7 +115,7 @@ class HomeVC: UIViewController{
                         let jsonData = try jsonDecoder.decode(ArticleStatus.self, from: data)
                         ArticleData = [jsonData]
                         TotalResultcount = jsonData.totalResults!
-                        self.SaveData()
+                        self.SaveDataDB()
                         self.FetchDataFromDB()
                         self.HomeNewsTV.reloadData()
                     }
@@ -129,7 +128,7 @@ class HomeVC: UIViewController{
         
     }
     
-    func IsCoreDAtaEmpty() -> Int
+    func IsCoreDataEmpty() -> Int
     {
         let managedContext =
             appDelegate?.persistentContainer.viewContext
@@ -142,24 +141,6 @@ class HomeVC: UIViewController{
             print("error executing fetch request: \(error)")
         }
         return records.count
-    }
-    
-    func FetchDataFromDB()
-    {
-        let managedContext =
-            appDelegate?.persistentContainer.viewContext
-        let fetchRequest =
-            NSFetchRequest<NewsArticle>(entityName: "NewsArticle")
-        do {
-            ShowArticle = try (managedContext?.fetch(fetchRequest))!
-            print(ShowArticle.count)
-        } catch let error as NSError {
-            print("Could not fetch. \(error), \(error.userInfo)")
-        }
-    }
-    
-    override var prefersStatusBarHidden: Bool {
-        return true
     }
     
     //check for existing entry in DB
@@ -186,7 +167,7 @@ class HomeVC: UIViewController{
     }
     
     //save articles in DB
-    func SaveData()
+    func SaveDataDB()
     {
         let managedContext =
             appDelegate?.persistentContainer.viewContext
@@ -216,6 +197,21 @@ class HomeVC: UIViewController{
             }
         }
     }
+    
+    func FetchDataFromDB()
+    {
+        let managedContext =
+            appDelegate?.persistentContainer.viewContext
+        let fetchRequest =
+            NSFetchRequest<NewsArticle>(entityName: "NewsArticle")
+        do {
+            ShowArticle = try (managedContext?.fetch(fetchRequest))!
+            print(ShowArticle.count)
+        } catch let error as NSError {
+            print("Could not fetch. \(error), \(error.userInfo)")
+        }
+    }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -231,10 +227,11 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource{
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         print("This cell  was selected: \(indexPath.row)")
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        let vc:NewsDetailVC = storyboard.instantiateViewController(withIdentifier: "NewsDetailID") as! NewsDetailVC
+        let newsDetailvc:NewsDetailVC = storyboard.instantiateViewController(withIdentifier: "NewsDetailID") as! NewsDetailVC
         currentIndex = indexPath.row
+        newsDetailvc.ShowArticle = ShowArticle
         print("currentIndex: \(currentIndex)")
-        present(vc, animated: true, completion: nil)
+        present(newsDetailvc, animated: true, completion: nil)
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {

@@ -30,7 +30,7 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
             self.present(searchvc, animated: true, completion: nil)
         }
         floaty.addItem("Search", icon: UIImage(named: "search")!) { item in
-            
+            isSearch = true
             floaty.autoCloseOnTap = true
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             let searchvc:SearchVC = storyboard.instantiateViewController(withIdentifier: "SearchID") as! SearchVC
@@ -47,6 +47,7 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
         
         floaty.addItem("Bookmark", icon: UIImage(named: "bookmark")!) { item in
             floaty.autoCloseOnTap = true
+            isSearch = false
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             let settingvc:SearchVC = storyboard.instantiateViewController(withIdentifier: "SearchID") as! SearchVC
             self.present(settingvc, animated: true, completion: nil)

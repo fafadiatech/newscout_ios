@@ -8,6 +8,7 @@
 
 import UIKit
 import Alamofire
+import CoreData
 
 class SearchVC: UIViewController {
     @IBOutlet weak var searchResultTV: UITableView!
@@ -19,6 +20,8 @@ class SearchVC: UIViewController {
     var ArticleData = [Article]()
     var count = 0
     var SearchData = [ArticleStatus]()
+    var results: [NewsArticle] = []
+    let appDelegate = UIApplication.shared.delegate as? AppDelegate
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -40,28 +43,10 @@ class SearchVC: UIViewController {
         super.viewWillAppear(animated)
         changeFont()
         searchResultTV.reloadData() //for tableview
-        
     }
     
     override var prefersStatusBarHidden: Bool {
         return true
-    }
-    
-    //Load data to be displayed from json file
-    func loadJson(filename fileName: String) -> [Article]?
-    {
-        if let url = Bundle.main.url(forResource: fileName, withExtension: "json") {
-            do {
-                let data = try Data(contentsOf: url)
-                let decoder = JSONDecoder()
-                let jsonData = try decoder.decode(ArticleStatus.self, from: data)
-                // print("jsondata: \(jsonData)")
-                return jsonData.articles
-            } catch {
-                print("error:\(error)")
-            }
-        }
-        return nil
     }
     
     func loadSearchAPI()
@@ -117,9 +102,10 @@ class SearchVC: UIViewController {
         // Dispose of any resources that can be recreated.
     }
 }
+
 extension SearchVC: UITableViewDelegate, UITableViewDataSource{
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return count
+        return results.count
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -138,11 +124,11 @@ extension SearchVC: UITableViewDelegate, UITableViewDataSource{
         cell.ViewCellBackground.layer.cornerRadius = 10.0
         cell.imgNews.layer.cornerRadius = 10.0
         cell.imgNews.clipsToBounds = true
-        let currentArticle = SearchData[0].articles[indexPath.row]
+        let currentArticle = results[indexPath.row]
         cell.lblSource.text = currentArticle.source
         cell.lbltimeAgo.text = currentArticle.publishedAt
         cell.lblNewsDescription.text = currentArticle.title
-        cell.imgNews.downloadedFrom(link: "\(currentArticle.urlToImage!)")
+        cell.imgNews.downloadedFrom(link: "\(currentArticle.imageURL!)")
         
         if textSizeSelected == 0{
             cell.lblSource.font = xsmallFont
@@ -160,5 +146,27 @@ extension SearchVC: UITableViewDelegate, UITableViewDataSource{
             cell.lbltimeAgo.font = xNormalFont
         }
         return cell
+    }
+}
+
+extension SearchVC: UITextFieldDelegate
+{
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool
+    {
+        txtSearch.resignFirstResponder()
+        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "NewsArticle")
+        fetchRequest.predicate = NSPredicate(format: "title CONTAINS[c] %@ OR news_description CONTAINS[c] %@",txtSearch.text!, txtSearch.text!)
+        let managedContext =
+            appDelegate?.persistentContainer.viewContext
+        do {
+            results = (try managedContext?.fetch(fetchRequest))! as! [NewsArticle]
+            print("result.count: \(results.count)")
+            print ("results val: \(results)")
+            searchResultTV.reloadData()
+        }
+        catch {
+            print("error executing fetch request: \(error)")
+        }
+        return true
     }
 }
