@@ -1,24 +1,44 @@
 PODS:
   - Alamofire (4.7.2)
   - Floaty (4.0.1)
+  - MaterialComponents/ActivityIndicator (59.0.0):
+    - MaterialComponents/Palettes
+    - MaterialComponents/private/Application
+    - MDFInternationalization
+    - MotionAnimator (~> 2.0)
+  - MaterialComponents/Palettes (59.0.0)
+  - MaterialComponents/private/Application (59.0.0)
+  - MDFInternationalization (1.0.4)
+  - MotionAnimator (2.8.1):
+    - MotionInterchange (~> 1.6)
+  - MotionInterchange (1.6.0)
   - XLPagerTabStrip (8.0.1)
 
 DEPENDENCIES:
   - Alamofire
   - Floaty
+  - MaterialComponents/ActivityIndicator
   - XLPagerTabStrip
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
     - Alamofire
     - Floaty
+    - MaterialComponents
+    - MDFInternationalization
+    - MotionAnimator
+    - MotionInterchange
     - XLPagerTabStrip
 
 SPEC CHECKSUMS:
   Alamofire: e4fa87002c137ba2d8d634d2c51fabcda0d5c223
   Floaty: 82854e1a5ef4fa208281ebd4da2f3d1e51ba67a6
+  MaterialComponents: 3607dd0e952af5c0254798758b6944712465243f
+  MDFInternationalization: e355b0cebecf53d60233bd267084e49366c82513
+  MotionAnimator: ee16aa30567c5bae0fb2750c132915829cfaaf8a
+  MotionInterchange: ead0e3ae1f3a5fb539e289debbc7ae036160a10d
   XLPagerTabStrip: c908b17cbf42fcd2598ee1adfc49bae25444d88a
 
-PODFILE CHECKSUM: b72925d249321fa2f146e86fa4a96a54bdd3b9f2
+PODFILE CHECKSUM: 357cabb12621a79c834a8e2883855da75097f859
 
-COCOAPODS: 1.5.2
+COCOAPODS: 1.5.3

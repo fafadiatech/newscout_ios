@@ -9,6 +9,7 @@
 import UIKit
 import XLPagerTabStrip
 import Floaty
+import MaterialComponents.MaterialActivityIndicator
 
 class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
     

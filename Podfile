@@ -10,6 +10,7 @@ target 'NewsApp' do
 	pod 'Alamofire'
 	pod "Floaty"
     pod 'XLPagerTabStrip'
+    pod 'MaterialComponents/ActivityIndicator'
   target 'NewsAppTests' do
     inherit! :search_paths
     # Pods for testing

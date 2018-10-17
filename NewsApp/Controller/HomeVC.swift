@@ -249,7 +249,7 @@ class HomeVC: UIViewController{
             NSFetchRequest<NewsArticle>(entityName: "NewsArticle")
         let newArticle = NewsArticle(context: managedContext!)
         let name = "Indian Religion"
-        fetchRequest.predicate = NSPredicate(format: "categories.cat_id CONTAINS[C] %@", name)
+        fetchRequest.predicate = NSPredicate(format: "categories.title CONTAINS[C] %@", name)
         do {
             categoryResults = try (managedContext?.fetch(fetchRequest))!
             print(categoryResults)
