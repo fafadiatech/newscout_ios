@@ -81,14 +81,15 @@ class HomeVC: UIViewController{
     // var ArticleData = [Article]()
     var tabBarTitle: String = ""
     var ShowArticle = [NewsArticle]()
+    var categoryResults = [NewsArticle]()
+    var isCAt = 0
     let appDelegate = UIApplication.shared.delegate as? AppDelegate
     
     override func viewDidLoad() {
         super.viewDidLoad()
         var paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
         print("\(paths[0])")
-        
-        var coredataRecordCount = IsCoreDataEmpty()
+        let coredataRecordCount = IsCoreDataEmpty()
         if coredataRecordCount != 0{
             FetchDataFromDB()
             HomeNewsTV.reloadData()
@@ -104,7 +105,7 @@ class HomeVC: UIViewController{
     
     func loadNewsAPI()
     {
-        let url = "https://api.myjson.com/bins/pmyq0" //"https://api.myjson.com/bins/q2kdg"
+        let url = "https://api.myjson.com/bins/10kz4w" //"https://api.myjson.com/bins/q2kdg"
         
         Alamofire.request(url,method: .get).responseJSON{
             response in
@@ -118,6 +119,7 @@ class HomeVC: UIViewController{
                         self.SaveDataDB()
                         self.FetchDataFromDB()
                         self.HomeNewsTV.reloadData()
+                        self.FetchCategoryArticles()
                     }
                     catch {
                         print("Error: \(error)")
@@ -132,7 +134,7 @@ class HomeVC: UIViewController{
     {
         let managedContext =
             appDelegate?.persistentContainer.viewContext
-        var fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "NewsArticle")
+        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "NewsArticle")
         var records = [NewsArticle]()
         do {
             records = (try managedContext?.fetch(fetchRequest)) as! [NewsArticle]
@@ -145,7 +147,7 @@ class HomeVC: UIViewController{
     
     //check for existing entry in DB
     func someEntityExists(title: String) -> Bool {
-        var fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "NewsArticle")
+        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "NewsArticle")
         fetchRequest.predicate = NSPredicate(format: "title = %@",title)
         
         let managedContext =
@@ -177,7 +179,7 @@ class HomeVC: UIViewController{
             for news in ArticleData[0].articles{
                 if  someEntityExists(title: news.title!) == false
                 {
-                    var newArticle = NewsArticle(context: managedContext!)
+                    let newArticle = NewsArticle(context: managedContext!)
                     newArticle.title = news.title
                     newArticle.source = news.source
                     newArticle.news_description = news.description
@@ -186,6 +188,31 @@ class HomeVC: UIViewController{
                     newArticle.publishedAt = news.publishedAt
                     newArticle.isBookmarked = false
                     newArticle.isLiked = false
+                    for category in news.categories!
+                    {
+                        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "Category")
+                        fetchRequest.predicate = NSPredicate(format: "title = %@",category)
+                        
+                        let managedContext =
+                            appDelegate?.persistentContainer.viewContext
+                        var results: [Category] = []
+                        
+                        do {
+                            results = (try managedContext?.fetch(fetchRequest))! as! [Category]
+                            
+                        }
+                        catch {
+                            print("error executing fetch request: \(error)")
+                        }
+                        if results.count == 0
+                        {
+                            let newCategory = Category(context: managedContext!)
+                            newCategory.title = category
+                            newArticle.addToCategories(newCategory)
+                        }
+                    }
+                    print(news.categories)
+                    
                     do {
                         try managedContext?.save()
                         print("successfully saved ..")
@@ -204,9 +231,29 @@ class HomeVC: UIViewController{
             appDelegate?.persistentContainer.viewContext
         let fetchRequest =
             NSFetchRequest<NewsArticle>(entityName: "NewsArticle")
+        var newArticle = NewsArticle(context: managedContext!)
         do {
             ShowArticle = try (managedContext?.fetch(fetchRequest))!
             print(ShowArticle.count)
+        } catch let error as NSError {
+            print("Could not fetch. \(error), \(error.userInfo)")
+        }
+        //categorie as! [Category]
+        FetchCategoryArticles()
+    }
+    func FetchCategoryArticles()
+    {
+        let managedContext =
+            appDelegate?.persistentContainer.viewContext
+        let fetchRequest =
+            NSFetchRequest<NewsArticle>(entityName: "NewsArticle")
+        let newArticle = NewsArticle(context: managedContext!)
+        let name = "Indian Religion"
+        fetchRequest.predicate = NSPredicate(format: "categories.cat_id CONTAINS[C] %@", name)
+        do {
+            categoryResults = try (managedContext?.fetch(fetchRequest))!
+            print(categoryResults)
+            print(categoryResults.count)
         } catch let error as NSError {
             print("Could not fetch. \(error), \(error.userInfo)")
         }
@@ -220,8 +267,8 @@ class HomeVC: UIViewController{
 
 extension HomeVC: UITableViewDelegate, UITableViewDataSource{
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // return TotalResultcount
-        return ShowArticle.count
+        // return ShowArticle.count
+        return categoryResults.count
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -247,28 +294,36 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource{
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
         dateFormatter.timeZone = NSTimeZone(name: "UTC")! as TimeZone
-        if ShowArticle.count == 0{
-            //display data using API call
-            let currentArticle = ArticleData[0].articles[indexPath.row]
-            print(currentArticle)
-            let newDate = dateFormatter.date(from: currentArticle.publishedAt!)
-            print("newDAte:\(newDate!)")
-            let agoDate = timeAgoSinceDate(newDate!)
-            cell.lblNewsHeading.text = currentArticle.title
-            cell.lblSource.text = currentArticle.source
-            cell.lblTimesAgo.text = agoDate
-            cell.imgNews.downloadedFrom(link: "\(currentArticle.urlToImage!)")
-        }
-        else{
-            //display data using coredata
-            cell.lblNewsHeading.text = ShowArticle[indexPath.row].title
-            cell.lblSource.text = ShowArticle[indexPath.row].source
-            let newDate = dateFormatter.date(from: ShowArticle[indexPath.row].publishedAt!)
-            print("newDAte:\(newDate!)")
-            let agoDate = timeAgoSinceDate(newDate!)
-            cell.lblTimesAgo.text = agoDate
-            cell.imgNews.downloadedFrom(link: "\(ShowArticle[indexPath.row].imageURL!)")
-        }
+        /* if ShowArticle.count == 0{
+         //display data using API call
+         let currentArticle = ArticleData[0].articles[indexPath.row]
+         print(currentArticle)
+         let newDate = dateFormatter.date(from: currentArticle.publishedAt!)
+         print("newDAte:\(newDate!)")
+         let agoDate = timeAgoSinceDate(newDate!)
+         cell.lblNewsHeading.text = currentArticle.title
+         cell.lblSource.text = currentArticle.source
+         cell.lblTimesAgo.text = agoDate
+         cell.imgNews.downloadedFrom(link: "\(currentArticle.urlToImage!)")
+         }
+         else{
+         //display data using coredata
+         cell.lblNewsHeading.text = ShowArticle[indexPath.row].title
+         cell.lblSource.text = ShowArticle[indexPath.row].source
+         let newDate = dateFormatter.date(from: ShowArticle[indexPath.row].publishedAt!)
+         print("newDAte:\(newDate!)")
+         let agoDate = timeAgoSinceDate(newDate!)
+         cell.lblTimesAgo.text = agoDate
+         cell.imgNews.downloadedFrom(link: "\(ShowArticle[indexPath.row].imageURL!)")
+         }*/
+        //show data of mentioned category
+        cell.lblNewsHeading.text = categoryResults[indexPath.row].title
+        cell.lblSource.text = categoryResults[indexPath.row].source
+        let newDate = dateFormatter.date(from: categoryResults[indexPath.row].publishedAt!)
+        print("newDAte:\(newDate!)")
+        let agoDate = timeAgoSinceDate(newDate!)
+        cell.lblTimesAgo.text = agoDate
+        cell.imgNews.downloadedFrom(link: "\(categoryResults[indexPath.row].imageURL!)")
         if textSizeSelected == 0{
             cell.lblSource.font = xsmallFont
             cell.lblNewsHeading.font = smallFontMedium

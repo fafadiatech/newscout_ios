@@ -16,7 +16,6 @@ struct ArticleStatus : Decodable
 
 struct Article: Decodable
 {
-    let topics: [String]?
     let categories: [String]?
     let source: String?
     let author: String?

@@ -18,7 +18,7 @@ class CategoryListVC: UIViewController {
     
     @IBOutlet weak var tableCategoryLIst: UITableView!
     var protocolObj : CategoryListProtocol?
-    var catArr = ["ALL NEWS", "TRENDING", "TOP STORIES","NEWS", "TECHNOLOGY", "SPORTS", "POLITICS", "BUSINESS", "CELEBRITY", "NEWS", "INDIAN PARLIAMENT", "INDIAN RELIGION"]
+    var catArr = ["ALL NEWS", "TRENDING", "TOP STORIES","NEWS", "TECHNOLOGY", "SPORTS", "POLITICS", "BUSINESS", "CELEBRITY", "INDIAN PARLIAMENT", "INDIAN RELIGION"]
     
     override func viewDidLoad() {
         super.viewDidLoad()

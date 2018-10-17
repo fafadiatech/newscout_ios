@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="14315.18" systemVersion="18A391" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="Category" representedClassName="Category" syncable="YES" codeGenerationType="class">
+        <attribute name="cat_id" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="newsArticle" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="NewsArticle" inverseName="categories" inverseEntity="NewsArticle" syncable="YES"/>
+    </entity>
     <entity name="NewsArticle" representedClassName="NewsArticle" syncable="YES" codeGenerationType="class">
         <attribute name="imageURL" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="isBookmarked" optional="YES" attributeType="Boolean" usesScalarValueType="YES" syncable="YES"/>
@@ -9,8 +14,10 @@
         <attribute name="source" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="url" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="categories" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Category" inverseName="newsArticle" inverseEntity="Category" syncable="YES"/>
     </entity>
     <elements>
-        <element name="NewsArticle" positionX="-63" positionY="-18" width="128" height="165"/>
+        <element name="Category" positionX="-63" positionY="45" width="128" height="88"/>
+        <element name="NewsArticle" positionX="407.63671875" positionY="-45.1953125" width="128" height="178"/>
     </elements>
 </model>
