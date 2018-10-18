@@ -87,6 +87,7 @@ class HomeVC: UIViewController{
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         var paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
         print("\(paths[0])")
         let coredataRecordCount = IsCoreDataEmpty()

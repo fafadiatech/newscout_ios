@@ -193,6 +193,13 @@ class NewsDetailVC: UIViewController {
     }
     
     @IBAction func btnShareActn(_ sender: Any) {
+        let text = ArticleData[0].articles[currentIndex].title
+        let myUrl = NSURL(string:ArticleData[0].articles[currentIndex].url!)
+        let shareAll = [text ,myUrl] as [Any]
+        let activityViewController = UIActivityViewController(activityItems: shareAll, applicationActivities: nil)
+        activityViewController.popoverPresentationController?.sourceView = self.view
+        self.present(activityViewController, animated: true, completion: nil)
+        
     }
     
     @IBAction func btnBackAction(_ sender: Any) {

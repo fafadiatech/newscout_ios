@@ -8,7 +8,7 @@
 
 import UIKit
 import XLPagerTabStrip
-
+import MaterialComponents.MaterialActivityIndicator
 protocol CategoryListProtocol {
     func updateCategoryList(catName: String)
     func deleteCategory(currentCategory: String)

@@ -17,6 +17,20 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
     override func viewDidLoad() {
         settings.style.buttonBarItemsShouldFillAvailiableWidth = false
         super.viewDidLoad()
+        let activityIndicator = MDCActivityIndicator()
+       activityIndicator.cycleColors = [.blue]
+        activityIndicator.frame = CGRect(x: 166, y: 150, width: 40, height: 40)
+        activityIndicator.sizeToFit()
+        activityIndicator.indicatorMode = .indeterminate
+        activityIndicator.progress = 2.0
+        view.addSubview(activityIndicator)
+        
+        // To make the activity indicator appear:
+        activityIndicator.startAnimating()
+      
+        // To make the activity indicator disappear:
+       // activityIndicator.stopAnimating()
+        
         let floaty = Floaty()
         floaty.itemTitleColor = .blue
         floaty.buttonColor = commonColor
@@ -67,11 +81,13 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
         super.viewWillAppear(animated)
     }
    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+    }
     override func viewControllers(for pagerTabStripController: PagerTabStripViewController) -> [UIViewController] {
         
         //Clear children viewcontrollers
         childrenVC.removeAll()
-        
         //Create children viewcontrolles based on categories passed from CategoryListVC
         for cat in categories
         {
@@ -84,9 +100,9 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
         let childMore = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "CategoryListID") as! CategoryListVC
         childMore.protocolObj = self
         childrenVC.append(childMore)
-        
         return childrenVC
     }
+   
 }
 
 extension HomeParentVC:CategoryListProtocol{
