@@ -7,22 +7,52 @@
 //
 
 import Foundation
+
 struct ArticleStatus : Decodable
 {
-    let status : String
-    let totalResults : Int?
     let articles : [Article]
 }
 
 struct Article: Decodable
 {
-    let categories: [String]?
-    let source: String?
-    let author: String?
+    //let categories: [String]?
+    let article_id : Int64?
+    let category_id : Int64?
+    let subCategory_id: Int64?
+    let source_id: Int64?
     let description : String?
     let title : String?
-    let urlToImage : String?
+    let imageURL : String?
     let url : String?
-    let publishedAt : String?
-    let isBookmarked : Bool?
+    let published_on : String?
+    let blurb : String?
+    
+    enum CodingKeys: String, CodingKey{
+        case article_id = "id"
+        case category_id = "category"
+        case source_id = "source"
+        case imageURL = "cover_image"
+        case url = "source_url"
+        case subCategory_id = "sub_category"
+        case description
+        case title
+        case published_on
+        case blurb
+    }
+}
+
+struct CategoryList: Decodable
+{
+    let category : [CategoryDetails]
+}
+
+struct CategoryDetails : Decodable
+{
+    let cat_id: Int64?
+    let name: String?
+    
+    enum CodingKeys: String, CodingKey{
+        case cat_id = "id"
+        case name
+    }
 }

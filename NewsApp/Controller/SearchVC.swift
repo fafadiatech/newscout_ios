@@ -60,7 +60,7 @@ class SearchVC: UIViewController {
                     do {
                         let jsonData = try jsonDecoder.decode(ArticleStatus.self, from: data)
                         self.SearchData = [jsonData]
-                        self.count = jsonData.totalResults!                        //self.ArticleData = try [jsonDecodeç.decode(ArticleStatus.self, from: data)]
+                        self.count = self.SearchData.count                      //self.ArticleData = try [jsonDecodeç.decode(ArticleStatus.self, from: data)]
                         // print("self.AData: \(self.ArticleData)")
                         // print("self.AData: \(self.ArticleData.count)")
                         self.searchResultTV.reloadData()
@@ -125,8 +125,8 @@ extension SearchVC: UITableViewDelegate, UITableViewDataSource{
         cell.imgNews.layer.cornerRadius = 10.0
         cell.imgNews.clipsToBounds = true
         let currentArticle = results[indexPath.row]
-        cell.lblSource.text = currentArticle.source
-        cell.lbltimeAgo.text = currentArticle.publishedAt
+       // cell.lblSource.text = currentArticle.source_id
+        cell.lbltimeAgo.text = currentArticle.published_on
         cell.lblNewsDescription.text = currentArticle.title
         cell.imgNews.downloadedFrom(link: "\(currentArticle.imageURL!)")
         

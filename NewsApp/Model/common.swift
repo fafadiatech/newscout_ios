@@ -10,7 +10,7 @@ import XLPagerTabStrip
 
 var isCategoryAdded = 0
 var textSizeSelected = 1
-var currentIndex = 0
+var newsCurrentIndex = 0
 var TotalResultcount = 0
   var categories = ["FOR YOU"]
 var obj = HomeParentVC()
@@ -29,7 +29,9 @@ var NormalFontHeading = UIFont(name: AppFontName.regular, size: Constants.fontNo
 var smallFontMedium = UIFont(name: AppFontName.medium, size: Constants.fontSmallTitle)
 var LargeFontMedium = UIFont(name: AppFontName.medium, size: Constants.fontLargeTitle)
 var NormalFontMedium = UIFont(name: AppFontName.medium, size: Constants.fontNormalTitle)
-
+var xsmallFontMedium = UIFont(name: AppFontName.medium, size: Constants.fontxSmall)
+var xLargeFontMedium = UIFont(name: AppFontName.medium, size: Constants.fontxLarge)
+var xNormalFontMedium = UIFont(name: AppFontName.medium, size: Constants.fontxNormal)
 struct Constants{
     static let isPhone = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.phone)
     static let fontSize:CGFloat = isPhone ? 12 :20

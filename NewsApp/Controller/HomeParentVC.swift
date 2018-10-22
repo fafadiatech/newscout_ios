@@ -14,11 +14,12 @@ import MaterialComponents.MaterialActivityIndicator
 class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
     
     var childrenVC = [UIViewController]()
+    let activityIndicator = MDCActivityIndicator()
+    var VCIndex = 0
     override func viewDidLoad() {
         settings.style.buttonBarItemsShouldFillAvailiableWidth = false
         super.viewDidLoad()
-        let activityIndicator = MDCActivityIndicator()
-       activityIndicator.cycleColors = [.blue]
+        activityIndicator.cycleColors = [.blue]
         activityIndicator.frame = CGRect(x: 166, y: 150, width: 40, height: 40)
         activityIndicator.sizeToFit()
         activityIndicator.indicatorMode = .indeterminate
@@ -26,7 +27,7 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
         view.addSubview(activityIndicator)
         
         // To make the activity indicator appear:
-        activityIndicator.startAnimating()
+        //activityIndicator.startAnimating()
       
         // To make the activity indicator disappear:
        // activityIndicator.stopAnimating()
@@ -102,14 +103,26 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
         childrenVC.append(childMore)
         return childrenVC
     }
-   
+    
+    override func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
+        super.scrollViewDidEndScrollingAnimation(scrollView)
+        notifyChildOfPresentation(in: scrollView) //only triggered when the segmented control is tapped
+    }
+    
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        notifyChildOfPresentation(in: scrollView) //only triggered by a pan gesture transition
+    }
+    
+    func notifyChildOfPresentation(in scrollView: UIScrollView?) {
+        let presentedViewController = viewControllers[currentIndex]
+        print("tab changed..\(currentIndex)")
+    }
 }
 
 extension HomeParentVC:CategoryListProtocol{
     
     func updateCategoryList(catName: String) {
         categories.append(catName)
-        let catObj = CategoryListVC()
         print("ParentCatArr: \(categories)")
         self.reloadPagerTabStripView()
     }

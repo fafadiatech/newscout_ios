@@ -11,7 +11,7 @@ import Floaty
 import XLPagerTabStrip
 import Alamofire
 import CoreData
-
+import MaterialComponents.MaterialActivityIndicator
 //for conversion of timestamp
 func timeAgoSinceDate(_ date:Date, numericDates:Bool = false) -> String {
     let calendar = NSCalendar.current
@@ -77,17 +77,34 @@ func timeAgoSinceDate(_ date:Date, numericDates:Bool = false) -> String {
 }
 
 class HomeVC: UIViewController{
+    
     @IBOutlet weak var HomeNewsTV: UITableView!
     // var ArticleData = [Article]()
     var tabBarTitle: String = ""
     var ShowArticle = [NewsArticle]()
+   
     var categoryResults = [NewsArticle]()
     var isCAt = 0
+    var VCIndex = 0
     let appDelegate = UIApplication.shared.delegate as? AppDelegate
-    
+     let activityIndicator = MDCActivityIndicator()
     override func viewDidLoad() {
         super.viewDidLoad()
+     
+        activityIndicator.cycleColors = [.blue]
+        activityIndicator.frame = CGRect(x: 166, y: 150, width: 40, height: 40)
+        activityIndicator.sizeToFit()
+        activityIndicator.indicatorMode = .indeterminate
+        activityIndicator.progress = 2.0
+        view.addSubview(activityIndicator)
         
+        // To make the activity indicator appear:
+        activityIndicator.startAnimating()
+        
+        // To make the activity indicator disappear:
+        // activityIndicator.stopAnimating()
+        
+       // loadCategoriesAPI()
         var paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
         print("\(paths[0])")
         let coredataRecordCount = IsCoreDataEmpty()
@@ -102,11 +119,12 @@ class HomeVC: UIViewController{
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        HomeNewsTV.reloadData()
     }
     
     func loadNewsAPI()
     {
-        let url = "https://api.myjson.com/bins/10kz4w" //"https://api.myjson.com/bins/q2kdg"
+        let url = "http://192.168.2.204:8000/api/v1/articles"  //"https://api.myjson.com/bins/10kz4w"
         
         Alamofire.request(url,method: .get).responseJSON{
             response in
@@ -115,12 +133,13 @@ class HomeVC: UIViewController{
                     let jsonDecoder = JSONDecoder()
                     do {
                         let jsonData = try jsonDecoder.decode(ArticleStatus.self, from: data)
+                        print("jsonData: \(jsonData)")
                         ArticleData = [jsonData]
-                        TotalResultcount = jsonData.totalResults!
-                        self.SaveDataDB()
-                        self.FetchDataFromDB()
+                        TotalResultcount = ArticleData[0].articles.count
+                      //  self.SaveDataDB()
+                       // self.FetchDataFromDB()
                         self.HomeNewsTV.reloadData()
-                        self.FetchCategoryArticles()
+                       // self.FetchCategoryArticles()
                     }
                     catch {
                         print("Error: \(error)")
@@ -130,7 +149,28 @@ class HomeVC: UIViewController{
         }
         
     }
+    func loadCategoriesAPI()
+    {
+        let url = "https://api.myjson.com/bins/tuh9w"
+        
+        Alamofire.request(url,method: .get).responseJSON{
+            response in
+            if(response.result.isSuccess){
+                if let data = response.data {
+                    let jsonDecoder = JSONDecoder()
+                    do {
+                        let jsonData = try jsonDecoder.decode(CategoryList.self, from: data)
+                        print(jsonData)
     
+                    }
+                    catch {
+                        print("Error: \(error)")
+                    }
+                }
+            }
+        }
+        
+    }
     func IsCoreDataEmpty() -> Int
     {
         let managedContext =
@@ -182,45 +222,11 @@ class HomeVC: UIViewController{
                 {
                     let newArticle = NewsArticle(context: managedContext!)
                     newArticle.title = news.title
-                    newArticle.source = news.source
-                    newArticle.news_description = news.description
-                    newArticle.imageURL = news.urlToImage
-                    newArticle.url = news.url
-                    newArticle.publishedAt = news.publishedAt
-                    newArticle.isBookmarked = false
-                    newArticle.isLiked = false
-                    for category in news.categories!
-                    {
-                        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "Category")
-                        fetchRequest.predicate = NSPredicate(format: "title = %@",category)
-                        
-                        let managedContext =
-                            appDelegate?.persistentContainer.viewContext
-                        var results: [Category] = []
-                        
-                        do {
-                            results = (try managedContext?.fetch(fetchRequest))! as! [Category]
-                            
-                        }
-                        catch {
-                            print("error executing fetch request: \(error)")
-                        }
-                        if results.count == 0
-                        {
-                            let newCategory = Category(context: managedContext!)
-                            newCategory.title = category
-                            newArticle.addToCategories(newCategory)
-                        }
-                    }
-                    print(news.categories)
-                    
-                    do {
-                        try managedContext?.save()
-                        print("successfully saved ..")
-                        
-                    } catch let error as NSError  {
-                        print("Could not save \(error)")
-                    }
+                   // newArticle.source = news.source_id
+                   // newArticle.news_description = news.description
+                    newArticle.imageURL = news.imageURL
+                    newArticle.source_url = news.url
+                    newArticle.published_on = news.published_on
                 }
             }
         }
@@ -232,15 +238,14 @@ class HomeVC: UIViewController{
             appDelegate?.persistentContainer.viewContext
         let fetchRequest =
             NSFetchRequest<NewsArticle>(entityName: "NewsArticle")
-        var newArticle = NewsArticle(context: managedContext!)
+       // var newArticle = NewsArticle(context: managedContext!)
         do {
             ShowArticle = try (managedContext?.fetch(fetchRequest))!
             print(ShowArticle.count)
         } catch let error as NSError {
             print("Could not fetch. \(error), \(error.userInfo)")
         }
-        //categorie as! [Category]
-        FetchCategoryArticles()
+       // FetchCategoryArticles()
     }
     func FetchCategoryArticles()
     {
@@ -248,7 +253,7 @@ class HomeVC: UIViewController{
             appDelegate?.persistentContainer.viewContext
         let fetchRequest =
             NSFetchRequest<NewsArticle>(entityName: "NewsArticle")
-        let newArticle = NewsArticle(context: managedContext!)
+       // let newArticle = NewsArticle(context: managedContext!)
         let name = "Indian Religion"
         fetchRequest.predicate = NSPredicate(format: "categories.title CONTAINS[C] %@", name)
         do {
@@ -259,7 +264,7 @@ class HomeVC: UIViewController{
             print("Could not fetch. \(error), \(error.userInfo)")
         }
     }
-    
+
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -268,17 +273,17 @@ class HomeVC: UIViewController{
 
 extension HomeVC: UITableViewDelegate, UITableViewDataSource{
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // return ShowArticle.count
-        return categoryResults.count
+         return TotalResultcount
+        //return categoryResults.count
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         print("This cell  was selected: \(indexPath.row)")
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let newsDetailvc:NewsDetailVC = storyboard.instantiateViewController(withIdentifier: "NewsDetailID") as! NewsDetailVC
-        currentIndex = indexPath.row
+        newsCurrentIndex = indexPath.row
         newsDetailvc.ShowArticle = ShowArticle
-        print("currentIndex: \(currentIndex)")
+        print("currentIndex: \(newsCurrentIndex)")
         present(newsDetailvc, animated: true, completion: nil)
     }
     
@@ -291,40 +296,39 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource{
         cell.ViewCellBackground.layer.cornerRadius = 10.0
         cell.imgNews.layer.cornerRadius = 10.0
         cell.imgNews.clipsToBounds = true
+       
         //timestamp conversion
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
         dateFormatter.timeZone = NSTimeZone(name: "UTC")! as TimeZone
-        /* if ShowArticle.count == 0{
+         if ShowArticle.count == 0{
          //display data using API call
          let currentArticle = ArticleData[0].articles[indexPath.row]
          print(currentArticle)
-         let newDate = dateFormatter.date(from: currentArticle.publishedAt!)
-         print("newDAte:\(newDate!)")
+            let newDate = dateFormatter.date(from: currentArticle.published_on!)
          let agoDate = timeAgoSinceDate(newDate!)
          cell.lblNewsHeading.text = currentArticle.title
-         cell.lblSource.text = currentArticle.source
+        //cell.lblSource.text = currentArticle.source_id
          cell.lblTimesAgo.text = agoDate
-         cell.imgNews.downloadedFrom(link: "\(currentArticle.urlToImage!)")
+         cell.imgNews.downloadedFrom(link: "\(currentArticle.imageURL!)")
          }
          else{
          //display data using coredata
          cell.lblNewsHeading.text = ShowArticle[indexPath.row].title
-         cell.lblSource.text = ShowArticle[indexPath.row].source
-         let newDate = dateFormatter.date(from: ShowArticle[indexPath.row].publishedAt!)
-         print("newDAte:\(newDate!)")
+            //cell.lblSource.text = ShowArticle[indexPath.row].source_id
+            let newDate = dateFormatter.date(from: ShowArticle[indexPath.row].published_on!)
          let agoDate = timeAgoSinceDate(newDate!)
          cell.lblTimesAgo.text = agoDate
          cell.imgNews.downloadedFrom(link: "\(ShowArticle[indexPath.row].imageURL!)")
-         }*/
+         }
         //show data of mentioned category
-        cell.lblNewsHeading.text = categoryResults[indexPath.row].title
+       /* cell.lblNewsHeading.text = categoryResults[indexPath.row].title
         cell.lblSource.text = categoryResults[indexPath.row].source
         let newDate = dateFormatter.date(from: categoryResults[indexPath.row].publishedAt!)
-        print("newDAte:\(newDate!)")
         let agoDate = timeAgoSinceDate(newDate!)
         cell.lblTimesAgo.text = agoDate
-        cell.imgNews.downloadedFrom(link: "\(categoryResults[indexPath.row].imageURL!)")
+        cell.imgNews.downloadedFrom(link: "\(categoryResults[indexPath.row].imageURL!)")*/
+      
         if textSizeSelected == 0{
             cell.lblSource.font = xsmallFont
             cell.lblNewsHeading.font = smallFontMedium
@@ -336,12 +340,15 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource{
             cell.lblTimesAgo.font = xLargeFont
         }
         else{
-            cell.lblSource.font =  xNormalFont//.systemFont(ofSize: Constants.fontNormalTitle) //
+            cell.lblSource.font =  xNormalFont
             cell.lblNewsHeading.font = NormalFontMedium
             cell.lblTimesAgo.font = xNormalFont
         }
+         activityIndicator.stopAnimating()
         return cell
     }
+    
+  
 }
 
 extension HomeVC: IndicatorInfoProvider{
@@ -349,3 +356,6 @@ extension HomeVC: IndicatorInfoProvider{
         return IndicatorInfo(title: tabBarTitle)
     }
 }
+
+    
+    

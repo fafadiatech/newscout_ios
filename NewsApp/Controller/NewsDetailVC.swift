@@ -31,7 +31,7 @@ class NewsDetailVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // ArticleData = loadJson(filename: "news")!
-        ShowNews(currentIndex: currentIndex)
+        ShowNews(currentIndex: newsCurrentIndex)
         ViewWebContainer.isHidden = true
         //swipe gestures
         let swipeUp = UISwipeGestureRecognizer(target: self, action: #selector(self.respondToSwipeGesture))
@@ -119,10 +119,10 @@ class NewsDetailVC: UIViewController {
                 print("Swiped right")
                 
             case UISwipeGestureRecognizerDirection.down:
-                if currentIndex > 0
+                if newsCurrentIndex > 0
                 {
-                    currentIndex = currentIndex - 1
-                    ShowNews(currentIndex : currentIndex)
+                    newsCurrentIndex = newsCurrentIndex - 1
+                    ShowNews(currentIndex : newsCurrentIndex)
                     transition.type = kCATransitionPush
                     transition.subtype = kCATransitionFromBottom
                     view.window!.layer.add(transition, forKey: kCATransition)
@@ -140,11 +140,11 @@ class NewsDetailVC: UIViewController {
                 WKWebView.load(myRequest)
                 
             case UISwipeGestureRecognizerDirection.up:
-                if currentIndex < ShowArticle.count
+                if newsCurrentIndex < ShowArticle.count
                 {
-                    currentIndex = currentIndex + 1
+                    newsCurrentIndex = newsCurrentIndex + 1
                     
-                    ShowNews(currentIndex : currentIndex)
+                    ShowNews(currentIndex : newsCurrentIndex)
                     transition.type = kCATransitionPush
                     transition.subtype = kCATransitionFromTop
                     view.window!.layer.add(transition, forKey: kCATransition)
@@ -164,25 +164,25 @@ class NewsDetailVC: UIViewController {
         
         if ShowArticle.count != 0{
             let currentArticle =  ShowArticle[currentIndex]
-            let newDate = dateFormatter.date(from: currentArticle.publishedAt!)
+            let newDate = dateFormatter.date(from: currentArticle.published_on!)
             print("newDAte:\(newDate!)")
             let agoDate = timeAgoSinceDate(newDate!)
             lblNewsHeading.text = currentArticle.title
             txtViewNewsDesc.text = currentArticle.news_description
-            lblSource.text = currentArticle.source
+           // lblSource.text = currentArticle.source_id
             lblTimeAgo.text = agoDate
             imgNews.downloadedFrom(link: "\(currentArticle.imageURL!)")
         }
         else{
             let currentArticle = ArticleData[0].articles[currentIndex]
-            let newDate = dateFormatter.date(from: currentArticle.publishedAt!)
+            let newDate = dateFormatter.date(from: currentArticle.published_on!)
             print("newDAte:\(newDate!)")
             let agoDate = timeAgoSinceDate(newDate!)
             lblNewsHeading.text = currentArticle.title
             txtViewNewsDesc.text = currentArticle.description
-            lblSource.text = currentArticle.source
+           // lblSource.text = currentArticle.source_id
             lblTimeAgo.text = agoDate
-            imgNews.downloadedFrom(link: "\(currentArticle.urlToImage!)")
+            imgNews.downloadedFrom(link: "\(currentArticle.imageURL!)")
         }
     }
     
@@ -193,8 +193,8 @@ class NewsDetailVC: UIViewController {
     }
     
     @IBAction func btnShareActn(_ sender: Any) {
-        let text = ArticleData[0].articles[currentIndex].title
-        let myUrl = NSURL(string:ArticleData[0].articles[currentIndex].url!)
+        let text = ArticleData[0].articles[newsCurrentIndex].title
+        let myUrl = NSURL(string:ArticleData[0].articles[newsCurrentIndex].url!)
         let shareAll = [text ,myUrl] as [Any]
         let activityViewController = UIActivityViewController(activityItems: shareAll, applicationActivities: nil)
         activityViewController.popoverPresentationController?.sourceView = self.view
