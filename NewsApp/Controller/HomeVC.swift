@@ -82,11 +82,6 @@ class HomeVC: UIViewController{
     @IBOutlet weak var HomeNewsTV: UITableView!
     var tabBarTitle: String = ""
     var ShowArticle = [NewsArticle]()
-    var categoryData = [CategoryList]()
-    var sourceData = [SourceList]()
-    var categoryResults = [NewsArticle]()
-    var isCAt = 0
-    var VCIndex = 0
     let appDelegate = UIApplication.shared.delegate as? AppDelegate
     var article_id = Int64()
     let activityIndicator = MDCActivityIndicator()
@@ -114,8 +109,9 @@ class HomeVC: UIViewController{
         }
         else{
             loadNewsAPI()
-            loadSourceAPI()
-            loadCategoriesAPI()
+            self.SaveDataDB()
+            self.FetchDataFromDB()
+            self.HomeNewsTV.reloadData()
         }
     }
     
@@ -126,7 +122,7 @@ class HomeVC: UIViewController{
     
     func loadNewsAPI()
     {
-        let url = baseURL + "articles/"
+        let url = APPURL.ArticlesURL
         
         Alamofire.request(url,method: .get).responseJSON{
             response in
@@ -138,54 +134,6 @@ class HomeVC: UIViewController{
                         print("jsonData: \(jsonData)")
                         ArticleData = [jsonData]
                         TotalResultcount = ArticleData[0].articles.count
-                        self.SaveDataDB()
-                        self.FetchDataFromDB()
-                        self.HomeNewsTV.reloadData()
-                        // self.FetchCategoryArticles()
-                    }
-                    catch {
-                        print("Error: \(error)")
-                    }
-                }
-            }
-        }
-    }
-    
-    func loadCategoriesAPI()
-    {
-        let url = baseURL + "categories"
-        
-        Alamofire.request(url,method: .get).responseJSON{
-            response in
-            if(response.result.isSuccess){
-                if let data = response.data {
-                    let jsonDecoder = JSONDecoder()
-                    do {
-                        let jsonData = try jsonDecoder.decode(CategoryList.self, from: data)
-                        self.categoryData = [jsonData]
-                        print(jsonData)
-                        self.SaveCatSourceDB()
-                    }
-                    catch {
-                        print("Error: \(error)")
-                    }
-                }
-            }
-        }
-    }
-    
-    func loadSourceAPI()
-    {
-        let url = baseURL + "source"
-        
-        Alamofire.request(url,method: .get).responseJSON{
-            response in
-            if(response.result.isSuccess){
-                if let data = response.data {
-                    let jsonDecoder = JSONDecoder()
-                    do {
-                        let jsonData = try jsonDecoder.decode(SourceList.self, from: data)
-                        self.sourceData = [jsonData]
                     }
                     catch {
                         print("Error: \(error)")
@@ -254,7 +202,6 @@ class HomeVC: UIViewController{
                     newArticle.published_on = news.published_on
                     newArticle.blurb = news.blurb
                     newArticle.category_id = news.category_id!
-                    newArticle.subCategory_id = 0//news.subCategory_id!
                     do {
                         try managedContext?.save()
                         print("successfully saved ..")
@@ -263,39 +210,6 @@ class HomeVC: UIViewController{
                         print("Could not save \(error)")
                     }
                 }
-            }
-        }
-    }
-    
-    func SaveCatSourceDB(){
-        let managedContext =
-            appDelegate?.persistentContainer.viewContext
-        
-        for cat in categoryData[0].categories{
-            print(cat)
-            let newCategory = Category(context: managedContext!)
-            newCategory.cat_id = cat.cat_id!
-            newCategory.name = cat.name
-            do {
-                try managedContext?.save()
-                print("successfully saved ..")
-                
-            } catch let error as NSError  {
-                print("Could not save \(error)")
-            }
-        }
-        
-        for source in sourceData[0].source{
-            print(source)
-            let newSource = Source(context: managedContext!)
-            newSource.source_id = source.source_id!
-            newSource.source_name = source.source_name
-            do {
-                try managedContext?.save()
-                print("successfully saved ..")
-                
-            } catch let error as NSError  {
-                print("Could not save \(error)")
             }
         }
     }
@@ -310,24 +224,6 @@ class HomeVC: UIViewController{
         do {
             ShowArticle = try (managedContext?.fetch(fetchRequest))!
             TotalResultcount = ShowArticle.count
-        } catch let error as NSError {
-            print("Could not fetch. \(error), \(error.userInfo)")
-        }
-    }
-    
-    func FetchCategoryArticles()
-    {
-        let managedContext =
-            appDelegate?.persistentContainer.viewContext
-        let fetchRequest =
-            NSFetchRequest<NewsArticle>(entityName: "NewsArticle")
-        // let newArticle = NewsArticle(context: managedContext!)
-        let name = "Indian Religion"
-        fetchRequest.predicate = NSPredicate(format: "categories.title CONTAINS[C] %@", name)
-        do {
-            categoryResults = try (managedContext?.fetch(fetchRequest))!
-            print(categoryResults)
-            print(categoryResults.count)
         } catch let error as NSError {
             print("Could not fetch. \(error), \(error.userInfo)")
         }

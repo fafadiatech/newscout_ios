@@ -73,7 +73,29 @@ extension UIFont {
         return UIFont.systemFont(ofSize: CGFloat(fontSize + 10))
     }
 }
-
+struct APPURL {
+    
+    private struct Domains {
+        static let Local = "http://192.168.2.204"
+        static let Server = ""
+    }
+    
+    private  struct Routes {
+        static let Articles = "/api/v1/articles"
+        static let Login = "/api/v1/login"
+        static let SignUp = "/api/v1/signup"
+        static let Logout = "/api/v1/logout"
+        static let Categories = "/api/v1/categories"
+        static let Search = "/api/v1/search"
+    }
+    
+    static let ArticlesURL = Domains.Local + Routes.Articles
+    static let LoginURL = Domains.Local + Routes.Login
+    static let SignUpURL =  Domains.Local + Routes.SignUp
+    static let LogoutURL =  Domains.Local + Routes.Logout
+    static let CategoriesURL =  Domains.Local + Routes.Categories
+    static let SearchURL =  Domains.Local + Routes.Search
+}
 //show an image from url
 extension UIImageView {
     func downloadedFrom(url: URL, contentMode mode: UIViewContentMode = .scaleAspectFit) {

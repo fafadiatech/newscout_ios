@@ -41,38 +41,6 @@ struct Article: Decodable
     }
 }
 
-struct CategoryList: Decodable
-{
-    let categories : [CategoryDetails]
-}
-
-struct CategoryDetails : Decodable
-{
-    let cat_id: Int64?
-    let name: String?
-    
-    enum CodingKeys: String, CodingKey{
-        case cat_id = "id"
-        case name
-    }
-}
-
-struct SourceList: Decodable
-{
-    let source : [SourceDetails]
-}
-
-struct SourceDetails : Decodable
-{
-    let source_id: Int64?
-    let source_name: String?
-    
-    enum CodingKeys: String, CodingKey{
-        case source_id = "id"
-        case source_name = "name"
-    }
-}
-
 struct ArticleDetails: Decodable
 {
     let article : ArticleDict 
@@ -81,7 +49,6 @@ struct ArticleDetails: Decodable
 struct ArticleDict: Decodable{
     let article_id : Int64?
     let category_id : Int64?
-    let subCategory_id: Int64?
     let source_id: Int64?
     let description : String?
     let title : String?
@@ -96,7 +63,6 @@ struct ArticleDict: Decodable{
         case source_id = "source"
         case imageURL = "cover_image"
         case url = "source_url"
-        case subCategory_id = "sub_category"
         case description = "full_text"
         case title
         case published_on
