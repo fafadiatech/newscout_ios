@@ -87,6 +87,7 @@ class HomeVC: UIViewController{
     var isCAt = 0
     var VCIndex = 0
     let appDelegate = UIApplication.shared.delegate as? AppDelegate
+    var article_id = Int64()
      let activityIndicator = MDCActivityIndicator()
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -124,7 +125,7 @@ class HomeVC: UIViewController{
     
     func loadNewsAPI()
     {
-        let url = "http://192.168.2.204:8000/api/v1/articles"  //"https://api.myjson.com/bins/10kz4w"
+        let url = "http://192.168.2.151:8000/api/v1/articles" //"http://192.168.2.204:8000/api/v1/articles"  //"https://api.myjson.com/bins/10kz4w"
         
         Alamofire.request(url,method: .get).responseJSON{
             response in
@@ -139,6 +140,7 @@ class HomeVC: UIViewController{
                       //  self.SaveDataDB()
                        // self.FetchDataFromDB()
                         self.HomeNewsTV.reloadData()
+                        self.loadCategoriesAPI()
                        // self.FetchCategoryArticles()
                     }
                     catch {
@@ -151,7 +153,7 @@ class HomeVC: UIViewController{
     }
     func loadCategoriesAPI()
     {
-        let url = "https://api.myjson.com/bins/tuh9w"
+        let url = "http://192.168.2.151:8000/api/v1/categories" //"https://api.myjson.com/bins/tuh9w"
         
         Alamofire.request(url,method: .get).responseJSON{
             response in
@@ -281,6 +283,7 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource{
         print("This cell  was selected: \(indexPath.row)")
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let newsDetailvc:NewsDetailVC = storyboard.instantiateViewController(withIdentifier: "NewsDetailID") as! NewsDetailVC
+        newsDetailvc.article_id = ArticleData[0].articles[indexPath.row].article_id!
         newsCurrentIndex = indexPath.row
         newsDetailvc.ShowArticle = ShowArticle
         print("currentIndex: \(newsCurrentIndex)")

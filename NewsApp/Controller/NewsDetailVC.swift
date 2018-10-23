@@ -8,6 +8,7 @@
 
 import UIKit
 import WebKit
+import Alamofire
 
 class NewsDetailVC: UIViewController {
     @IBOutlet weak var imgNews: UIImageView!
@@ -27,13 +28,15 @@ class NewsDetailVC: UIViewController {
     @IBOutlet weak var ViewWebContainer: UIView!
     @IBOutlet weak var lblWebSource: UILabel!
     var ShowArticle = [NewsArticle]()
-    
+   // var ArticleDetails = [article]()
+    var article_id = Int64()
     override func viewDidLoad() {
         super.viewDidLoad()
         // ArticleData = loadJson(filename: "news")!
-        ShowNews(currentIndex: newsCurrentIndex)
+       // ShowNews(currentIndex: newsCurrentIndex)
         ViewWebContainer.isHidden = true
         //swipe gestures
+        loadArticleDetailsAPI()
         let swipeUp = UISwipeGestureRecognizer(target: self, action: #selector(self.respondToSwipeGesture))
         swipeUp.direction = UISwipeGestureRecognizerDirection.up
         self.newsView.addGestureRecognizer(swipeUp)
@@ -77,6 +80,29 @@ class NewsDetailVC: UIViewController {
             }
         }
         return nil
+    }
+    func loadArticleDetailsAPI()
+    {
+        
+        let url = "http://192.168.2.151:8000/api/v1/articles/" + "\(article_id)" //"http://192.168.2.204:8000/api/v1/articles"  //"https://api.myjson.com/bins/10kz4w"
+        print(url)
+        Alamofire.request(url,method: .get).responseJSON{
+            response in
+            if(response.result.isSuccess){
+                if let data = response.data {
+                    let jsonDecoder = JSONDecoder()
+                    do {
+                        //let jsonData = try jsonDecoder.decode(ArticleDetails.self, from: data)
+                      // let jsonData = try container.decode([String: Any].self, forKey: "article")
+                        print("jsonData: \(jsonData)")
+                    }
+                    catch {
+                        print("Error: \(error)")
+                    }
+                }
+            }
+        }
+        
     }
     
     func changeFont()
