@@ -24,7 +24,6 @@ extension NewsArticle {
     @NSManaged public var published_on: String?
     @NSManaged public var source_id: Int64
     @NSManaged public var source_url: String?
-    @NSManaged public var subCategory_id: Int64
     @NSManaged public var title: String?
 
 }

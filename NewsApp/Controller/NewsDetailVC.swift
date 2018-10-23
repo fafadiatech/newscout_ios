@@ -28,7 +28,7 @@ class NewsDetailVC: UIViewController {
     @IBOutlet weak var ViewWebContainer: UIView!
     @IBOutlet weak var lblWebSource: UILabel!
     var ShowArticle = [NewsArticle]()
-    var ArticleDetail = ArticleDict.init(article_id: 0, category_id: 0, subCategory_id: 0, source_id: 0, description: "", title: "", imageURL: "", url: "", published_on: "", blurb: "")
+    var ArticleDetail = ArticleDict.init(article_id: 0, category_id: 0, source_id: 0, description: "", title: "", imageURL: "", url: "", published_on: "", blurb: "")
     var article_id = Int64()
     var articleCount = 0
     

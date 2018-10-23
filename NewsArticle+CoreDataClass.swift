@@ -2,7 +2,7 @@
 //  NewsArticle+CoreDataClass.swift
 //  
 //
-//  Created by Jayashri on 16/10/18.
+//  Created by Jayashree on 23/10/18.
 //
 //
 
