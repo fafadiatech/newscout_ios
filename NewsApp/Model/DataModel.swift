@@ -57,12 +57,28 @@ struct CategoryDetails : Decodable
     }
 }
 
-struct ArticleDetails
+struct SourceList: Decodable
 {
-    let article : [String: Any]?
+    let source : [SourceDetails]
 }
 
-struct article: Decodable{
+struct SourceDetails : Decodable
+{
+    let source_id: Int64?
+    let source_name: String?
+    
+    enum CodingKeys: String, CodingKey{
+        case source_id = "id"
+        case source_name = "name"
+    }
+}
+
+struct ArticleDetails: Decodable
+{
+    let article : ArticleDict 
+}
+
+struct ArticleDict: Decodable{
     let article_id : Int64?
     let category_id : Int64?
     let subCategory_id: Int64?

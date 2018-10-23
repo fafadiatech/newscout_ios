@@ -2,7 +2,7 @@
 //  Category+CoreDataProperties.swift
 //  
 //
-//  Created by Jayashri on 23/10/18.
+//  Created by Jayashree on 23/10/18.
 //
 //
 

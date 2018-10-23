@@ -12,6 +12,7 @@ import XLPagerTabStrip
 import Alamofire
 import CoreData
 import MaterialComponents.MaterialActivityIndicator
+
 //for conversion of timestamp
 func timeAgoSinceDate(_ date:Date, numericDates:Bool = false) -> String {
     let calendar = NSCalendar.current
@@ -79,19 +80,20 @@ func timeAgoSinceDate(_ date:Date, numericDates:Bool = false) -> String {
 class HomeVC: UIViewController{
     
     @IBOutlet weak var HomeNewsTV: UITableView!
-    // var ArticleData = [Article]()
     var tabBarTitle: String = ""
     var ShowArticle = [NewsArticle]()
-   
+    var categoryData = [CategoryList]()
+    var sourceData = [SourceList]()
     var categoryResults = [NewsArticle]()
     var isCAt = 0
     var VCIndex = 0
     let appDelegate = UIApplication.shared.delegate as? AppDelegate
     var article_id = Int64()
-     let activityIndicator = MDCActivityIndicator()
+    let activityIndicator = MDCActivityIndicator()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-     
+        
         activityIndicator.cycleColors = [.blue]
         activityIndicator.frame = CGRect(x: 166, y: 150, width: 40, height: 40)
         activityIndicator.sizeToFit()
@@ -101,11 +103,8 @@ class HomeVC: UIViewController{
         
         // To make the activity indicator appear:
         activityIndicator.startAnimating()
-        
         // To make the activity indicator disappear:
         // activityIndicator.stopAnimating()
-        
-       // loadCategoriesAPI()
         var paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
         print("\(paths[0])")
         let coredataRecordCount = IsCoreDataEmpty()
@@ -115,6 +114,8 @@ class HomeVC: UIViewController{
         }
         else{
             loadNewsAPI()
+            loadSourceAPI()
+            loadCategoriesAPI()
         }
     }
     
@@ -125,7 +126,7 @@ class HomeVC: UIViewController{
     
     func loadNewsAPI()
     {
-        let url = "http://192.168.2.151:8000/api/v1/articles" //"http://192.168.2.204:8000/api/v1/articles"  //"https://api.myjson.com/bins/10kz4w"
+        let url = baseURL + "articles/"
         
         Alamofire.request(url,method: .get).responseJSON{
             response in
@@ -137,11 +138,10 @@ class HomeVC: UIViewController{
                         print("jsonData: \(jsonData)")
                         ArticleData = [jsonData]
                         TotalResultcount = ArticleData[0].articles.count
-                      //  self.SaveDataDB()
-                       // self.FetchDataFromDB()
+                        self.SaveDataDB()
+                        self.FetchDataFromDB()
                         self.HomeNewsTV.reloadData()
-                        self.loadCategoriesAPI()
-                       // self.FetchCategoryArticles()
+                        // self.FetchCategoryArticles()
                     }
                     catch {
                         print("Error: \(error)")
@@ -149,11 +149,11 @@ class HomeVC: UIViewController{
                 }
             }
         }
-        
     }
+    
     func loadCategoriesAPI()
     {
-        let url = "http://192.168.2.151:8000/api/v1/categories" //"https://api.myjson.com/bins/tuh9w"
+        let url = baseURL + "categories"
         
         Alamofire.request(url,method: .get).responseJSON{
             response in
@@ -162,8 +162,9 @@ class HomeVC: UIViewController{
                     let jsonDecoder = JSONDecoder()
                     do {
                         let jsonData = try jsonDecoder.decode(CategoryList.self, from: data)
+                        self.categoryData = [jsonData]
                         print(jsonData)
-    
+                        self.SaveCatSourceDB()
                     }
                     catch {
                         print("Error: \(error)")
@@ -171,8 +172,29 @@ class HomeVC: UIViewController{
                 }
             }
         }
-        
     }
+    
+    func loadSourceAPI()
+    {
+        let url = baseURL + "source"
+        
+        Alamofire.request(url,method: .get).responseJSON{
+            response in
+            if(response.result.isSuccess){
+                if let data = response.data {
+                    let jsonDecoder = JSONDecoder()
+                    do {
+                        let jsonData = try jsonDecoder.decode(SourceList.self, from: data)
+                        self.sourceData = [jsonData]
+                    }
+                    catch {
+                        print("Error: \(error)")
+                    }
+                }
+            }
+        }
+    }
+    
     func IsCoreDataEmpty() -> Int
     {
         let managedContext =
@@ -223,13 +245,57 @@ class HomeVC: UIViewController{
                 if  someEntityExists(title: news.title!) == false
                 {
                     let newArticle = NewsArticle(context: managedContext!)
+                    newArticle.article_id = news.article_id!
                     newArticle.title = news.title
-                   // newArticle.source = news.source_id
-                   // newArticle.news_description = news.description
+                    newArticle.source_id = news.source_id!
+                    newArticle.news_description = news.description
                     newArticle.imageURL = news.imageURL
                     newArticle.source_url = news.url
                     newArticle.published_on = news.published_on
+                    newArticle.blurb = news.blurb
+                    newArticle.category_id = news.category_id!
+                    newArticle.subCategory_id = 0//news.subCategory_id!
+                    do {
+                        try managedContext?.save()
+                        print("successfully saved ..")
+                        
+                    } catch let error as NSError  {
+                        print("Could not save \(error)")
+                    }
                 }
+            }
+        }
+    }
+    
+    func SaveCatSourceDB(){
+        let managedContext =
+            appDelegate?.persistentContainer.viewContext
+        
+        for cat in categoryData[0].categories{
+            print(cat)
+            let newCategory = Category(context: managedContext!)
+            newCategory.cat_id = cat.cat_id!
+            newCategory.name = cat.name
+            do {
+                try managedContext?.save()
+                print("successfully saved ..")
+                
+            } catch let error as NSError  {
+                print("Could not save \(error)")
+            }
+        }
+        
+        for source in sourceData[0].source{
+            print(source)
+            let newSource = Source(context: managedContext!)
+            newSource.source_id = source.source_id!
+            newSource.source_name = source.source_name
+            do {
+                try managedContext?.save()
+                print("successfully saved ..")
+                
+            } catch let error as NSError  {
+                print("Could not save \(error)")
             }
         }
     }
@@ -240,22 +306,22 @@ class HomeVC: UIViewController{
             appDelegate?.persistentContainer.viewContext
         let fetchRequest =
             NSFetchRequest<NewsArticle>(entityName: "NewsArticle")
-       // var newArticle = NewsArticle(context: managedContext!)
+        // var newArticle = NewsArticle(context: managedContext!)
         do {
             ShowArticle = try (managedContext?.fetch(fetchRequest))!
-            print(ShowArticle.count)
+            TotalResultcount = ShowArticle.count
         } catch let error as NSError {
             print("Could not fetch. \(error), \(error.userInfo)")
         }
-       // FetchCategoryArticles()
     }
+    
     func FetchCategoryArticles()
     {
         let managedContext =
             appDelegate?.persistentContainer.viewContext
         let fetchRequest =
             NSFetchRequest<NewsArticle>(entityName: "NewsArticle")
-       // let newArticle = NewsArticle(context: managedContext!)
+        // let newArticle = NewsArticle(context: managedContext!)
         let name = "Indian Religion"
         fetchRequest.predicate = NSPredicate(format: "categories.title CONTAINS[C] %@", name)
         do {
@@ -266,7 +332,7 @@ class HomeVC: UIViewController{
             print("Could not fetch. \(error), \(error.userInfo)")
         }
     }
-
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -275,7 +341,7 @@ class HomeVC: UIViewController{
 
 extension HomeVC: UITableViewDelegate, UITableViewDataSource{
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-         return TotalResultcount
+        return TotalResultcount
         //return categoryResults.count
     }
     
@@ -283,10 +349,9 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource{
         print("This cell  was selected: \(indexPath.row)")
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let newsDetailvc:NewsDetailVC = storyboard.instantiateViewController(withIdentifier: "NewsDetailID") as! NewsDetailVC
+        newsDetailvc.articleCount = ArticleData[0].articles.count
         newsDetailvc.article_id = ArticleData[0].articles[indexPath.row].article_id!
-        newsCurrentIndex = indexPath.row
         newsDetailvc.ShowArticle = ShowArticle
-        print("currentIndex: \(newsCurrentIndex)")
         present(newsDetailvc, animated: true, completion: nil)
     }
     
@@ -299,39 +364,39 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource{
         cell.ViewCellBackground.layer.cornerRadius = 10.0
         cell.imgNews.layer.cornerRadius = 10.0
         cell.imgNews.clipsToBounds = true
-       
+        
         //timestamp conversion
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
         dateFormatter.timeZone = NSTimeZone(name: "UTC")! as TimeZone
-         if ShowArticle.count == 0{
-         //display data using API call
-         let currentArticle = ArticleData[0].articles[indexPath.row]
-         print(currentArticle)
+        if ShowArticle.count == 0{
+            //display data using API call
+            let currentArticle = ArticleData[0].articles[indexPath.row]
+            print(currentArticle)
             let newDate = dateFormatter.date(from: currentArticle.published_on!)
-         let agoDate = timeAgoSinceDate(newDate!)
-         cell.lblNewsHeading.text = currentArticle.title
-        //cell.lblSource.text = currentArticle.source_id
-         cell.lblTimesAgo.text = agoDate
-         cell.imgNews.downloadedFrom(link: "\(currentArticle.imageURL!)")
-         }
-         else{
-         //display data using coredata
-         cell.lblNewsHeading.text = ShowArticle[indexPath.row].title
+            let agoDate = timeAgoSinceDate(newDate!)
+            cell.lblNewsHeading.text = currentArticle.title
+            //cell.lblSource.text = currentArticle.source_id
+            cell.lblTimesAgo.text = agoDate
+            cell.imgNews.downloadedFrom(link: "\(currentArticle.imageURL!)")
+        }
+        else{
+            //display data using coredata
+            cell.lblNewsHeading.text = ShowArticle[indexPath.row].title
             //cell.lblSource.text = ShowArticle[indexPath.row].source_id
             let newDate = dateFormatter.date(from: ShowArticle[indexPath.row].published_on!)
+            let agoDate = timeAgoSinceDate(newDate!)
+            cell.lblTimesAgo.text = agoDate
+            cell.imgNews.downloadedFrom(link: "\(ShowArticle[indexPath.row].imageURL!)")
+        }
+        //show data of mentioned category
+        /* cell.lblNewsHeading.text = categoryResults[indexPath.row].title
+         cell.lblSource.text = categoryResults[indexPath.row].source
+         let newDate = dateFormatter.date(from: categoryResults[indexPath.row].publishedAt!)
          let agoDate = timeAgoSinceDate(newDate!)
          cell.lblTimesAgo.text = agoDate
-         cell.imgNews.downloadedFrom(link: "\(ShowArticle[indexPath.row].imageURL!)")
-         }
-        //show data of mentioned category
-       /* cell.lblNewsHeading.text = categoryResults[indexPath.row].title
-        cell.lblSource.text = categoryResults[indexPath.row].source
-        let newDate = dateFormatter.date(from: categoryResults[indexPath.row].publishedAt!)
-        let agoDate = timeAgoSinceDate(newDate!)
-        cell.lblTimesAgo.text = agoDate
-        cell.imgNews.downloadedFrom(link: "\(categoryResults[indexPath.row].imageURL!)")*/
-      
+         cell.imgNews.downloadedFrom(link: "\(categoryResults[indexPath.row].imageURL!)")*/
+        
         if textSizeSelected == 0{
             cell.lblSource.font = xsmallFont
             cell.lblNewsHeading.font = smallFontMedium
@@ -347,11 +412,9 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource{
             cell.lblNewsHeading.font = NormalFontMedium
             cell.lblTimesAgo.font = xNormalFont
         }
-         activityIndicator.stopAnimating()
+        activityIndicator.stopAnimating()
         return cell
     }
-    
-  
 }
 
 extension HomeVC: IndicatorInfoProvider{
@@ -360,5 +423,5 @@ extension HomeVC: IndicatorInfoProvider{
     }
 }
 
-    
-    
+
+

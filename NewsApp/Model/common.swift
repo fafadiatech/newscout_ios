@@ -10,7 +10,8 @@ import XLPagerTabStrip
 
 var isCategoryAdded = 0
 var textSizeSelected = 1
-var newsCurrentIndex = 0
+let baseURL = "http://192.168.2.204/api/v1/"
+let articleURL = "http://192.168.2.204/api/v1/articles/"
 var TotalResultcount = 0
   var categories = ["FOR YOU"]
 var obj = HomeParentVC()
