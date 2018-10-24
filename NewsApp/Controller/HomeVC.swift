@@ -13,70 +13,6 @@ import Alamofire
 import CoreData
 import MaterialComponents.MaterialActivityIndicator
 
-//for conversion of timestamp
-func timeAgoSinceDate(_ date:Date, numericDates:Bool = false) -> String {
-    let calendar = NSCalendar.current
-    let unitFlags: Set<Calendar.Component> = [.minute, .hour, .day, .weekOfYear, .month, .year, .second]
-    let now = Date()
-    let earliest = now < date ? now : date
-    let latest = (earliest == now) ? date : now
-    let components = calendar.dateComponents(unitFlags, from: earliest,  to: latest)
-    
-    if (components.year! >= 2) {
-        return "\(components.year!) years ago"
-    } else if (components.year! >= 1){
-        if (numericDates){
-            return "1yr ago"
-        } else {
-            return "Last year"
-        }
-    } else if (components.month! >= 2) {
-        return "\(components.month!) mo ago"
-    } else if (components.month! >= 1){
-        if (numericDates){
-            return "1mo ago"
-        } else {
-            return "Last month"
-        }
-    } else if (components.weekOfYear! >= 2) {
-        return "\(components.weekOfYear!) w ago"
-    } else if (components.weekOfYear! >= 1){
-        if (numericDates){
-            return "1w ago"
-        } else {
-            return "Last week"
-        }
-    } else if (components.day! >= 2) {
-        return "\(components.day!)d ago"
-    } else if (components.day! >= 1){
-        if (numericDates){
-            return "1d ago"
-        } else {
-            return "Yesterday"
-        }
-    } else if (components.hour! >= 2) {
-        return "\(components.hour!) hours ago"
-    } else if (components.hour! >= 1){
-        if (numericDates){
-            return "1hour ago"
-        } else {
-            return "An hour ago"
-        }
-    } else if (components.minute! >= 2) {
-        return "\(components.minute!) minutes ago"
-    } else if (components.minute! >= 1){
-        if (numericDates){
-            return "1min ago"
-        } else {
-            return "A min ago"
-        }
-    } else if (components.second! >= 3) {
-        return "\(components.second!) sec ago"
-    } else {
-        return "Just now"
-    }
-}
-
 class HomeVC: UIViewController{
     
     @IBOutlet weak var HomeNewsTV: UITableView!
@@ -102,131 +38,47 @@ class HomeVC: UIViewController{
         // activityIndicator.stopAnimating()
         var paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
         print("\(paths[0])")
-        let coredataRecordCount = IsCoreDataEmpty()
+        let coredataRecordCount = DBManager().IsCoreDataEmpty()
         if coredataRecordCount != 0{
-            FetchDataFromDB()
+            let result = DBManager().FetchDataFromDB()
+            switch result {
+            case .Success(let DBData) :
+                self.ShowArticle = DBData
+                TotalResultcount = self.ShowArticle.count
+                self.HomeNewsTV.reloadData()
+            case .Failure(let errorMsg) :
+                print(errorMsg)
+            }
             HomeNewsTV.reloadData()
         }
         else{
-            loadNewsAPI()
-            self.SaveDataDB()
-            self.FetchDataFromDB()
-            self.HomeNewsTV.reloadData()
+            APICall().loadNewsAPI{ response in
+                switch response {
+                case .Success(let data) :
+                    ArticleData = data
+                    print(data)
+                    TotalResultcount = ArticleData[0].articles.count
+                    DBManager().SaveDataDB()
+                    let result = DBManager().FetchDataFromDB()
+                    switch result {
+                    case .Success(let DBData) :
+                        self.ShowArticle = DBData
+                        TotalResultcount = self.ShowArticle.count
+                        self.HomeNewsTV.reloadData()
+                    case .Failure(let errorMsg) :
+                        print(errorMsg)
+                    }
+                case .Failure(let errormessage) :
+                    print(errormessage)
+                    // handle the error
+                }
+            }
         }
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         HomeNewsTV.reloadData()
-    }
-    
-    func loadNewsAPI()
-    {
-        let url = APPURL.ArticlesURL
-        
-        Alamofire.request(url,method: .get).responseJSON{
-            response in
-            if(response.result.isSuccess){
-                if let data = response.data {
-                    let jsonDecoder = JSONDecoder()
-                    do {
-                        let jsonData = try jsonDecoder.decode(ArticleStatus.self, from: data)
-                        print("jsonData: \(jsonData)")
-                        ArticleData = [jsonData]
-                        TotalResultcount = ArticleData[0].articles.count
-                    }
-                    catch {
-                        print("Error: \(error)")
-                    }
-                }
-            }
-        }
-    }
-    
-    func IsCoreDataEmpty() -> Int
-    {
-        let managedContext =
-            appDelegate?.persistentContainer.viewContext
-        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "NewsArticle")
-        var records = [NewsArticle]()
-        do {
-            records = (try managedContext?.fetch(fetchRequest)) as! [NewsArticle]
-        }
-        catch {
-            print("error executing fetch request: \(error)")
-        }
-        return records.count
-    }
-    
-    //check for existing entry in DB
-    func someEntityExists(title: String) -> Bool {
-        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "NewsArticle")
-        fetchRequest.predicate = NSPredicate(format: "title = %@",title)
-        
-        let managedContext =
-            appDelegate?.persistentContainer.viewContext
-        var results: [NSManagedObject] = []
-        
-        do {
-            results = (try managedContext?.fetch(fetchRequest))!
-        }
-        catch {
-            print("error executing fetch request: \(error)")
-        }
-        if results.count == 0{
-            return false
-        }
-        else{
-            return true
-        }
-    }
-    
-    //save articles in DB
-    func SaveDataDB()
-    {
-        let managedContext =
-            appDelegate?.persistentContainer.viewContext
-        
-        if ArticleData.count != 0
-        {
-            for news in ArticleData[0].articles{
-                if  someEntityExists(title: news.title!) == false
-                {
-                    let newArticle = NewsArticle(context: managedContext!)
-                    newArticle.article_id = news.article_id!
-                    newArticle.title = news.title
-                    newArticle.source_id = news.source_id!
-                    newArticle.news_description = news.description
-                    newArticle.imageURL = news.imageURL
-                    newArticle.source_url = news.url
-                    newArticle.published_on = news.published_on
-                    newArticle.blurb = news.blurb
-                    newArticle.category_id = news.category_id!
-                    do {
-                        try managedContext?.save()
-                        print("successfully saved ..")
-                        
-                    } catch let error as NSError  {
-                        print("Could not save \(error)")
-                    }
-                }
-            }
-        }
-    }
-    
-    func FetchDataFromDB()
-    {
-        let managedContext =
-            appDelegate?.persistentContainer.viewContext
-        let fetchRequest =
-            NSFetchRequest<NewsArticle>(entityName: "NewsArticle")
-        // var newArticle = NewsArticle(context: managedContext!)
-        do {
-            ShowArticle = try (managedContext?.fetch(fetchRequest))!
-            TotalResultcount = ShowArticle.count
-        } catch let error as NSError {
-            print("Could not fetch. \(error), \(error.userInfo)")
-        }
     }
     
     override func didReceiveMemoryWarning() {
@@ -238,15 +90,13 @@ class HomeVC: UIViewController{
 extension HomeVC: UITableViewDelegate, UITableViewDataSource{
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return TotalResultcount
-        //return categoryResults.count
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         print("This cell  was selected: \(indexPath.row)")
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let newsDetailvc:NewsDetailVC = storyboard.instantiateViewController(withIdentifier: "NewsDetailID") as! NewsDetailVC
-        newsDetailvc.articleCount = ArticleData[0].articles.count
-        newsDetailvc.article_id = ArticleData[0].articles[indexPath.row].article_id!
+        newsCurrentIndex = indexPath.row
         newsDetailvc.ShowArticle = ShowArticle
         present(newsDetailvc, animated: true, completion: nil)
     }
@@ -272,26 +122,19 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource{
             let newDate = dateFormatter.date(from: currentArticle.published_on!)
             let agoDate = timeAgoSinceDate(newDate!)
             cell.lblNewsHeading.text = currentArticle.title
-            //cell.lblSource.text = currentArticle.source_id
+            cell.lblSource.text = currentArticle.source
             cell.lblTimesAgo.text = agoDate
             cell.imgNews.downloadedFrom(link: "\(currentArticle.imageURL!)")
         }
         else{
             //display data using coredata
             cell.lblNewsHeading.text = ShowArticle[indexPath.row].title
-            //cell.lblSource.text = ShowArticle[indexPath.row].source_id
+            cell.lblSource.text = ShowArticle[indexPath.row].source
             let newDate = dateFormatter.date(from: ShowArticle[indexPath.row].published_on!)
             let agoDate = timeAgoSinceDate(newDate!)
             cell.lblTimesAgo.text = agoDate
             cell.imgNews.downloadedFrom(link: "\(ShowArticle[indexPath.row].imageURL!)")
         }
-        //show data of mentioned category
-        /* cell.lblNewsHeading.text = categoryResults[indexPath.row].title
-         cell.lblSource.text = categoryResults[indexPath.row].source
-         let newDate = dateFormatter.date(from: categoryResults[indexPath.row].publishedAt!)
-         let agoDate = timeAgoSinceDate(newDate!)
-         cell.lblTimesAgo.text = agoDate
-         cell.imgNews.downloadedFrom(link: "\(categoryResults[indexPath.row].imageURL!)")*/
         
         if textSizeSelected == 0{
             cell.lblSource.font = xsmallFont

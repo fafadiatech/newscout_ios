@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="SXV-EA-KWG">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14313.18" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="SXV-EA-KWG">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14283.14"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -124,7 +124,7 @@
                                                     <rect key="frame" x="10" y="10" width="355" height="119"/>
                                                     <subviews>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Source" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WNE-8O-iT3">
-                                                            <rect key="frame" x="16" y="85" width="103" height="26"/>
+                                                            <rect key="frame" x="16" y="85" width="124" height="26"/>
                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                             <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="14"/>
                                                             <color key="textColor" red="0.49803921579999999" green="0.49803921579999999" blue="0.49803921579999999" alpha="1" colorSpace="calibratedRGB"/>
@@ -198,7 +198,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3182" y="-663"/>
+            <point key="canvasLocation" x="3181.5999999999999" y="-663.41829085457277"/>
         </scene>
         <!--Forgot PasswordVC-->
         <scene sceneID="nIk-Zg-xN0">
@@ -989,7 +989,7 @@
                                                     <rect key="frame" x="10" y="10" width="355" height="119"/>
                                                     <subviews>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Source" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iWH-Oh-AUP">
-                                                            <rect key="frame" x="16" y="85" width="103" height="26"/>
+                                                            <rect key="frame" x="16" y="85" width="124" height="26"/>
                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                             <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="17"/>
                                                             <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
@@ -1068,7 +1068,7 @@
                     </connections>
                 </searchDisplayController>
             </objects>
-            <point key="canvasLocation" x="2530" y="-663"/>
+            <point key="canvasLocation" x="2528.8000000000002" y="-663.41829085457277"/>
         </scene>
         <!--LoginVC-->
         <scene sceneID="9gu-En-2dP">
@@ -1176,12 +1176,12 @@
         <image name="backArrow" width="256" height="256"/>
         <image name="bookmark" width="225" height="225"/>
         <image name="cross" width="512" height="512"/>
-        <image name="dislike" width="50" height="50"/>
+        <image name="dislike" width="37.5" height="37.5"/>
         <image name="f1" width="550" height="596"/>
-        <image name="facebook-48" width="48" height="48"/>
-        <image name="google-plus-40" width="40" height="40"/>
+        <image name="facebook-48" width="36" height="36"/>
+        <image name="google-plus-40" width="32" height="32"/>
         <image name="icon" width="512" height="512"/>
-        <image name="like" width="50" height="50"/>
-        <image name="share" width="50" height="50"/>
+        <image name="like" width="37.5" height="37.5"/>
+        <image name="share" width="37.5" height="37.5"/>
     </resources>
 </document>

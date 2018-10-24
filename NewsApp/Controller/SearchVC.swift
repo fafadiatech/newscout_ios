@@ -17,7 +17,6 @@ class SearchVC: UIViewController {
     @IBOutlet weak var txtSearch: UITextField!
     @IBOutlet weak var lblTitle: UILabel!
     //variables
-    var ArticleData = [Article]()
     var count = 0
     var SearchData = [ArticleStatus]()
     var results: [NewsArticle] = []
@@ -25,9 +24,8 @@ class SearchVC: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        loadSearchAPI()
+        
         lblTitle.font = LargeFontMedium
-        //ArticleData = loadJson(filename: "news")!
         //check whether search or bookmark is selected
         if isSearch == true{
             lblTitle.isHidden = true
@@ -47,32 +45,6 @@ class SearchVC: UIViewController {
     
     override var prefersStatusBarHidden: Bool {
         return true
-    }
-    
-    func loadSearchAPI()
-    {
-        let url = "https://api.myjson.com/bins/q2kdg"
-        Alamofire.request(url,method: .get).responseJSON{
-            response in
-            if(response.result.isSuccess){
-                if let data = response.data {
-                    let jsonDecoder = JSONDecoder()
-                    do {
-                        let jsonData = try jsonDecoder.decode(ArticleStatus.self, from: data)
-                        self.SearchData = [jsonData]
-                        self.count = self.SearchData.count                      //self.ArticleData = try [jsonDecodeç.decode(ArticleStatus.self, from: data)]
-                        // print("self.AData: \(self.ArticleData)")
-                        // print("self.AData: \(self.ArticleData.count)")
-                        self.searchResultTV.reloadData()
-                        print("jsonData: \(jsonData)")
-                        
-                    }
-                    catch {
-                        print("Error: \(error)")
-                    }
-                }
-            }
-        }
     }
     
     func changeFont()
@@ -105,7 +77,7 @@ class SearchVC: UIViewController {
 
 extension SearchVC: UITableViewDelegate, UITableViewDataSource{
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return results.count
+        return count
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -124,9 +96,15 @@ extension SearchVC: UITableViewDelegate, UITableViewDataSource{
         cell.ViewCellBackground.layer.cornerRadius = 10.0
         cell.imgNews.layer.cornerRadius = 10.0
         cell.imgNews.clipsToBounds = true
-        let currentArticle = results[indexPath.row]
-       // cell.lblSource.text = currentArticle.source_id
-        cell.lbltimeAgo.text = currentArticle.published_on
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
+        dateFormatter.timeZone = NSTimeZone(name: "UTC")! as TimeZone
+        
+        let currentArticle = ArticleData[0].articles[indexPath.row]//SearchData[0].articles[indexPath.row]
+        cell.lblSource.text = currentArticle.source
+        let newDate = dateFormatter.date(from: currentArticle.published_on!)
+        let agoDate = timeAgoSinceDate(newDate!)
+        cell.lbltimeAgo.text = agoDate
         cell.lblNewsDescription.text = currentArticle.title
         cell.imgNews.downloadedFrom(link: "\(currentArticle.imageURL!)")
         
@@ -154,19 +132,34 @@ extension SearchVC: UITextFieldDelegate
     func textFieldShouldReturn(_ textField: UITextField) -> Bool
     {
         txtSearch.resignFirstResponder()
-        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "NewsArticle")
-        fetchRequest.predicate = NSPredicate(format: "title CONTAINS[c] %@ OR news_description CONTAINS[c] %@",txtSearch.text!, txtSearch.text!)
-        let managedContext =
-            appDelegate?.persistentContainer.viewContext
-        do {
-            results = (try managedContext?.fetch(fetchRequest))! as! [NewsArticle]
-            print("result.count: \(results.count)")
-            print ("results val: \(results)")
-            searchResultTV.reloadData()
+        APICall().loadSearchAPI(searchTxt: txtSearch.text!){ response in
+            switch response {
+            case .Success(let data) :
+                ArticleData = data
+                print(data)
+                self.count = ArticleData[0].articles.count
+                self.searchResultTV.reloadData()
+            case .Failure(let errormessage) :
+                print(errormessage)
+                // handle the error
+            }
         }
-        catch {
-            print("error executing fetch request: \(error)")
-        }
+        // search text in DB
+        /*   let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "NewsArticle")
+         fetchRequest.predicate = NSPredicate(format: "title CONTAINS[c] %@ OR news_description CONTAINS[c] %@",txtSearch.text!, txtSearch.text!)
+         let managedContext =
+         appDelegate?.persistentContainer.viewContext
+         do {
+         results = (try managedContext?.fetch(fetchRequest))! as! [NewsArticle]
+         print("result.count: \(results.count)")
+         print ("results val: \(results)")
+         searchResultTV.reloadData()
+         }
+         catch {
+         print("error executing fetch request: \(error)")
+         }
+         
+         }*/
         return true
     }
 }

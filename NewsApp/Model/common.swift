@@ -8,14 +8,17 @@
 import UIKit
 import XLPagerTabStrip
 
+var newsCurrentIndex = 0
 var isCategoryAdded = 0
 var textSizeSelected = 1
 let baseURL = "http://192.168.2.204/api/v1/"
 let articleURL = "http://192.168.2.204/api/v1/articles/"
 var TotalResultcount = 0
-  var categories = ["FOR YOU"]
+var categories = ["FOR YOU"]
 var obj = HomeParentVC()
 var ArticleData = [ArticleStatus]()
+var CategoryData = [CategoryList]()
+
 var isSearch = false
 var commonColor = UIColor.gray
 var xsmallFont = UIFont(name: AppFontName.regular, size: Constants.fontxSmall)
@@ -33,6 +36,7 @@ var NormalFontMedium = UIFont(name: AppFontName.medium, size: Constants.fontNorm
 var xsmallFontMedium = UIFont(name: AppFontName.medium, size: Constants.fontxSmall)
 var xLargeFontMedium = UIFont(name: AppFontName.medium, size: Constants.fontxLarge)
 var xNormalFontMedium = UIFont(name: AppFontName.medium, size: Constants.fontxNormal)
+
 struct Constants{
     static let isPhone = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.phone)
     static let fontSize:CGFloat = isPhone ? 12 :20
@@ -86,7 +90,7 @@ struct APPURL {
         static let SignUp = "/api/v1/signup"
         static let Logout = "/api/v1/logout"
         static let Categories = "/api/v1/categories"
-        static let Search = "/api/v1/search"
+        static let Search = "/api/v1/search/?q="
     }
     
     static let ArticlesURL = Domains.Local + Routes.Articles
@@ -96,24 +100,4 @@ struct APPURL {
     static let CategoriesURL =  Domains.Local + Routes.Categories
     static let SearchURL =  Domains.Local + Routes.Search
 }
-//show an image from url
-extension UIImageView {
-    func downloadedFrom(url: URL, contentMode mode: UIViewContentMode = .scaleAspectFit) {
-        contentMode = mode
-        URLSession.shared.dataTask(with: url) { data, response, error in
-            guard
-                let httpURLResponse = response as? HTTPURLResponse, httpURLResponse.statusCode == 200,
-                let mimeType = response?.mimeType, mimeType.hasPrefix("image"),
-                let data = data, error == nil,
-                let image = UIImage(data: data)
-                else { return }
-            DispatchQueue.main.async() {
-                self.image = image
-            }
-            }.resume()
-    }
-    func downloadedFrom(link: String, contentMode mode: UIViewContentMode = .scaleToFill) {
-        guard let url = URL(string: link) else { return }
-        downloadedFrom(url: url, contentMode: mode)
-    }
-}
+
