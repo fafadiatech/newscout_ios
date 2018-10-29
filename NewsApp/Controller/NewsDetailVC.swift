@@ -27,6 +27,7 @@ class NewsDetailVC: UIViewController {
     @IBOutlet weak var viewWebTitle: UIView!
     @IBOutlet weak var ViewWebContainer: UIView!
     @IBOutlet weak var lblWebSource: UILabel!
+    var ArticleData = [ArticleStatus]()
     var ShowArticle = [NewsArticle]()
     var ArticleDetail = ArticleDict.init(article_id: 0, category: "", source: "", title: "", imageURL: "", url: "", published_on: "", blurb: "")
     
@@ -163,7 +164,7 @@ class NewsDetailVC: UIViewController {
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
         dateFormatter.timeZone = NSTimeZone(name: "UTC")! as TimeZone
         
-        if ShowArticle.count != 0{
+       // if ShowArticle.count != 0{
             let currentArticle =  ShowArticle[currentIndex]
             let newDate = dateFormatter.date(from: currentArticle.published_on!)
             print("newDAte:\(newDate!)")
@@ -173,8 +174,8 @@ class NewsDetailVC: UIViewController {
             lblSource.text = currentArticle.source
             lblTimeAgo.text = agoDate
             imgNews.downloadedFrom(link: "\(currentArticle.imageURL!)")
-        }
-        else{
+      //  }
+       /* else{
             let currentArticle = ArticleData[0].articles[currentIndex]
             let newDate = dateFormatter.date(from: currentArticle.published_on!)
             print("newDAte:\(newDate!)")
@@ -184,7 +185,7 @@ class NewsDetailVC: UIViewController {
             lblSource.text = currentArticle.source
             lblTimeAgo.text = agoDate
             imgNews.downloadedFrom(link: "\(currentArticle.imageURL!)")
-        }
+        }*/
     }
     @IBAction func btnLikeActn(_ sender: Any) {
     }
@@ -193,8 +194,8 @@ class NewsDetailVC: UIViewController {
     }
     
     @IBAction func btnShareActn(_ sender: Any) {
-        let text = ArticleData[0].articles[newsCurrentIndex].title
-        let myUrl = NSURL(string:ArticleData[0].articles[newsCurrentIndex].url!)
+        let text = ShowArticle[newsCurrentIndex].title
+        let myUrl = NSURL(string:ShowArticle[newsCurrentIndex].imageURL!)
         let shareAll = [text ,myUrl] as [Any]
         let activityViewController = UIActivityViewController(activityItems: shareAll, applicationActivities: nil)
         activityViewController.popoverPresentationController?.sourceView = self.view

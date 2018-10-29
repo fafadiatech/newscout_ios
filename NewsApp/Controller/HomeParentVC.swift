@@ -115,7 +115,15 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
     
     func notifyChildOfPresentation(in scrollView: UIScrollView?) {
         let presentedViewController = viewControllers[currentIndex]
+     
         print("tab changed..\(currentIndex)")
+        let HomeVc = HomeVC()
+        if currentIndex < categories.count{
+        selectedCat = categories[currentIndex]
+            print("category selected : \(categories[currentIndex])")
+        }
+        
+       
     }
 }
 

@@ -18,6 +18,7 @@ class SearchVC: UIViewController {
     @IBOutlet weak var lblTitle: UILabel!
     //variables
     var count = 0
+    var ArticleData = [ArticleStatus]()
     var SearchData = [ArticleStatus]()
     var results: [NewsArticle] = []
     let appDelegate = UIApplication.shared.delegate as? AppDelegate
@@ -135,9 +136,9 @@ extension SearchVC: UITextFieldDelegate
         APICall().loadSearchAPI(searchTxt: txtSearch.text!){ response in
             switch response {
             case .Success(let data) :
-                ArticleData = data
+                self.ArticleData = data
                 print(data)
-                self.count = ArticleData[0].articles.count
+                self.count = self.ArticleData[0].articles.count
                 self.searchResultTV.reloadData()
             case .Failure(let errormessage) :
                 print(errormessage)

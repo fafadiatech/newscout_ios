@@ -12,35 +12,47 @@ import UIKit
 
 class DBManager{
     let appDelegate = UIApplication.shared.delegate as? AppDelegate
+    var ArticleData = [ArticleStatus]()
+    var CategoryData = [CategoryList]()
     
     //save articles in DB
-    func SaveDataDB()
+    func SaveDataDB(_ completion : @escaping (Bool) -> ())
     {
         let managedContext =
             appDelegate?.persistentContainer.viewContext
-        
-        if ArticleData.count != 0
-        {
-            for news in ArticleData[0].articles{
-                if  someEntityExists(title: news.title!, entity: "NewsArticle") == false
-                {
-                    let newArticle = NewsArticle(context: managedContext!)
-                    newArticle.article_id = news.article_id!
-                    newArticle.title = news.title
-                    newArticle.source = news.source!
-                    newArticle.imageURL = news.imageURL
-                    newArticle.source_url = news.url
-                    newArticle.published_on = news.published_on
-                    newArticle.blurb = news.blurb
-                    newArticle.category = news.category!
-                    do {
-                        try managedContext?.save()
-                        print("successfully saved ..")
-                        
-                    } catch let error as NSError  {
-                        print("Could not save \(error)")
+        APICall().loadNewsAPI{ response in
+            switch response {
+            case .Success(let data) :
+                self.ArticleData = data
+                
+            case .Failure(let errormessage) :
+                print(errormessage)
+            }
+            if self.ArticleData.count != 0{
+                for news in self.ArticleData[0].articles{
+                    if  self.someEntityExists(title: news.title!, entity: "NewsArticle") == false
+                    {
+                        let newArticle = NewsArticle(context: managedContext!)
+                        newArticle.article_id = news.article_id!
+                        newArticle.title = news.title
+                        newArticle.source = news.source!
+                        newArticle.imageURL = news.imageURL
+                        newArticle.source_url = news.url
+                        newArticle.published_on = news.published_on
+                        newArticle.blurb = news.blurb
+                        newArticle.category = news.category!
+                        do {
+                            try managedContext?.save()
+                            print("successfully saved ..")
+                            
+                        } catch let error as NSError  {
+                            print("Could not save \(error)")
+                        }
                     }
                 }
+                completion(true)
+            }else{
+                completion(false)
             }
         }
     }
@@ -102,26 +114,41 @@ class DBManager{
     }
     
     //save categories in DB
-    func SaveCategoryDB()
+    func SaveCategoryDB(_ completion : @escaping (Bool) -> ())
     {
         let managedContext =
             appDelegate?.persistentContainer.viewContext
-        for cat in CategoryData[0].categories{
-            if  someEntityExists(title: cat.title!, entity: "Category") == false
-            {
-                let newCategory = Category(context: managedContext!)
-                newCategory.cat_id = cat.cat_id!
-                newCategory.title = cat.title
-                do {
-                    try managedContext?.save()
-                    print("successfully saved ..")
-                    
-                } catch let error as NSError  {
-                    print("Could not save \(error)")
+        APICall().loadCategoriesAPI{ response in
+            switch response {
+            case .Success(let data) :
+                self.CategoryData = data
+            case .Failure(let errormessage) :
+                print(errormessage)
+            }
+            
+            if self.CategoryData.count != 0{
+                for cat in self.CategoryData[0].categories{
+                    if  self.someEntityExists(title: cat.title!, entity: "Category") == false
+                    {
+                        let newCategory = Category(context: managedContext!)
+                        newCategory.cat_id = cat.cat_id!
+                        newCategory.title = cat.title
+                        do {
+                            try managedContext?.save()
+                            print("successfully saved ..")
+                        } catch let error as NSError  {
+                            print("Could not save \(error)")
+                        }
+                    }
                 }
+                completion(true)
+            }
+            else{
+                completion(false)
             }
         }
     }
+    
     //fetch categories from DB
     func FetchCategoryFromDB() -> CategoryDBfetchResult
     {

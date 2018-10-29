@@ -18,6 +18,7 @@ class HomeVC: UIViewController{
     @IBOutlet weak var HomeNewsTV: UITableView!
     var tabBarTitle: String = ""
     var ShowArticle = [NewsArticle]()
+    var ArticleData = [ArticleStatus]()
     let appDelegate = UIApplication.shared.delegate as? AppDelegate
     var article_id = Int64()
     let activityIndicator = MDCActivityIndicator()
@@ -43,8 +44,14 @@ class HomeVC: UIViewController{
             let result = DBManager().FetchDataFromDB()
             switch result {
             case .Success(let DBData) :
-                self.ShowArticle = DBData
-                TotalResultcount = self.ShowArticle.count
+                let articles = DBData
+                if selectedCat == "FOR YOU" || selectedCat == "All News"
+                {
+                    self.filterNews(selectedCat: "All News" )
+                    print("cat pressed is: for u")
+                }else{
+                    self.filterNews(selectedCat: selectedCat )
+                }
                 self.HomeNewsTV.reloadData()
             case .Failure(let errorMsg) :
                 print(errorMsg)
@@ -52,33 +59,55 @@ class HomeVC: UIViewController{
             HomeNewsTV.reloadData()
         }
         else{
-            APICall().loadNewsAPI{ response in
-                switch response {
-                case .Success(let data) :
-                    ArticleData = data
-                    print(data)
-                    TotalResultcount = ArticleData[0].articles.count
-                    DBManager().SaveDataDB()
+            DBManager().SaveDataDB{response in
+                if response == true{
                     let result = DBManager().FetchDataFromDB()
                     switch result {
                     case .Success(let DBData) :
-                        self.ShowArticle = DBData
-                        TotalResultcount = self.ShowArticle.count
+                        let articles = DBData
+                        if selectedCat == "FOR YOU" || selectedCat == "All News"
+                        {
+                            self.filterNews(selectedCat: "All News" )
+                        }else{
+                        self.filterNews(selectedCat: selectedCat )
+                        }
                         self.HomeNewsTV.reloadData()
                     case .Failure(let errorMsg) :
                         print(errorMsg)
                     }
-                case .Failure(let errormessage) :
-                    print(errormessage)
-                    // handle the error
                 }
             }
         }
     }
     
+    func filterNews(selectedCat : String)
+    {
+        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "NewsArticle")
+        fetchRequest.predicate = NSPredicate(format: "category CONTAINS[c] %@", selectedCat)
+        let managedContext =
+            self.appDelegate?.persistentContainer.viewContext
+        do {
+            self.ShowArticle = (try managedContext?.fetch(fetchRequest))! as! [NewsArticle]
+            print("result.count: \(self.ShowArticle.count)")
+            print ("results val: \(self.ShowArticle)")
+            TotalResultcount = self.ShowArticle.count
+            self.HomeNewsTV.reloadData()
+            
+        }
+        catch {
+            print("error executing fetch request: \(error)")
+        }
+        
+    }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        HomeNewsTV.reloadData()
+        if selectedCat == ""
+        {
+            self.filterNews(selectedCat: "all news" )
+        }else{
+            self.filterNews(selectedCat: selectedCat )
+        }
+        self.HomeNewsTV.reloadData()
     }
     
     override func didReceiveMemoryWarning() {
@@ -115,26 +144,13 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource{
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
         dateFormatter.timeZone = NSTimeZone(name: "UTC")! as TimeZone
-        if ShowArticle.count == 0{
-            //display data using API call
-            let currentArticle = ArticleData[0].articles[indexPath.row]
-            print(currentArticle)
-            let newDate = dateFormatter.date(from: currentArticle.published_on!)
-            let agoDate = timeAgoSinceDate(newDate!)
-            cell.lblNewsHeading.text = currentArticle.title
-            cell.lblSource.text = currentArticle.source
-            cell.lblTimesAgo.text = agoDate
-            cell.imgNews.downloadedFrom(link: "\(currentArticle.imageURL!)")
-        }
-        else{
-            //display data using coredata
-            cell.lblNewsHeading.text = ShowArticle[indexPath.row].title
-            cell.lblSource.text = ShowArticle[indexPath.row].source
-            let newDate = dateFormatter.date(from: ShowArticle[indexPath.row].published_on!)
-            let agoDate = timeAgoSinceDate(newDate!)
-            cell.lblTimesAgo.text = agoDate
-            cell.imgNews.downloadedFrom(link: "\(ShowArticle[indexPath.row].imageURL!)")
-        }
+        //display data using coredata
+        cell.lblNewsHeading.text = ShowArticle[indexPath.row].title
+        cell.lblSource.text = ShowArticle[indexPath.row].source
+        let newDate = dateFormatter.date(from: ShowArticle[indexPath.row].published_on!)
+        let agoDate = timeAgoSinceDate(newDate!)
+        cell.lblTimesAgo.text = agoDate
+        cell.imgNews.downloadedFrom(link: "\(ShowArticle[indexPath.row].imageURL!)")
         
         if textSizeSelected == 0{
             cell.lblSource.font = xsmallFont

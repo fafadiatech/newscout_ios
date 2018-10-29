@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14313.18" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="SXV-EA-KWG">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="SXV-EA-KWG">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14283.14"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -569,9 +569,8 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="eVO-Ev-inh">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="eVO-Ev-inh">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="CategoryListID" rowHeight="67" id="O8I-oU-aqi" customClass="CategoryListTVCell" customModule="NewsApp" customModuleProvider="target">
@@ -608,6 +607,12 @@
                             </tableView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="eVO-Ev-inh" firstAttribute="leading" secondItem="DvU-27-jfv" secondAttribute="leading" id="3WR-b2-Pfs"/>
+                            <constraint firstItem="eVO-Ev-inh" firstAttribute="top" secondItem="iGE-V5-pBr" secondAttribute="top" id="6bb-4H-JvA"/>
+                            <constraint firstItem="eVO-Ev-inh" firstAttribute="bottom" secondItem="DvU-27-jfv" secondAttribute="bottom" id="UBJ-R8-B0q"/>
+                            <constraint firstItem="eVO-Ev-inh" firstAttribute="trailing" secondItem="DvU-27-jfv" secondAttribute="trailing" id="eup-ng-tFN"/>
+                        </constraints>
                         <viewLayoutGuide key="safeArea" id="DvU-27-jfv"/>
                     </view>
                     <connections>
@@ -1176,12 +1181,12 @@
         <image name="backArrow" width="256" height="256"/>
         <image name="bookmark" width="225" height="225"/>
         <image name="cross" width="512" height="512"/>
-        <image name="dislike" width="37.5" height="37.5"/>
+        <image name="dislike" width="50" height="50"/>
         <image name="f1" width="550" height="596"/>
-        <image name="facebook-48" width="36" height="36"/>
-        <image name="google-plus-40" width="32" height="32"/>
+        <image name="facebook-48" width="48" height="48"/>
+        <image name="google-plus-40" width="40" height="40"/>
         <image name="icon" width="512" height="512"/>
-        <image name="like" width="37.5" height="37.5"/>
-        <image name="share" width="37.5" height="37.5"/>
+        <image name="like" width="50" height="50"/>
+        <image name="share" width="50" height="50"/>
     </resources>
 </document>

@@ -18,33 +18,43 @@ class CategoryListVC: UIViewController {
     
     @IBOutlet weak var tableCategoryLIst: UITableView!
     var protocolObj : CategoryListProtocol?
-    var TotalResultcount = 0
+    var categoryCount = 0
     var catArr = ["ALL NEWS", "TRENDING", "TOP STORIES","NEWS", "TECHNOLOGY", "SPORTS", "POLITICS", "BUSINESS", "CELEBRITY", "INDIAN PARLIAMENT", "INDIAN RELIGION"]
     var showCategory = [Category]()
+    var CategoryData = [CategoryList]()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        APICall().loadCategoriesAPI{ response in
-            switch response {
-            case .Success(let data) :
-                CategoryData = data
-                print(data)
-                print(data)
-               // self.TotalResultcount = CategoryData[0].categories.count
-                DBManager().SaveCategoryDB()
+        let coredataRecordCount = DBManager().IsCoreDataEmpty()
+        if coredataRecordCount != 0{
+            let result = DBManager().FetchCategoryFromDB()
+            switch result {
+            case .Success(let DBData) :
+                self.showCategory = DBData
+                self.categoryCount = self.showCategory.count
+                self.tableCategoryLIst.reloadData()
+            case .Failure(let errorMsg) :
+                print(errorMsg)
+            }
+           self.tableCategoryLIst.reloadData()
+        }
+        else{
+                DBManager().SaveCategoryDB{response in
+                if response == true{
                 let result = DBManager().FetchCategoryFromDB()
                 switch result {
                 case .Success(let DBData) :
                     self.showCategory = DBData
-                    self.TotalResultcount = self.showCategory.count
+                    self.categoryCount = self.showCategory.count
                     self.tableCategoryLIst.reloadData()
                 case .Failure(let errorMsg) :
                     print(errorMsg)
+                    }
                 }
-            case .Failure(let errormessage) :
-                print(errormessage)
-            }
+        }
     }
     }
+    
     
     override var prefersStatusBarHidden: Bool {
         return true
@@ -56,7 +66,7 @@ class CategoryListVC: UIViewController {
     
     @objc func deleteCat(sender: UIButton){
         let indexPath = sender.tag
-        let selectedCategory = CategoryData[0].categories[indexPath].title!
+        let selectedCategory = showCategory[indexPath].title!
         protocolObj?.deleteCategory(currentCategory: selectedCategory)
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let vc:HomeParentVC = storyboard.instantiateViewController(withIdentifier: "HomeParentID") as! HomeParentVC
@@ -72,13 +82,13 @@ class CategoryListVC: UIViewController {
 extension CategoryListVC:UITableViewDelegate, UITableViewDataSource{
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return TotalResultcount
+        return categoryCount
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableCategoryLIst.dequeueReusableCell(withIdentifier: "CategoryListID", for:indexPath) as! CategoryListTVCell
-        let category =  CategoryData[0].categories[indexPath.row]
+        //CategoryData[0].categories[indexPath.row]
         cell.lblCategoryName.text = showCategory[indexPath.row].title
         cell.btnDelete.tag = indexPath.row
         if categories.contains(showCategory[indexPath.row].title!){
@@ -92,7 +102,7 @@ extension CategoryListVC:UITableViewDelegate, UITableViewDataSource{
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let selectedCat = CategoryData[0].categories[indexPath.row].title!
+        selectedCat = showCategory[indexPath.row].title!
         if !categories.contains(selectedCat)
         {
             protocolObj?.updateCategoryList(catName: selectedCat)
