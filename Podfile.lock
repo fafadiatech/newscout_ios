@@ -12,22 +12,25 @@ PODS:
   - MotionAnimator (2.8.1):
     - MotionInterchange (~> 1.6)
   - MotionInterchange (1.6.0)
+  - SwiftyJSON (4.1.0)
   - XLPagerTabStrip (8.0.1)
 
 DEPENDENCIES:
   - Alamofire
   - Floaty
   - MaterialComponents/ActivityIndicator
+  - SwiftyJSON
   - XLPagerTabStrip
 
 SPEC REPOS:
-  https://github.com/cocoapods/specs.git:
+  https://github.com/CocoaPods/Specs.git:
     - Alamofire
     - Floaty
     - MaterialComponents
     - MDFInternationalization
     - MotionAnimator
     - MotionInterchange
+    - SwiftyJSON
     - XLPagerTabStrip
 
 SPEC CHECKSUMS:
@@ -37,8 +40,9 @@ SPEC CHECKSUMS:
   MDFInternationalization: e355b0cebecf53d60233bd267084e49366c82513
   MotionAnimator: ee16aa30567c5bae0fb2750c132915829cfaaf8a
   MotionInterchange: ead0e3ae1f3a5fb539e289debbc7ae036160a10d
+  SwiftyJSON: c29297daf073d2aa016295d5809cdd68045c39b3
   XLPagerTabStrip: c908b17cbf42fcd2598ee1adfc49bae25444d88a
 
-PODFILE CHECKSUM: 357cabb12621a79c834a8e2883855da75097f859
+PODFILE CHECKSUM: b6b364b6d7d5993849361aaffe8091ccd8ef146d
 
-COCOAPODS: 1.5.3
+COCOAPODS: 1.5.0

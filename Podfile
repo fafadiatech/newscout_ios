@@ -7,6 +7,7 @@ target 'NewsApp' do
 
   # Pods for NewsApp
 	#pod 'GoogleSignIn'
+     pod 'SwiftyJSON'
 	pod 'Alamofire'
 	pod "Floaty"
     pod 'XLPagerTabStrip'

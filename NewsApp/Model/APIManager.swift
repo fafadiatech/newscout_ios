@@ -9,6 +9,7 @@
 import Foundation
 import Alamofire
 import UIKit
+import SwiftyJSON
 
 class APICall{
     //API call to load all articles on HomeVC
@@ -66,7 +67,6 @@ class APICall{
                         let jsonData = try jsonDecoder.decode(ArticleStatus.self, from: data)
                         print(jsonData)
                         completion(ArticleAPIResult.Success([jsonData]))
-                        
                     }
                     catch {
                         print("Error: \(error)")
@@ -77,4 +77,26 @@ class APICall{
         }
     }
     
+    //Signup API
+    func SignupAPI(fname : String, lname : String, email: String, pswd: String,_ completion : @escaping (String) ->()) {
+        let url = APPURL.SignUpURL
+        let param = ["first_name": fname,
+                     "last_name": lname,
+                     "email" : email,
+                     "password" : pswd]
+        
+        Alamofire.request(url,method: .post, parameters: param).responseJSON{
+            response in
+            if(response.result.isSuccess){
+                let output = JSON(response.result.value!)
+                if(output["header"]["status"] == "1"){
+                    completion(output["body"]["Msg"].stringValue)
+                }
+                else{
+                    output["errors"]["error_list"] as? [[String: Any]]
+                    completion(output["errors"]["errorList"].stringValue)
+                }
+            }
+        }
+    }
 }

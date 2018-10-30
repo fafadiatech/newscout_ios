@@ -10,8 +10,13 @@ import UIKit
 
 class LoginVC: UIViewController {
     
+    @IBOutlet weak var txtUsername: UITextField!
+    @IBOutlet weak var txtPassword: UITextField!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        txtUsername.autocorrectionType = .no
+        txtPassword.autocorrectionType = .no
     }
     
     override var prefersStatusBarHidden: Bool {

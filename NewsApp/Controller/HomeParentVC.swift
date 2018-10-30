@@ -28,9 +28,9 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
         
         // To make the activity indicator appear:
         //activityIndicator.startAnimating()
-      
+        
         // To make the activity indicator disappear:
-       // activityIndicator.stopAnimating()
+        // activityIndicator.stopAnimating()
         
         let floaty = Floaty()
         floaty.itemTitleColor = .blue
@@ -73,7 +73,7 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
         buttonBarView.backgroundColor = commonColor
         //UIColor(red: 7/255, green: 185/255, blue: 155/255, alpha: 1
     }
-  
+    
     override var prefersStatusBarHidden: Bool {
         return true
     }
@@ -81,7 +81,7 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
     }
-   
+    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
     }
@@ -115,15 +115,23 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
     
     func notifyChildOfPresentation(in scrollView: UIScrollView?) {
         let presentedViewController = viewControllers[currentIndex]
-     
+        
         print("tab changed..\(currentIndex)")
-        let HomeVc = HomeVC()
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let HomeVc:HomeVC = storyboard.instantiateViewController(withIdentifier: "HomeVC") as! HomeVC
         if currentIndex < categories.count{
-        selectedCat = categories[currentIndex]
+            selectedCat = categories[currentIndex]
             print("category selected : \(categories[currentIndex])")
+            if categories[currentIndex] == "FOR YOU"{
+                HomeVc.filterNews(selectedCat: "All News")
+            }
+            else{
+                HomeVc.filterNews(selectedCat: "\(categories[currentIndex])")
+            }
+            
         }
         
-       
+        
     }
 }
 

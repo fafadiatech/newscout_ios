@@ -25,7 +25,7 @@ class CategoryListVC: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        let coredataRecordCount = DBManager().IsCoreDataEmpty()
+        let coredataRecordCount = DBManager().IsCategoryDataEmpty()
         if coredataRecordCount != 0{
             let result = DBManager().FetchCategoryFromDB()
             switch result {
@@ -36,25 +36,23 @@ class CategoryListVC: UIViewController {
             case .Failure(let errorMsg) :
                 print(errorMsg)
             }
-           self.tableCategoryLIst.reloadData()
         }
         else{
-                DBManager().SaveCategoryDB{response in
+            DBManager().SaveCategoryDB{response in
                 if response == true{
-                let result = DBManager().FetchCategoryFromDB()
-                switch result {
-                case .Success(let DBData) :
-                    self.showCategory = DBData
-                    self.categoryCount = self.showCategory.count
-                    self.tableCategoryLIst.reloadData()
-                case .Failure(let errorMsg) :
-                    print(errorMsg)
+                    let result = DBManager().FetchCategoryFromDB()
+                    switch result {
+                    case .Success(let DBData) :
+                        self.showCategory = DBData
+                        self.categoryCount = self.showCategory.count
+                        self.tableCategoryLIst.reloadData()
+                    case .Failure(let errorMsg) :
+                        print(errorMsg)
                     }
                 }
+            }
         }
     }
-    }
-    
     
     override var prefersStatusBarHidden: Bool {
         return true
@@ -86,7 +84,6 @@ extension CategoryListVC:UITableViewDelegate, UITableViewDataSource{
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
         let cell = tableCategoryLIst.dequeueReusableCell(withIdentifier: "CategoryListID", for:indexPath) as! CategoryListTVCell
         //CategoryData[0].categories[indexPath.row]
         cell.lblCategoryName.text = showCategory[indexPath.row].title
@@ -103,8 +100,7 @@ extension CategoryListVC:UITableViewDelegate, UITableViewDataSource{
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         selectedCat = showCategory[indexPath.row].title!
-        if !categories.contains(selectedCat)
-        {
+        if !categories.contains(selectedCat){
             protocolObj?.updateCategoryList(catName: selectedCat)
         }
         else{

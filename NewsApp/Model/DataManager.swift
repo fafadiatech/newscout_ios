@@ -112,7 +112,22 @@ class DBManager{
         }
         return records.count
     }
+    //check if category table is empty
     
+    func IsCategoryDataEmpty() -> Int
+    {
+        let managedContext =
+            appDelegate?.persistentContainer.viewContext
+        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "Category")
+        var records = [Category]()
+        do {
+            records = (try managedContext?.fetch(fetchRequest)) as! [Category]
+        }
+        catch {
+            print("error executing fetch request: \(error)")
+        }
+        return records.count
+    }
     //save categories in DB
     func SaveCategoryDB(_ completion : @escaping (Bool) -> ())
     {

@@ -9,15 +9,36 @@
 import UIKit
 
 class SignUpVC: UIViewController {
-
+    
+    @IBOutlet weak var txtFname: UITextField!
+    @IBOutlet weak var txtLname: UITextField!
+    @IBOutlet weak var txtEmail: UITextField!
+    @IBOutlet weak var txtPassword: UITextField!
+    @IBOutlet weak var txtConfirmPswd: UITextField!
     override func viewDidLoad() {
         super.viewDidLoad()
+        txtFname.autocorrectionType = .no
+        txtLname.autocorrectionType = .no
+        txtEmail.autocorrectionType = .no
+        txtPassword.autocorrectionType = .no
+        txtConfirmPswd.autocorrectionType = .no
     }
-
+    
     @IBAction func btnBackActn(_ sender: Any) {
         self.dismiss(animated: true)
     }
     
+    @IBAction func btnSignUpActn(_ sender: Any) {
+        APICall().SignupAPI(fname: txtFname.text!, lname: txtLname.text!, email: txtEmail.text!, pswd: txtPassword.text!){response in
+            if response == "success"{
+                print(response)
+            }
+            else{
+                print(response)
+            }
+            
+        }
+    }
     //Hide status bar
     override var prefersStatusBarHidden: Bool {
         return true
