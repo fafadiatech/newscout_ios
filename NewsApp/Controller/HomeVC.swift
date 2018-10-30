@@ -56,7 +56,7 @@ class HomeVC: UIViewController{
             case .Failure(let errorMsg) :
                 print(errorMsg)
             }
-            HomeNewsTV.reloadData()
+            //HomeNewsTV.reloadData()
         }
         else{
             DBManager().SaveDataDB{response in
@@ -91,8 +91,7 @@ class HomeVC: UIViewController{
             print("result.count: \(self.ShowArticle.count)")
             print ("results val: \(self.ShowArticle)")
             TotalResultcount = self.ShowArticle.count
-            self.HomeNewsTV.reloadData()
-            
+           // self.HomeNewsTV.reloadData()
         }
         catch {
             print("error executing fetch request: \(error)")
@@ -101,13 +100,13 @@ class HomeVC: UIViewController{
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        if selectedCat == ""
-        {
-            self.filterNews(selectedCat: "all news" )
-        }else{
-            self.filterNews(selectedCat: selectedCat )
-        }
-        self.HomeNewsTV.reloadData()
+//        if selectedCat == "" || selectedCat == "FOR YOU" || selectedCat == "All News"
+//        {
+//            self.filterNews(selectedCat: "all news" )
+//        }else{
+//            self.filterNews(selectedCat: selectedCat )
+//        }
+       // self.HomeNewsTV.reloadData()
     }
     
     override func didReceiveMemoryWarning() {
@@ -118,6 +117,14 @@ class HomeVC: UIViewController{
 
 extension HomeVC: UITableViewDelegate, UITableViewDataSource{
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if ShowArticle.count == 0
+        {
+            let alertController = UIAlertController(title: "There is not any article found in this category...", message: "", preferredStyle: .alert)
+            let action1 = UIAlertAction(title: "OK", style: .default) { (action:UIAlertAction) in }
+            alertController.addAction(action1)
+            self.present(alertController, animated: true, completion: nil)
+        }
+        activityIndicator.stopAnimating()
         return TotalResultcount
     }
     
@@ -139,7 +146,7 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource{
         cell.ViewCellBackground.layer.cornerRadius = 10.0
         cell.imgNews.layer.cornerRadius = 10.0
         cell.imgNews.clipsToBounds = true
-        
+       
         //timestamp conversion
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
