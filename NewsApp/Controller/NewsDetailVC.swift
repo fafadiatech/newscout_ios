@@ -30,10 +30,20 @@ class NewsDetailVC: UIViewController {
     var ArticleData = [ArticleStatus]()
     var ShowArticle = [NewsArticle]()
     var ArticleDetail = ArticleDict.init(article_id: 0, category: "", source: "", title: "", imageURL: "", url: "", published_on: "", blurb: "")
-    
+    var suggestedCVCount = 0
     override func viewDidLoad() {
         super.viewDidLoad()
         ViewWebContainer.isHidden = true
+        APICall().loadRecommendationNewsAPI{ response in
+            switch response {
+            case .Success(let data) :
+                self.ArticleData = data
+                self.suggestedCVCount = self.ArticleData[0].body.articles.count
+                self.suggestedCV.reloadData()
+            case .Failure(let errormessage) :
+                print(errormessage)
+            }
+        }
         ShowNews(currentIndex: newsCurrentIndex)
         let swipeUp = UISwipeGestureRecognizer(target: self, action: #selector(self.respondToSwipeGesture))
         swipeUp.direction = UISwipeGestureRecognizerDirection.up
@@ -223,12 +233,12 @@ class NewsDetailVC: UIViewController {
 }
 extension NewsDetailVC:UICollectionViewDelegate, UICollectionViewDataSource{
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return ShowArticle.count
+        return suggestedCVCount
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "SuggestedNewsID", for: indexPath) as! SuggestedNewsCVCell
-        let currentArticle =  ShowArticle[indexPath.row] //ArticleData[0].articles[indexPath.row]
+        let currentArticle =  ArticleData[0].body.articles[indexPath.row]
         cell.lblTitle.text = currentArticle.title
         cell.imgNews.downloadedFrom(link: "\(currentArticle.imageURL!)")
         return cell

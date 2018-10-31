@@ -10,12 +10,27 @@ import Foundation
 
 struct ArticleStatus : Decodable
 {
-    let articles : [Article]
+   // let articles : [Article]
+    let header : Header
+    let body: articleBody
+    
 }
-
+struct articleBody : Decodable
+{
+    let count :  Int?
+    let next : String?
+    let previous : String?
+    let articles : [Article]
+    
+    enum CodingKeys: String, CodingKey{
+        case articles 
+        case count
+        case next
+        case previous
+    }
+}
 struct Article: Decodable
 {
-    //let categories: [String]?
     let article_id : Int64?
     let category : String?
     let source: String?
@@ -78,6 +93,40 @@ struct CategoryDetails : Decodable
         case cat_id = "id"
         case title = "name"
     }
+}
+
+struct MainModel: Decodable
+{
+    let header : Header
+    let errors: Error?
+    let body: Body?
+}
+
+struct Header : Decodable
+{
+    let status: String
+}
+
+struct Error : Decodable
+{
+    let errorList : [ErrorItem]?
+    let invalid_credentials : String?
+}
+
+struct ErrorItem : Decodable
+{
+    let field: String
+    let field_error : String
+}
+struct Body : Decodable{
+    //signup
+    let Msg : String?
+    //login
+    let token : String?
+    let user_id : Int?
+    let first_name : String?
+    let last_name : String?
+    
 }
 
 enum ArticleAPIResult {

@@ -30,15 +30,19 @@ class SignUpVC: UIViewController {
     
     @IBAction func btnSignUpActn(_ sender: Any) {
         APICall().SignupAPI(fname: txtFname.text!, lname: txtLname.text!, email: txtEmail.text!, pswd: txtPassword.text!){response in
-            if response == "success"{
-                print(response)
-            }
-            else{
-                print(response)
-            }
+            print("signup response:\(response)")
+            let alertController = UIAlertController(title:response, message: "", preferredStyle: .alert)
+            
+            let action1 = UIAlertAction(title: "OK", style: .default) { (action:UIAlertAction) in }
+            
+            alertController.addAction(action1)
+            
+            self.present(alertController, animated: true, completion: nil)
             
         }
+        
     }
+    
     //Hide status bar
     override var prefersStatusBarHidden: Bool {
         return true

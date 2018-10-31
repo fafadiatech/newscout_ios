@@ -29,7 +29,7 @@ class DBManager{
                 print(errormessage)
             }
             if self.ArticleData.count != 0{
-                for news in self.ArticleData[0].articles{
+                for news in self.ArticleData[0].body.articles{ 
                     if  self.someEntityExists(title: news.title!, entity: "NewsArticle") == false
                     {
                         let newArticle = NewsArticle(context: managedContext!)

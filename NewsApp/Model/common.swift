@@ -18,6 +18,7 @@ var categories = ["FOR YOU"]
 var obj = HomeParentVC()
 var selectedCat = "FOR YOU"
 var isSearch = false
+var articleId = 0
 var commonColor = UIColor.gray
 var xsmallFont = UIFont(name: AppFontName.regular, size: Constants.fontxSmall)
 var xLargeFont = UIFont(name: AppFontName.regular, size: Constants.fontxLarge)
@@ -84,11 +85,12 @@ struct APPURL {
     
     private  struct Routes {
         static let Articles = "/api/v1/articles"
-        static let Login = "/api/v1/login"
-        static let SignUp = "/api/v1/signup"
-        static let Logout = "/api/v1/logout"
+        static let Login = "/api/v1/login/"
+        static let SignUp = "/api/v1/signup/"
+        static let Logout = "/api/v1/logout/"
         static let Categories = "/api/v1/categories"
         static let Search = "/api/v1/search/?q="
+        static let recommendation = "/api/v1/articles/" + "\(articleId)" + "/recommendations/"
     }
     
     static let ArticlesURL = Domains.Local + Routes.Articles
@@ -97,5 +99,6 @@ struct APPURL {
     static let LogoutURL =  Domains.Local + Routes.Logout
     static let CategoriesURL =  Domains.Local + Routes.Categories
     static let SearchURL =  Domains.Local + Routes.Search
+    static let recommendationURL = Domains.Local + Routes.recommendation
 }
 

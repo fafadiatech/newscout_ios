@@ -27,13 +27,35 @@ class APICall{
                     }
                     catch {
                         print("Error: \(error)")
-                        completion(ArticleAPIResult.Failure(error as! String))
+                        completion(ArticleAPIResult.Failure(error.localizedDescription
+                        ))
                     }
                 }
             }
         }
     }
     
+    func loadRecommendationNewsAPI(_ completion : @escaping (ArticleAPIResult) -> ()){
+        let url = APPURL.recommendationURL
+        print(url)
+        Alamofire.request(url,method: .post).responseJSON{
+            response in
+            if(response.result.isSuccess){
+                if let data = response.data {
+                    let jsonDecoder = JSONDecoder()
+                    do {
+                        let jsonData = try jsonDecoder.decode(ArticleStatus.self, from: data)
+                        completion(ArticleAPIResult.Success([jsonData]))
+                    }
+                    catch {
+                        print("Error: \(error)")
+                        completion(ArticleAPIResult.Failure(error.localizedDescription
+                        ))
+                    }
+                }
+            }
+        }
+    }
     func loadCategoriesAPI(_ completion : @escaping (CategoryAPIResult) -> ()){
         let url = APPURL.CategoriesURL
         
@@ -84,19 +106,68 @@ class APICall{
                      "last_name": lname,
                      "email" : email,
                      "password" : pswd]
-        
-        Alamofire.request(url,method: .post, parameters: param).responseJSON{
+        print(param)
+        Alamofire.request(url,method: .post, parameters: param).responseString{
             response in
             if(response.result.isSuccess){
-                let output = JSON(response.result.value!)
-                if(output["header"]["status"] == "1"){
-                    completion(output["body"]["Msg"].stringValue)
+                if let data = response.data {
+                    let jsonDecoder = JSONDecoder()
+                    do {
+                        let jsonData = try jsonDecoder.decode(MainModel.self, from: data)
+                        print(jsonData)
+                        if jsonData.header.status == "0"{
+                            completion(jsonData.errors!.errorList![0].field_error)
+                        }
+                        else{
+                            completion(jsonData.body!.Msg!)
+                        }
+                    }
+                    catch {
+                        print("Error: \(error)")
+                    }
                 }
-                else{
-                    output["errors"]["error_list"] as? [[String: Any]]
-                    completion(output["errors"]["errorList"].stringValue)
-                }
+            }
+            else{
+                print(response.result.error!)
             }
         }
     }
+    
+    //Login API
+    func LoginAPI(email : String, pswd : String,_ completion : @escaping (String) ->()) {
+        let url = APPURL.LoginURL
+        let param = ["email" : email,
+                     "password" : pswd]
+        print(param)
+        Alamofire.request(url,method: .post, parameters: param).responseString{
+            response in
+            if(response.result.isSuccess){
+                if let data = response.data {
+                    let jsonDecoder = JSONDecoder()
+                    do {
+                        let jsonData = try jsonDecoder.decode(MainModel.self, from: data)
+                        print(jsonData)
+                        if jsonData.header.status == "0"{
+                            completion(jsonData.errors!.invalid_credentials!)
+                        }
+                        else{
+                            UserDefaults.standard.set(jsonData.body?.first_name, forKey: "first_name")
+                            UserDefaults.standard.set(jsonData.body?.last_name, forKey: "last_name")
+                            UserDefaults.standard.set(jsonData.body?.token, forKey: "token")
+                            UserDefaults.standard.set(jsonData.body?.user_id, forKey: "user_id")
+                             UserDefaults.standard.set(email, forKey: "email")
+                            completion("successfully logged in ..")
+                        }
+                    }
+                    catch {
+                        print("Error: \(error)")
+                    }
+                }
+            }
+            else{
+                print(response.result.error!)
+            }
+        }
+    }
+    
 }

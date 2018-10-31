@@ -22,7 +22,7 @@ class HomeVC: UIViewController{
     let appDelegate = UIApplication.shared.delegate as? AppDelegate
     var article_id = Int64()
     let activityIndicator = MDCActivityIndicator()
-    
+    var page = 1
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -133,6 +133,7 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource{
         let newsDetailvc:NewsDetailVC = storyboard.instantiateViewController(withIdentifier: "NewsDetailID") as! NewsDetailVC
         newsCurrentIndex = indexPath.row
         newsDetailvc.ShowArticle = ShowArticle
+        articleId = Int(ShowArticle[indexPath.row].article_id)
         present(newsDetailvc, animated: true, completion: nil)
     }
     
@@ -176,6 +177,15 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource{
         activityIndicator.stopAnimating()
         return cell
     }
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        let lastSectionIndex : NSInteger = HomeNewsTV.numberOfSections - 1
+        let lastRowIndex : NSInteger = HomeNewsTV.numberOfRows(inSection: lastSectionIndex) - 1
+        if ((indexPath as NSIndexPath).row == lastRowIndex){
+            print("You are at last cell")
+           page = page + 1
+        }
+    }
+    
 }
 
 extension HomeVC: IndicatorInfoProvider{

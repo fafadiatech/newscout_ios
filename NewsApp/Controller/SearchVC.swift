@@ -101,14 +101,14 @@ extension SearchVC: UITableViewDelegate, UITableViewDataSource{
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
         dateFormatter.timeZone = NSTimeZone(name: "UTC")! as TimeZone
         
-        let currentArticle = ArticleData[0].articles[indexPath.row]//SearchData[0].articles[indexPath.row]
+        let currentArticle = SearchData[0].body.articles[indexPath.row]
         cell.lblSource.text = currentArticle.source
         let newDate = dateFormatter.date(from: currentArticle.published_on!)
         let agoDate = timeAgoSinceDate(newDate!)
         cell.lbltimeAgo.text = agoDate
         cell.lblNewsDescription.text = currentArticle.title
         cell.imgNews.downloadedFrom(link: "\(currentArticle.imageURL!)")
-        
+//
         if textSizeSelected == 0{
             cell.lblSource.font = xsmallFont
             cell.lblNewsDescription.font = smallFontMedium
@@ -138,7 +138,7 @@ extension SearchVC: UITextFieldDelegate
             case .Success(let data) :
                 self.ArticleData = data
                 print(data)
-                self.count = self.ArticleData[0].articles.count
+               self.count = self.ArticleData[0].body.articles.count
                 self.searchResultTV.reloadData()
             case .Failure(let errormessage) :
                 print(errormessage)
