@@ -84,7 +84,7 @@ struct APPURL {
     }
     
     private  struct Routes {
-        static let Articles = "/api/v1/articles"
+        static let Articles = "/api/v1/articles/?page="
         static let Login = "/api/v1/login/"
         static let SignUp = "/api/v1/signup/"
         static let Logout = "/api/v1/logout/"

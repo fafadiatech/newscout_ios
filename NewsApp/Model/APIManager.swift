@@ -13,10 +13,10 @@ import SwiftyJSON
 
 class APICall{
     //API call to load all articles on HomeVC
-    func loadNewsAPI(_ completion : @escaping (ArticleAPIResult) -> ()){
-        let url = APPURL.ArticlesURL
-        
-        Alamofire.request(url,method: .get).responseJSON{
+    func loadNewsAPI(page: Int, _ completion : @escaping (ArticleAPIResult) -> ()){
+        let url = APPURL.ArticlesURL + "\(page)"
+        print("Load API url: \(url)")
+        Alamofire.request(url,method: .get).responseString{
             response in
             if(response.result.isSuccess){
                 if let data = response.data {
@@ -138,6 +138,7 @@ class APICall{
         let url = APPURL.LoginURL
         let param = ["email" : email,
                      "password" : pswd]
+        
         print(param)
         Alamofire.request(url,method: .post, parameters: param).responseString{
             response in
@@ -156,7 +157,7 @@ class APICall{
                             UserDefaults.standard.set(jsonData.body?.token, forKey: "token")
                             UserDefaults.standard.set(jsonData.body?.user_id, forKey: "user_id")
                              UserDefaults.standard.set(email, forKey: "email")
-                            completion("successfully logged in ..")
+                            completion("1")
                         }
                     }
                     catch {
@@ -171,12 +172,13 @@ class APICall{
     }
     
     //Logout API
-    func LogoutAPI(_ completion : @escaping (String) ->()) {
-        let url = APPURL.LoginURL
-        let token = UserDefaults.standard.value(forKey: "token")
-        let param = ["Authorization" : token]
-        print(param)
-        Alamofire.request(url,method: .get, parameters: param).responseString{
+    func LogoutAPI(_ completion : @escaping (String, String) ->()) {
+        let url = APPURL.LogoutURL
+        let token = "Token " + "\(UserDefaults.standard.value(forKey: "token")!)"
+        //let param = ["Authorization" : token]
+        let headers = ["Authorization": token]
+       
+        Alamofire.request(url,method: .get, parameters: nil, headers: headers).responseString{
             response in
             if(response.result.isSuccess){
                 if let data = response.data {
@@ -185,7 +187,7 @@ class APICall{
                         let jsonData = try jsonDecoder.decode(MainModel.self, from: data)
                         print(jsonData)
                         if jsonData.header.status == "0"{
-                            completion(jsonData.errors!.invalid_credentials!)
+                            completion(jsonData.header.status,jsonData.errors!.invalid_credentials!)
                         }
                         else{
                             let defaults = UserDefaults.standard
@@ -194,7 +196,7 @@ class APICall{
                             defaults.removeObject(forKey: "last_name")
                             defaults.removeObject(forKey: "user_id")
                             defaults.synchronize()
-                             completion(jsonData.body!.Msg!)
+                             completion(jsonData.header.status,jsonData.body!.Msg!)
                         }
                     }
                     catch {

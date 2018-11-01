@@ -16,11 +16,11 @@ class DBManager{
     var CategoryData = [CategoryList]()
     
     //save articles in DB
-    func SaveDataDB(_ completion : @escaping (Bool) -> ())
+    func SaveDataDB(pageNum:Int,_ completion : @escaping (Bool) -> ())
     {
         let managedContext =
             appDelegate?.persistentContainer.viewContext
-        APICall().loadNewsAPI{ response in
+        APICall().loadNewsAPI(page:pageNum){ response in
             switch response {
             case .Success(let data) :
                 self.ArticleData = data
@@ -29,8 +29,9 @@ class DBManager{
                 print(errormessage)
             }
             if self.ArticleData.count != 0{
+                print(self.ArticleData[0].body.articles)
                 for news in self.ArticleData[0].body.articles{ 
-                    if  self.someEntityExists(title: news.title!, entity: "NewsArticle") == false
+                    if  self.someEntityExists(id: Int(news.article_id!), entity: "NewsArticle") == false
                     {
                         let newArticle = NewsArticle(context: managedContext!)
                         newArticle.article_id = news.article_id!
@@ -58,9 +59,10 @@ class DBManager{
     }
     
     //check for existing entry in DB
-    func someEntityExists(title: String, entity : String) -> Bool {
+    func someEntityExists(id: Int, entity : String) -> Bool {
         let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: entity)
-        fetchRequest.predicate = NSPredicate(format: "title = %@",title)
+       fetchRequest.predicate = NSPredicate(format: "article_id == \(id)")
+        //= %@",id)
         
         let managedContext =
             appDelegate?.persistentContainer.viewContext
@@ -143,7 +145,7 @@ class DBManager{
             
             if self.CategoryData.count != 0{
                 for cat in self.CategoryData[0].categories{
-                    if  self.someEntityExists(title: cat.title!, entity: "Category") == false
+                    if  self.someEntityExists(id: Int(cat.cat_id!), entity: "Category") == false
                     {
                         let newCategory = Category(context: managedContext!)
                         newCategory.cat_id = cat.cat_id!

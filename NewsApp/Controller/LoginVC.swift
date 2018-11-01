@@ -41,10 +41,15 @@ class LoginVC: UIViewController {
         else{
         APICall().LoginAPI(email: txtUsername.text!, pswd: txtPassword.text!){response in
             print("Login response:\(response)")
-            //self.showMSg(title: response, msg: "")
+            if response == "1"{
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             let HomeVc:HomeParentVC = storyboard.instantiateViewController(withIdentifier: "HomeParentID") as! HomeParentVC
-            self.present(HomeVc, animated: true, completion: nil)
+                self.present(HomeVc, animated: true, completion: nil)
+                
+            }
+            else{
+                self.showMSg(title: response, msg: "")
+            }
         }
         }
     }

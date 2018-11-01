@@ -81,12 +81,19 @@ class SettingsTVC: UITableViewController {
             present(vc, animated: true, completion: nil)
             }
            else{
-            APICall().LogoutAPI{response in
+            APICall().LogoutAPI{(status, response) in
+                print(status,response)
+                if status == "1"{
                 print("Logout response:\(response)")
                 self.showMSg(title: response, msg: "")
+                    self.lblLogout.isHidden = true
+                    self.lblLogin.text = "Login"
             }
-            lblLogout.isHidden = true
-            lblLogin.text = "Login"
+                else{
+                    self.showMSg(title: response, msg: "")
+                }
+            }
+            
             }
         }
         return indexPath

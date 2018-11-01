@@ -13,7 +13,7 @@ import Alamofire
 import CoreData
 import MaterialComponents.MaterialActivityIndicator
 
-class HomeVC: UIViewController{
+class HomeVC: UIViewController, UIScrollViewDelegate{
     
     @IBOutlet weak var HomeNewsTV: UITableView!
     var tabBarTitle: String = ""
@@ -22,7 +22,8 @@ class HomeVC: UIViewController{
     let appDelegate = UIApplication.shared.delegate as? AppDelegate
     var article_id = Int64()
     let activityIndicator = MDCActivityIndicator()
-    var page = 1
+    var pageNum = 0
+    var coredataRecordCount = 0
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -39,7 +40,7 @@ class HomeVC: UIViewController{
         // activityIndicator.stopAnimating()
         var paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
         print("\(paths[0])")
-        let coredataRecordCount = DBManager().IsCoreDataEmpty()
+         coredataRecordCount = DBManager().IsCoreDataEmpty()
         if coredataRecordCount != 0{
             let result = DBManager().FetchDataFromDB()
             switch result {
@@ -59,7 +60,7 @@ class HomeVC: UIViewController{
             HomeNewsTV.reloadData()
         }
         else{
-            DBManager().SaveDataDB{response in
+            DBManager().SaveDataDB(pageNum:pageNum){response in
                 if response == true{
                     let result = DBManager().FetchDataFromDB()
                     switch result {
@@ -106,6 +107,7 @@ class HomeVC: UIViewController{
         //            self.filterNews(selectedCat: selectedCat )
         //        }
         //        self.HomeNewsTV.reloadData()
+    
     }
     
     override func didReceiveMemoryWarning() {
@@ -146,7 +148,7 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource{
         cell.ViewCellBackground.layer.cornerRadius = 10.0
         cell.imgNews.layer.cornerRadius = 10.0
         cell.imgNews.clipsToBounds = true
-        
+      
         //timestamp conversion
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
@@ -177,13 +179,33 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource{
         activityIndicator.stopAnimating()
         return cell
     }
+    
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         let lastSectionIndex : NSInteger = HomeNewsTV.numberOfSections - 1
         let lastRowIndex : NSInteger = HomeNewsTV.numberOfRows(inSection: lastSectionIndex) - 1
+        print(lastRowIndex)
         if ((indexPath as NSIndexPath).row == lastRowIndex){
             print("You are at last cell")
-           page = page + 1
+           pageNum = pageNum + 1
+            DBManager().SaveDataDB(pageNum:pageNum){response in
+                if response == true{
+                    let result = DBManager().FetchDataFromDB()
+                    switch result {
+                    case .Success(let DBData) :
+                        let articles = DBData
+                        if  selectedCat == "" || selectedCat == "FOR YOU" || selectedCat == "All News"{
+                            self.filterNews(selectedCat: "All News" )
+                        }else{
+                            self.filterNews(selectedCat: selectedCat )
+                        }
+                       // self.HomeNewsTV.reloadData()
+                    case .Failure(let errorMsg) :
+                        print(errorMsg)
+                    }
+                }
+            }
         }
+
     }
     
 }
