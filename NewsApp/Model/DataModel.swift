@@ -23,7 +23,7 @@ struct articleBody : Decodable
     let articles : [Article]
     
     enum CodingKeys: String, CodingKey{
-        case articles 
+        case articles = "results"
         case count
         case next
         case previous
@@ -51,7 +51,7 @@ struct Article: Decodable
         case blurb
     }
 }
-
+//for news detail
 struct ArticleDetails: Decodable
 {
     let article : ArticleDict 

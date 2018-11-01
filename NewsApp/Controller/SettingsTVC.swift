@@ -81,10 +81,10 @@ class SettingsTVC: UITableViewController {
             present(vc, animated: true, completion: nil)
             }
            else{
-            let defaults = UserDefaults.standard
-            defaults.removeObject(forKey: "token")
-            defaults.removeObject(forKey: "email")
-            defaults.synchronize()
+            APICall().LogoutAPI{response in
+                print("Logout response:\(response)")
+                self.showMSg(title: response, msg: "")
+            }
             lblLogout.isHidden = true
             lblLogin.text = "Login"
             }
@@ -92,6 +92,22 @@ class SettingsTVC: UITableViewController {
         return indexPath
     }
     
+    func showMSg(title: String, msg: String)
+    {
+        
+        let alertController = UIAlertController(title: title, message: msg, preferredStyle: .alert)
+        if UI_USER_INTERFACE_IDIOM() == .pad
+        {
+            alertController.popoverPresentationController?.sourceView = self.view
+            alertController.popoverPresentationController?.sourceRect = CGRect(x: self.view.bounds.midX, y: self.view.bounds.midY, width: 0, height: 0)
+            
+        }
+        let action1 = UIAlertAction(title: "OK", style: .default) { (action:UIAlertAction) in }
+        
+        alertController.addAction(action1)
+        
+        self.present(alertController, animated: true, completion: nil)
+    }
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.

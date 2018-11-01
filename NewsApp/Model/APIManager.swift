@@ -170,4 +170,42 @@ class APICall{
         }
     }
     
+    //Logout API
+    func LogoutAPI(_ completion : @escaping (String) ->()) {
+        let url = APPURL.LoginURL
+        let token = UserDefaults.standard.value(forKey: "token")
+        let param = ["Authorization" : token]
+        print(param)
+        Alamofire.request(url,method: .get, parameters: param).responseString{
+            response in
+            if(response.result.isSuccess){
+                if let data = response.data {
+                    let jsonDecoder = JSONDecoder()
+                    do {
+                        let jsonData = try jsonDecoder.decode(MainModel.self, from: data)
+                        print(jsonData)
+                        if jsonData.header.status == "0"{
+                            completion(jsonData.errors!.invalid_credentials!)
+                        }
+                        else{
+                            let defaults = UserDefaults.standard
+                            defaults.removeObject(forKey: "token")
+                            defaults.removeObject(forKey: "first_name")
+                            defaults.removeObject(forKey: "last_name")
+                            defaults.removeObject(forKey: "user_id")
+                            defaults.synchronize()
+                             completion(jsonData.body!.Msg!)
+                        }
+                    }
+                    catch {
+                        print("Error: \(error)")
+                    }
+                }
+            }
+            else{
+                print(response.result.error!)
+            }
+        }
+    }
+    
 }
