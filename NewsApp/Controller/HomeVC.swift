@@ -24,6 +24,8 @@ class HomeVC: UIViewController{
     let activityIndicator = MDCActivityIndicator()
     var pageNum = 0
     var coredataRecordCount = 0
+    var currentCategory = "All News"
+    var selectedCategory = "All news"
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -41,7 +43,8 @@ class HomeVC: UIViewController{
         // activityIndicator.stopAnimating()
         var paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
         print("\(paths[0])")
-         coredataRecordCount = DBManager().IsCoreDataEmpty()
+        
+        /* coredataRecordCount = DBManager().IsCoreDataEmpty()
         if coredataRecordCount != 0{
             let result = DBManager().FetchDataFromDB()
             switch result {
@@ -78,7 +81,7 @@ class HomeVC: UIViewController{
                     }
                 }
             }
-        }
+        }*/
     }
     
     func filterNews(selectedCat : String)
@@ -90,8 +93,6 @@ class HomeVC: UIViewController{
         do {
             self.ShowArticle = (try managedContext?.fetch(fetchRequest))! as! [NewsArticle]
             print("result.count: \(self.ShowArticle.count)")
-            print ("results val: \(self.ShowArticle)")
-            TotalResultcount = self.ShowArticle.count
         }
         catch {
             print("error executing fetch request: \(error)")
@@ -100,15 +101,15 @@ class HomeVC: UIViewController{
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
-        //        if selectedCat == "" || selectedCat == "FOR YOU" || selectedCat == "All News"
-        //        {
-        //            self.filterNews(selectedCat: "all news" )
-        //        }else{
-        //            self.filterNews(selectedCat: selectedCat )
-        //        }
-        //        self.HomeNewsTV.reloadData()
-    
+        APICall().loadNewsbyCategoryAPI(category:currentCategory){ response in
+            switch response {
+            case .Success(let data) :
+                self.ArticleData = data
+                self.HomeNewsTV.reloadData()
+            case .Failure(let errormessage) :
+                print(errormessage)
+            }
+        }
     }
    
 
@@ -120,15 +121,7 @@ class HomeVC: UIViewController{
 
 extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelegate{
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        //        if ShowArticle.count == 0
-        //        {
-        //            let alertController = UIAlertController(title: "There is not any article found in this category...", message: "", preferredStyle: .alert)
-        //            let action1 = UIAlertAction(title: "OK", style: .default) { (action:UIAlertAction) in }
-        //            alertController.addAction(action1)
-        //            self.present(alertController, animated: true, completion: nil)
-        //        }
-        //        activityIndicator.stopAnimating()
-        return TotalResultcount
+        return (ArticleData.count != 0) ? self.ArticleData[0].body.articles.count : 0
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -136,8 +129,8 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let newsDetailvc:NewsDetailVC = storyboard.instantiateViewController(withIdentifier: "NewsDetailID") as! NewsDetailVC
         newsCurrentIndex = indexPath.row
-        newsDetailvc.ShowArticle = ShowArticle
-        articleId = Int(ShowArticle[indexPath.row].article_id)
+        newsDetailvc.ArticleData = ArticleData
+        articleId = ArticleData[0].body.articles[indexPath.row].article_id!
         present(newsDetailvc, animated: true, completion: nil)
     }
     
@@ -155,14 +148,16 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
         dateFormatter.timeZone = NSTimeZone(name: "UTC")! as TimeZone
-        //display data using coredata
-        cell.lblNewsHeading.text = ShowArticle[indexPath.row].title
-        cell.lblSource.text = ShowArticle[indexPath.row].source
-        let newDate = dateFormatter.date(from: ShowArticle[indexPath.row].published_on!)
+        //display data using API
+        if ArticleData.count != 0{
+        let currentArticle = ArticleData[0].body.articles[indexPath.row]
+        cell.lblNewsHeading.text = currentArticle.title
+        cell.lblSource.text = currentArticle.source
+        let newDate = dateFormatter.date(from: currentArticle.published_on!)
         let agoDate = timeAgoSinceDate(newDate!)
         cell.lblTimesAgo.text = agoDate
-        cell.imgNews.downloadedFrom(link: "\(ShowArticle[indexPath.row].imageURL!)")
-
+        cell.imgNews.downloadedFrom(link: "\(currentArticle.imageURL!)")
+        }
         if textSizeSelected == 0{
             cell.lblSource.font = Constants.xsmallFont
             cell.lblNewsHeading.font = Constants.smallFontMedium
@@ -188,7 +183,7 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
         
         // Change 10.0 to adjust the distance from bottom
         if maximumOffset - currentOffset <= 10.0 {
-            pageNum = pageNum + 1
+           /* pageNum = pageNum + 1
             DBManager().SaveDataDB(pageNum:pageNum){response in
                 if response == true{
                     let result = DBManager().FetchDataFromDB()
@@ -204,14 +199,15 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
                     case .Failure(let errorMsg) :
                         print(errorMsg)
                     }
-                }
+                }*/
             }
         }
     }
-}
+
 
 extension HomeVC: IndicatorInfoProvider{
     func indicatorInfo(for pagerTabStripController: PagerTabStripViewController) -> IndicatorInfo {
+        print(tabBarTitle)
         return IndicatorInfo(title: tabBarTitle)
     }
 }

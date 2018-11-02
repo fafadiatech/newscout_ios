@@ -10,7 +10,6 @@ import XLPagerTabStrip
 
 var newsCurrentIndex = 0
 var textSizeSelected = 1
-var TotalResultcount = 0
 var categories = ["FOR YOU"]
 var selectedCat = "FOR YOU"
 var isSearch = false
@@ -84,6 +83,7 @@ struct APPURL {
     
     private  struct Routes {
         static let Articles = Domains.version + "articles/?page="
+        static let ArticlesByCategory = Domains.version + "articles/?categories="
         static let Login = Domains.version + "login/"
         static let SignUp = Domains.version + "signup/"
         static let Logout = Domains.version + "logout/"
@@ -93,6 +93,7 @@ struct APPURL {
     }
     
     static let ArticlesURL = Domains.Local + Routes.Articles
+    static let ArticlesByCategoryURL = Domains.Local + Routes.ArticlesByCategory
     static let LoginURL = Domains.Local + Routes.Login
     static let SignUpURL =  Domains.Local + Routes.SignUp
     static let LogoutURL =  Domains.Local + Routes.Logout

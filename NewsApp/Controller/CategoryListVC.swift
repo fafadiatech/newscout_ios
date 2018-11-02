@@ -18,13 +18,21 @@ class CategoryListVC: UIViewController {
     
     @IBOutlet weak var tableCategoryLIst: UITableView!
     var protocolObj : CategoryListProtocol?
-    var categoryCount = 0
     var showCategory = [Category]()
     var CategoryData = [CategoryList]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        let coredataRecordCount = DBManager().IsCategoryDataEmpty()
+        APICall().loadCategoriesAPI{ response in
+            switch response {
+            case .Success(let data) :
+                self.CategoryData = data
+                self.tableCategoryLIst.reloadData()
+            case .Failure(let errormessage) :
+                print(errormessage)
+            }
+        }
+      /*  let coredataRecordCount = DBManager().IsCategoryDataEmpty()
         if coredataRecordCount != 0{
             let result = DBManager().FetchCategoryFromDB()
             switch result {
@@ -50,7 +58,7 @@ class CategoryListVC: UIViewController {
                     }
                 }
             }
-        }
+        }*/
     }
     
     override var prefersStatusBarHidden: Bool {
@@ -63,7 +71,7 @@ class CategoryListVC: UIViewController {
     
     @objc func deleteCat(sender: UIButton){
         let indexPath = sender.tag
-        let selectedCategory = showCategory[indexPath].title!
+        let selectedCategory = CategoryData[0].categories[indexPath].title!
         protocolObj?.deleteCategory(currentCategory: selectedCategory)
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let vc:HomeParentVC = storyboard.instantiateViewController(withIdentifier: "HomeParentID") as! HomeParentVC
@@ -79,15 +87,15 @@ class CategoryListVC: UIViewController {
 extension CategoryListVC:UITableViewDelegate, UITableViewDataSource{
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return categoryCount
+        return (CategoryData.count != 0) ? self.CategoryData[0].categories.count : 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableCategoryLIst.dequeueReusableCell(withIdentifier: "CategoryListID", for:indexPath) as! CategoryListTVCell
-        //CategoryData[0].categories[indexPath.row]
-        cell.lblCategoryName.text = showCategory[indexPath.row].title
+        let catData = CategoryData[0].categories[indexPath.row]
+        cell.lblCategoryName.text = catData.title
         cell.btnDelete.tag = indexPath.row
-        if categories.contains(showCategory[indexPath.row].title!){
+        if categories.contains(catData.title!){
             cell.btnDelete.isHidden = false
         }
         else{
@@ -98,7 +106,7 @@ extension CategoryListVC:UITableViewDelegate, UITableViewDataSource{
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        selectedCat = showCategory[indexPath.row].title!
+        selectedCat = CategoryData[0].categories[indexPath.row].title!
         if !categories.contains(selectedCat){
             protocolObj?.updateCategoryList(catName: selectedCat)
         }

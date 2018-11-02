@@ -34,7 +34,7 @@ class DBManager{
                     if  self.someEntityExists(id: Int(news.article_id!), entity: "NewsArticle") == false
                     {
                         let newArticle = NewsArticle(context: managedContext!)
-                        newArticle.article_id = news.article_id!
+                        newArticle.article_id = Int64(news.article_id!)
                         newArticle.title = news.title
                         newArticle.source = news.source!
                         newArticle.imageURL = news.imageURL

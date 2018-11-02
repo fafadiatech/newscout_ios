@@ -31,7 +31,7 @@ struct articleBody : Decodable
 }
 struct Article: Decodable
 {
-    let article_id : Int64?
+    let article_id : Int?
     let category : String?
     let source: String?
     let title : String?

@@ -34,7 +34,32 @@ class APICall{
             }
         }
     }
-    
+    //load articles by category
+    func loadNewsbyCategoryAPI(category : String, _ completion : @escaping (ArticleAPIResult) -> ()){
+        let url = APPURL.ArticlesByCategoryURL + "\(category)"
+        let urlString = url.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)
+        print("Load API url: \(urlString!)")
+        Alamofire.request(urlString!,method: .get).responseString{
+            response in
+            if(response.result.isSuccess){
+                if let data = response.data {
+                    let jsonDecoder = JSONDecoder()
+                    do {
+                        let jsonData = try jsonDecoder.decode(ArticleStatus.self, from: data)
+                        completion(ArticleAPIResult.Success([jsonData]))
+                    }
+                    catch {
+                        print("Error: \(error)")
+                        completion(ArticleAPIResult.Failure(error.localizedDescription
+                        ))
+                    }
+                }
+            }
+            else{
+                print(response.result.error!)
+            }
+        }
+    }
     func loadRecommendationNewsAPI(_ completion : @escaping (ArticleAPIResult) -> ()){
         let url = APPURL.recommendationURL
         print(url)

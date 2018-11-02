@@ -27,6 +27,7 @@ class NewsDetailVC: UIViewController {
     @IBOutlet weak var viewWebTitle: UIView!
     @IBOutlet weak var ViewWebContainer: UIView!
     @IBOutlet weak var lblWebSource: UILabel!
+    var RecomArticleData = [ArticleStatus]()
     var ArticleData = [ArticleStatus]()
     var ShowArticle = [NewsArticle]()
     var ArticleDetail = ArticleDict.init(article_id: 0, category: "", source: "", title: "", imageURL: "", url: "", published_on: "", blurb: "")
@@ -37,8 +38,8 @@ class NewsDetailVC: UIViewController {
         APICall().loadRecommendationNewsAPI{ response in
             switch response {
             case .Success(let data) :
-                self.ArticleData = data
-                self.suggestedCVCount = self.ArticleData[0].body.articles.count
+                self.RecomArticleData = data
+                self.suggestedCVCount = self.RecomArticleData[0].body.articles.count
                 self.suggestedCV.reloadData()
             case .Failure(let errormessage) :
                 print(errormessage)
@@ -153,7 +154,7 @@ class NewsDetailVC: UIViewController {
                 WKWebView.load(myRequest)
                 
             case UISwipeGestureRecognizerDirection.up:
-                if newsCurrentIndex < ShowArticle.count
+                if newsCurrentIndex < ArticleData[0].body.articles.count - 1
                 {
                     newsCurrentIndex = newsCurrentIndex + 1
                     ShowNews(currentIndex : newsCurrentIndex)
@@ -174,7 +175,7 @@ class NewsDetailVC: UIViewController {
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
         dateFormatter.timeZone = NSTimeZone(name: "UTC")! as TimeZone
         
-       // if ShowArticle.count != 0{
+       /*if ShowArticle.count != 0{
             let currentArticle =  ShowArticle[currentIndex]
             let newDate = dateFormatter.date(from: currentArticle.published_on!)
             print("newDAte:\(newDate!)")
@@ -184,9 +185,9 @@ class NewsDetailVC: UIViewController {
             lblSource.text = currentArticle.source
             lblTimeAgo.text = agoDate
             imgNews.downloadedFrom(link: "\(currentArticle.imageURL!)")
-      //  }
-       /* else{
-            let currentArticle = ArticleData[0].articles[currentIndex]
+        }*/
+       
+            let currentArticle = ArticleData[0].body.articles[currentIndex]
             let newDate = dateFormatter.date(from: currentArticle.published_on!)
             print("newDAte:\(newDate!)")
             let agoDate = timeAgoSinceDate(newDate!)
@@ -195,7 +196,7 @@ class NewsDetailVC: UIViewController {
             lblSource.text = currentArticle.source
             lblTimeAgo.text = agoDate
             imgNews.downloadedFrom(link: "\(currentArticle.imageURL!)")
-        }*/
+        
     }
     @IBAction func btnLikeActn(_ sender: Any) {
     }
@@ -204,8 +205,8 @@ class NewsDetailVC: UIViewController {
     }
     
     @IBAction func btnShareActn(_ sender: Any) {
-        let text = ShowArticle[newsCurrentIndex].title
-        let myUrl = NSURL(string:ShowArticle[newsCurrentIndex].imageURL!)
+        let text = ArticleData[0].body.articles[newsCurrentIndex].title
+        let myUrl = NSURL(string:ArticleData[0].body.articles[newsCurrentIndex].imageURL!)
         let shareAll = [text ,myUrl] as [Any]
         let activityViewController = UIActivityViewController(activityItems: shareAll, applicationActivities: nil)
         activityViewController.popoverPresentationController?.sourceView = self.view
@@ -238,7 +239,7 @@ extension NewsDetailVC:UICollectionViewDelegate, UICollectionViewDataSource{
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "SuggestedNewsID", for: indexPath) as! SuggestedNewsCVCell
-        let currentArticle =  ArticleData[0].body.articles[indexPath.row]
+        let currentArticle =  RecomArticleData[0].body.articles[indexPath.row]
         cell.lblTitle.text = currentArticle.title
         cell.imgNews.downloadedFrom(link: "\(currentArticle.imageURL!)")
         return cell
