@@ -25,7 +25,8 @@ class HomeVC: UIViewController{
     var pageNum = 0
     var coredataRecordCount = 0
     var currentCategory = "All News"
-    var selectedCategory = "All news"
+    var selectedCategory = ""
+    var nextURL = ""
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -43,45 +44,44 @@ class HomeVC: UIViewController{
         // activityIndicator.stopAnimating()
         var paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
         print("\(paths[0])")
-        
         /* coredataRecordCount = DBManager().IsCoreDataEmpty()
-        if coredataRecordCount != 0{
-            let result = DBManager().FetchDataFromDB()
-            switch result {
-            case .Success(let DBData) :
-                let articles = DBData
-                if selectedCat == "" || selectedCat == "FOR YOU" || selectedCat == "All News"
-                {
-                    self.filterNews(selectedCat: "All News" )
-                    print("cat pressed is: for u")
-                }else{
-                    self.filterNews(selectedCat: selectedCat )
-                }
-                self.HomeNewsTV.reloadData()
-            case .Failure(let errorMsg) :
-                print(errorMsg)
-            }
-            HomeNewsTV.reloadData()
-        }
-        else{
-            DBManager().SaveDataDB(pageNum:pageNum){response in
-                if response == true{
-                    let result = DBManager().FetchDataFromDB()
-                    switch result {
-                    case .Success(let DBData) :
-                        let articles = DBData
-                        if  selectedCat == "" || selectedCat == "FOR YOU" || selectedCat == "All News"{
-                            self.filterNews(selectedCat: "All News" )
-                        }else{
-                            self.filterNews(selectedCat: selectedCat )
-                        }
-                        self.HomeNewsTV.reloadData()
-                    case .Failure(let errorMsg) :
-                        print(errorMsg)
-                    }
-                }
-            }
-        }*/
+         if coredataRecordCount != 0{
+         let result = DBManager().FetchDataFromDB()
+         switch result {
+         case .Success(let DBData) :
+         let articles = DBData
+         if selectedCat == "" || selectedCat == "FOR YOU" || selectedCat == "All News"
+         {
+         self.filterNews(selectedCat: "All News" )
+         print("cat pressed is: for u")
+         }else{
+         self.filterNews(selectedCat: selectedCat )
+         }
+         self.HomeNewsTV.reloadData()
+         case .Failure(let errorMsg) :
+         print(errorMsg)
+         }
+         HomeNewsTV.reloadData()
+         }
+         else{
+         DBManager().SaveDataDB(pageNum:pageNum){response in
+         if response == true{
+         let result = DBManager().FetchDataFromDB()
+         switch result {
+         case .Success(let DBData) :
+         let articles = DBData
+         if  selectedCat == "" || selectedCat == "FOR YOU" || selectedCat == "All News"{
+         self.filterNews(selectedCat: "All News" )
+         }else{
+         self.filterNews(selectedCat: selectedCat )
+         }
+         self.HomeNewsTV.reloadData()
+         case .Failure(let errorMsg) :
+         print(errorMsg)
+         }
+         }
+         }
+         }*/
     }
     
     func filterNews(selectedCat : String)
@@ -101,18 +101,43 @@ class HomeVC: UIViewController{
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        APICall().loadNewsbyCategoryAPI(category:currentCategory){ response in
+        
+        if tabBarTitle == "FOR YOU"{
+            selectedCategory = "All News"
+        }
+        else{
+            selectedCategory = tabBarTitle
+        }
+        print("selectedcat: \(tabBarTitle)")
+        APICall().loadNewsbyCategoryAPI(category:selectedCategory){ response in
             switch response {
             case .Success(let data) :
                 self.ArticleData = data
-                self.HomeNewsTV.reloadData()
+                if self.ArticleData[0].body.next != nil{
+                    self.nextURL = self.ArticleData[0].body.next!}
+                if self.ArticleData[0].body.articles.count == 0{
+                    self.activityIndicator.stopAnimating()
+                    let alertController = UIAlertController(title: "No articles found in this category...", message: "", preferredStyle: .alert)
+                    if UI_USER_INTERFACE_IDIOM() == .pad
+                    {
+                        alertController.popoverPresentationController?.sourceView = self.view
+                        alertController.popoverPresentationController?.sourceRect = CGRect(x: self.view.bounds.midX, y: self.view.bounds.midY, width: 0, height: 0)
+                        
+                    }
+                    let action1 = UIAlertAction(title: "OK", style: .default) { (action:UIAlertAction) in }
+                    
+                    alertController.addAction(action1)
+                    
+                    self.present(alertController, animated: true, completion: nil)
+                    
+                }else{
+                    self.HomeNewsTV.reloadData()}
             case .Failure(let errormessage) :
                 print(errormessage)
             }
         }
     }
-   
-
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -143,20 +168,20 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
         cell.ViewCellBackground.layer.cornerRadius = 10.0
         cell.imgNews.layer.cornerRadius = 10.0
         cell.imgNews.clipsToBounds = true
-      
+        
         //timestamp conversion
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
         dateFormatter.timeZone = NSTimeZone(name: "UTC")! as TimeZone
         //display data using API
         if ArticleData.count != 0{
-        let currentArticle = ArticleData[0].body.articles[indexPath.row]
-        cell.lblNewsHeading.text = currentArticle.title
-        cell.lblSource.text = currentArticle.source
-        let newDate = dateFormatter.date(from: currentArticle.published_on!)
-        let agoDate = timeAgoSinceDate(newDate!)
-        cell.lblTimesAgo.text = agoDate
-        cell.imgNews.downloadedFrom(link: "\(currentArticle.imageURL!)")
+            let currentArticle = ArticleData[0].body.articles[indexPath.row]
+            cell.lblNewsHeading.text = currentArticle.title
+            cell.lblSource.text = currentArticle.source
+            let newDate = dateFormatter.date(from: currentArticle.published_on!)
+            let agoDate = timeAgoSinceDate(newDate!)
+            cell.lblTimesAgo.text = agoDate
+            cell.imgNews.downloadedFrom(link: "\(currentArticle.imageURL!)")
         }
         if textSizeSelected == 0{
             cell.lblSource.font = Constants.xsmallFont
@@ -176,6 +201,7 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
         activityIndicator.stopAnimating()
         return cell
     }
+    
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView){
         // UITableView only moves in one direction, y axis
         let currentOffset = scrollView.contentOffset.y
@@ -183,27 +209,34 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
         
         // Change 10.0 to adjust the distance from bottom
         if maximumOffset - currentOffset <= 10.0 {
-           /* pageNum = pageNum + 1
-            DBManager().SaveDataDB(pageNum:pageNum){response in
-                if response == true{
-                    let result = DBManager().FetchDataFromDB()
-                    switch result {
-                    case .Success(let DBData) :
-                        let articles = DBData
-                        if  selectedCat == "" || selectedCat == "FOR YOU" || selectedCat == "All News"{
-                            self.filterNews(selectedCat: "All News" )
-                        }else{
-                            self.filterNews(selectedCat: selectedCat )
-                        }
-                     self.HomeNewsTV.reloadData()
-                    case .Failure(let errorMsg) :
-                        print(errorMsg)
-                    }
-                }*/
+         /*   APICall().loadNewsbyCategoryAPI(category:selectedCategory){ response in
+                switch response {
+                case .Success(let data) :
+                    self.ArticleData = data
+                case .Failure(let errormessage) :
+                    print(errormessage)
+                }
             }
+             pageNum = pageNum + 1
+             DBManager().SaveDataDB(pageNum:pageNum){response in
+             if response == true{
+             let result = DBManager().FetchDataFromDB()
+             switch result {
+             case .Success(let DBData) :
+             let articles = DBData
+             if  selectedCat == "" || selectedCat == "FOR YOU" || selectedCat == "All News"{
+             self.filterNews(selectedCat: "All News" )
+             }else{
+             self.filterNews(selectedCat: selectedCat )
+             }
+             self.HomeNewsTV.reloadData()
+             case .Failure(let errorMsg) :
+             print(errorMsg)
+             }
+             }*/
         }
     }
-
+}
 
 extension HomeVC: IndicatorInfoProvider{
     func indicatorInfo(for pagerTabStripController: PagerTabStripViewController) -> IndicatorInfo {

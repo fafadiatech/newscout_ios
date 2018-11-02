@@ -19,16 +19,16 @@ class SettingsTVC: UITableViewController {
         lblLogout.isHidden = true
         isLoggedIn()
         segmentTextSize.selectedSegmentIndex = textSizeSelected
-    segmentTextSize.setTitleTextAttributes([NSAttributedStringKey.foregroundColor: UIColor.black], for: UIControlState.normal)
+        segmentTextSize.setTitleTextAttributes([NSAttributedStringKey.foregroundColor: UIColor.black], for: UIControlState.normal)
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
         
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem
     }
-//    override func viewDidAppear(_ animated: Bool) {
-//        isLoggedIn()
-//    }
+    //    override func viewDidAppear(_ animated: Bool) {
+    //        isLoggedIn()
+    //    }
     func isLoggedIn()
     {
         
@@ -39,7 +39,7 @@ class SettingsTVC: UITableViewController {
         } else {
             print(UserDefaults.standard.value(forKey: "token")!)
             lblLogin.text = "\(UserDefaults.standard.value(forKey: "email")!)"
-             lblLogout.isHidden = false
+            lblLogout.isHidden = false
         }
         
     }
@@ -74,26 +74,26 @@ class SettingsTVC: UITableViewController {
     
     override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
         if indexPath.section == 2 && indexPath.row == 0{
-           if UserDefaults.standard.value(forKey: "token") == nil {
-            let storyboard = UIStoryboard(name: "Main", bundle: nil)
-            let vc:LoginVC = storyboard.instantiateViewController(withIdentifier: "LoginID") as! LoginVC
-            print(indexPath.section)
-            present(vc, animated: true, completion: nil)
+            if UserDefaults.standard.value(forKey: "token") == nil {
+                let storyboard = UIStoryboard(name: "Main", bundle: nil)
+                let vc:LoginVC = storyboard.instantiateViewController(withIdentifier: "LoginID") as! LoginVC
+                print(indexPath.section)
+                present(vc, animated: true, completion: nil)
             }
-           else{
-            APICall().LogoutAPI{(status, response) in
-                print(status,response)
-                if status == "1"{
-                print("Logout response:\(response)")
-                self.showMSg(title: response, msg: "")
-                    self.lblLogout.isHidden = true
-                    self.lblLogin.text = "Login"
-            }
-                else{
-                    self.showMSg(title: response, msg: "")
+            else{
+                APICall().LogoutAPI{(status, response) in
+                    print(status,response)
+                    if status == "1"{
+                        print("Logout response:\(response)")
+                        self.showMSg(title: response, msg: "")
+                        self.lblLogout.isHidden = true
+                        self.lblLogin.text = "Login"
+                    }
+                    else{
+                        self.showMSg(title: response, msg: "")
+                    }
                 }
-            }
-            
+                
             }
         }
         return indexPath

@@ -10,7 +10,7 @@ import Foundation
 
 struct ArticleStatus : Decodable
 {
-   // let articles : [Article]
+    // let articles : [Article]
     let header : Header
     let body: articleBody
     

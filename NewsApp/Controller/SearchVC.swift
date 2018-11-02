@@ -108,7 +108,7 @@ extension SearchVC: UITableViewDelegate, UITableViewDataSource{
         cell.lbltimeAgo.text = agoDate
         cell.lblNewsDescription.text = currentArticle.title
         cell.imgNews.downloadedFrom(link: "\(currentArticle.imageURL!)")
-//
+        //
         if textSizeSelected == 0{
             cell.lblSource.font = Constants.xsmallFont
             cell.lblNewsDescription.font = Constants.smallFontMedium
@@ -138,7 +138,7 @@ extension SearchVC: UITextFieldDelegate
             case .Success(let data) :
                 self.ArticleData = data
                 print(data)
-               self.count = self.ArticleData[0].body.articles.count
+                self.count = self.ArticleData[0].body.articles.count
                 self.searchResultTV.reloadData()
             case .Failure(let errormessage) :
                 print(errormessage)

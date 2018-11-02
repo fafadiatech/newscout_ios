@@ -32,35 +32,46 @@ class CategoryListVC: UIViewController {
                 print(errormessage)
             }
         }
-      /*  let coredataRecordCount = DBManager().IsCategoryDataEmpty()
-        if coredataRecordCount != 0{
-            let result = DBManager().FetchCategoryFromDB()
-            switch result {
-            case .Success(let DBData) :
-                self.showCategory = DBData
-                self.categoryCount = self.showCategory.count
+        /*  let coredataRecordCount = DBManager().IsCategoryDataEmpty()
+         if coredataRecordCount != 0{
+         let result = DBManager().FetchCategoryFromDB()
+         switch result {
+         case .Success(let DBData) :
+         self.showCategory = DBData
+         self.categoryCount = self.showCategory.count
+         self.tableCategoryLIst.reloadData()
+         case .Failure(let errorMsg) :
+         print(errorMsg)
+         }
+         }
+         else{
+         DBManager().SaveCategoryDB{response in
+         if response == true{
+         let result = DBManager().FetchCategoryFromDB()
+         switch result {
+         case .Success(let DBData) :
+         self.showCategory = DBData
+         self.categoryCount = self.showCategory.count
+         self.tableCategoryLIst.reloadData()
+         case .Failure(let errorMsg) :
+         print(errorMsg)
+         }
+         }
+         }
+         }*/
+    }
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        APICall().loadCategoriesAPI{ response in
+            switch response {
+            case .Success(let data) :
+                self.CategoryData = data
                 self.tableCategoryLIst.reloadData()
-            case .Failure(let errorMsg) :
-                print(errorMsg)
+            case .Failure(let errormessage) :
+                print(errormessage)
             }
         }
-        else{
-            DBManager().SaveCategoryDB{response in
-                if response == true{
-                    let result = DBManager().FetchCategoryFromDB()
-                    switch result {
-                    case .Success(let DBData) :
-                        self.showCategory = DBData
-                        self.categoryCount = self.showCategory.count
-                        self.tableCategoryLIst.reloadData()
-                    case .Failure(let errorMsg) :
-                        print(errorMsg)
-                    }
-                }
-            }
-        }*/
     }
-    
     override var prefersStatusBarHidden: Bool {
         return true
     }
@@ -109,6 +120,8 @@ extension CategoryListVC:UITableViewDelegate, UITableViewDataSource{
         selectedCat = CategoryData[0].categories[indexPath.row].title!
         if !categories.contains(selectedCat){
             protocolObj?.updateCategoryList(catName: selectedCat)
+            var Homevc = HomeVC()
+            Homevc.selectedCategory = selectedCat
         }
         else{
             let alertController = UIAlertController(title: "Category is already added..", message: "", preferredStyle: .alert)

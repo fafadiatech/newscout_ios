@@ -175,27 +175,27 @@ class NewsDetailVC: UIViewController {
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
         dateFormatter.timeZone = NSTimeZone(name: "UTC")! as TimeZone
         
-       /*if ShowArticle.count != 0{
-            let currentArticle =  ShowArticle[currentIndex]
-            let newDate = dateFormatter.date(from: currentArticle.published_on!)
-            print("newDAte:\(newDate!)")
-            let agoDate = timeAgoSinceDate(newDate!)
-            lblNewsHeading.text = currentArticle.title
-            txtViewNewsDesc.text = currentArticle.blurb
-            lblSource.text = currentArticle.source
-            lblTimeAgo.text = agoDate
-            imgNews.downloadedFrom(link: "\(currentArticle.imageURL!)")
-        }*/
-       
-            let currentArticle = ArticleData[0].body.articles[currentIndex]
-            let newDate = dateFormatter.date(from: currentArticle.published_on!)
-            print("newDAte:\(newDate!)")
-            let agoDate = timeAgoSinceDate(newDate!)
-            lblNewsHeading.text = currentArticle.title
-            txtViewNewsDesc.text = currentArticle.blurb
-            lblSource.text = currentArticle.source
-            lblTimeAgo.text = agoDate
-            imgNews.downloadedFrom(link: "\(currentArticle.imageURL!)")
+        /*if ShowArticle.count != 0{
+         let currentArticle =  ShowArticle[currentIndex]
+         let newDate = dateFormatter.date(from: currentArticle.published_on!)
+         print("newDAte:\(newDate!)")
+         let agoDate = timeAgoSinceDate(newDate!)
+         lblNewsHeading.text = currentArticle.title
+         txtViewNewsDesc.text = currentArticle.blurb
+         lblSource.text = currentArticle.source
+         lblTimeAgo.text = agoDate
+         imgNews.downloadedFrom(link: "\(currentArticle.imageURL!)")
+         }*/
+        
+        let currentArticle = ArticleData[0].body.articles[currentIndex]
+        let newDate = dateFormatter.date(from: currentArticle.published_on!)
+        print("newDAte:\(newDate!)")
+        let agoDate = timeAgoSinceDate(newDate!)
+        lblNewsHeading.text = currentArticle.title
+        txtViewNewsDesc.text = currentArticle.blurb
+        lblSource.text = currentArticle.source
+        lblTimeAgo.text = agoDate
+        imgNews.downloadedFrom(link: "\(currentArticle.imageURL!)")
         
     }
     @IBAction func btnLikeActn(_ sender: Any) {

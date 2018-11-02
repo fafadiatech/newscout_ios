@@ -66,7 +66,7 @@ class DBManager{
             
         }
         else{
-             fetchRequest.predicate = NSPredicate(format: "cat_id == \(id)")
+            fetchRequest.predicate = NSPredicate(format: "cat_id == \(id)")
             
         }
         let managedContext =

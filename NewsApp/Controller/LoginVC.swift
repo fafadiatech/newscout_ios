@@ -23,7 +23,7 @@ class LoginVC: UIViewController {
     override var prefersStatusBarHidden: Bool {
         return true
     }
-  
+    
     @IBAction func btnBackActn(_ sender: Any) {
         self.dismiss(animated: true)
     }
@@ -39,18 +39,18 @@ class LoginVC: UIViewController {
             self.showMSg(title: "", msg: "Please enter valid username and password..")
         }
         else{
-        APICall().LoginAPI(email: txtUsername.text!, pswd: txtPassword.text!){response in
-            print("Login response:\(response)")
-            if response == "1"{
-            let storyboard = UIStoryboard(name: "Main", bundle: nil)
-            let HomeVc:HomeParentVC = storyboard.instantiateViewController(withIdentifier: "HomeParentID") as! HomeParentVC
-                self.present(HomeVc, animated: true, completion: nil)
-                
+            APICall().LoginAPI(email: txtUsername.text!, pswd: txtPassword.text!){response in
+                print("Login response:\(response)")
+                if response == "1"{
+                    let storyboard = UIStoryboard(name: "Main", bundle: nil)
+                    let HomeVc:HomeParentVC = storyboard.instantiateViewController(withIdentifier: "HomeParentID") as! HomeParentVC
+                    self.present(HomeVc, animated: true, completion: nil)
+                    
+                }
+                else{
+                    self.showMSg(title: response, msg: "")
+                }
             }
-            else{
-                self.showMSg(title: response, msg: "")
-            }
-        }
         }
     }
     

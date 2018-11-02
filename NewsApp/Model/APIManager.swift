@@ -83,7 +83,7 @@ class APICall{
     }
     func loadCategoriesAPI(_ completion : @escaping (CategoryAPIResult) -> ()){
         let url = APPURL.CategoriesURL
-        
+        print(url)
         Alamofire.request(url,method: .get).responseJSON{
             response in
             if(response.result.isSuccess){
@@ -181,7 +181,7 @@ class APICall{
                             UserDefaults.standard.set(jsonData.body?.last_name, forKey: "last_name")
                             UserDefaults.standard.set(jsonData.body?.token, forKey: "token")
                             UserDefaults.standard.set(jsonData.body?.user_id, forKey: "user_id")
-                             UserDefaults.standard.set(email, forKey: "email")
+                            UserDefaults.standard.set(email, forKey: "email")
                             completion("1")
                         }
                     }
@@ -202,7 +202,7 @@ class APICall{
         let token = "Token " + "\(UserDefaults.standard.value(forKey: "token")!)"
         //let param = ["Authorization" : token]
         let headers = ["Authorization": token]
-       
+        
         Alamofire.request(url,method: .get, parameters: nil, headers: headers).responseString{
             response in
             if(response.result.isSuccess){
@@ -221,7 +221,7 @@ class APICall{
                             defaults.removeObject(forKey: "last_name")
                             defaults.removeObject(forKey: "user_id")
                             defaults.synchronize()
-                             completion(jsonData.header.status,jsonData.body!.Msg!)
+                            completion(jsonData.header.status,jsonData.body!.Msg!)
                         }
                     }
                     catch {

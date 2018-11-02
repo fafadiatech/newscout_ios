@@ -94,6 +94,7 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
         {
             let childVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "HomeVC") as! HomeVC
             childVC.tabBarTitle = cat
+        
             childrenVC.append(childVC)
         }
         
