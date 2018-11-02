@@ -13,7 +13,7 @@ import Alamofire
 import CoreData
 import MaterialComponents.MaterialActivityIndicator
 
-class HomeVC: UIViewController, UIScrollViewDelegate{
+class HomeVC: UIViewController{
     
     @IBOutlet weak var HomeNewsTV: UITableView!
     var tabBarTitle: String = ""
@@ -24,6 +24,7 @@ class HomeVC: UIViewController, UIScrollViewDelegate{
     let activityIndicator = MDCActivityIndicator()
     var pageNum = 0
     var coredataRecordCount = 0
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -109,14 +110,15 @@ class HomeVC: UIViewController, UIScrollViewDelegate{
         //        self.HomeNewsTV.reloadData()
     
     }
-    
+   
+
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
 }
 
-extension HomeVC: UITableViewDelegate, UITableViewDataSource{
+extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelegate{
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         //        if ShowArticle.count == 0
         //        {
@@ -160,33 +162,33 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource{
         let agoDate = timeAgoSinceDate(newDate!)
         cell.lblTimesAgo.text = agoDate
         cell.imgNews.downloadedFrom(link: "\(ShowArticle[indexPath.row].imageURL!)")
-        
+
         if textSizeSelected == 0{
-            cell.lblSource.font = xsmallFont
-            cell.lblNewsHeading.font = smallFontMedium
-            cell.lblTimesAgo.font = xsmallFont
+            cell.lblSource.font = Constants.xsmallFont
+            cell.lblNewsHeading.font = Constants.smallFontMedium
+            cell.lblTimesAgo.font = Constants.xsmallFont
         }
         else if textSizeSelected == 2{
-            cell.lblSource.font = xLargeFont
-            cell.lblNewsHeading.font = LargeFontMedium
-            cell.lblTimesAgo.font = xLargeFont
+            cell.lblSource.font = Constants.xLargeFont
+            cell.lblNewsHeading.font = Constants.LargeFontMedium
+            cell.lblTimesAgo.font = Constants.xLargeFont
         }
         else{
-            cell.lblSource.font =  xNormalFont
-            cell.lblNewsHeading.font = NormalFontMedium
-            cell.lblTimesAgo.font = xNormalFont
+            cell.lblSource.font =  Constants.xNormalFont
+            cell.lblNewsHeading.font = Constants.NormalFontMedium
+            cell.lblTimesAgo.font = Constants.xNormalFont
         }
         activityIndicator.stopAnimating()
         return cell
     }
-    
-    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        let lastSectionIndex : NSInteger = HomeNewsTV.numberOfSections - 1
-        let lastRowIndex : NSInteger = HomeNewsTV.numberOfRows(inSection: lastSectionIndex) - 1
-        print(lastRowIndex)
-        if ((indexPath as NSIndexPath).row == lastRowIndex){
-            print("You are at last cell")
-           pageNum = pageNum + 1
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView){
+        // UITableView only moves in one direction, y axis
+        let currentOffset = scrollView.contentOffset.y
+        let maximumOffset = scrollView.contentSize.height - scrollView.frame.size.height
+        
+        // Change 10.0 to adjust the distance from bottom
+        if maximumOffset - currentOffset <= 10.0 {
+            pageNum = pageNum + 1
             DBManager().SaveDataDB(pageNum:pageNum){response in
                 if response == true{
                     let result = DBManager().FetchDataFromDB()
@@ -198,16 +200,14 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource{
                         }else{
                             self.filterNews(selectedCat: selectedCat )
                         }
-                       // self.HomeNewsTV.reloadData()
+                     self.HomeNewsTV.reloadData()
                     case .Failure(let errorMsg) :
                         print(errorMsg)
                     }
                 }
             }
         }
-
     }
-    
 }
 
 extension HomeVC: IndicatorInfoProvider{

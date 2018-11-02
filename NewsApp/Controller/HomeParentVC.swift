@@ -34,7 +34,7 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
         
         let floaty = Floaty()
         floaty.itemTitleColor = .blue
-        floaty.buttonColor = commonColor
+        floaty.buttonColor = themeColor.commonColor
         floaty.plusColor = .black
         
         floaty.addItem("Profile", icon: UIImage(named: "profile")!) { item in
@@ -70,7 +70,7 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
         }
         self.view.addSubview(floaty)
         buttonBarView.selectedBar.backgroundColor = .black
-        buttonBarView.backgroundColor = commonColor
+        buttonBarView.backgroundColor = themeColor.commonColor
         //UIColor(red: 7/255, green: 185/255, blue: 155/255, alpha: 1
     }
     

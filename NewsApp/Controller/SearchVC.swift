@@ -26,7 +26,7 @@ class SearchVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        lblTitle.font = LargeFontMedium
+        lblTitle.font = Constants.LargeFontMedium
         //check whether search or bookmark is selected
         if isSearch == true{
             lblTitle.isHidden = true
@@ -53,16 +53,16 @@ class SearchVC: UIViewController {
         print(textSizeSelected)
         
         if textSizeSelected == 0{
-            lblTitle.font = NormalFontMedium
-            txtSearch.font = NormalFontMedium
+            lblTitle.font = Constants.NormalFontMedium
+            txtSearch.font = Constants.NormalFontMedium
         }
         else if textSizeSelected == 2{
-            lblTitle.font = LargeFontMedium
-            txtSearch.font = LargeFontMedium
+            lblTitle.font = Constants.LargeFontMedium
+            txtSearch.font = Constants.LargeFontMedium
         }
         else{
-            lblTitle.font = LargeFontMedium
-            txtSearch.font = LargeFontMedium
+            lblTitle.font = Constants.LargeFontMedium
+            txtSearch.font = Constants.LargeFontMedium
         }
     }
     
@@ -110,19 +110,19 @@ extension SearchVC: UITableViewDelegate, UITableViewDataSource{
         cell.imgNews.downloadedFrom(link: "\(currentArticle.imageURL!)")
 //
         if textSizeSelected == 0{
-            cell.lblSource.font = xsmallFont
-            cell.lblNewsDescription.font = smallFontMedium
-            cell.lbltimeAgo.font = xsmallFont
+            cell.lblSource.font = Constants.xsmallFont
+            cell.lblNewsDescription.font = Constants.smallFontMedium
+            cell.lbltimeAgo.font = Constants.xsmallFont
         }
         else if textSizeSelected == 2{
-            cell.lblSource.font = xLargeFont
-            cell.lblNewsDescription.font = LargeFontMedium
-            cell.lbltimeAgo.font = xLargeFont
+            cell.lblSource.font = Constants.xLargeFont
+            cell.lblNewsDescription.font = Constants.LargeFontMedium
+            cell.lbltimeAgo.font = Constants.xLargeFont
         }
         else{
-            cell.lblSource.font = xNormalFont
-            cell.lblNewsDescription.font = NormalFontMedium
-            cell.lbltimeAgo.font = xNormalFont
+            cell.lblSource.font = Constants.xNormalFont
+            cell.lblNewsDescription.font = Constants.NormalFontMedium
+            cell.lbltimeAgo.font = Constants.xNormalFont
         }
         return cell
     }

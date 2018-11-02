@@ -61,9 +61,14 @@ class DBManager{
     //check for existing entry in DB
     func someEntityExists(id: Int, entity : String) -> Bool {
         let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: entity)
-       fetchRequest.predicate = NSPredicate(format: "article_id == \(id)")
-        //= %@",id)
-        
+        if entity == "NewsArticle"{
+            fetchRequest.predicate = NSPredicate(format: "article_id == \(id)")
+            
+        }
+        else{
+             fetchRequest.predicate = NSPredicate(format: "cat_id == \(id)")
+            
+        }
         let managedContext =
             appDelegate?.persistentContainer.viewContext
         var results: [NSManagedObject] = []

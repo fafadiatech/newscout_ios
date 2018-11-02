@@ -69,7 +69,7 @@ class SettingsTVC: UITableViewController {
     override func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
         let headerView = view as! UITableViewHeaderFooterView
         headerView.textLabel?.textColor = .black
-        headerView.textLabel?.font = NormalFontMedium
+        headerView.textLabel?.font = Constants.NormalFontMedium
     }
     
     override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {

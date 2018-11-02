@@ -96,25 +96,25 @@ class NewsDetailVC: UIViewController {
     func changeFont()
     {
         if textSizeSelected == 0{
-            lblNewsHeading.font = smallFontMedium
-            lblSource.font = smallFont
-            lblTimeAgo.font = smallFont
-            lblSuggested.font = smallFont
-            txtViewNewsDesc.font = smallFont
+            lblNewsHeading.font = Constants.smallFontMedium
+            lblSource.font = Constants.smallFont
+            lblTimeAgo.font = Constants.smallFont
+            lblSuggested.font = Constants.smallFont
+            txtViewNewsDesc.font = Constants.smallFont
         }
         else if textSizeSelected == 2{
-            lblNewsHeading.font = LargeFontMedium
-            lblSource.font = LargeFont
-            lblTimeAgo.font = LargeFont
-            lblSuggested.font = LargeFont
-            txtViewNewsDesc.font = LargeFont
+            lblNewsHeading.font = Constants.LargeFontMedium
+            lblSource.font = Constants.LargeFont
+            lblTimeAgo.font = Constants.LargeFont
+            lblSuggested.font = Constants.LargeFont
+            txtViewNewsDesc.font = Constants.LargeFont
         }
         else{
-            lblNewsHeading.font = NormalFontMedium
-            lblSource.font = NormalFont
-            lblTimeAgo.font = NormalFont
-            lblSuggested.font = NormalFont
-            txtViewNewsDesc.font = NormalFont
+            lblNewsHeading.font = Constants.NormalFontMedium
+            lblSource.font = Constants.NormalFont
+            lblTimeAgo.font = Constants.NormalFont
+            lblSuggested.font = Constants.NormalFont
+            txtViewNewsDesc.font = Constants.NormalFont
         }
     }
     

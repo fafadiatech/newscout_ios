@@ -19,7 +19,6 @@ class CategoryListVC: UIViewController {
     @IBOutlet weak var tableCategoryLIst: UITableView!
     var protocolObj : CategoryListProtocol?
     var categoryCount = 0
-    var catArr = ["ALL NEWS", "TRENDING", "TOP STORIES","NEWS", "TECHNOLOGY", "SPORTS", "POLITICS", "BUSINESS", "CELEBRITY", "INDIAN PARLIAMENT", "INDIAN RELIGION"]
     var showCategory = [Category]()
     var CategoryData = [CategoryList]()
     

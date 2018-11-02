@@ -9,32 +9,12 @@ import UIKit
 import XLPagerTabStrip
 
 var newsCurrentIndex = 0
-var isCategoryAdded = 0
 var textSizeSelected = 1
-let baseURL = "http://192.168.2.204/api/v1/"
-let articleURL = "http://192.168.2.204/api/v1/articles/"
 var TotalResultcount = 0
 var categories = ["FOR YOU"]
-var obj = HomeParentVC()
 var selectedCat = "FOR YOU"
 var isSearch = false
 var articleId = 0
-var commonColor = UIColor.gray
-var xsmallFont = UIFont(name: AppFontName.regular, size: Constants.fontxSmall)
-var xLargeFont = UIFont(name: AppFontName.regular, size: Constants.fontxLarge)
-var xNormalFont = UIFont(name: AppFontName.regular, size: Constants.fontxNormal)
-var smallFont = UIFont(name: AppFontName.regular, size: Constants.fontSmallTitle)
-var LargeFont = UIFont(name: AppFontName.regular, size: Constants.fontLargeTitle)
-var NormalFont = UIFont(name: AppFontName.regular, size: Constants.fontNormalTitle)
-var smallFontHeading = UIFont(name: AppFontName.regular, size: Constants.fontSmallTitle)
-var LargeFontHeading = UIFont(name: AppFontName.regular, size: Constants.fontLargeTitle)
-var NormalFontHeading = UIFont(name: AppFontName.regular, size: Constants.fontNormalTitle)
-var smallFontMedium = UIFont(name: AppFontName.medium, size: Constants.fontSmallTitle)
-var LargeFontMedium = UIFont(name: AppFontName.medium, size: Constants.fontLargeTitle)
-var NormalFontMedium = UIFont(name: AppFontName.medium, size: Constants.fontNormalTitle)
-var xsmallFontMedium = UIFont(name: AppFontName.medium, size: Constants.fontxSmall)
-var xLargeFontMedium = UIFont(name: AppFontName.medium, size: Constants.fontxLarge)
-var xNormalFontMedium = UIFont(name: AppFontName.medium, size: Constants.fontxNormal)
 
 struct Constants{
     static let isPhone = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.phone)
@@ -51,6 +31,21 @@ struct Constants{
     static let fontLargeContent:CGFloat = isPhone ? 18 :20
     static let fontNormalContent:CGFloat = isPhone ? 14 :20
     static let fontSmallContent:CGFloat = isPhone ? 10 :20
+    static let  xsmallFont = UIFont(name: AppFontName.regular, size: Constants.fontxSmall)
+     static let xLargeFont = UIFont(name: AppFontName.regular, size: Constants.fontxLarge)
+     static let xNormalFont = UIFont(name: AppFontName.regular, size: Constants.fontxNormal)
+     static let smallFont = UIFont(name: AppFontName.regular, size: Constants.fontSmallTitle)
+     static let LargeFont = UIFont(name: AppFontName.regular, size: Constants.fontLargeTitle)
+     static let NormalFont = UIFont(name: AppFontName.regular, size: Constants.fontNormalTitle)
+     static let smallFontHeading = UIFont(name: AppFontName.regular, size: Constants.fontSmallTitle)
+     static let LargeFontHeading = UIFont(name: AppFontName.regular, size: Constants.fontLargeTitle)
+     static let NormalFontHeading = UIFont(name: AppFontName.regular, size: Constants.fontNormalTitle)
+     static let smallFontMedium = UIFont(name: AppFontName.medium, size: Constants.fontSmallTitle)
+     static let LargeFontMedium = UIFont(name: AppFontName.medium, size: Constants.fontLargeTitle)
+     static let NormalFontMedium = UIFont(name: AppFontName.medium, size: Constants.fontNormalTitle)
+     static let xsmallFontMedium = UIFont(name: AppFontName.medium, size: Constants.fontxSmall)
+     static let xLargeFontMedium = UIFont(name: AppFontName.medium, size: Constants.fontxLarge)
+     static let xNormalFontMedium = UIFont(name: AppFontName.medium, size: Constants.fontxNormal)
 }
 
 struct AppFontName {
@@ -58,6 +53,9 @@ struct AppFontName {
     static let bold = "HelveticaNeue-Bold"
     static let medium = "HelveticaNeue-Medium"
     
+}
+struct themeColor{
+    static let commonColor = UIColor.gray
 }
 extension UIFont {
     
@@ -81,16 +79,17 @@ struct APPURL {
     private struct Domains {
         static let Local = "http://192.168.2.204"
         static let Server = ""
+        static let version = "/api/v1/"
     }
     
     private  struct Routes {
-        static let Articles = "/api/v1/articles/?page="
-        static let Login = "/api/v1/login/"
-        static let SignUp = "/api/v1/signup/"
-        static let Logout = "/api/v1/logout/"
-        static let Categories = "/api/v1/categories"
-        static let Search = "/api/v1/search/?q="
-        static let recommendation = "/api/v1/articles/" + "\(articleId)" + "/recommendations/"
+        static let Articles = Domains.version + "articles/?page="
+        static let Login = Domains.version + "login/"
+        static let SignUp = Domains.version + "signup/"
+        static let Logout = Domains.version + "logout/"
+        static let Categories = Domains.version + "categories"
+        static let Search = Domains.version + "search/?q="
+        static let recommendation = Domains.version + "articles/" + "\(articleId)" + "/recommendations/"
     }
     
     static let ArticlesURL = Domains.Local + Routes.Articles
