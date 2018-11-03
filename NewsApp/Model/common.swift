@@ -76,7 +76,7 @@ extension UIFont {
 struct APPURL {
     
     private struct Domains {
-        static let Local = "http://192.168.2.204"
+        static let Local = "http://192.168.2.151:8000"//"http://192.168.2.204"
         static let Server = ""
         static let version = "/api/v1/"
     }

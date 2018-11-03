@@ -35,8 +35,8 @@ class APICall{
         }
     }
     //load articles by category
-    func loadNewsbyCategoryAPI(category : String, _ completion : @escaping (ArticleAPIResult) -> ()){
-        let url = APPURL.ArticlesByCategoryURL + "\(category)"
+    func loadNewsbyCategoryAPI(category : String,url: String, _ completion : @escaping (ArticleAPIResult) -> ()){
+        let url = url
         let urlString = url.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)
         print("Load API url: \(urlString!)")
         Alamofire.request(urlString!,method: .get).responseString{

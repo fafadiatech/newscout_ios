@@ -27,6 +27,7 @@ class HomeVC: UIViewController{
     var currentCategory = "All News"
     var selectedCategory = ""
     var nextURL = ""
+    var previousURL = ""
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -109,12 +110,14 @@ class HomeVC: UIViewController{
             selectedCategory = tabBarTitle
         }
         print("selectedcat: \(tabBarTitle)")
-        APICall().loadNewsbyCategoryAPI(category:selectedCategory){ response in
+        APICall().loadNewsbyCategoryAPI(category:selectedCategory, url: APPURL.ArticlesByCategoryURL + "\(selectedCategory)" ){ response in
             switch response {
             case .Success(let data) :
                 self.ArticleData = data
                 if self.ArticleData[0].body.next != nil{
                     self.nextURL = self.ArticleData[0].body.next!}
+                if self.ArticleData[0].body.previous != nil{
+                    self.previousURL = self.ArticleData[0].body.next!}
                 if self.ArticleData[0].body.articles.count == 0{
                     self.activityIndicator.stopAnimating()
                     let alertController = UIAlertController(title: "No articles found in this category...", message: "", preferredStyle: .alert)
@@ -209,6 +212,29 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
         
         // Change 10.0 to adjust the distance from bottom
         if maximumOffset - currentOffset <= 10.0 {
+            if nextURL != "" || previousURL != ""{
+            APICall().loadNewsbyCategoryAPI(category:selectedCategory, url: nextURL){ response in
+                switch response {
+                case .Success(let data) :
+                    self.ArticleData = data
+                    if self.ArticleData[0].body.next != nil{
+                        self.nextURL = self.ArticleData[0].body.next!
+                    }
+                    else{
+                        self.nextURL = ""
+                    }
+                    if self.ArticleData[0].body.previous != nil{
+                        self.previousURL = self.ArticleData[0].body.previous!
+                    }
+                    else{
+                        self.previousURL = ""
+                    }
+                    self.HomeNewsTV.reloadData()
+                case .Failure(let errormessage) :
+                    print(errormessage)
+                }
+                }
+            }
          /*   APICall().loadNewsbyCategoryAPI(category:selectedCategory){ response in
                 switch response {
                 case .Success(let data) :
