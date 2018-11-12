@@ -27,10 +27,11 @@ class NewsDetailVC: UIViewController {
     @IBOutlet weak var viewWebTitle: UIView!
     @IBOutlet weak var ViewWebContainer: UIView!
     @IBOutlet weak var lblWebSource: UILabel!
+    @IBOutlet weak var btnBookamark: UIButton!
     var RecomArticleData = [ArticleStatus]()
     var ArticleData = [ArticleStatus]()
     var ShowArticle = [NewsArticle]()
-    var ArticleDetail = ArticleDict.init(article_id: 0, category: "", source: "", title: "", imageURL: "", url: "", published_on: "", blurb: "")
+    var ArticleDetail = ArticleDict.init(article_id: 0, category: "", source: "", title: "", imageURL: "", url: "", published_on: "", blurb: "", isBookmark: false, isLike: false)
     var suggestedCVCount = 0
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -196,12 +197,23 @@ class NewsDetailVC: UIViewController {
         lblSource.text = currentArticle.source
         lblTimeAgo.text = agoDate
         imgNews.downloadedFrom(link: "\(currentArticle.imageURL!)")
-        
+       /* if currentArticle.isLike == true{
+            btnLike.setImage(UIImage(named: "filledLike.png"), for: .normal)
+        }
+        else{
+            btnLike.setImage(UIImage(named: "Like.png"), for: .normal)
+        }
+       
+        */
     }
     @IBAction func btnLikeActn(_ sender: Any) {
+        
     }
     
     @IBAction func btnDislikeActn(_ sender: Any) {
+    }
+    
+    @IBAction func btnBookmarkActn(_ sender: Any) {
     }
     
     @IBAction func btnShareActn(_ sender: Any) {

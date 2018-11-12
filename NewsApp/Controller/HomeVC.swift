@@ -28,6 +28,7 @@ class HomeVC: UIViewController{
     var selectedCategory = ""
     var nextURL = ""
     var previousURL = ""
+    var lastContentOffset: CGFloat = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -109,30 +110,20 @@ class HomeVC: UIViewController{
         else{
             selectedCategory = tabBarTitle
         }
+        selectedCategory = selectedCategory.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)!
         print("selectedcat: \(tabBarTitle)")
         APICall().loadNewsbyCategoryAPI(category:selectedCategory, url: APPURL.ArticlesByCategoryURL + "\(selectedCategory)" ){ response in
             switch response {
             case .Success(let data) :
                 self.ArticleData = data
+                print(self.ArticleData[0].body.articles.count)
                 if self.ArticleData[0].body.next != nil{
                     self.nextURL = self.ArticleData[0].body.next!}
                 if self.ArticleData[0].body.previous != nil{
-                    self.previousURL = self.ArticleData[0].body.next!}
+                    self.previousURL = self.ArticleData[0].body.previous!}
                 if self.ArticleData[0].body.articles.count == 0{
                     self.activityIndicator.stopAnimating()
-                    let alertController = UIAlertController(title: "No articles found in this category...", message: "", preferredStyle: .alert)
-                    if UI_USER_INTERFACE_IDIOM() == .pad
-                    {
-                        alertController.popoverPresentationController?.sourceView = self.view
-                        alertController.popoverPresentationController?.sourceRect = CGRect(x: self.view.bounds.midX, y: self.view.bounds.midY, width: 0, height: 0)
-                        
-                    }
-                    let action1 = UIAlertAction(title: "OK", style: .default) { (action:UIAlertAction) in }
-                    
-                    alertController.addAction(action1)
-                    
-                    self.present(alertController, animated: true, completion: nil)
-                    
+                    self.showToast(message: "No articles found in this category...")
                 }else{
                     self.HomeNewsTV.reloadData()}
             case .Failure(let errormessage) :
@@ -141,10 +132,31 @@ class HomeVC: UIViewController{
         }
     }
     
+    func showToast(message : String) {
+        
+        let toastLabel = UILabel(frame: CGRect(x: 60, y: self.view.frame.size.height/2 - 40, width: self.view.frame.size.width - 100, height: 50))
+        toastLabel.backgroundColor = UIColor.black.withAlphaComponent(0.6)
+        toastLabel.textColor = UIColor.white
+        toastLabel.textAlignment = .center;
+        toastLabel.font = UIFont(name: AppFontName.regular, size: 18.0)
+        toastLabel.text = message
+        toastLabel.alpha = 1.0
+        toastLabel.layer.cornerRadius = 10;
+        toastLabel.clipsToBounds  =  true
+        toastLabel.numberOfLines = 0
+        self.view.addSubview(toastLabel)
+        UIView.animate(withDuration: 4.0, delay: 0.1, options: .curveEaseOut, animations: {
+            toastLabel.alpha = 0.0
+        }, completion: {(isCompleted) in
+            toastLabel.removeFromSuperview()
+        })
+    }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+    
 }
 
 extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelegate{
@@ -204,62 +216,66 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
         activityIndicator.stopAnimating()
         return cell
     }
-    
-    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView){
-        // UITableView only moves in one direction, y axis
-        let currentOffset = scrollView.contentOffset.y
-        let maximumOffset = scrollView.contentSize.height - scrollView.frame.size.height
+  
+    //check whether tableview scrolled up or down
+    func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
         
-        // Change 10.0 to adjust the distance from bottom
-        if maximumOffset - currentOffset <= 10.0 {
-            if nextURL != "" || previousURL != ""{
-            APICall().loadNewsbyCategoryAPI(category:selectedCategory, url: nextURL){ response in
-                switch response {
-                case .Success(let data) :
-                    self.ArticleData = data
-                    if self.ArticleData[0].body.next != nil{
-                        self.nextURL = self.ArticleData[0].body.next!
+        
+        if targetContentOffset.pointee.y < scrollView.contentOffset.y {
+            print("it's going up")
+            if nextURL != "" {
+                APICall().loadNewsbyCategoryAPI(category:selectedCategory, url: nextURL){ response in
+                    switch response {
+                    case .Success(let data) :
+                        self.ArticleData = data
+                        print(self.ArticleData[0].body.articles.count)
+                        print("nexturl data: \(self.ArticleData)")
+                        if self.ArticleData[0].body.next != nil{
+                            self.nextURL = self.ArticleData[0].body.next!
+                        }
+                        else{
+                            self.nextURL = ""
+                        }
+                        if self.ArticleData[0].body.previous != nil{
+                            self.previousURL = self.ArticleData[0].body.previous!
+                        }
+                        else{
+                            self.previousURL = ""
+                        }
+                        self.HomeNewsTV.reloadData()
+                    case .Failure(let errormessage) :
+                        print(errormessage)
                     }
-                    else{
-                        self.nextURL = ""
-                    }
-                    if self.ArticleData[0].body.previous != nil{
-                        self.previousURL = self.ArticleData[0].body.previous!
-                    }
-                    else{
-                        self.previousURL = ""
-                    }
-                    self.HomeNewsTV.reloadData()
-                case .Failure(let errormessage) :
-                    print(errormessage)
-                }
-                }
-            }
-         /*   APICall().loadNewsbyCategoryAPI(category:selectedCategory){ response in
-                switch response {
-                case .Success(let data) :
-                    self.ArticleData = data
-                case .Failure(let errormessage) :
-                    print(errormessage)
                 }
             }
-             pageNum = pageNum + 1
-             DBManager().SaveDataDB(pageNum:pageNum){response in
-             if response == true{
-             let result = DBManager().FetchDataFromDB()
-             switch result {
-             case .Success(let DBData) :
-             let articles = DBData
-             if  selectedCat == "" || selectedCat == "FOR YOU" || selectedCat == "All News"{
-             self.filterNews(selectedCat: "All News" )
-             }else{
-             self.filterNews(selectedCat: selectedCat )
-             }
-             self.HomeNewsTV.reloadData()
-             case .Failure(let errorMsg) :
-             print(errorMsg)
-             }
-             }*/
+        } else {
+             print(" it's going down")
+            if previousURL != ""{
+                APICall().loadNewsbyCategoryAPI(category:selectedCategory, url: previousURL){ response in
+                    switch response {
+                    case .Success(let data) :
+                        self.ArticleData = data
+                         print(self.ArticleData[0].body.articles.count)
+                        print("previous url data: \(self.ArticleData)")
+                        if self.ArticleData[0].body.previous != nil{
+                            self.previousURL = self.ArticleData[0].body.previous!
+                            print(self.previousURL)
+                        }
+                        else{
+                            self.previousURL = ""
+                        }
+                        if self.ArticleData[0].body.next != nil{
+                            self.nextURL = self.ArticleData[0].body.next!
+                        }
+                        else{
+                            self.nextURL = ""
+                        }
+                        self.HomeNewsTV.reloadData()
+                    case .Failure(let errormessage) :
+                        print(errormessage)
+                    }
+                }
+            }
         }
     }
 }

@@ -39,6 +39,8 @@ struct Article: Decodable
     let url : String?
     let published_on : String?
     let blurb : String?
+    let isBookmark : Bool?
+    let isLike : Bool?
     
     enum CodingKeys: String, CodingKey{
         case article_id = "id"
@@ -49,6 +51,8 @@ struct Article: Decodable
         case title
         case published_on
         case blurb
+        case isBookmark
+        case isLike
     }
 }
 //for news detail
@@ -66,6 +70,8 @@ struct ArticleDict: Decodable{
     let url : String?
     let published_on : String?
     let blurb : String?
+    let isBookmark : Bool?
+    let isLike : Bool?
     
     enum CodingKeys: String, CodingKey{
         case article_id = "id"
@@ -76,6 +82,8 @@ struct ArticleDict: Decodable{
         case title
         case published_on
         case blurb
+        case isBookmark
+        case isLike
     }
 }
 
@@ -111,6 +119,7 @@ struct Error : Decodable
 {
     let errorList : [ErrorItem]?
     let invalid_credentials : String?
+    let Msg : String?
 }
 
 struct ErrorItem : Decodable

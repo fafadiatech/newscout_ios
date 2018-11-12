@@ -36,10 +36,10 @@ class APICall{
     }
     //load articles by category
     func loadNewsbyCategoryAPI(category : String,url: String, _ completion : @escaping (ArticleAPIResult) -> ()){
-        let url = url
+        //let url = url
         let urlString = url.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)
         print("Load API url: \(urlString!)")
-        Alamofire.request(urlString!,method: .get).responseString{
+        Alamofire.request(url,method: .get).responseString{
             response in
             if(response.result.isSuccess){
                 if let data = response.data {
@@ -235,4 +235,57 @@ class APICall{
         }
     }
     
+    //bookmark API
+    func bookmarkAPI(id : Int, isBookmark : Bool,_ completion : @escaping (String) -> ()){
+        let url = APPURL.bookmarkURL
+        print(url)
+        let param = ["article_id" : id,
+                     "isBookMark" : isBookmark] as [String : Any]
+        Alamofire.request(url,method: .post, parameters: param).responseJSON{
+            response in
+            if(response.result.isSuccess){
+                if let data = response.data {
+                    let jsonDecoder = JSONDecoder()
+                    do {
+                        let jsonData = try jsonDecoder.decode(MainModel.self, from: data)
+                        if jsonData.header.status == "1"{
+                            completion((jsonData.body?.Msg)!)
+                        }else{
+                            completion((jsonData.errors?.Msg)!)
+                        }
+                    }
+                    catch {
+                        print("Error: \(error)")
+                    }
+                }
+            }
+        }
+    }
+    
+    // Like/dislike API
+    func LikeDislikeAPI(id : Int, isLike : Int,_ completion : @escaping (String) -> ()){
+        let url = APPURL.likeDislikeURL
+        print(url)
+        let param = ["article_id" : id,
+                     "isLike" : isLike]
+        Alamofire.request(url,method: .post, parameters: param).responseJSON{
+            response in
+            if(response.result.isSuccess){
+                if let data = response.data {
+                    let jsonDecoder = JSONDecoder()
+                    do {
+                        let jsonData = try jsonDecoder.decode(MainModel.self, from: data)
+                        if jsonData.header.status == "1"{
+                            completion((jsonData.body?.Msg)!)
+                        }else{
+                            completion((jsonData.errors?.Msg)!)
+                        }
+                    }
+                    catch {
+                        print("Error: \(error)")
+                    }
+                }
+            }
+        }
+    }
 }

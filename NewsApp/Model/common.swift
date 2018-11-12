@@ -76,7 +76,7 @@ extension UIFont {
 struct APPURL {
     
     private struct Domains {
-        static let Local = "http://192.168.2.151:8000"//"http://192.168.2.204"
+        static let Local = "http://192.168.2.204" //"http://192.168.2.151:8000"//
         static let Server = ""
         static let version = "/api/v1/"
     }
@@ -90,6 +90,8 @@ struct APPURL {
         static let Categories = Domains.version + "categories"
         static let Search = Domains.version + "search/?q="
         static let recommendation = Domains.version + "articles/" + "\(articleId)" + "/recommendations/"
+        static let bookmark = Domains.version + "articles/bookmark/"
+        static let likeDislike =  Domains.version + "articles/vote/"
     }
     
     static let ArticlesURL = Domains.Local + Routes.Articles
@@ -100,5 +102,7 @@ struct APPURL {
     static let CategoriesURL =  Domains.Local + Routes.Categories
     static let SearchURL =  Domains.Local + Routes.Search
     static let recommendationURL = Domains.Local + Routes.recommendation
+    static let bookmarkURL = Domains.Local + Routes.bookmark
+    static let likeDislikeURL = Domains.Local + Routes.likeDislike
 }
 

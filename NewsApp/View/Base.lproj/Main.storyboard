@@ -816,6 +816,9 @@
                                         <rect key="frame" x="329" y="21" width="30" height="36"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <state key="normal" backgroundImage="bookmark"/>
+                                        <connections>
+                                            <action selector="btnBookmarkActn:" destination="yxW-qj-gIF" eventType="touchUpInside" id="Vxg-p3-6YI"/>
+                                        </connections>
                                     </button>
                                     <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" editable="NO" textAlignment="natural" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fW6-pK-tzj">
                                         <rect key="frame" x="8" y="71" width="351" height="133"/>
@@ -978,6 +981,7 @@
                     <connections>
                         <outlet property="ViewWebContainer" destination="d60-rI-rFg" id="04P-6G-QjK"/>
                         <outlet property="WKWebView" destination="scR-xK-5Ou" id="XCH-ru-Gus"/>
+                        <outlet property="btnBookamark" destination="22D-cz-AGN" id="Ed9-V6-yMT"/>
                         <outlet property="btnDislike" destination="wVK-oY-EQo" id="Qew-Xp-Nfl"/>
                         <outlet property="btnLike" destination="mNk-M4-IU3" id="4ho-LT-J3C"/>
                         <outlet property="btnShare" destination="2Y2-a1-Kyv" id="Lad-Fm-kYS"/>
