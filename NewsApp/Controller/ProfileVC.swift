@@ -32,6 +32,13 @@ class ProfileVC: UIViewController {
         btnImgProfile.layer.cornerRadius = 0.5 * btnImgProfile.bounds.size.width
         btnImgProfile.clipsToBounds = true
         btnImgProfile.setImage(UIImage(named:"settings"), for: .normal)
+        if UserDefaults.standard.value(forKey: "first_name") != nil{
+            txtName.text = UserDefaults.standard.value(forKey: "first_name") as! String
+        }
+        if UserDefaults.standard.value(forKey: "email") != nil{
+            txtEmail.text = UserDefaults.standard.value(forKey: "email") as! String
+        }
+        
     }
     
     override var prefersStatusBarHidden: Bool {

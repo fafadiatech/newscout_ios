@@ -41,10 +41,10 @@ class APICall{
         print("Load API url: \(urlString!)")
         var headers : [String: String]
         if UserDefaults.standard.value(forKey: "token") != nil{
-        let token = "Token " + "\(UserDefaults.standard.value(forKey: "token")!)"
-         headers = ["Authorization": token]
+            let token = "Token " + "\(UserDefaults.standard.value(forKey: "token")!)"
+            headers = ["Authorization": token]
         }else{
-          headers = ["Authorization": ""]
+            headers = ["Authorization": ""]
         }
         
         Alamofire.request(url,method: .get, headers: headers).responseString{

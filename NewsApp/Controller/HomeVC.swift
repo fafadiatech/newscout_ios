@@ -46,6 +46,10 @@ class HomeVC: UIViewController{
         // activityIndicator.stopAnimating()
         var paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
         print("\(paths[0])")
+        let refreshControl = UIRefreshControl()
+        refreshControl.addTarget(self, action: #selector(refreshNews), for: .valueChanged)
+        HomeNewsTV.refreshControl = refreshControl
+        refreshControl.attributedTitle = NSAttributedString(string: "Pull  to Refresh...")
         /* coredataRecordCount = DBManager().IsCoreDataEmpty()
          if coredataRecordCount != 0{
          let result = DBManager().FetchDataFromDB()
@@ -86,6 +90,11 @@ class HomeVC: UIViewController{
          }*/
     }
     
+    @objc func refreshNews(refreshControl: UIRefreshControl) {
+        ArticlesAPICall()
+        refreshControl.endRefreshing()
+    }
+    
     func filterNews(selectedCat : String)
     {
         let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "NewsArticle")
@@ -112,6 +121,11 @@ class HomeVC: UIViewController{
         }
         selectedCategory = selectedCategory.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)!
         print("selectedcat: \(tabBarTitle)")
+        ArticlesAPICall()
+        
+    }
+    
+    func ArticlesAPICall(){
         APICall().loadNewsbyCategoryAPI(category:selectedCategory, url: APPURL.ArticlesByCategoryURL + "\(selectedCategory)" ){ response in
             switch response {
             case .Success(let data) :
@@ -131,7 +145,6 @@ class HomeVC: UIViewController{
             }
         }
     }
-    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -197,7 +210,7 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
         activityIndicator.stopAnimating()
         return cell
     }
-  
+    
     //check whether tableview scrolled up or down
     func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
         if targetContentOffset.pointee.y < scrollView.contentOffset.y {
@@ -229,13 +242,13 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
                 }
             }
         } else {
-             print(" it's going down")
+            print(" it's going down")
             if previousURL != ""{
                 APICall().loadNewsbyCategoryAPI(category:selectedCategory, url: previousURL){ response in
                     switch response {
                     case .Success(let data) :
                         self.ArticleData = data
-                         print(self.ArticleData[0].body.articles.count)
+                        print(self.ArticleData[0].body.articles.count)
                         print("previous url data: \(self.ArticleData)")
                         if self.ArticleData[0].body.previous != nil{
                             self.previousURL = self.ArticleData[0].body.previous!

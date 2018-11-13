@@ -143,7 +143,9 @@ class NewsDetailVC: UIViewController {
                     view.window!.layer.add(transition, forKey: kCATransition)
                     print("swipe down")
                 }
-                
+                else{
+                    self.view.makeToast("No more news to show", duration: 3.0, position: .center)
+                }
             case UISwipeGestureRecognizerDirection.left:
                 ViewWebContainer.isHidden = false
                 print("Swiped left")
@@ -163,6 +165,9 @@ class NewsDetailVC: UIViewController {
                     transition.subtype = kCATransitionFromTop
                     view.window!.layer.add(transition, forKey: kCATransition)
                     print("Swiped up")
+                }
+                else{
+                    self.view.makeToast("No more news to show", duration: 3.0, position: .center)
                 }
             default:
                 break
@@ -223,6 +228,7 @@ class NewsDetailVC: UIViewController {
             btnBookamark.setImage(UIImage(named: "book.png"), for: .normal)
         }
     }
+    
     @IBAction func btnLikeActn(_ sender: Any) {
         if UserDefaults.standard.value(forKey: "token") != nil{
             if (btnLike.currentImage?.isEqual(UIImage(named: "like.png")))! {
@@ -309,7 +315,7 @@ class NewsDetailVC: UIViewController {
                 APICall().bookmarkAPI(id: articleId){
                     (status, response) in
                     if status == "0"{
-                       self.view.makeToast(response, duration: 3.0, position: .center)
+                        self.view.makeToast(response, duration: 3.0, position: .center)
                     }
                     else{
                         self.btnBookamark.setImage(UIImage(named: "book.png"), for: .normal)
@@ -330,7 +336,6 @@ class NewsDetailVC: UIViewController {
         let activityViewController = UIActivityViewController(activityItems: shareAll, applicationActivities: nil)
         activityViewController.popoverPresentationController?.sourceView = self.view
         self.present(activityViewController, animated: true, completion: nil)
-        
     }
     
     @IBAction func btnBackAction(_ sender: Any) {
