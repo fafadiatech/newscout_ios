@@ -31,7 +31,7 @@ class NewsDetailVC: UIViewController {
     var RecomArticleData = [ArticleStatus]()
     var ArticleData = [ArticleStatus]()
     var ShowArticle = [NewsArticle]()
-    var ArticleDetail = ArticleDict.init(article_id: 0, category: "", source: "", title: "", imageURL: "", url: "", published_on: "", blurb: "", isBookmark: false, isLike: false)
+    var ArticleDetail = ArticleDict.init(article_id: 0, category: "", source: "", title: "", imageURL: "", url: "", published_on: "", blurb: "", isBookmark: false, isLike: 0)
     var suggestedCVCount = 0
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -197,23 +197,130 @@ class NewsDetailVC: UIViewController {
         lblSource.text = currentArticle.source
         lblTimeAgo.text = agoDate
         imgNews.downloadedFrom(link: "\(currentArticle.imageURL!)")
-       /* if currentArticle.isLike == true{
+        print("currentArticle.isLike: \(currentArticle.isLike)")
+        if currentArticle.isLike == 0 {
             btnLike.setImage(UIImage(named: "filledLike.png"), for: .normal)
+            btnDislike.setImage(UIImage(named: "dislike.png"), for: .normal)
+            self.btnDislike.isUserInteractionEnabled = false
+        }
+        else if currentArticle.isLike == 1{
+            btnLike.setImage(UIImage(named: "like.png"), for: .normal)
+            btnDislike.setImage(UIImage(named: "filledDislike.png"), for: .normal)
+            self.btnLike.isUserInteractionEnabled = false
+        }
+        else if currentArticle.isLike == 2{
+            btnLike.setImage(UIImage(named: "like.png"), for: .normal)
+            btnDislike.setImage(UIImage(named: "dislike.png"), for: .normal)
         }
         else{
-            btnLike.setImage(UIImage(named: "Like.png"), for: .normal)
+            btnLike.setImage(UIImage(named: "like.png"), for: .normal)
+            btnDislike.setImage(UIImage(named: "dislike.png"), for: .normal)
+            btnBookamark.setImage(UIImage(named: "book.png"), for: .normal)
         }
-       
-        */
+        if currentArticle.isBookmark == true{
+            btnBookamark.setImage(UIImage(named: "filledBookmrk.png"), for: .normal)
+        }else{
+            btnBookamark.setImage(UIImage(named: "book.png"), for: .normal)
+        }
     }
     @IBAction func btnLikeActn(_ sender: Any) {
-        
+        if UserDefaults.standard.value(forKey: "token") != nil{
+            if (btnLike.currentImage?.isEqual(UIImage(named: "like.png")))! {
+                APICall().LikeDislikeAPI(id: articleId, isLike: 0){
+                    (status,response) in
+                    if status == "0"{
+                        self.view.makeToast(response, duration: 3.0, position: .center)
+                    }
+                    else{
+                        self.btnLike.setImage(UIImage(named: "filledLike.png"), for: .normal)
+                        self.btnDislike.isUserInteractionEnabled = false
+                    }
+                }
+            }
+            else{
+                APICall().LikeDislikeAPI(id: articleId, isLike: 2){
+                    (status,response) in
+                    if status == "0"{
+                        self.view.makeToast(response, duration: 3.0, position: .center)
+                    }
+                    else{
+                        self.btnLike.setImage(UIImage(named: "like.png"), for: .normal)
+                        self.btnDislike.isUserInteractionEnabled = true
+                    }
+                }
+            }
+        }
+        else{
+            self.view.makeToast("Please login to continue..", duration: 3.0, position: .center)
+        }
     }
     
     @IBAction func btnDislikeActn(_ sender: Any) {
+        if UserDefaults.standard.value(forKey: "token") != nil{
+            if (btnDislike.currentImage?.isEqual(UIImage(named: "dislike.png")))! {
+                
+                APICall().LikeDislikeAPI(id: articleId, isLike: 1){
+                    (status,response) in
+                    if status == "0"{
+                        self.view.makeToast(response, duration: 3.0, position: .center)
+                    }
+                    else{
+                        self.btnDislike.setImage(UIImage(named: "filledDislike.png"), for: .normal)
+                        self.btnLike.isUserInteractionEnabled = false
+                    }
+                }
+            }
+            else{
+                btnDislike.setImage(UIImage(named: "dislike.png"), for: .normal)
+                btnLike.isUserInteractionEnabled = true
+                APICall().LikeDislikeAPI(id: articleId, isLike: 2){
+                    (status,response) in
+                    if status == "0"{
+                        self.view.makeToast(response, duration: 3.0, position: .center)
+                    }
+                    else{
+                        self.btnDislike.setImage(UIImage(named: "dislike.png"), for: .normal)
+                        self.btnLike.isUserInteractionEnabled = true
+                    }
+                }
+            }
+        }
+        else{
+            self.view.makeToast("Please login to continue..", duration: 3.0, position: .center)
+        }
     }
     
     @IBAction func btnBookmarkActn(_ sender: Any) {
+        if UserDefaults.standard.value(forKey: "token") != nil{
+            if (btnBookamark.currentImage?.isEqual(UIImage(named: "book.png")))! {
+                
+                APICall().bookmarkAPI(id: articleId){
+                    (status, response) in
+                    if status == "0"{
+                        self.view.makeToast(response, duration: 3.0, position: .center)
+                    }
+                    else{
+                        self.btnBookamark.setImage(UIImage(named: "filledBookmrk.png"), for: .normal)
+                        self.view.makeToast(response, duration: 1.0, position: .center)
+                    }
+                }
+            }
+            else{
+                APICall().bookmarkAPI(id: articleId){
+                    (status, response) in
+                    if status == "0"{
+                       self.view.makeToast(response, duration: 3.0, position: .center)
+                    }
+                    else{
+                        self.btnBookamark.setImage(UIImage(named: "book.png"), for: .normal)
+                        self.view.makeToast(response, duration: 1.0, position: .center)
+                    }
+                }
+            }
+        }
+        else{
+            self.view.makeToast("Please login to continue..", duration: 3.0, position: .center)
+        }
     }
     
     @IBAction func btnShareActn(_ sender: Any) {

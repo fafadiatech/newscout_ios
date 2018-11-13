@@ -124,10 +124,7 @@ extension CategoryListVC:UITableViewDelegate, UITableViewDataSource{
             Homevc.selectedCategory = selectedCat
         }
         else{
-            let alertController = UIAlertController(title: "Category is already added..", message: "", preferredStyle: .alert)
-            let action1 = UIAlertAction(title: "OK", style: .default) { (action:UIAlertAction) in }
-            alertController.addAction(action1)
-            self.present(alertController, animated: true, completion: nil)
+            self.view.makeToast("Category is already added..", duration: 3.0, position: .center)
         }
     }
 }

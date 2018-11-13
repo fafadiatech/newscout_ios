@@ -85,12 +85,13 @@ class SettingsTVC: UITableViewController {
                     print(status,response)
                     if status == "1"{
                         print("Logout response:\(response)")
-                        self.showMSg(title: response, msg: "")
+                        self.view.makeToast("No articles found in this category...", duration: 3.0, position: .center)
+    
                         self.lblLogout.isHidden = true
                         self.lblLogin.text = "Login"
                     }
                     else{
-                        self.showMSg(title: response, msg: "")
+                        self.view.makeToast(response, duration: 3.0, position: .center)
                     }
                 }
                 
@@ -99,22 +100,6 @@ class SettingsTVC: UITableViewController {
         return indexPath
     }
     
-    func showMSg(title: String, msg: String)
-    {
-        
-        let alertController = UIAlertController(title: title, message: msg, preferredStyle: .alert)
-        if UI_USER_INTERFACE_IDIOM() == .pad
-        {
-            alertController.popoverPresentationController?.sourceView = self.view
-            alertController.popoverPresentationController?.sourceRect = CGRect(x: self.view.bounds.midX, y: self.view.bounds.midY, width: 0, height: 0)
-            
-        }
-        let action1 = UIAlertAction(title: "OK", style: .default) { (action:UIAlertAction) in }
-        
-        alertController.addAction(action1)
-        
-        self.present(alertController, animated: true, completion: nil)
-    }
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.

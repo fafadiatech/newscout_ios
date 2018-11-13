@@ -116,40 +116,20 @@ class HomeVC: UIViewController{
             switch response {
             case .Success(let data) :
                 self.ArticleData = data
-                print(self.ArticleData[0].body.articles.count)
+                print(self.ArticleData[0].body.articles)
                 if self.ArticleData[0].body.next != nil{
                     self.nextURL = self.ArticleData[0].body.next!}
                 if self.ArticleData[0].body.previous != nil{
                     self.previousURL = self.ArticleData[0].body.previous!}
                 if self.ArticleData[0].body.articles.count == 0{
                     self.activityIndicator.stopAnimating()
-                    self.showToast(message: "No articles found in this category...")
+                    self.HomeNewsTV.makeToast("No articles found in this category...", duration: 3.0, position: .center)
                 }else{
                     self.HomeNewsTV.reloadData()}
             case .Failure(let errormessage) :
                 print(errormessage)
             }
         }
-    }
-    
-    func showToast(message : String) {
-        
-        let toastLabel = UILabel(frame: CGRect(x: 60, y: self.view.frame.size.height/2 - 40, width: self.view.frame.size.width - 100, height: 50))
-        toastLabel.backgroundColor = UIColor.black.withAlphaComponent(0.6)
-        toastLabel.textColor = UIColor.white
-        toastLabel.textAlignment = .center;
-        toastLabel.font = UIFont(name: AppFontName.regular, size: 18.0)
-        toastLabel.text = message
-        toastLabel.alpha = 1.0
-        toastLabel.layer.cornerRadius = 10;
-        toastLabel.clipsToBounds  =  true
-        toastLabel.numberOfLines = 0
-        self.view.addSubview(toastLabel)
-        UIView.animate(withDuration: 4.0, delay: 0.1, options: .curveEaseOut, animations: {
-            toastLabel.alpha = 0.0
-        }, completion: {(isCompleted) in
-            toastLabel.removeFromSuperview()
-        })
     }
     
     override func didReceiveMemoryWarning() {
@@ -171,6 +151,7 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
         newsCurrentIndex = indexPath.row
         newsDetailvc.ArticleData = ArticleData
         articleId = ArticleData[0].body.articles[indexPath.row].article_id!
+        print("articleId in didselect: \(articleId)")
         present(newsDetailvc, animated: true, completion: nil)
     }
     
@@ -219,8 +200,6 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
   
     //check whether tableview scrolled up or down
     func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
-        
-        
         if targetContentOffset.pointee.y < scrollView.contentOffset.y {
             print("it's going up")
             if nextURL != "" {
@@ -235,6 +214,7 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
                         }
                         else{
                             self.nextURL = ""
+                            self.HomeNewsTV.makeToast("No more news to show", duration: 3.0, position: .center)
                         }
                         if self.ArticleData[0].body.previous != nil{
                             self.previousURL = self.ArticleData[0].body.previous!
@@ -263,6 +243,7 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
                         }
                         else{
                             self.previousURL = ""
+                            self.HomeNewsTV.makeToast("No more news to show", duration: 3.0, position: .center)
                         }
                         if self.ArticleData[0].body.next != nil{
                             self.nextURL = self.ArticleData[0].body.next!
@@ -283,7 +264,7 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
 extension HomeVC: IndicatorInfoProvider{
     func indicatorInfo(for pagerTabStripController: PagerTabStripViewController) -> IndicatorInfo {
         print(tabBarTitle)
-        return IndicatorInfo(title: tabBarTitle)
+        return IndicatorInfo(title: tabBarTitle.uppercased())
     }
 }
 

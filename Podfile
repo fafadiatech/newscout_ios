@@ -12,6 +12,7 @@ target 'NewsApp' do
 	pod "Floaty"
     pod 'XLPagerTabStrip'
     pod 'MaterialComponents/ActivityIndicator'
+    pod 'Toast-Swift'
   target 'NewsAppTests' do
     inherit! :search_paths
     # Pods for testing

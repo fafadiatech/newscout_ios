@@ -40,7 +40,7 @@ struct Article: Decodable
     let published_on : String?
     let blurb : String?
     let isBookmark : Bool?
-    let isLike : Bool?
+    let isLike : Int?
     
     enum CodingKeys: String, CodingKey{
         case article_id = "id"
@@ -51,7 +51,7 @@ struct Article: Decodable
         case title
         case published_on
         case blurb
-        case isBookmark
+        case isBookmark = "isBookMark"
         case isLike
     }
 }
@@ -71,7 +71,7 @@ struct ArticleDict: Decodable{
     let published_on : String?
     let blurb : String?
     let isBookmark : Bool?
-    let isLike : Bool?
+    let isLike : Int?
     
     enum CodingKeys: String, CodingKey{
         case article_id = "id"
@@ -82,7 +82,7 @@ struct ArticleDict: Decodable{
         case title
         case published_on
         case blurb
-        case isBookmark
+        case isBookmark = "isBookMark"
         case isLike
     }
 }

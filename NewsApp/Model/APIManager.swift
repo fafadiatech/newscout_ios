@@ -39,7 +39,15 @@ class APICall{
         //let url = url
         let urlString = url.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)
         print("Load API url: \(urlString!)")
-        Alamofire.request(url,method: .get).responseString{
+        var headers : [String: String]
+        if UserDefaults.standard.value(forKey: "token") != nil{
+        let token = "Token " + "\(UserDefaults.standard.value(forKey: "token")!)"
+         headers = ["Authorization": token]
+        }else{
+          headers = ["Authorization": ""]
+        }
+        
+        Alamofire.request(url,method: .get, headers: headers).responseString{
             response in
             if(response.result.isSuccess){
                 if let data = response.data {
@@ -199,9 +207,13 @@ class APICall{
     //Logout API
     func LogoutAPI(_ completion : @escaping (String, String) ->()) {
         let url = APPURL.LogoutURL
-        let token = "Token " + "\(UserDefaults.standard.value(forKey: "token")!)"
-        //let param = ["Authorization" : token]
-        let headers = ["Authorization": token]
+        var headers : [String: String]
+        if UserDefaults.standard.value(forKey: "token") != nil{
+            let token = "Token " + "\(UserDefaults.standard.value(forKey: "token")!)"
+            headers = ["Authorization": token]
+        }else{
+            headers = ["Authorization": ""]
+        }
         
         Alamofire.request(url,method: .get, parameters: nil, headers: headers).responseString{
             response in
@@ -236,12 +248,19 @@ class APICall{
     }
     
     //bookmark API
-    func bookmarkAPI(id : Int, isBookmark : Bool,_ completion : @escaping (String) -> ()){
+    func bookmarkAPI(id : Int, _ completion : @escaping (String, String) -> ()){
         let url = APPURL.bookmarkURL
         print(url)
-        let param = ["article_id" : id,
-                     "isBookMark" : isBookmark] as [String : Any]
-        Alamofire.request(url,method: .post, parameters: param).responseJSON{
+        let param = ["article_id" : id]
+        var headers : [String: String]
+        if UserDefaults.standard.value(forKey: "token") != nil{
+            let token = "Token " + "\(UserDefaults.standard.value(forKey: "token")!)"
+            headers = ["Authorization": token]
+        }else{
+            headers = ["Authorization": ""]
+        }
+        
+        Alamofire.request(url,method: .post, parameters: param, headers: headers).responseJSON{
             response in
             if(response.result.isSuccess){
                 if let data = response.data {
@@ -249,9 +268,9 @@ class APICall{
                     do {
                         let jsonData = try jsonDecoder.decode(MainModel.self, from: data)
                         if jsonData.header.status == "1"{
-                            completion((jsonData.body?.Msg)!)
+                            completion(jsonData.header.status,(jsonData.body?.Msg)!)
                         }else{
-                            completion((jsonData.errors?.Msg)!)
+                            completion(jsonData.header.status,(jsonData.errors?.Msg)!)
                         }
                     }
                     catch {
@@ -263,12 +282,20 @@ class APICall{
     }
     
     // Like/dislike API
-    func LikeDislikeAPI(id : Int, isLike : Int,_ completion : @escaping (String) -> ()){
+    func LikeDislikeAPI(id : Int, isLike : Int,_ completion : @escaping (String, String) -> ()){
         let url = APPURL.likeDislikeURL
         print(url)
         let param = ["article_id" : id,
                      "isLike" : isLike]
-        Alamofire.request(url,method: .post, parameters: param).responseJSON{
+        print(param)
+        var headers : [String: String]
+        if UserDefaults.standard.value(forKey: "token") != nil{
+            let token = "Token " + "\(UserDefaults.standard.value(forKey: "token")!)"
+            headers = ["Authorization": token]
+        }else{
+            headers = ["Authorization": ""]
+        }
+        Alamofire.request(url,method: .post, parameters: param, headers: headers).responseJSON{
             response in
             if(response.result.isSuccess){
                 if let data = response.data {
@@ -276,9 +303,9 @@ class APICall{
                     do {
                         let jsonData = try jsonDecoder.decode(MainModel.self, from: data)
                         if jsonData.header.status == "1"{
-                            completion((jsonData.body?.Msg)!)
+                            completion(jsonData.header.status, (jsonData.body?.Msg)!)
                         }else{
-                            completion((jsonData.errors?.Msg)!)
+                            completion(jsonData.header.status, (jsonData.errors?.Msg)!)
                         }
                     }
                     catch {

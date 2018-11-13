@@ -815,7 +815,6 @@
                                     <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="22D-cz-AGN">
                                         <rect key="frame" x="329" y="21" width="30" height="36"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <state key="normal" backgroundImage="bookmark"/>
                                         <connections>
                                             <action selector="btnBookmarkActn:" destination="yxW-qj-gIF" eventType="touchUpInside" id="Vxg-p3-6YI"/>
                                         </connections>
@@ -839,7 +838,6 @@
                                     <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mNk-M4-IU3">
                                         <rect key="frame" x="15" y="251" width="30" height="30"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <state key="normal" backgroundImage="like"/>
                                         <connections>
                                             <action selector="btnLikeActn:" destination="yxW-qj-gIF" eventType="touchUpInside" id="tbT-Ep-xtn"/>
                                         </connections>
@@ -847,7 +845,6 @@
                                     <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wVK-oY-EQo">
                                         <rect key="frame" x="59" y="251" width="28" height="30"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <state key="normal" backgroundImage="dislike"/>
                                         <connections>
                                             <action selector="btnDislikeActn:" destination="yxW-qj-gIF" eventType="touchUpInside" id="Tx3-LF-DAc"/>
                                         </connections>
@@ -937,7 +934,7 @@
                                 </connections>
                             </button>
                             <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="d60-rI-rFg">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                                <rect key="frame" x="0.0" y="-667" width="375" height="667"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="HS9-vL-0jm">
@@ -1247,14 +1244,11 @@
     </scenes>
     <resources>
         <image name="backArrow" width="256" height="256"/>
-        <image name="bookmark" width="225" height="225"/>
         <image name="cross" width="512" height="512"/>
-        <image name="dislike" width="50" height="50"/>
         <image name="f1" width="550" height="596"/>
         <image name="facebook-48" width="48" height="48"/>
         <image name="google-plus-40" width="40" height="40"/>
         <image name="icon" width="512" height="512"/>
-        <image name="like" width="50" height="50"/>
         <image name="share" width="50" height="50"/>
     </resources>
 </document>

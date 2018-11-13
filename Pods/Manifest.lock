@@ -13,6 +13,7 @@ PODS:
     - MotionInterchange (~> 1.6)
   - MotionInterchange (1.6.0)
   - SwiftyJSON (4.1.0)
+  - Toast-Swift (3.0.1)
   - XLPagerTabStrip (8.0.1)
 
 DEPENDENCIES:
@@ -20,6 +21,7 @@ DEPENDENCIES:
   - Floaty
   - MaterialComponents/ActivityIndicator
   - SwiftyJSON
+  - Toast-Swift
   - XLPagerTabStrip
 
 SPEC REPOS:
@@ -31,6 +33,7 @@ SPEC REPOS:
     - MotionAnimator
     - MotionInterchange
     - SwiftyJSON
+    - Toast-Swift
     - XLPagerTabStrip
 
 SPEC CHECKSUMS:
@@ -41,8 +44,9 @@ SPEC CHECKSUMS:
   MotionAnimator: ee16aa30567c5bae0fb2750c132915829cfaaf8a
   MotionInterchange: ead0e3ae1f3a5fb539e289debbc7ae036160a10d
   SwiftyJSON: c29297daf073d2aa016295d5809cdd68045c39b3
+  Toast-Swift: ba0b01b095aada709d915f9beb1d38184a2721c3
   XLPagerTabStrip: c908b17cbf42fcd2598ee1adfc49bae25444d88a
 
-PODFILE CHECKSUM: b6b364b6d7d5993849361aaffe8091ccd8ef146d
+PODFILE CHECKSUM: 0e32ab1b57b162a2f0502a8d511c38c4f43ed634
 
 COCOAPODS: 1.5.0

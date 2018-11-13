@@ -31,16 +31,8 @@ class SignUpVC: UIViewController {
     @IBAction func btnSignUpActn(_ sender: Any) {
         APICall().SignupAPI(fname: txtFname.text!, lname: txtLname.text!, email: txtEmail.text!, pswd: txtPassword.text!){response in
             print("signup response:\(response)")
-            let alertController = UIAlertController(title:response, message: "", preferredStyle: .alert)
-            
-            let action1 = UIAlertAction(title: "OK", style: .default) { (action:UIAlertAction) in }
-            
-            alertController.addAction(action1)
-            
-            self.present(alertController, animated: true, completion: nil)
-            
+            self.view.makeToast(response, duration: 3.0, position: .center)
         }
-        
     }
     
     //Hide status bar
