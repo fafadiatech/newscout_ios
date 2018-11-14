@@ -1,5 +1,5 @@
 //
-//  ForgotPasswordVC.swift
+//  ChangePasswordVC.swift
 //  NewsApp
 //
 //  Created by Jayashri on 12/10/18.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ForgotPasswordVC: UIViewController {
+class ChangePasswordVC: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()

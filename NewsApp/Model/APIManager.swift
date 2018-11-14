@@ -12,6 +12,8 @@ import UIKit
 import SwiftyJSON
 
 class APICall{
+    let imageCache = NSCache<NSString, UIImage>()
+    
     //API call to load all articles on HomeVC
     func loadNewsAPI(page: Int, _ completion : @escaping (ArticleAPIResult) -> ()){
         let url = APPURL.ArticlesURL + "\(page)"
@@ -43,7 +45,12 @@ class APICall{
         if UserDefaults.standard.value(forKey: "token") != nil{
             let token = "Token " + "\(UserDefaults.standard.value(forKey: "token")!)"
             headers = ["Authorization": token]
-        }else{
+        }
+        else if UserDefaults.standard.value(forKey: "googleToken") != nil{
+            let token = "Token " + "\(UserDefaults.standard.value(forKey: "googleToken")!)"
+            headers = ["Authorization": token]
+        }
+        else{
             headers = ["Authorization": ""]
         }
         
@@ -66,6 +73,12 @@ class APICall{
             else{
                 print(response.result.error!)
             }
+        }
+    }
+    
+    func downloadImage(url: URL, completion: @escaping (UIImage?) -> Void) {
+        if let cachedImage = imageCache.object(forKey: url.absoluteString as NSString) {
+            completion(cachedImage)
         }
     }
     func loadRecommendationNewsAPI(_ completion : @escaping (ArticleAPIResult) -> ()){
@@ -211,7 +224,12 @@ class APICall{
         if UserDefaults.standard.value(forKey: "token") != nil{
             let token = "Token " + "\(UserDefaults.standard.value(forKey: "token")!)"
             headers = ["Authorization": token]
-        }else{
+        }
+        else if UserDefaults.standard.value(forKey: "googleToken") != nil{
+            let token = "Token " + "\(UserDefaults.standard.value(forKey: "googleToken")!)"
+            headers = ["Authorization": token]
+        }
+        else{
             headers = ["Authorization": ""]
         }
         
@@ -256,7 +274,12 @@ class APICall{
         if UserDefaults.standard.value(forKey: "token") != nil{
             let token = "Token " + "\(UserDefaults.standard.value(forKey: "token")!)"
             headers = ["Authorization": token]
-        }else{
+        }
+        else if UserDefaults.standard.value(forKey: "googleToken") != nil{
+            let token = "Token " + "\(UserDefaults.standard.value(forKey: "googleToken")!)"
+            headers = ["Authorization": token]
+        }
+        else{
             headers = ["Authorization": ""]
         }
         
@@ -292,7 +315,12 @@ class APICall{
         if UserDefaults.standard.value(forKey: "token") != nil{
             let token = "Token " + "\(UserDefaults.standard.value(forKey: "token")!)"
             headers = ["Authorization": token]
-        }else{
+        }
+        else if UserDefaults.standard.value(forKey: "googleToken") != nil{
+            let token = "Token " + "\(UserDefaults.standard.value(forKey: "googleToken")!)"
+            headers = ["Authorization": token]
+        }
+        else{
             headers = ["Authorization": ""]
         }
         Alamofire.request(url,method: .post, parameters: param, headers: headers).responseJSON{

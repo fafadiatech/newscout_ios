@@ -7,13 +7,13 @@
 //
 
 import UIKit
-
-class SettingsTVC: UITableViewController {
+import GoogleSignIn
+class SettingsTVC: UITableViewController, GIDSignInUIDelegate {
     
     @IBOutlet weak var segmentTextSize: UISegmentedControl!
     @IBOutlet weak var lblLogin: UILabel!
     @IBOutlet weak var lblLogout: UILabel!
-    
+   
     override func viewDidLoad() {
         super.viewDidLoad()
         lblLogout.isHidden = true
@@ -32,12 +32,12 @@ class SettingsTVC: UITableViewController {
     func isLoggedIn()
     {
         
-        if UserDefaults.standard.value(forKey: "token") == nil {
+        if UserDefaults.standard.value(forKey: "token") == nil && UserDefaults.standard.value(forKey: "googleToken") == nil {
             lblLogin.text = "Login"
             lblLogout.isHidden = true
             // userDefault has a value
         } else {
-            print(UserDefaults.standard.value(forKey: "token")!)
+           
             lblLogin.text = "\(UserDefaults.standard.value(forKey: "email")!)"
             lblLogout.isHidden = false
         }
@@ -74,13 +74,26 @@ class SettingsTVC: UITableViewController {
     
     override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
         if indexPath.section == 2 && indexPath.row == 0{
-            if UserDefaults.standard.value(forKey: "token") == nil {
+            if UserDefaults.standard.value(forKey: "token") == nil && UserDefaults.standard.value(forKey: "googleToken") == nil {
                 let storyboard = UIStoryboard(name: "Main", bundle: nil)
                 let vc:LoginVC = storyboard.instantiateViewController(withIdentifier: "LoginID") as! LoginVC
                 print(indexPath.section)
                 present(vc, animated: true, completion: nil)
             }
             else{
+                 if UserDefaults.standard.value(forKey: "googleToken") != nil{
+                    GIDSignIn.sharedInstance().signOut()
+                    let defaults = UserDefaults.standard
+                    defaults.removeObject(forKey: "googleToken")
+                    defaults.removeObject(forKey: "email")
+                    defaults.removeObject(forKey: "first_name")
+                    defaults.removeObject(forKey: "last_name")
+                    defaults.synchronize()
+                    self.lblLogout.isHidden = true
+                    self.lblLogin.text = "Login"
+                    print("google sign out successful..")
+                }
+                 else{
                 APICall().LogoutAPI{(status, response) in
                     print(status,response)
                     if status == "1"{
@@ -94,7 +107,7 @@ class SettingsTVC: UITableViewController {
                         self.view.makeToast(response, duration: 3.0, position: .center)
                     }
                 }
-                
+                }
             }
         }
         return indexPath

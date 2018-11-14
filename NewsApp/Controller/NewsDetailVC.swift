@@ -9,6 +9,7 @@
 import UIKit
 import WebKit
 import Alamofire
+import SDWebImage
 
 class NewsDetailVC: UIViewController {
     @IBOutlet weak var imgNews: UIImageView!
@@ -28,11 +29,13 @@ class NewsDetailVC: UIViewController {
     @IBOutlet weak var ViewWebContainer: UIView!
     @IBOutlet weak var lblWebSource: UILabel!
     @IBOutlet weak var btnBookamark: UIButton!
+    let imageCache = NSCache<NSString, UIImage>()
     var RecomArticleData = [ArticleStatus]()
     var ArticleData = [ArticleStatus]()
     var ShowArticle = [NewsArticle]()
     var ArticleDetail = ArticleDict.init(article_id: 0, category: "", source: "", title: "", imageURL: "", url: "", published_on: "", blurb: "", isBookmark: false, isLike: 0)
     var suggestedCVCount = 0
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         ViewWebContainer.isHidden = true
@@ -365,7 +368,7 @@ extension NewsDetailVC:UICollectionViewDelegate, UICollectionViewDataSource{
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "SuggestedNewsID", for: indexPath) as! SuggestedNewsCVCell
         let currentArticle =  RecomArticleData[0].body.articles[indexPath.row]
         cell.lblTitle.text = currentArticle.title
-        cell.imgNews.downloadedFrom(link: "\(currentArticle.imageURL!)")
+        cell.imgNews.sd_setImage(with: URL(string: currentArticle.imageURL!), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
         return cell
     }
 }

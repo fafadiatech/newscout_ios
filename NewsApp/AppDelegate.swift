@@ -8,25 +8,58 @@
 
 import UIKit
 import CoreData
-//import GoogleSignIn
+import GoogleSignIn
 
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate {
+class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
 
     var window: UIWindow?
-
-
+    
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
-//        UILabel.appearance().font = UIFont(name: "HelveticaNeue", size: 12.0)
-//        
-//        UITextField.appearance().font = UIFont(name: "HelveticaNeue", size: 12.0)
-//        
-//        UITextView.appearance().font = UIFont(name: "HelveticaNeue", size: 12.0)
-
+        GIDSignIn.sharedInstance().clientID = "424337192018-pnik0j5sm85mjg48uf0u02ucrb64e6lc.apps.googleusercontent.com"
+        GIDSignIn.sharedInstance().delegate = self as! GIDSignInDelegate
         return true
     }
 
+    func application(_ app: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey : Any] = [:]) -> Bool {
+        return GIDSignIn.sharedInstance().handle(url as URL?,
+                                                 sourceApplication: options[UIApplicationOpenURLOptionsKey.sourceApplication] as? String,
+                                                 annotation: options[UIApplicationOpenURLOptionsKey.annotation])
+    }
+    
+   /* func application(application: UIApplication,
+                     openURL url: NSURL, sourceApplication: String?, annotation: AnyObject?) -> Bool {
+        var options: [String: AnyObject] = [UIApplicationOpenURLOptionsKey.sourceApplication.rawValue: sourceApplication as AnyObject,
+                                            UIApplicationOpenURLOptionsKey.annotation.rawValue: annotation!]
+        return GIDSignIn.sharedInstance().handle(url as URL!,
+                                                    sourceApplication: sourceApplication,
+                                                    annotation: annotation)
+    }*/
+    
+    func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!,
+              withError error: Error!) {
+        if let error = error {
+            print("\(error.localizedDescription)")
+        } else {
+            // Perform any operations on signed in user here.
+            let userId = user.userID                  // For client-side use only!
+            let idToken = user.authentication.idToken // Safe to send to the server
+            let fullName = user.profile.name
+            let givenName = user.profile.givenName
+            let familyName = user.profile.familyName
+            let email = user.profile.email
+            let pic1 = user.profile.imageURL(withDimension: 50)
+            let pic = (pic1?.relativeString)!
+            UserDefaults.standard.set(idToken, forKey: "googleToken")
+            UserDefaults.standard.set(email, forKey: "email")
+            UserDefaults.standard.set(givenName, forKey: "first_name")
+            UserDefaults.standard.set(familyName, forKey: "last_name")
+            // ...
+            print("\(userId!) \n \(idToken) \n \(fullName!) \n \(email!) \n \(pic)")
+            print("google sign in successful..")
+        }
+    }
+    
     func applicationWillResignActive(_ application: UIApplication) {
         // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
         // Use this method to pause ongoing tasks, disable timers, and invalidate graphics rendering callbacks. Games should use this method to pause the game.

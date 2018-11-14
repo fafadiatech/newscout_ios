@@ -7,17 +7,32 @@
 //
 
 import UIKit
+import GoogleSignIn
 
-class LoginVC: UIViewController {
+class LoginVC: UIViewController, GIDSignInUIDelegate {
     
     @IBOutlet weak var txtUsername: UITextField!
     @IBOutlet weak var txtPassword: UITextField!
+    @IBOutlet weak var btnForgtPswd: UIButton!
+    @IBOutlet weak var btnSignUp: UIButton!
+    @IBOutlet weak var btnLogin: UIButton!
+    @IBOutlet weak var signInButton: GIDSignInButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         txtUsername.autocorrectionType = .no
         txtPassword.autocorrectionType = .no
+        btnLogin.layer.cornerRadius = 15
+        btnLogin.layer.borderWidth = 0
+        btnSignUp.layer.cornerRadius = 15
+        btnSignUp.layer.borderWidth = 0
+        btnForgtPswd.layer.cornerRadius = 15
+        btnForgtPswd.layer.borderWidth = 0
         
+        //GIDSignIn.sharedInstance().uiDelegate = self
+        // Uncomment to automatically sign in the user.
+        //GIDSignIn.sharedInstance().signInSilently()
+
     }
     
     override var prefersStatusBarHidden: Bool {
@@ -54,6 +69,12 @@ class LoginVC: UIViewController {
         }
     }
 
+   
+    @IBAction func googleSignIn(_ sender: Any) {
+        GIDSignIn.sharedInstance().uiDelegate=self
+        GIDSignIn.sharedInstance().signIn()
+
+    }
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.

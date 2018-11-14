@@ -106,7 +106,7 @@ struct CategoryDetails : Decodable
 struct MainModel: Decodable
 {
     let header : Header
-    let errors: Error?
+    let errors: ErrorList?
     let body: Body?
 }
 
@@ -115,7 +115,7 @@ struct Header : Decodable
     let status: String
 }
 
-struct Error : Decodable
+struct ErrorList : Decodable
 {
     let errorList : [ErrorItem]?
     let invalid_credentials : String?

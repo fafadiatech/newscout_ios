@@ -41,7 +41,7 @@
 		421ADFEE2156575300C00F6F /* HomeNewsTVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 421ADFED2156575300C00F6F /* HomeNewsTVCell.swift */; };
 		421ADFF021566FE000C00F6F /* NewsDetailVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 421ADFEF21566FE000C00F6F /* NewsDetailVC.swift */; };
 		421ADFF22156755100C00F6F /* SuggestedNewsCVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 421ADFF12156755100C00F6F /* SuggestedNewsCVCell.swift */; };
-		423F0A502170CF19001D52B5 /* ForgotPasswordVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 423F0A4F2170CF18001D52B5 /* ForgotPasswordVC.swift */; };
+		423F0A502170CF19001D52B5 /* ChangePasswordVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 423F0A4F2170CF18001D52B5 /* ChangePasswordVC.swift */; };
 		427B430B2180840E00F00269 /* Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 427B430A2180840E00F00269 /* Helper.swift */; };
 		42D12BF2215A0AEB0085EF12 /* SearchVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42D12BF1215A0AEB0085EF12 /* SearchVC.swift */; };
 		42D12BF4215A0FA60085EF12 /* common.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42D12BF3215A0FA60085EF12 /* common.swift */; };
@@ -112,7 +112,7 @@
 		421ADFED2156575300C00F6F /* HomeNewsTVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = HomeNewsTVCell.swift; path = NewsApp/Cell/HomeNewsTVCell.swift; sourceTree = SOURCE_ROOT; };
 		421ADFEF21566FE000C00F6F /* NewsDetailVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = NewsDetailVC.swift; path = NewsApp/Controller/NewsDetailVC.swift; sourceTree = SOURCE_ROOT; };
 		421ADFF12156755100C00F6F /* SuggestedNewsCVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuggestedNewsCVCell.swift; sourceTree = "<group>"; };
-		423F0A4F2170CF18001D52B5 /* ForgotPasswordVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForgotPasswordVC.swift; sourceTree = "<group>"; };
+		423F0A4F2170CF18001D52B5 /* ChangePasswordVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangePasswordVC.swift; sourceTree = "<group>"; };
 		427B430A2180840E00F00269 /* Helper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helper.swift; sourceTree = "<group>"; };
 		42D12BF1215A0AEB0085EF12 /* SearchVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchVC.swift; sourceTree = "<group>"; };
 		42D12BF3215A0FA60085EF12 /* common.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = common.swift; sourceTree = "<group>"; };
@@ -258,7 +258,7 @@
 		421ADFEA2156553500C00F6F /* Controller */ = {
 			isa = PBXGroup;
 			children = (
-				423F0A4F2170CF18001D52B5 /* ForgotPasswordVC.swift */,
+				423F0A4F2170CF18001D52B5 /* ChangePasswordVC.swift */,
 				263F2D9B216B7FC700764C45 /* ProfileVC.swift */,
 				26ACEA93216733BA000EF3C7 /* CategoryListVC.swift */,
 				263421F221624AD200C8510F /* SettingsTVC.swift */,
@@ -324,6 +324,7 @@
 				421ADFB22156407400C00F6F /* Frameworks */,
 				421ADFB32156407400C00F6F /* Resources */,
 				E625024055F7036CE7E77A23 /* [CP] Embed Pods Frameworks */,
+				13535408023F39BB35B8B79C /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -457,6 +458,24 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		13535408023F39BB35B8B79C /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-NewsApp/Pods-NewsApp-resources.sh",
+				"${PODS_ROOT}/GoogleSignIn/Resources/GoogleSignIn.bundle",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/GoogleSignIn.bundle",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-NewsApp/Pods-NewsApp-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		2A61B467375C987B24EE6A90 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -501,11 +520,18 @@
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-NewsApp/Pods-NewsApp-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
+				"${BUILT_PRODUCTS_DIR}/Bolts/Bolts.framework",
+				"${BUILT_PRODUCTS_DIR}/FBSDKCoreKit/FBSDKCoreKit.framework",
+				"${BUILT_PRODUCTS_DIR}/FBSDKLoginKit/FBSDKLoginKit.framework",
 				"${BUILT_PRODUCTS_DIR}/Floaty/Floaty.framework",
+				"${BUILT_PRODUCTS_DIR}/GTMOAuth2/GTMOAuth2.framework",
+				"${BUILT_PRODUCTS_DIR}/GTMSessionFetcher/GTMSessionFetcher.framework",
+				"${BUILT_PRODUCTS_DIR}/GoogleToolboxForMac/GoogleToolboxForMac.framework",
 				"${BUILT_PRODUCTS_DIR}/MDFInternationalization/MDFInternationalization.framework",
 				"${BUILT_PRODUCTS_DIR}/MaterialComponents/MaterialComponents.framework",
 				"${BUILT_PRODUCTS_DIR}/MotionAnimator/MotionAnimator.framework",
 				"${BUILT_PRODUCTS_DIR}/MotionInterchange/MotionInterchange.framework",
+				"${BUILT_PRODUCTS_DIR}/SDWebImage/SDWebImage.framework",
 				"${BUILT_PRODUCTS_DIR}/SwiftyJSON/SwiftyJSON.framework",
 				"${BUILT_PRODUCTS_DIR}/Toast-Swift/Toast_Swift.framework",
 				"${BUILT_PRODUCTS_DIR}/XLPagerTabStrip/XLPagerTabStrip.framework",
@@ -513,11 +539,18 @@
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Bolts.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FBSDKCoreKit.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FBSDKLoginKit.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Floaty.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GTMOAuth2.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GTMSessionFetcher.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleToolboxForMac.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MDFInternationalization.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MaterialComponents.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MotionAnimator.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MotionInterchange.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SDWebImage.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftyJSON.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Toast_Swift.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/XLPagerTabStrip.framework",
@@ -569,7 +602,7 @@
 				263F2D8F216B2DEE00764C45 /* DataModel.swift in Sources */,
 				263F2D9C216B7FC700764C45 /* ProfileVC.swift in Sources */,
 				421ADFF22156755100C00F6F /* SuggestedNewsCVCell.swift in Sources */,
-				423F0A502170CF19001D52B5 /* ForgotPasswordVC.swift in Sources */,
+				423F0A502170CF19001D52B5 /* ChangePasswordVC.swift in Sources */,
 				7E1D1399216CC79000FE342A /* HomeParentVC.swift in Sources */,
 				421ADFEE2156575300C00F6F /* HomeNewsTVCell.swift in Sources */,
 				421ADFF021566FE000C00F6F /* NewsDetailVC.swift in Sources */,

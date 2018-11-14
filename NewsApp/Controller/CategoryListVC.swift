@@ -104,6 +104,15 @@ extension CategoryListVC:UITableViewDelegate, UITableViewDataSource{
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableCategoryLIst.dequeueReusableCell(withIdentifier: "CategoryListID", for:indexPath) as! CategoryListTVCell
         let catData = CategoryData[0].categories[indexPath.row]
+        if textSizeSelected == 0{
+            cell.lblCategoryName.font = Constants.smallFont
+        }
+        else if textSizeSelected == 2{
+            cell.lblCategoryName.font = Constants.LargeFont
+        }
+        else{
+            cell.lblCategoryName.font =  Constants.NormalFont
+        }
         cell.lblCategoryName.text = catData.title
         cell.btnDelete.tag = indexPath.row
         if categories.contains(catData.title!){
