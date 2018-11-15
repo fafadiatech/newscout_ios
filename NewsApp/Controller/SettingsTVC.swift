@@ -8,6 +8,9 @@
 
 import UIKit
 import GoogleSignIn
+import FBSDKLoginKit
+import FBSDKCoreKit
+
 class SettingsTVC: UITableViewController, GIDSignInUIDelegate {
     
     @IBOutlet weak var segmentTextSize: UISegmentedControl!
@@ -29,6 +32,8 @@ class SettingsTVC: UITableViewController, GIDSignInUIDelegate {
     //    override func viewDidAppear(_ animated: Bool) {
     //        isLoggedIn()
     //    }
+    
+   
     func isLoggedIn()
     {
         
@@ -36,7 +41,13 @@ class SettingsTVC: UITableViewController, GIDSignInUIDelegate {
             lblLogin.text = "Login"
             lblLogout.isHidden = true
             // userDefault has a value
-        } else {
+        }
+        else if (FBSDKAccessToken.current() != nil) {
+            //UserDefaults.standard.set(idToken, forKey: "FBToken")
+            lblLogin.text = "\(UserDefaults.standard.value(forKey: "email")!)"
+            lblLogout.isHidden = false
+            
+        }else {
            
             lblLogin.text = "\(UserDefaults.standard.value(forKey: "email")!)"
             lblLogout.isHidden = false
@@ -59,6 +70,15 @@ class SettingsTVC: UITableViewController, GIDSignInUIDelegate {
             textSizeSelected = 1
             break
         }
+    }
+    
+    func loginButtonDidLogOut(_ loginButton: FBSDKLoginButton!) {
+        let defaults = UserDefaults.standard
+        defaults.removeObject(forKey: "FBToken")
+        defaults.synchronize()
+        self.view.makeToast("Succesfully Logged out..", duration: 1.0, position: .center)
+        self.lblLogout.isHidden = true
+        self.lblLogin.text = "Login"
     }
     
     func tableView(tableView: UITableView,
