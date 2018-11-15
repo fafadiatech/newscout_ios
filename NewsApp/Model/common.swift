@@ -92,6 +92,9 @@ struct APPURL {
         static let recommendation = Domains.version + "articles/" + "\(articleId)" + "/recommendations/"
         static let bookmark = Domains.version + "articles/bookmark/"
         static let likeDislike =  Domains.version + "articles/vote/"
+        static let forgotPassword = Domains.version + "forgot-password/"
+        static let changePassword = Domains.version + "change-password/"
+        static let bookmarkedArticles = Domains.version + "bookmark-articles/"
     }
     
     static let ArticlesURL = Domains.Local + Routes.Articles
@@ -104,5 +107,8 @@ struct APPURL {
     static let recommendationURL = Domains.Local + Routes.recommendation
     static let bookmarkURL = Domains.Local + Routes.bookmark
     static let likeDislikeURL = Domains.Local + Routes.likeDislike
+    static let forgotPasswordURL = Domains.Local + Routes.forgotPassword
+    static let changePasswordURL = Domains.Local + Routes.changePassword
+    static let bookmarkedArticlesURL = Domains.Local + Routes.bookmarkedArticles
 }
 

@@ -16,7 +16,7 @@ class SettingsTVC: UITableViewController, GIDSignInUIDelegate {
     @IBOutlet weak var segmentTextSize: UISegmentedControl!
     @IBOutlet weak var lblLogin: UILabel!
     @IBOutlet weak var lblLogout: UILabel!
-   
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         lblLogout.isHidden = true
@@ -29,31 +29,26 @@ class SettingsTVC: UITableViewController, GIDSignInUIDelegate {
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem
     }
-    //    override func viewDidAppear(_ animated: Bool) {
-    //        isLoggedIn()
-    //    }
     
-   
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        isLoggedIn()
+    }
+    
     func isLoggedIn()
     {
         
-        if UserDefaults.standard.value(forKey: "token") == nil && UserDefaults.standard.value(forKey: "googleToken") == nil {
+        if UserDefaults.standard.value(forKey: "token") == nil && UserDefaults.standard.value(forKey: "googleToken") == nil && UserDefaults.standard.value(forKey: "FBToken") == nil  {
             lblLogin.text = "Login"
             lblLogout.isHidden = true
             // userDefault has a value
         }
-        else if (FBSDKAccessToken.current() != nil) {
-            //UserDefaults.standard.set(idToken, forKey: "FBToken")
-            lblLogin.text = "\(UserDefaults.standard.value(forKey: "email")!)"
-            lblLogout.isHidden = false
-            
-        }else {
-           
+        else {
             lblLogin.text = "\(UserDefaults.standard.value(forKey: "email")!)"
             lblLogout.isHidden = false
         }
-        
     }
+    
     @IBAction func TextSizeAction(_ sender: Any) {
         switch segmentTextSize.selectedSegmentIndex
         {
@@ -72,15 +67,6 @@ class SettingsTVC: UITableViewController, GIDSignInUIDelegate {
         }
     }
     
-    func loginButtonDidLogOut(_ loginButton: FBSDKLoginButton!) {
-        let defaults = UserDefaults.standard
-        defaults.removeObject(forKey: "FBToken")
-        defaults.synchronize()
-        self.view.makeToast("Succesfully Logged out..", duration: 1.0, position: .center)
-        self.lblLogout.isHidden = true
-        self.lblLogin.text = "Login"
-    }
-    
     func tableView(tableView: UITableView,
                    didSelectRowAtIndexPath indexPath: NSIndexPath) {
         
@@ -94,14 +80,14 @@ class SettingsTVC: UITableViewController, GIDSignInUIDelegate {
     
     override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
         if indexPath.section == 2 && indexPath.row == 0{
-            if UserDefaults.standard.value(forKey: "token") == nil && UserDefaults.standard.value(forKey: "googleToken") == nil {
+            if UserDefaults.standard.value(forKey: "token") == nil && UserDefaults.standard.value(forKey: "googleToken") == nil && UserDefaults.standard.value(forKey: "FBToken") == nil {
                 let storyboard = UIStoryboard(name: "Main", bundle: nil)
                 let vc:LoginVC = storyboard.instantiateViewController(withIdentifier: "LoginID") as! LoginVC
                 print(indexPath.section)
                 present(vc, animated: true, completion: nil)
             }
             else{
-                 if UserDefaults.standard.value(forKey: "googleToken") != nil{
+                if UserDefaults.standard.value(forKey: "googleToken") != nil{
                     GIDSignIn.sharedInstance().signOut()
                     let defaults = UserDefaults.standard
                     defaults.removeObject(forKey: "googleToken")
@@ -113,20 +99,35 @@ class SettingsTVC: UITableViewController, GIDSignInUIDelegate {
                     self.lblLogin.text = "Login"
                     print("google sign out successful..")
                 }
-                 else{
-                APICall().LogoutAPI{(status, response) in
-                    print(status,response)
-                    if status == "1"{
-                        print("Logout response:\(response)")
-                        self.view.makeToast("No articles found in this category...", duration: 3.0, position: .center)
-    
-                        self.lblLogout.isHidden = true
-                        self.lblLogin.text = "Login"
-                    }
-                    else{
-                        self.view.makeToast(response, duration: 3.0, position: .center)
-                    }
+                else if UserDefaults.standard.value(forKey: "FBToken") != nil{
+                    let manager = FBSDKLoginManager()
+                    manager.logOut()
+                    FBSDKAccessToken.setCurrent(nil)//setCurrentAccessToken(nil)
+                    FBSDKProfile.setCurrent(nil)
+                    self.lblLogout.isHidden = true
+                    let defaults = UserDefaults.standard
+                    defaults.removeObject(forKey: "FBToken")
+                    defaults.removeObject(forKey: "email")
+                    defaults.removeObject(forKey: "first_name")
+                    defaults.removeObject(forKey: "last_name")
+                    defaults.synchronize()
+                    self.lblLogin.text = "Login"
+                    print("google sign out successful..")
                 }
+                else{
+                    APICall().LogoutAPI{(status, response) in
+                        print(status,response)
+                        if status == "1"{
+                            print("Logout response:\(response)")
+                            self.view.makeToast("No articles found in this category...", duration: 3.0, position: .center)
+                            
+                            self.lblLogout.isHidden = true
+                            self.lblLogin.text = "Login"
+                        }
+                        else{
+                            self.view.makeToast(response, duration: 3.0, position: .center)
+                        }
+                    }
                 }
             }
         }

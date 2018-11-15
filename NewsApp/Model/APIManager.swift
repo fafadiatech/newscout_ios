@@ -50,6 +50,10 @@ class APICall{
             let token = "Token " + "\(UserDefaults.standard.value(forKey: "googleToken")!)"
             headers = ["Authorization": token]
         }
+        else if UserDefaults.standard.value(forKey: "FBToken") != nil{
+            let token = "Token " + "\(UserDefaults.standard.value(forKey: "FBToken")!)"
+            headers = ["Authorization": token]
+        }
         else{
             headers = ["Authorization": ""]
         }
@@ -229,6 +233,10 @@ class APICall{
             let token = "Token " + "\(UserDefaults.standard.value(forKey: "googleToken")!)"
             headers = ["Authorization": token]
         }
+        else if UserDefaults.standard.value(forKey: "FBToken") != nil{
+            let token = "Token " + "\(UserDefaults.standard.value(forKey: "FBToken")!)"
+            headers = ["Authorization": token]
+        }
         else{
             headers = ["Authorization": ""]
         }
@@ -279,6 +287,10 @@ class APICall{
             let token = "Token " + "\(UserDefaults.standard.value(forKey: "googleToken")!)"
             headers = ["Authorization": token]
         }
+        else if UserDefaults.standard.value(forKey: "FBToken") != nil{
+            let token = "Token " + "\(UserDefaults.standard.value(forKey: "FBToken")!)"
+            headers = ["Authorization": token]
+        }
         else{
             headers = ["Authorization": ""]
         }
@@ -320,6 +332,10 @@ class APICall{
             let token = "Token " + "\(UserDefaults.standard.value(forKey: "googleToken")!)"
             headers = ["Authorization": token]
         }
+        else if UserDefaults.standard.value(forKey: "FBToken") != nil{
+            let token = "Token " + "\(UserDefaults.standard.value(forKey: "FBToken")!)"
+            headers = ["Authorization": token]
+        }
         else{
             headers = ["Authorization": ""]
         }
@@ -340,6 +356,128 @@ class APICall{
                         print("Error: \(error)")
                     }
                 }
+            }
+        }
+    }
+    
+    //Forgot Password
+    func ForgortPasswordAPI(email: String,_ completion : @escaping (String) ->()) {
+        let url = APPURL.forgotPasswordURL
+        let param = ["email" : email]
+        
+        print(param)
+        Alamofire.request(url,method: .post, parameters: param).responseString{
+            response in
+            if(response.result.isSuccess){
+                if let data = response.data {
+                    let jsonDecoder = JSONDecoder()
+                    do {
+                        let jsonData = try jsonDecoder.decode(MainModel.self, from: data)
+                        print(jsonData)
+                        if jsonData.header.status == "0"{
+                            completion(jsonData.errors!.Msg!)
+                        }
+                        else{
+                            completion((jsonData.body?.Msg)!)
+                        }
+                    }
+                    catch {
+                        print("Error: \(error)")
+                    }
+                }
+            }
+            else{
+                print(response.result.error!)
+            }
+        }
+    }
+    
+    //Change Password
+    func ChangePasswordAPI(old_pswd: String,New_pswd: String,_ completion : @escaping (String) ->()) {
+        let url = APPURL.forgotPasswordURL
+        let param = ["old" : old_pswd,
+                     "New" : New_pswd]
+        
+        print(param)
+        var headers : [String: String]
+        if UserDefaults.standard.value(forKey: "token") != nil{
+            let token = "Token " + "\(UserDefaults.standard.value(forKey: "token")!)"
+            headers = ["Authorization": token]
+        }
+        else if UserDefaults.standard.value(forKey: "googleToken") != nil{
+            let token = "Token " + "\(UserDefaults.standard.value(forKey: "googleToken")!)"
+            headers = ["Authorization": token]
+        }
+        else if UserDefaults.standard.value(forKey: "FBToken") != nil{
+            let token = "Token " + "\(UserDefaults.standard.value(forKey: "FBToken")!)"
+            headers = ["Authorization": token]
+        }
+        else{
+            headers = ["Authorization": ""]
+        }
+        Alamofire.request(url,method: .post, parameters: param, headers: headers).responseString{
+            response in
+            if(response.result.isSuccess){
+                if let data = response.data {
+                    let jsonDecoder = JSONDecoder()
+                    do {
+                        let jsonData = try jsonDecoder.decode(MainModel.self, from: data)
+                        print(jsonData)
+                        if jsonData.header.status == "0"{
+                            completion(jsonData.errors!.Msg!)
+                        }
+                        else{
+                            completion((jsonData.body?.Msg)!)
+                        }
+                    }
+                    catch {
+                        print("Error: \(error)")
+                    }
+                }
+            }
+            else{
+                print(response.result.error!)
+            }
+        }
+    }
+    
+    //get list of bookmarked articles
+    func BookmarkedArticlesAPI(_ completion : @escaping (ArticleAPIResult) -> ()) {
+        let url = APPURL.bookmarkedArticlesURL
+        var headers : [String: String]
+        if UserDefaults.standard.value(forKey: "token") != nil{
+            let token = "Token " + "\(UserDefaults.standard.value(forKey: "token")!)"
+            headers = ["Authorization": token]
+        }
+        else if UserDefaults.standard.value(forKey: "googleToken") != nil{
+            let token = "Token " + "\(UserDefaults.standard.value(forKey: "googleToken")!)"
+            headers = ["Authorization": token]
+        }
+        else if UserDefaults.standard.value(forKey: "FBToken") != nil{
+            let token = "Token " + "\(UserDefaults.standard.value(forKey: "FBToken")!)"
+            headers = ["Authorization": token]
+        }
+        else{
+            headers = ["Authorization": ""]
+        }
+        Alamofire.request(url,method: .get,headers: headers).responseString{
+            response in
+            if(response.result.isSuccess){
+                if let data = response.data {
+                    let jsonDecoder = JSONDecoder()
+                    do {
+                        let jsonData = try jsonDecoder.decode(ArticleStatus.self, from: data)
+                        completion(ArticleAPIResult.Success([jsonData]))
+                    }
+                    catch {
+                        print("Error: \(error)")
+                        completion(ArticleAPIResult.Failure(error.localizedDescription
+                        ))
+                    }
+                }
+            }
+            else{
+                print(response.result.error!)
             }
         }
     }
