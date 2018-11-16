@@ -242,7 +242,9 @@ class NewsDetailVC: UIViewController {
                     }
                     else{
                         self.btnLike.setImage(UIImage(named: "filledLike.png"), for: .normal)
-                        self.btnDislike.isUserInteractionEnabled = false
+                        if (self.btnDislike.currentImage?.isEqual(UIImage(named: "filledDislike.png")))! {
+                            self.btnDislike.setImage(UIImage(named: "dislike.png"), for: .normal)
+                        }
                     }
                 }
             }
@@ -254,7 +256,6 @@ class NewsDetailVC: UIViewController {
                     }
                     else{
                         self.btnLike.setImage(UIImage(named: "like.png"), for: .normal)
-                        self.btnDislike.isUserInteractionEnabled = true
                     }
                 }
             }
@@ -275,13 +276,13 @@ class NewsDetailVC: UIViewController {
                     }
                     else{
                         self.btnDislike.setImage(UIImage(named: "filledDislike.png"), for: .normal)
-                        self.btnLike.isUserInteractionEnabled = false
+                        if (self.btnLike.currentImage?.isEqual(UIImage(named: "filledLike.png")))! {
+                            self.btnLike.setImage(UIImage(named: "like.png"), for: .normal)
+                        }
                     }
                 }
             }
             else{
-                btnDislike.setImage(UIImage(named: "dislike.png"), for: .normal)
-                btnLike.isUserInteractionEnabled = true
                 APICall().LikeDislikeAPI(id: articleId, isLike: 2){
                     (status,response) in
                     if status == "0"{
@@ -289,7 +290,6 @@ class NewsDetailVC: UIViewController {
                     }
                     else{
                         self.btnDislike.setImage(UIImage(named: "dislike.png"), for: .normal)
-                        self.btnLike.isUserInteractionEnabled = true
                     }
                 }
             }
