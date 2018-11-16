@@ -119,13 +119,13 @@ class SettingsTVC: UITableViewController, GIDSignInUIDelegate {
                         print(status,response)
                         if status == "1"{
                             print("Logout response:\(response)")
-                            self.view.makeToast("No articles found in this category...", duration: 3.0, position: .center)
+                            self.view.makeToast("No articles found in this category...", duration: 1.0, position: .center)
                             
                             self.lblLogout.isHidden = true
                             self.lblLogin.text = "Login"
                         }
                         else{
-                            self.view.makeToast(response, duration: 3.0, position: .center)
+                            self.view.makeToast(response, duration: 1.0, position: .center)
                         }
                     }
                 }

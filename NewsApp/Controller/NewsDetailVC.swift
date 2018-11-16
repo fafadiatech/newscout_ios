@@ -147,7 +147,7 @@ class NewsDetailVC: UIViewController {
                     print("swipe down")
                 }
                 else{
-                    self.view.makeToast("No more news to show", duration: 3.0, position: .center)
+                    self.view.makeToast("No more news to show", duration: 1.0, position: .center)
                 }
             case UISwipeGestureRecognizerDirection.left:
                 ViewWebContainer.isHidden = false
@@ -170,7 +170,7 @@ class NewsDetailVC: UIViewController {
                     print("Swiped up")
                 }
                 else{
-                    self.view.makeToast("No more news to show", duration: 3.0, position: .center)
+                    self.view.makeToast("No more news to show", duration: 1.0, position: .center)
                 }
             default:
                 break
@@ -238,7 +238,7 @@ class NewsDetailVC: UIViewController {
                 APICall().LikeDislikeAPI(id: articleId, isLike: 0){
                     (status,response) in
                     if status == "0"{
-                        self.view.makeToast(response, duration: 3.0, position: .center)
+                        self.view.makeToast(response, duration: 1.0, position: .center)
                     }
                     else{
                         self.btnLike.setImage(UIImage(named: "filledLike.png"), for: .normal)
@@ -252,7 +252,7 @@ class NewsDetailVC: UIViewController {
                 APICall().LikeDislikeAPI(id: articleId, isLike: 2){
                     (status,response) in
                     if status == "0"{
-                        self.view.makeToast(response, duration: 3.0, position: .center)
+                        self.view.makeToast(response, duration: 1.0, position: .center)
                     }
                     else{
                         self.btnLike.setImage(UIImage(named: "like.png"), for: .normal)
@@ -261,7 +261,7 @@ class NewsDetailVC: UIViewController {
             }
         }
         else{
-            self.view.makeToast("Please login to continue..", duration: 3.0, position: .center)
+            self.view.makeToast("Please login to continue..", duration: 1.0, position: .center)
         }
     }
     
@@ -272,7 +272,7 @@ class NewsDetailVC: UIViewController {
                 APICall().LikeDislikeAPI(id: articleId, isLike: 1){
                     (status,response) in
                     if status == "0"{
-                        self.view.makeToast(response, duration: 3.0, position: .center)
+                        self.view.makeToast(response, duration: 1.0, position: .center)
                     }
                     else{
                         self.btnDislike.setImage(UIImage(named: "filledDislike.png"), for: .normal)
@@ -286,7 +286,7 @@ class NewsDetailVC: UIViewController {
                 APICall().LikeDislikeAPI(id: articleId, isLike: 2){
                     (status,response) in
                     if status == "0"{
-                        self.view.makeToast(response, duration: 3.0, position: .center)
+                        self.view.makeToast(response, duration: 1.0, position: .center)
                     }
                     else{
                         self.btnDislike.setImage(UIImage(named: "dislike.png"), for: .normal)
@@ -295,7 +295,7 @@ class NewsDetailVC: UIViewController {
             }
         }
         else{
-            self.view.makeToast("Please login to continue..", duration: 3.0, position: .center)
+            self.view.makeToast("Please login to continue..", duration: 1.0, position: .center)
         }
     }
     
@@ -306,7 +306,7 @@ class NewsDetailVC: UIViewController {
                 APICall().bookmarkAPI(id: articleId){
                     (status, response) in
                     if status == "0"{
-                        self.view.makeToast(response, duration: 3.0, position: .center)
+                        self.view.makeToast(response, duration: 1.0, position: .center)
                     }
                     else{
                         self.btnBookamark.setImage(UIImage(named: "filledBookmrk.png"), for: .normal)
@@ -318,7 +318,7 @@ class NewsDetailVC: UIViewController {
                 APICall().bookmarkAPI(id: articleId){
                     (status, response) in
                     if status == "0"{
-                        self.view.makeToast(response, duration: 3.0, position: .center)
+                        self.view.makeToast(response, duration: 1.0, position: .center)
                     }
                     else{
                         self.btnBookamark.setImage(UIImage(named: "book.png"), for: .normal)
@@ -328,7 +328,7 @@ class NewsDetailVC: UIViewController {
             }
         }
         else{
-            self.view.makeToast("Please login to continue..", duration: 3.0, position: .center)
+            self.view.makeToast("Please login to continue..", duration: 1.0, position: .center)
         }
     }
     

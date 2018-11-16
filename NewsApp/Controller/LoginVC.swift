@@ -86,7 +86,7 @@ class LoginVC: UIViewController, GIDSignInUIDelegate, FBSDKLoginButtonDelegate{
     
     @IBAction func btnLoginActn(_ sender: Any) {
         if txtUsername.text == "" || txtPassword.text == ""{
-            self.view.makeToast("Please enter valid username and password..", duration: 3.0, position: .center)
+            self.view.makeToast("Please enter valid username and password..", duration: 1.0, position: .center)
         }
         else{
             APICall().LoginAPI(email: txtUsername.text!, pswd: txtPassword.text!){response in
@@ -98,7 +98,7 @@ class LoginVC: UIViewController, GIDSignInUIDelegate, FBSDKLoginButtonDelegate{
                     
                 }
                 else{
-                    self.view.makeToast(response, duration: 3.0, position: .center)
+                    self.view.makeToast(response, duration: 1.0, position: .center)
                 }
             }
         }

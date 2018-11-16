@@ -133,7 +133,7 @@ extension CategoryListVC:UITableViewDelegate, UITableViewDataSource{
             Homevc.selectedCategory = selectedCat
         }
         else{
-            self.view.makeToast("Category is already added..", duration: 3.0, position: .center)
+            self.view.makeToast("Category is already added..", duration: 1.0, position: .center)
         }
     }
 }

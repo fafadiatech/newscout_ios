@@ -9,6 +9,7 @@
 import UIKit
 import Alamofire
 import CoreData
+import MaterialComponents.MaterialActivityIndicator
 
 class SearchVC: UIViewController {
     @IBOutlet weak var searchResultTV: UITableView!
@@ -16,16 +17,25 @@ class SearchVC: UIViewController {
     @IBOutlet weak var searchView: UIView!
     @IBOutlet weak var txtSearch: UITextField!
     @IBOutlet weak var lblTitle: UILabel!
+    let activityIndicator = MDCActivityIndicator()
     //variables
     var count = 0
     var ArticleData = [ArticleStatus]()
     var SearchData = [ArticleStatus]()
     var results: [NewsArticle] = []
+    var nextURL = ""
+    var previousURL = ""
     let appDelegate = UIApplication.shared.delegate as? AppDelegate
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        activityIndicator.cycleColors = [.blue]
+        activityIndicator.frame = CGRect(x: 166, y: 150, width: 40, height: 40)
+        activityIndicator.sizeToFit()
+        activityIndicator.indicatorMode = .indeterminate
+        activityIndicator.progress = 2.0
+        view.addSubview(activityIndicator)
+        activityIndicator.startAnimating()
         lblTitle.font = Constants.LargeFontMedium
         //check whether search or bookmark is selected
         if isSearch == true{
@@ -35,7 +45,39 @@ class SearchVC: UIViewController {
         else{
             txtSearch.isHidden = true
             lblTitle.isHidden = false
+            BookmarkAPICall()
         }
+        let refreshControl = UIRefreshControl()
+        refreshControl.addTarget(self, action: #selector(refreshBookmarkedNews), for: .valueChanged)
+        searchResultTV.refreshControl = refreshControl
+        refreshControl.attributedTitle = NSAttributedString(string: "Pull  to Refresh...")
+    }
+    
+    func BookmarkAPICall()
+    {
+            APICall().BookmarkedArticlesAPI(url: APPURL.bookmarkedArticlesURL){ response in
+                switch response {
+                case .Success(let data) :
+                    self.ArticleData = data
+                    print(self.ArticleData[0].body.articles)
+                    if self.ArticleData[0].body.next != nil{
+                        self.nextURL = self.ArticleData[0].body.next!}
+                    if self.ArticleData[0].body.previous != nil{
+                        self.previousURL = self.ArticleData[0].body.previous!}
+                    if self.ArticleData[0].body.articles.count == 0{
+                        self.activityIndicator.stopAnimating()
+                        self.searchResultTV.makeToast("There is not any article bookmarked yet...", duration: 1.0, position: .center)
+                    }else{
+                        self.searchResultTV.reloadData()}
+                case .Failure(let errormessage) :
+                    print(errormessage)
+                }
+            }
+    }
+    
+    @objc func refreshBookmarkedNews(refreshControl: UIRefreshControl) {
+        BookmarkAPICall()
+        refreshControl.endRefreshing()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -78,14 +120,18 @@ class SearchVC: UIViewController {
 
 extension SearchVC: UITableViewDelegate, UITableViewDataSource{
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return count
+         return (ArticleData.count != 0) ? self.ArticleData[0].body.articles.count : 0
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         print("This cell  was selected: \(indexPath.row)")
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        let vc:NewsDetailVC = storyboard.instantiateViewController(withIdentifier: "NewsDetailID") as! NewsDetailVC
-        present(vc, animated: true, completion: nil)
+        let newsDetailvc:NewsDetailVC = storyboard.instantiateViewController(withIdentifier: "NewsDetailID") as! NewsDetailVC
+        newsCurrentIndex = indexPath.row
+        newsDetailvc.ArticleData = ArticleData
+        articleId = ArticleData[0].body.articles[indexPath.row].article_id!
+        print("articleId in didselect: \(articleId)")
+        present(newsDetailvc, animated: true, completion: nil)
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -100,15 +146,16 @@ extension SearchVC: UITableViewDelegate, UITableViewDataSource{
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
         dateFormatter.timeZone = NSTimeZone(name: "UTC")! as TimeZone
-        
-        let currentArticle = SearchData[0].body.articles[indexPath.row]
+          if ArticleData.count != 0{
+        let currentArticle = ArticleData[0].body.articles[indexPath.row]
         cell.lblSource.text = currentArticle.source
         let newDate = dateFormatter.date(from: currentArticle.published_on!)
         let agoDate = timeAgoSinceDate(newDate!)
         cell.lbltimeAgo.text = agoDate
         cell.lblNewsDescription.text = currentArticle.title
         cell.imgNews.downloadedFrom(link: "\(currentArticle.imageURL!)")
-        //
+        }
+
         if textSizeSelected == 0{
             cell.lblSource.font = Constants.xsmallFont
             cell.lblNewsDescription.font = Constants.smallFontMedium
@@ -124,7 +171,69 @@ extension SearchVC: UITableViewDelegate, UITableViewDataSource{
             cell.lblNewsDescription.font = Constants.NormalFontMedium
             cell.lbltimeAgo.font = Constants.xNormalFont
         }
+        activityIndicator.stopAnimating()
         return cell
+    }
+    //check whether tableview scrolled up or down
+    func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
+        if targetContentOffset.pointee.y < scrollView.contentOffset.y {
+            print("it's going up")
+            if nextURL != "" {
+                APICall().BookmarkedArticlesAPI(url: nextURL){ response in
+                    switch response {
+                    case .Success(let data) :
+                        self.ArticleData = data
+                        print(self.ArticleData[0].body.articles.count)
+                        print("nexturl data: \(self.ArticleData)")
+                        if self.ArticleData[0].body.next != nil{
+                            self.nextURL = self.ArticleData[0].body.next!
+                        }
+                        else{
+                            self.nextURL = ""
+                            self.searchResultTV.makeToast("No more news to show", duration: 1.0, position: .center)
+                        }
+                        if self.ArticleData[0].body.previous != nil{
+                            self.previousURL = self.ArticleData[0].body.previous!
+                        }
+                        else{
+                            self.previousURL = ""
+                        }
+                        self.searchResultTV.reloadData()
+                    case .Failure(let errormessage) :
+                        print(errormessage)
+                    }
+                }
+            }
+        } else {
+            print(" it's going down")
+            if previousURL != ""{
+                APICall().BookmarkedArticlesAPI(url: nextURL){ response in
+                    switch response {
+                    case .Success(let data) :
+                        self.ArticleData = data
+                        print(self.ArticleData[0].body.articles.count)
+                        print("previous url data: \(self.ArticleData)")
+                        if self.ArticleData[0].body.previous != nil{
+                            self.previousURL = self.ArticleData[0].body.previous!
+                            print(self.previousURL)
+                        }
+                        else{
+                            self.previousURL = ""
+                            self.searchResultTV.makeToast("No more news to show", duration: 1.0, position: .center)
+                        }
+                        if self.ArticleData[0].body.next != nil{
+                            self.nextURL = self.ArticleData[0].body.next!
+                        }
+                        else{
+                            self.nextURL = ""
+                        }
+                        self.searchResultTV.reloadData()
+                    case .Failure(let errormessage) :
+                        print(errormessage)
+                    }
+                }
+            }
+        }
     }
 }
 

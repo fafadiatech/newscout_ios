@@ -38,9 +38,6 @@ class APICall{
     }
     //load articles by category
     func loadNewsbyCategoryAPI(category : String,url: String, _ completion : @escaping (ArticleAPIResult) -> ()){
-        //let url = url
-        let urlString = url.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)
-        print("Load API url: \(urlString!)")
         var headers : [String: String]
         if UserDefaults.standard.value(forKey: "token") != nil{
             let token = "Token " + "\(UserDefaults.standard.value(forKey: "token")!)"
@@ -442,8 +439,8 @@ class APICall{
     }
     
     //get list of bookmarked articles
-    func BookmarkedArticlesAPI(_ completion : @escaping (ArticleAPIResult) -> ()) {
-        let url = APPURL.bookmarkedArticlesURL
+    func BookmarkedArticlesAPI(url: String,_ completion : @escaping (ArticleAPIResult) -> ()) {
+        
         var headers : [String: String]
         if UserDefaults.standard.value(forKey: "token") != nil{
             let token = "Token " + "\(UserDefaults.standard.value(forKey: "token")!)"

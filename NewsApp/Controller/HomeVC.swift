@@ -42,8 +42,7 @@ class HomeVC: UIViewController{
         
         // To make the activity indicator appear:
         activityIndicator.startAnimating()
-        // To make the activity indicator disappear:
-        // activityIndicator.stopAnimating()
+
         var paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
         print("\(paths[0])")
         let refreshControl = UIRefreshControl()
@@ -137,7 +136,7 @@ class HomeVC: UIViewController{
                     self.previousURL = self.ArticleData[0].body.previous!}
                 if self.ArticleData[0].body.articles.count == 0{
                     self.activityIndicator.stopAnimating()
-                    self.HomeNewsTV.makeToast("No articles found in this category...", duration: 3.0, position: .center)
+                    self.HomeNewsTV.makeToast("No articles found in this category...", duration: 1.0, position: .center)
                 }else{
                     self.HomeNewsTV.reloadData()}
             case .Failure(let errormessage) :
@@ -227,7 +226,7 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
                         }
                         else{
                             self.nextURL = ""
-                            self.HomeNewsTV.makeToast("No more news to show", duration: 3.0, position: .center)
+                            self.HomeNewsTV.makeToast("No more news to show", duration: 1.0, position: .center)
                         }
                         if self.ArticleData[0].body.previous != nil{
                             self.previousURL = self.ArticleData[0].body.previous!
@@ -256,7 +255,7 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
                         }
                         else{
                             self.previousURL = ""
-                            self.HomeNewsTV.makeToast("No more news to show", duration: 3.0, position: .center)
+                            self.HomeNewsTV.makeToast("No more news to show", duration: 1.0, position: .center)
                         }
                         if self.ArticleData[0].body.next != nil{
                             self.nextURL = self.ArticleData[0].body.next!
