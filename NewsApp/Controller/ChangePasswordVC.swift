@@ -32,6 +32,7 @@ class ChangePasswordVC: UIViewController {
     }
     
     @IBAction func btnSubmitActn(_ sender: Any) {
+        if txtOldPswd.text != nil && txtOldPswd.text != nil && txtNewPswd.text != nil{
         APICall().ChangePasswordAPI(old_password: txtOldPswd.text!, password: txtNewPswd.text!, confirm_password: txtConfirmPswd.text!){response in
             print("change pswd response:\(response)")
             if response == "1"{
@@ -43,7 +44,10 @@ class ChangePasswordVC: UIViewController {
             else{
                 self.view.makeToast(response, duration: 1.0, position: .center)
             }
-            
+        }
+    }
+        else{
+            self.view.makeToast("Please enter all the details", duration: 1.0, position: .center)
         }
     }
 }

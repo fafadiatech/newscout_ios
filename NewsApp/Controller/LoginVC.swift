@@ -21,6 +21,7 @@ class LoginVC: UIViewController, GIDSignInUIDelegate, FBSDKLoginButtonDelegate{
     @IBOutlet weak var signInButton: GIDSignInButton!
     @IBOutlet weak var btnFbLogin: FBSDKLoginButton!
     
+    @IBOutlet weak var gmailView: GIDSignInButton!
     override func viewDidLoad() {
         super.viewDidLoad()
         txtUsername.autocorrectionType = .no
@@ -31,7 +32,6 @@ class LoginVC: UIViewController, GIDSignInUIDelegate, FBSDKLoginButtonDelegate{
         btnSignUp.layer.borderWidth = 0
         btnForgtPswd.layer.cornerRadius = 15
         btnForgtPswd.layer.borderWidth = 0
-        
         btnFbLogin.readPermissions = ["public_profile", "email"]
         if FBSDKAccessToken.current() != nil{
             print(FBSDKAccessToken.current())
