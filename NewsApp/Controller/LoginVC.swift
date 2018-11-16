@@ -136,11 +136,11 @@ class LoginVC: UIViewController, GIDSignInUIDelegate, FBSDKLoginButtonDelegate{
     }
     
     @IBAction func btnForgotPasswordActn(_ sender: Any) {
-        if txtUsername.text != nil{
-            
-        }
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let forgotVc:ForgotPasswordVC = storyboard.instantiateViewController(withIdentifier: "ForgotPswdID") as! ForgotPasswordVC
+        if txtUsername.text != nil{
+        forgotVc.email = txtUsername.text!
+        }
         self.present(forgotVc, animated: true, completion: nil)
         
     }

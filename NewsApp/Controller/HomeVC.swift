@@ -215,6 +215,7 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
         if targetContentOffset.pointee.y < scrollView.contentOffset.y {
             print("it's going up")
             if nextURL != "" {
+                self.activityIndicator.startAnimating()
                 APICall().loadNewsbyCategoryAPI(category:selectedCategory, url: nextURL){ response in
                     switch response {
                     case .Success(let data) :
@@ -239,10 +240,12 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
                         print(errormessage)
                     }
                 }
+                  self.activityIndicator.stopAnimating()
             }
         } else {
             print(" it's going down")
             if previousURL != ""{
+                 self.activityIndicator.startAnimating()
                 APICall().loadNewsbyCategoryAPI(category:selectedCategory, url: previousURL){ response in
                     switch response {
                     case .Success(let data) :
@@ -268,6 +271,7 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
                         print(errormessage)
                     }
                 }
+                self.activityIndicator.stopAnimating()
             }
         }
     }

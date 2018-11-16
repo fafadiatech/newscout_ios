@@ -35,7 +35,6 @@ class SearchVC: UIViewController {
         activityIndicator.indicatorMode = .indeterminate
         activityIndicator.progress = 2.0
         view.addSubview(activityIndicator)
-        activityIndicator.startAnimating()
         lblTitle.font = Constants.LargeFontMedium
         //check whether search or bookmark is selected
         if isSearch == true{
@@ -45,6 +44,7 @@ class SearchVC: UIViewController {
         else{
             txtSearch.isHidden = true
             lblTitle.isHidden = false
+            activityIndicator.startAnimating()
             BookmarkAPICall()
         }
         let refreshControl = UIRefreshControl()
@@ -179,6 +179,7 @@ extension SearchVC: UITableViewDelegate, UITableViewDataSource{
         if targetContentOffset.pointee.y < scrollView.contentOffset.y {
             print("it's going up")
             if nextURL != "" {
+                self.activityIndicator.startAnimating()
                 APICall().BookmarkedArticlesAPI(url: nextURL){ response in
                     switch response {
                     case .Success(let data) :
@@ -203,10 +204,12 @@ extension SearchVC: UITableViewDelegate, UITableViewDataSource{
                         print(errormessage)
                     }
                 }
+                self.activityIndicator.stopAnimating()
             }
         } else {
             print(" it's going down")
             if previousURL != ""{
+                self.activityIndicator.startAnimating()
                 APICall().BookmarkedArticlesAPI(url: nextURL){ response in
                     switch response {
                     case .Success(let data) :
@@ -232,6 +235,7 @@ extension SearchVC: UITableViewDelegate, UITableViewDataSource{
                         print(errormessage)
                     }
                 }
+                self.activityIndicator.stopAnimating()
             }
         }
     }
@@ -253,6 +257,7 @@ extension SearchVC: UITextFieldDelegate
                 print(errormessage)
                 // handle the error
             }
+            self.activityIndicator.stopAnimating()
         }
         // search text in DB
         /*   let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "NewsArticle")

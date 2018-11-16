@@ -31,6 +31,7 @@ class ProfileVC: UIViewController {
         if UserDefaults.standard.value(forKey: "first_name") != nil{
             lblNameVal.text = UserDefaults.standard.value(forKey: "first_name") as! String
         }
+        
         if UserDefaults.standard.value(forKey: "email") != nil{
             lblemailVal.text = UserDefaults.standard.value(forKey: "email") as! String
         }

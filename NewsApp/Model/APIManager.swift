@@ -255,6 +255,7 @@ class APICall{
                             defaults.removeObject(forKey: "first_name")
                             defaults.removeObject(forKey: "last_name")
                             defaults.removeObject(forKey: "user_id")
+                            defaults.removeObject(forKey: "email")
                             defaults.synchronize()
                             completion(jsonData.header.status,jsonData.body!.Msg!)
                         }
@@ -358,7 +359,7 @@ class APICall{
     }
     
     //Forgot Password
-    func ForgortPasswordAPI(email: String,_ completion : @escaping (String) ->()) {
+    func ForgotPasswordAPI(email: String,_ completion : @escaping (String) ->()) {
         let url = APPURL.forgotPasswordURL
         let param = ["email" : email]
         
@@ -390,10 +391,11 @@ class APICall{
     }
     
     //Change Password
-    func ChangePasswordAPI(old_pswd: String,New_pswd: String,_ completion : @escaping (String) ->()) {
-        let url = APPURL.forgotPasswordURL
-        let param = ["old" : old_pswd,
-                     "New" : New_pswd]
+    func ChangePasswordAPI(old_password: String, password: String, confirm_password: String, _ completion : @escaping (String) ->()) {
+        let url = APPURL.changePasswordURL
+        let param = ["old_password" : old_password,
+                     "password" : password,
+                     "confirm_password" : confirm_password ]
         
         print(param)
         var headers : [String: String]
@@ -412,6 +414,7 @@ class APICall{
         else{
             headers = ["Authorization": ""]
         }
+        print(headers)
         Alamofire.request(url,method: .post, parameters: param, headers: headers).responseString{
             response in
             if(response.result.isSuccess){

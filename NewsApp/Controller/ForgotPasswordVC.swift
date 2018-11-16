@@ -10,16 +10,33 @@ import UIKit
 
 class ForgotPasswordVC: UIViewController {
 
+    @IBOutlet weak var btnSubmit: UIButton!
     @IBOutlet weak var txtEmail: UITextField!
     var email = ""
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
+        txtEmail.text = email
+        btnSubmit.layer.cornerRadius = 15
+        btnSubmit.layer.borderWidth = 0
     }
 
     @IBAction func btnSubmitEmailActn(_ sender: Any) {
+        if txtEmail.text != nil {
+        APICall().ForgotPasswordAPI(email: txtEmail.text!){response in
+            print("ForgotPassword response:\(response)")
+            if response == "1"{
+                self.view.makeToast(response, duration: 2.0, position: .center)
+            }
+            else{
+                self.view.makeToast(response, duration: 1.0, position: .center)
+            }
+        }
+        }
+    }
+    
+    @IBAction func btnBackActn(_ sender: Any) {
+         self.dismiss(animated: false)
     }
     
     override func didReceiveMemoryWarning() {
