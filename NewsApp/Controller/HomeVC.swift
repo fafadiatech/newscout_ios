@@ -141,7 +141,10 @@ class HomeVC: UIViewController{
                     self.HomeNewsTV.reloadData()}
             case .Failure(let errormessage) :
                 print(errormessage)
+                self.activityIndicator.startAnimating()
+                self.HomeNewsTV.makeToast(errormessage, duration: 2.0, position: .center)
             }
+            
         }
     }
     override func didReceiveMemoryWarning() {
@@ -238,6 +241,8 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
                         self.HomeNewsTV.reloadData()
                     case .Failure(let errormessage) :
                         print(errormessage)
+                        self.activityIndicator.startAnimating()
+                        self.HomeNewsTV.makeToast(errormessage, duration: 2.0, position: .center)
                     }
                 }
                   self.activityIndicator.stopAnimating()
@@ -269,6 +274,9 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
                         self.HomeNewsTV.reloadData()
                     case .Failure(let errormessage) :
                         print(errormessage)
+                        self.HomeNewsTV.makeToast(errormessage, duration: 1.0, position: .center)
+                        self.activityIndicator.startAnimating()
+                        self.HomeNewsTV.makeToast(errormessage, duration: 2.0, position: .center)
                     }
                 }
                 self.activityIndicator.stopAnimating()

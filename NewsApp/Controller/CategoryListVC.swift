@@ -20,9 +20,18 @@ class CategoryListVC: UIViewController {
     var protocolObj : CategoryListProtocol?
     var showCategory = [Category]()
     var CategoryData = [CategoryList]()
+     let activityIndicator = MDCActivityIndicator()
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        activityIndicator.cycleColors = [.blue]
+        activityIndicator.frame = CGRect(x: 166, y: 150, width: 40, height: 40)
+        activityIndicator.sizeToFit()
+        activityIndicator.indicatorMode = .indeterminate
+        activityIndicator.progress = 2.0
+        view.addSubview(activityIndicator)
+         activityIndicator.startAnimating()
+        
         APICall().loadCategoriesAPI{ response in
             switch response {
             case .Success(let data) :
@@ -30,7 +39,9 @@ class CategoryListVC: UIViewController {
                 self.tableCategoryLIst.reloadData()
             case .Failure(let errormessage) :
                 print(errormessage)
+                self.tableCategoryLIst.makeToast(errormessage, duration: 2.0, position: .center)
             }
+            self.activityIndicator.stopAnimating()
         }
         /*  let coredataRecordCount = DBManager().IsCategoryDataEmpty()
          if coredataRecordCount != 0{
@@ -70,6 +81,7 @@ class CategoryListVC: UIViewController {
             case .Failure(let errormessage) :
                 print(errormessage)
             }
+            self.activityIndicator.stopAnimating()
         }
     }
     override var prefersStatusBarHidden: Bool {

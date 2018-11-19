@@ -47,6 +47,7 @@ class NewsDetailVC: UIViewController {
                 self.suggestedCV.reloadData()
             case .Failure(let errormessage) :
                 print(errormessage)
+                self.view.makeToast(errormessage, duration: 2.0, position: .center)
             }
         }
         ShowNews(currentIndex: newsCurrentIndex)

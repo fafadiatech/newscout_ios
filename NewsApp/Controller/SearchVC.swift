@@ -71,6 +71,8 @@ class SearchVC: UIViewController {
                         self.searchResultTV.reloadData()}
                 case .Failure(let errormessage) :
                     print(errormessage)
+                    self.activityIndicator.startAnimating()
+                    self.searchResultTV.makeToast(errormessage, duration: 2.0, position: .center)
                 }
             }
     }
@@ -202,6 +204,8 @@ extension SearchVC: UITableViewDelegate, UITableViewDataSource{
                         self.searchResultTV.reloadData()
                     case .Failure(let errormessage) :
                         print(errormessage)
+                        self.activityIndicator.startAnimating()
+                        self.searchResultTV.makeToast(errormessage, duration: 2.0, position: .center)
                     }
                 }
                 self.activityIndicator.stopAnimating()
@@ -233,6 +237,8 @@ extension SearchVC: UITableViewDelegate, UITableViewDataSource{
                         self.searchResultTV.reloadData()
                     case .Failure(let errormessage) :
                         print(errormessage)
+                        self.activityIndicator.startAnimating()
+                        self.searchResultTV.makeToast(errormessage, duration: 2.0, position: .center)
                     }
                 }
                 self.activityIndicator.stopAnimating()
@@ -255,7 +261,8 @@ extension SearchVC: UITextFieldDelegate
                 self.searchResultTV.reloadData()
             case .Failure(let errormessage) :
                 print(errormessage)
-                // handle the error
+                self.activityIndicator.startAnimating()
+                self.searchResultTV.makeToast(errormessage, duration: 2.0, position: .center)
             }
             self.activityIndicator.stopAnimating()
         }

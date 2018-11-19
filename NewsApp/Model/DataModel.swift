@@ -138,6 +138,9 @@ struct Body : Decodable{
     
 }
 
+enum MainModelError {
+    case Failure(String)
+}
 enum ArticleAPIResult {
     case Success([ArticleStatus])
     case Failure(String)

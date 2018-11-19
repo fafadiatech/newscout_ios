@@ -29,7 +29,7 @@ class APICall{
                     }
                     catch {
                         print("Error: \(error)")
-                        completion(ArticleAPIResult.Failure(error.localizedDescription
+                completion(ArticleAPIResult.Failure(error.localizedDescription
                         ))
                     }
                 }
@@ -66,13 +66,15 @@ class APICall{
                     }
                     catch {
                         print("Error: \(error)")
-                        completion(ArticleAPIResult.Failure(error.localizedDescription
-                        ))
+                        completion(ArticleAPIResult.Failure(error.localizedDescription))
                     }
                 }
             }
             else{
                 print(response.result.error!)
+                if let err = response.result.error as? URLError, err.code == .notConnectedToInternet {
+                   completion(ArticleAPIResult.Failure(err.localizedDescription))
+                }
             }
         }
     }
@@ -101,6 +103,11 @@ class APICall{
                     }
                 }
             }
+            else{
+                if let err = response.result.error as? URLError, err.code == .notConnectedToInternet {
+                    completion(ArticleAPIResult.Failure(err.localizedDescription))
+                }
+            }
         }
     }
     func loadCategoriesAPI(_ completion : @escaping (CategoryAPIResult) -> ()){
@@ -119,6 +126,11 @@ class APICall{
                         print("Error: \(error)")
                         completion(CategoryAPIResult.Failure(error as! String))
                     }
+                }
+            }
+            else{
+                if let err = response.result.error as? URLError, err.code == .notConnectedToInternet {
+                    completion(CategoryAPIResult.Failure("The Internet connection appears to be offline"))
                 }
             }
         }
@@ -141,6 +153,11 @@ class APICall{
                         print("Error: \(error)")
                         completion(ArticleAPIResult.Failure(error as! String))
                     }
+                }
+            }
+            else{
+                if let err = response.result.error as? URLError, err.code == .notConnectedToInternet {
+                    completion(ArticleAPIResult.Failure(err.localizedDescription))
                 }
             }
         }
@@ -175,7 +192,9 @@ class APICall{
                 }
             }
             else{
-                print(response.result.error!)
+                if let err = response.result.error as? URLError, err.code == .notConnectedToInternet {
+                completion("The Internet connection appears to be offline")
+                }
             }
         }
     }
@@ -213,7 +232,9 @@ class APICall{
                 }
             }
             else{
-                print(response.result.error!)
+                if let err = response.result.error as? URLError, err.code == .notConnectedToInternet {
+                     completion("The Internet connection appears to be offline")
+                }
             }
         }
     }
@@ -266,7 +287,9 @@ class APICall{
                 }
             }
             else{
-                print(response.result.error!)
+                if let err = response.result.error as? URLError, err.code == .notConnectedToInternet {
+                     completion("0","The Internet connection appears to be offline")
+                }
             }
         }
     }
@@ -309,6 +332,11 @@ class APICall{
                     catch {
                         print("Error: \(error)")
                     }
+                }
+            }
+            else{
+                if let err = response.result.error as? URLError, err.code == .notConnectedToInternet {
+                     completion("0", "The Internet connection appears to be offline")
                 }
             }
         }
@@ -355,6 +383,11 @@ class APICall{
                     }
                 }
             }
+            else{
+                if let err = response.result.error as? URLError, err.code == .notConnectedToInternet {
+                    completion("0", "The Internet connection appears to be offline")
+                }
+            }
         }
     }
     
@@ -385,7 +418,9 @@ class APICall{
                 }
             }
             else{
-                print(response.result.error!)
+                if let err = response.result.error as? URLError, err.code == .notConnectedToInternet {
+                    completion("The Internet connection appears to be offline")
+                }
             }
         }
     }
@@ -436,7 +471,9 @@ class APICall{
                 }
             }
             else{
-                print(response.result.error!)
+                if let err = response.result.error as? URLError, err.code == .notConnectedToInternet {
+                     completion("The Internet connection appears to be offline")
+                }
             }
         }
     }
@@ -471,14 +508,16 @@ class APICall{
                     }
                     catch {
                         print("Error: \(error)")
-                        completion(ArticleAPIResult.Failure(error.localizedDescription
+                    completion(ArticleAPIResult.Failure(error.localizedDescription
                         ))
                     }
                 }
             }
             else{
-                print(response.result.error!)
+                if let err = response.result.error as? URLError, err.code == .notConnectedToInternet {
+                    completion(ArticleAPIResult.Failure("The Internet connection appears to be offline"))
             }
         }
     }
+}
 }
