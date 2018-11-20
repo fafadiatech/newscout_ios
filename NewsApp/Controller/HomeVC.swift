@@ -208,6 +208,7 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
         }
         else{
             cell.lblSource.font =  FontConstants.xNormalFont
+            
             cell.lblNewsHeading.font = FontConstants.NormalFont
             cell.lblTimesAgo.font = FontConstants.xNormalFont
         }
