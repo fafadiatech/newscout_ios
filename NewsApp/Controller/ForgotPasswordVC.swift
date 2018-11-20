@@ -21,6 +21,10 @@ class ForgotPasswordVC: UIViewController {
         btnSubmit.layer.borderWidth = 0
     }
     
+    override var prefersStatusBarHidden: Bool {
+        return true
+    }
+    
     @IBAction func btnSubmitEmailActn(_ sender: Any) {
         if txtEmail.text != "" {
             
@@ -47,5 +51,4 @@ class ForgotPasswordVC: UIViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    
 }

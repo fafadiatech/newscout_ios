@@ -8,9 +8,16 @@
 import UIKit
 import XLPagerTabStrip
 
-struct Constants{
-    static let AppName = "NewScout"
-    static let InternetErrorMsg = "The Internet connection appears to be offline"
+struct colorConstants{
+    static let backgroundGray = UIColor(hexFromString: "F5F5F5")
+    static let redColor = UIColor(hexFromString: "ed1c24")
+    static let blackColor = UIColor(hexFromString: "383839")
+    static let whiteColor = UIColor.white
+    static let txtlightGrayColor = UIColor(hexFromString: "9B9B9B")
+    static let txtDarkGrayColor = UIColor(hexFromString: "424242")
+}
+
+struct FontConstants{
     static let isPhone = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.phone)
     static let fontSize:CGFloat = isPhone ? 12 :20
     static let fontxLarge:CGFloat = isPhone ? 16:20
@@ -25,49 +32,40 @@ struct Constants{
     static let fontLargeContent:CGFloat = isPhone ? 18 :20
     static let fontNormalContent:CGFloat = isPhone ? 14 :20
     static let fontSmallContent:CGFloat = isPhone ? 10 :20
-    static let  xsmallFont = UIFont(name: AppFontName.regular, size: Constants.fontxSmall)
-    static let xLargeFont = UIFont(name: AppFontName.regular, size: Constants.fontxLarge)
-    static let xNormalFont = UIFont(name: AppFontName.regular, size: Constants.fontxNormal)
-    static let smallFont = UIFont(name: AppFontName.regular, size: Constants.fontSmallTitle)
-    static let LargeFont = UIFont(name: AppFontName.regular, size: Constants.fontLargeTitle)
-    static let NormalFont = UIFont(name: AppFontName.regular, size: Constants.fontNormalTitle)
-    static let smallFontHeading = UIFont(name: AppFontName.regular, size: Constants.fontSmallTitle)
-    static let LargeFontHeading = UIFont(name: AppFontName.regular, size: Constants.fontLargeTitle)
-    static let NormalFontHeading = UIFont(name: AppFontName.regular, size: Constants.fontNormalTitle)
-    static let smallFontMedium = UIFont(name: AppFontName.medium, size: Constants.fontSmallTitle)
-    static let LargeFontMedium = UIFont(name: AppFontName.medium, size: Constants.fontLargeTitle)
-    static let NormalFontMedium = UIFont(name: AppFontName.medium, size: Constants.fontNormalTitle)
-    static let xsmallFontMedium = UIFont(name: AppFontName.medium, size: Constants.fontxSmall)
-    static let xLargeFontMedium = UIFont(name: AppFontName.medium, size: Constants.fontxLarge)
-    static let xNormalFontMedium = UIFont(name: AppFontName.medium, size: Constants.fontxNormal)
+    static let  xsmallFont = UIFont(name: AppFontName.regular, size: FontConstants.fontxSmall)
+    static let xLargeFont = UIFont(name: AppFontName.regular, size: FontConstants.fontxLarge)
+    static let xNormalFont = UIFont(name: AppFontName.regular, size: FontConstants.fontxNormal)
+    static let smallFont = UIFont(name: AppFontName.regular, size: FontConstants.fontSmallTitle)
+    static let LargeFont = UIFont(name: AppFontName.regular, size: FontConstants.fontLargeTitle)
+    static let NormalFont = UIFont(name: AppFontName.regular, size: FontConstants.fontNormalTitle)
+    static let smallFontHeading = UIFont(name: AppFontName.regular, size: FontConstants.fontSmallTitle)
+    static let LargeFontHeading = UIFont(name: AppFontName.regular, size: FontConstants.fontLargeTitle)
+    static let NormalFontHeading = UIFont(name: AppFontName.regular, size: FontConstants.fontNormalTitle)
+    static let smallFontMedium = UIFont(name: AppFontName.medium, size: FontConstants.fontSmallTitle)
+    static let LargeFontMedium = UIFont(name: AppFontName.medium, size: FontConstants.fontLargeTitle)
+    static let NormalFontMedium = UIFont(name: AppFontName.medium, size: FontConstants.fontNormalTitle)
+    static let xsmallFontMedium = UIFont(name: AppFontName.medium, size: FontConstants.fontxSmall)
+    static let xLargeFontMedium = UIFont(name: AppFontName.medium, size: FontConstants.fontxLarge)
+    static let xNormalFontMedium = UIFont(name: AppFontName.medium, size: FontConstants.fontxNormal)
+    static let appFont = UIFont(name: AppFontName.bold, size: FontConstants.fontLargeHeading)
+}
+
+struct Constants{
+    static let AppName = "NewScout"
+    static let InternetErrorMsg = "The Internet connection appears to be offline"
 }
 
 struct AppFontName {
     static let regular = "HelveticaNeue-Light"
     static let bold = "HelveticaNeue-Bold"
     static let medium = "HelveticaNeue-Medium"
-    
+    static let thin = "HelveticaNeue-Thin"
 }
+
 struct themeColor{
     static let commonColor = UIColor.gray
 }
-extension UIFont {
-    
-    class func myFontName() -> String { return "HelveticaNeue" }
-    class func myBoldFontName() -> String { return "System"}
-    class func smallFont(fontSize :Int) -> UIFont {
-        return UIFont.systemFont(ofSize: CGFloat(fontSize - 10))
-        
-    }
-    class func myNormalFont() -> UIFont {
-        return UIFont(name: "HelveticaNeue-Thin", size: 20)!
-        //return UIFont.systemFont(ofSize: 20)
-    }
-    
-    class func largeFont(fontSize :Int) -> UIFont {
-        return UIFont.systemFont(ofSize: CGFloat(fontSize + 10))
-    }
-}
+
 struct APPURL {
     
     private struct Domains {

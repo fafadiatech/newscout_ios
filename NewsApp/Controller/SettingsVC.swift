@@ -14,7 +14,7 @@ class SettingsVC: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        lblTitle.font = Constants.LargeFontMedium
+        lblTitle.font = FontConstants.LargeFontMedium
     }
     
     override var prefersStatusBarHidden: Bool {

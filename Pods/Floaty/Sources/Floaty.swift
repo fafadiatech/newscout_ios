@@ -290,7 +290,7 @@ open class Floaty: UIView {
         if isCustomFrame == false {
             setBottomFrameAccordingToRTL()
         } else {
-        
+           
             size = min(frame.size.width, frame.size.height)
         }
         
@@ -618,7 +618,7 @@ open class Floaty: UIView {
         
         var width: CGFloat
         if isCustomFrame {
-            width = item.titleLabel.bounds.size.width + item.bounds.size.width + tappableMargin + paddingX
+            width =  item.titleLabel.bounds.size.width + item.bounds.size.width + tappableMargin + paddingX
         } else {
             width = item.titleLabel.bounds.size.width + item.bounds.size.width + tappableMargin
         }
@@ -661,7 +661,7 @@ open class Floaty: UIView {
     }
     
     fileprivate func setTintLayer() {
-        tintLayer.frame = CGRect(x: circleLayer.frame.origin.x, y: circleLayer.frame.origin.y, width: size, height: size)
+        tintLayer.frame = CGRect(x: 0, y: 0, width: size, height: size)//(x: circleLayer.frame.origin.x, y: circleLayer.frame.origin.y, width: size, height: size)
         tintLayer.backgroundColor = UIColor.white.withAlphaComponent(0.2).cgColor
         tintLayer.cornerRadius = size/2
         layer.addSublayer(tintLayer)
@@ -678,7 +678,7 @@ open class Floaty: UIView {
         if let superview = superview {
             overlayView.frame = CGRect(
                 x: 0,y: 0,
-                width: superview.bounds.width,
+                width: superview.bounds.width ,
                 height: superview.bounds.height
             )
         }
@@ -713,6 +713,8 @@ open class Floaty: UIView {
         item.circleShadowColor = itemShadowColor
         item.titleShadowColor = itemShadowColor
         item.size = itemSize
+        item._titleLabel?.backgroundColor = UIColor(red: 255, green: 255, blue: 255, alpha: 0.2)
+        
     }
     
     

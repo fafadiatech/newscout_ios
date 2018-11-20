@@ -19,7 +19,6 @@ class SearchVC: UIViewController {
     @IBOutlet weak var lblTitle: UILabel!
     let activityIndicator = MDCActivityIndicator()
     //variables
-    var count = 0
     var ArticleData = [ArticleStatus]()
     var SearchData = [ArticleStatus]()
     var results: [NewsArticle] = []
@@ -37,7 +36,7 @@ class SearchVC: UIViewController {
         activityIndicator.indicatorMode = .indeterminate
         activityIndicator.progress = 2.0
         view.addSubview(activityIndicator)
-        lblTitle.font = Constants.LargeFontMedium
+        lblTitle.font = FontConstants.LargeFontMedium
         //check whether search or bookmark is selected
         if isSearch == true{
             lblTitle.isHidden = true
@@ -97,16 +96,16 @@ class SearchVC: UIViewController {
     func changeFont()
     {
         if textSizeSelected == 0{
-            lblTitle.font = Constants.NormalFontMedium
-            txtSearch.font = Constants.NormalFontMedium
+            lblTitle.font = FontConstants.NormalFontMedium
+            txtSearch.font = FontConstants.NormalFontMedium
         }
         else if textSizeSelected == 2{
-            lblTitle.font = Constants.LargeFontMedium
-            txtSearch.font = Constants.LargeFontMedium
+            lblTitle.font = FontConstants.LargeFontMedium
+            txtSearch.font = FontConstants.LargeFontMedium
         }
         else{
-            lblTitle.font = Constants.LargeFontMedium
-            txtSearch.font = Constants.LargeFontMedium
+            lblTitle.font = FontConstants.LargeFontMedium
+            txtSearch.font = FontConstants.LargeFontMedium
         }
     }
     
@@ -144,6 +143,8 @@ extension SearchVC: UITableViewDelegate, UITableViewDataSource{
         cell.ViewCellBackground.layer.cornerRadius = 10.0
         cell.imgNews.layer.cornerRadius = 10.0
         cell.imgNews.clipsToBounds = true
+        cell.lblSource.textColor = colorConstants.txtDarkGrayColor
+        cell.lbltimeAgo.textColor = colorConstants.txtDarkGrayColor
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
         dateFormatter.timeZone = NSTimeZone(name: "UTC")! as TimeZone
@@ -158,19 +159,19 @@ extension SearchVC: UITableViewDelegate, UITableViewDataSource{
         }
         
         if textSizeSelected == 0{
-            cell.lblSource.font = Constants.xsmallFont
-            cell.lblNewsDescription.font = Constants.smallFontMedium
-            cell.lbltimeAgo.font = Constants.xsmallFont
+            cell.lblSource.font = FontConstants.xsmallFont
+            cell.lblNewsDescription.font = FontConstants.smallFont
+            cell.lbltimeAgo.font = FontConstants.xsmallFont
         }
         else if textSizeSelected == 2{
-            cell.lblSource.font = Constants.xLargeFont
-            cell.lblNewsDescription.font = Constants.LargeFontMedium
-            cell.lbltimeAgo.font = Constants.xLargeFont
+            cell.lblSource.font = FontConstants.xLargeFont
+            cell.lblNewsDescription.font = FontConstants.LargeFont
+            cell.lbltimeAgo.font = FontConstants.xLargeFont
         }
         else{
-            cell.lblSource.font = Constants.xNormalFont
-            cell.lblNewsDescription.font = Constants.NormalFontMedium
-            cell.lbltimeAgo.font = Constants.xNormalFont
+            cell.lblSource.font = FontConstants.xNormalFont
+            cell.lblNewsDescription.font = FontConstants.NormalFont
+            cell.lbltimeAgo.font = FontConstants.xNormalFont
         }
         activityIndicator.stopAnimating()
         return cell

@@ -49,7 +49,7 @@ public struct ButtonBarPagerTabStripSettings {
         public var buttonBarRightContentInset: CGFloat?
         
         public var selectedBarBackgroundColor = UIColor.black
-        public var selectedBarHeight: CGFloat = 5
+        public var selectedBarHeight: CGFloat = 1 // underline height
         public var selectedBarVerticalAlignment: SelectedBarVerticalAlignment = .bottom
 
         public var buttonBarItemBackgroundColor: UIColor?
@@ -327,10 +327,10 @@ open class ButtonBarPagerTabStripViewController: PagerTabStripViewController, Pa
         cell.label.text = indicatorInfo.title//titleArr[indexPath.row] //
         print(cell.label.text)
         cell.accessibilityLabel = indicatorInfo.accessibilityLabel
-        cell.label.font = settings.style.buttonBarItemFont
-        cell.label.textColor = settings.style.buttonBarItemTitleColor ?? cell.label.textColor
+        cell.label.font = UIFont(name:"HelveticaNeue-Light", size: 18.0) //settings.style.buttonBarItemFont
+        cell.label.textColor = .black //settings.style.buttonBarItemTitleColor ?? cell.label.textColor
         cell.contentView.backgroundColor = settings.style.buttonBarItemBackgroundColor ?? cell.contentView.backgroundColor
-        cell.backgroundColor = .gray ?? .gray//settings.style.buttonBarItemBackgroundColor ?? cell.backgroundColor
+        cell.backgroundColor = .white ?? .white//.gray ?? .gray//settings.style.buttonBarItemBackgroundColor ?? cell.backgroundColor
         if let image = indicatorInfo.image {
             cell.imageView.image = image
         }

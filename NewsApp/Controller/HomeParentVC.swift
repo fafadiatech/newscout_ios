@@ -9,44 +9,33 @@
 import UIKit
 import XLPagerTabStrip
 import Floaty
-import MaterialComponents.MaterialActivityIndicator
 
 class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
     
+    @IBOutlet weak var viewAppTitle: UIView!
     @IBOutlet weak var lblAppName: UILabel!
     var childrenVC = [UIViewController]()
-    let activityIndicator = MDCActivityIndicator()
-    var VCIndex = 0
     var categories = ["FOR YOU"]
     
     override func viewDidLoad() {
         settings.style.buttonBarItemsShouldFillAvailiableWidth = false
         super.viewDidLoad()
+        lblAppName.font = FontConstants.appFont
+        viewAppTitle.backgroundColor = colorConstants.redColor
+        lblAppName.textColor = colorConstants.whiteColor
         if UserDefaults.standard.value(forKey: "textSize") == nil{
             UserDefaults.standard.set(1, forKey: "textSize")
         }
         lblAppName.text = Constants.AppName
-        activityIndicator.cycleColors = [.blue]
-        activityIndicator.frame = CGRect(x: 166, y: 150, width: 40, height: 40)
-        activityIndicator.sizeToFit()
-        activityIndicator.indicatorMode = .indeterminate
-        activityIndicator.progress = 2.0
-        view.addSubview(activityIndicator)
-        
-        // To make the activity indicator appear:
-        //activityIndicator.startAnimating()
-        
-        // To make the activity indicator disappear:
-        // activityIndicator.stopAnimating()
-        
         let floaty = Floaty()
-        floaty.itemTitleColor = .blue
-        floaty.buttonColor = themeColor.commonColor
+        floaty.itemButtonColor = colorConstants.redColor
+        floaty.itemTitleColor =  .black
+        floaty.buttonColor = colorConstants.redColor
         floaty.plusColor = .black
         
         floaty.addItem("Profile", icon: UIImage(named: "profile")!) { item in
-            
             floaty.autoCloseOnTap = true
+            
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             let searchvc:ProfileVC
                 = storyboard.instantiateViewController(withIdentifier: "ProfileID") as! ProfileVC
@@ -60,7 +49,7 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
             self.present(searchvc, animated: true, completion: nil)
         }
         
-        floaty.addItem("Settings", icon: UIImage(named: "settings")!) { item in
+        floaty.addItem("Settings", icon: UIImage(named: "settings3")!) { item in
             
             floaty.autoCloseOnTap = true
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
@@ -68,7 +57,7 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
             self.present(settingvc, animated: true, completion: nil)
         }
         
-        floaty.addItem("Bookmark", icon: UIImage(named: "bookmark")!) { item in
+        floaty.addItem("Bookmark", icon: UIImage(named: "book")!) { item in
             floaty.autoCloseOnTap = true
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             let searchvc:SearchVC = storyboard.instantiateViewController(withIdentifier: "SearchID") as! SearchVC
@@ -77,8 +66,14 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
         }
         self.view.addSubview(floaty)
         buttonBarView.selectedBar.backgroundColor = .black
-        buttonBarView.backgroundColor = themeColor.commonColor
-        //UIColor(red: 7/255, green: 185/255, blue: 155/255, alpha: 1
+        buttonBarView.backgroundColor = colorConstants.whiteColor
+        
+        changeCurrentIndexProgressive = {[weak self](oldCell:ButtonBarViewCell?, newCell: ButtonBarViewCell?, progressPercentage:CGFloat, changeCurrentIndex:Bool, animated:Bool)-> Void in
+            
+            guard changeCurrentIndex == true else {return}
+            oldCell?.label.textColor = colorConstants.blackColor
+            newCell?.label.textColor =  colorConstants.redColor
+        }
     }
     
     override var prefersStatusBarHidden: Bool {
@@ -112,7 +107,19 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
         childrenVC.append(childMore)
         return childrenVC
     }
+    override func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
+        super.scrollViewDidEndScrollingAnimation(scrollView)
+        notifyChildOfPresentation(in: scrollView) //only triggered when the segmented control is tapped
+    }
     
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        notifyChildOfPresentation(in: scrollView) //only triggered by a pan gesture transition
+    }
+    
+    func notifyChildOfPresentation(in scrollView: UIScrollView?) {
+        let presentedViewController = viewControllers[currentIndex]
+        
+    }
 }
 
 extension HomeParentVC:CategoryListProtocol{

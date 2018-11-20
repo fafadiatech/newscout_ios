@@ -34,7 +34,6 @@ class NewsDetailVC: UIViewController {
     var ArticleData = [ArticleStatus]()
     var ShowArticle = [NewsArticle]()
     var ArticleDetail = ArticleDict.init(article_id: 0, category: "", source: "", title: "", imageURL: "", url: "", published_on: "", blurb: "", isBookmark: false, isLike: 0)
-    var suggestedCVCount = 0
     var newsCurrentIndex = 0
     var articleId = 0
     
@@ -46,7 +45,6 @@ class NewsDetailVC: UIViewController {
             switch response {
             case .Success(let data) :
                 self.RecomArticleData = data
-                self.suggestedCVCount = self.RecomArticleData[0].body.articles.count
                 self.suggestedCV.reloadData()
             case .Failure(let errormessage) :
                 print(errormessage)
@@ -106,25 +104,25 @@ class NewsDetailVC: UIViewController {
     {
         let textSizeSelected = UserDefaults.standard.value(forKey: "textSize") as! Int
         if textSizeSelected == 0{
-            lblNewsHeading.font = Constants.smallFontMedium
-            lblSource.font = Constants.smallFont
-            lblTimeAgo.font = Constants.smallFont
-            lblSuggested.font = Constants.smallFont
-            txtViewNewsDesc.font = Constants.smallFont
+            lblNewsHeading.font = FontConstants.smallFontMedium
+            lblSource.font = FontConstants.smallFont
+            lblTimeAgo.font = FontConstants.smallFont
+            lblSuggested.font = FontConstants.smallFont
+            txtViewNewsDesc.font = FontConstants.smallFont
         }
         else if textSizeSelected == 2{
-            lblNewsHeading.font = Constants.LargeFontMedium
-            lblSource.font = Constants.LargeFont
-            lblTimeAgo.font = Constants.LargeFont
-            lblSuggested.font = Constants.LargeFont
-            txtViewNewsDesc.font = Constants.LargeFont
+            lblNewsHeading.font = FontConstants.LargeFontMedium
+            lblSource.font = FontConstants.LargeFont
+            lblTimeAgo.font = FontConstants.LargeFont
+            lblSuggested.font = FontConstants.LargeFont
+            txtViewNewsDesc.font = FontConstants.LargeFont
         }
         else{
-            lblNewsHeading.font = Constants.NormalFontMedium
-            lblSource.font = Constants.NormalFont
-            lblTimeAgo.font = Constants.NormalFont
-            lblSuggested.font = Constants.NormalFont
-            txtViewNewsDesc.font = Constants.NormalFont
+            lblNewsHeading.font = FontConstants.NormalFontMedium
+            lblSource.font = FontConstants.NormalFont
+            lblTimeAgo.font = FontConstants.NormalFont
+            lblSuggested.font = FontConstants.NormalFont
+            txtViewNewsDesc.font = FontConstants.NormalFont
         }
     }
     
@@ -376,7 +374,7 @@ class NewsDetailVC: UIViewController {
 }
 extension NewsDetailVC:UICollectionViewDelegate, UICollectionViewDataSource{
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return suggestedCVCount
+        return (self.RecomArticleData.count != 0) ? self.RecomArticleData[0].body.articles.count : 0
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {

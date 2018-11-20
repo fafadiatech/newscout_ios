@@ -9,6 +9,7 @@
 import UIKit
 import XLPagerTabStrip
 import MaterialComponents.MaterialActivityIndicator
+
 protocol CategoryListProtocol {
     func updateCategoryList(catName: String)
     func deleteCategory(currentCategory: String)
@@ -23,6 +24,7 @@ class CategoryListVC: UIViewController {
     var selectedCat = ""
     let activityIndicator = MDCActivityIndicator()
     var  categories : [String] = []
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         categories = UserDefaults.standard.array(forKey: "categories") as! [String]
@@ -74,6 +76,7 @@ class CategoryListVC: UIViewController {
          }
          }*/
     }
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         APICall().loadCategoriesAPI{ response in
@@ -88,6 +91,7 @@ class CategoryListVC: UIViewController {
             self.activityIndicator.stopAnimating()
         }
     }
+    
     override var prefersStatusBarHidden: Bool {
         return true
     }
@@ -122,13 +126,13 @@ extension CategoryListVC:UITableViewDelegate, UITableViewDataSource{
         let catData = CategoryData[0].categories[indexPath.row]
         var textSizeSelected = UserDefaults.standard.value(forKey: "textSize") as! Int
         if textSizeSelected == 0{
-            cell.lblCategoryName.font = Constants.smallFont
+            cell.lblCategoryName.font = FontConstants.smallFont
         }
         else if textSizeSelected == 2{
-            cell.lblCategoryName.font = Constants.LargeFont
+            cell.lblCategoryName.font = FontConstants.LargeFont
         }
         else{
-            cell.lblCategoryName.font =  Constants.NormalFont
+            cell.lblCategoryName.font =  FontConstants.NormalFont
         }
         cell.lblCategoryName.text = catData.title
         cell.btnDelete.tag = indexPath.row

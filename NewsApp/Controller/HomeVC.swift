@@ -20,7 +20,6 @@ class HomeVC: UIViewController{
     var ShowArticle = [NewsArticle]()
     var ArticleData = [ArticleStatus]()
     let appDelegate = UIApplication.shared.delegate as? AppDelegate
-    var article_id = Int64()
     let activityIndicator = MDCActivityIndicator()
     var pageNum = 0
     var coredataRecordCount = 0
@@ -183,6 +182,9 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
         dateFormatter.timeZone = NSTimeZone(name: "UTC")! as TimeZone
+        //set label colors
+        cell.lblSource.textColor = colorConstants.txtDarkGrayColor
+        cell.lblTimesAgo.textColor = colorConstants.txtDarkGrayColor
         //display data using API
         if ArticleData.count != 0{
             let currentArticle = ArticleData[0].body.articles[indexPath.row]
@@ -195,19 +197,19 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
         }
         let textSizeSelected = UserDefaults.standard.value(forKey: "textSize") as! Int
         if textSizeSelected == 0{
-            cell.lblSource.font = Constants.xsmallFont
-            cell.lblNewsHeading.font = Constants.smallFontMedium
-            cell.lblTimesAgo.font = Constants.xsmallFont
+            cell.lblSource.font = FontConstants.xsmallFont
+            cell.lblNewsHeading.font = FontConstants.smallFont
+            cell.lblTimesAgo.font = FontConstants.xsmallFont
         }
         else if textSizeSelected == 2{
-            cell.lblSource.font = Constants.xLargeFont
-            cell.lblNewsHeading.font = Constants.LargeFontMedium
-            cell.lblTimesAgo.font = Constants.xLargeFont
+            cell.lblSource.font = FontConstants.xLargeFont
+            cell.lblNewsHeading.font = FontConstants.LargeFont
+            cell.lblTimesAgo.font = FontConstants.xLargeFont
         }
         else{
-            cell.lblSource.font =  Constants.xNormalFont
-            cell.lblNewsHeading.font = Constants.NormalFontMedium
-            cell.lblTimesAgo.font = Constants.xNormalFont
+            cell.lblSource.font =  FontConstants.xNormalFont
+            cell.lblNewsHeading.font = FontConstants.NormalFont
+            cell.lblTimesAgo.font = FontConstants.xNormalFont
         }
         activityIndicator.stopAnimating()
         return cell

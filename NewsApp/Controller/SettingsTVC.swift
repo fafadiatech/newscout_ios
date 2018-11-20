@@ -23,7 +23,7 @@ class SettingsTVC: UITableViewController, GIDSignInUIDelegate {
         lblLogout.isHidden = true
         isLoggedIn()
         segmentTextSize.selectedSegmentIndex = textSizeSelected
-        segmentTextSize.setTitleTextAttributes([NSAttributedStringKey.foregroundColor: UIColor.black], for: UIControlState.normal)
+    segmentTextSize.setTitleTextAttributes([NSAttributedStringKey.foregroundColor: UIColor.black], for: UIControlState.normal)
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
         
@@ -38,7 +38,6 @@ class SettingsTVC: UITableViewController, GIDSignInUIDelegate {
     
     func isLoggedIn()
     {
-        
         if UserDefaults.standard.value(forKey: "token") == nil && UserDefaults.standard.value(forKey: "googleToken") == nil && UserDefaults.standard.value(forKey: "FBToken") == nil  {
             lblLogin.text = "Login"
             lblLogout.isHidden = true
@@ -83,7 +82,7 @@ class SettingsTVC: UITableViewController, GIDSignInUIDelegate {
     override func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
         let headerView = view as! UITableViewHeaderFooterView
         headerView.textLabel?.textColor = .black
-        headerView.textLabel?.font = Constants.NormalFontMedium
+        headerView.textLabel?.font = FontConstants.NormalFontMedium
     }
     
     override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
