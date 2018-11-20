@@ -13,12 +13,19 @@ import MaterialComponents.MaterialActivityIndicator
 
 class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
     
+    @IBOutlet weak var lblAppName: UILabel!
     var childrenVC = [UIViewController]()
     let activityIndicator = MDCActivityIndicator()
     var VCIndex = 0
+    var categories = ["FOR YOU"]
+    
     override func viewDidLoad() {
         settings.style.buttonBarItemsShouldFillAvailiableWidth = false
         super.viewDidLoad()
+        if UserDefaults.standard.value(forKey: "textSize") == nil{
+            UserDefaults.standard.set(1, forKey: "textSize")
+        }
+        lblAppName.text = Constants.AppName
         activityIndicator.cycleColors = [.blue]
         activityIndicator.frame = CGRect(x: 166, y: 150, width: 40, height: 40)
         activityIndicator.sizeToFit()
@@ -46,10 +53,10 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
             self.present(searchvc, animated: true, completion: nil)
         }
         floaty.addItem("Search", icon: UIImage(named: "search")!) { item in
-            isSearch = true
             floaty.autoCloseOnTap = true
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             let searchvc:SearchVC = storyboard.instantiateViewController(withIdentifier: "SearchID") as! SearchVC
+            searchvc.isSearch = true
             self.present(searchvc, animated: true, completion: nil)
         }
         
@@ -63,10 +70,10 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
         
         floaty.addItem("Bookmark", icon: UIImage(named: "bookmark")!) { item in
             floaty.autoCloseOnTap = true
-            isSearch = false
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
-            let settingvc:SearchVC = storyboard.instantiateViewController(withIdentifier: "SearchID") as! SearchVC
-            self.present(settingvc, animated: true, completion: nil)
+            let searchvc:SearchVC = storyboard.instantiateViewController(withIdentifier: "SearchID") as! SearchVC
+            searchvc.isSearch = false
+            self.present(searchvc, animated: true, completion: nil)
         }
         self.view.addSubview(floaty)
         buttonBarView.selectedBar.backgroundColor = .black
@@ -90,14 +97,15 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
         //Clear children viewcontrollers
         childrenVC.removeAll()
         //Create children viewcontrolles based on categories passed from CategoryListVC
+        print(categories)
+        categories = UserDefaults.standard.array(forKey: "categories") as! [String]
         for cat in categories
         {
             let childVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "HomeVC") as! HomeVC
             childVC.tabBarTitle = cat
-        
+            
             childrenVC.append(childVC)
         }
-        
         //Append CategoryListVC in the end
         let childMore = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "CategoryListID") as! CategoryListVC
         childMore.protocolObj = self
@@ -105,41 +113,14 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
         return childrenVC
     }
     
-    override func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
-        super.scrollViewDidEndScrollingAnimation(scrollView)
-        notifyChildOfPresentation(in: scrollView) //only triggered when the segmented control is tapped
-    }
-    
-    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-        notifyChildOfPresentation(in: scrollView) //only triggered by a pan gesture transition
-    }
-    
-    func notifyChildOfPresentation(in scrollView: UIScrollView?) {
-        let presentedViewController = viewControllers[currentIndex]
-        
-        print("tab changed..\(currentIndex)")
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        let HomeVc:HomeVC = storyboard.instantiateViewController(withIdentifier: "HomeVC") as! HomeVC
-        if currentIndex < categories.count{
-            selectedCat = categories[currentIndex]
-            print("category selected : \(categories[currentIndex])")
-            if categories[currentIndex] == "FOR YOU"{
-                HomeVc.filterNews(selectedCat: "All News")
-            }
-            else{
-                HomeVc.filterNews(selectedCat: "\(categories[currentIndex])")
-            }
-            
-        }
-        
-        
-    }
 }
 
 extension HomeParentVC:CategoryListProtocol{
     
     func updateCategoryList(catName: String) {
         categories.append(catName)
+        UserDefaults.standard.set(categories, forKey: "categories")
+        print(UserDefaults.standard.set(categories, forKey: "categories"))
         print("ParentCatArr: \(categories)")
         self.reloadPagerTabStripView()
     }
@@ -147,6 +128,8 @@ extension HomeParentVC:CategoryListProtocol{
     func deleteCategory(currentCategory: String) {
         // ParentCatArr.remove(at:currentCategory)
         categories = categories.filter{$0 != currentCategory}
+        UserDefaults.standard.set(categories, forKey: "categories")
         print(categories)
+        print(UserDefaults.standard.set(categories, forKey: "categories"))
     }
 }

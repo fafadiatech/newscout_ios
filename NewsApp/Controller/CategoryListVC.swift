@@ -20,17 +20,20 @@ class CategoryListVC: UIViewController {
     var protocolObj : CategoryListProtocol?
     var showCategory = [Category]()
     var CategoryData = [CategoryList]()
-     let activityIndicator = MDCActivityIndicator()
-    
+    var selectedCat = ""
+    let activityIndicator = MDCActivityIndicator()
+    var  categories : [String] = []
     override func viewDidLoad() {
         super.viewDidLoad()
+        categories = UserDefaults.standard.array(forKey: "categories") as! [String]
+        print(UserDefaults.standard.set(categories, forKey: "categories"))
         activityIndicator.cycleColors = [.blue]
         activityIndicator.frame = CGRect(x: 166, y: 150, width: 40, height: 40)
         activityIndicator.sizeToFit()
         activityIndicator.indicatorMode = .indeterminate
         activityIndicator.progress = 2.0
         view.addSubview(activityIndicator)
-         activityIndicator.startAnimating()
+        activityIndicator.startAnimating()
         
         APICall().loadCategoriesAPI{ response in
             switch response {
@@ -80,6 +83,7 @@ class CategoryListVC: UIViewController {
                 self.tableCategoryLIst.reloadData()
             case .Failure(let errormessage) :
                 print(errormessage)
+                self.tableCategoryLIst.makeToast(errormessage, duration: 2.0, position: .center)
             }
             self.activityIndicator.stopAnimating()
         }
@@ -116,6 +120,7 @@ extension CategoryListVC:UITableViewDelegate, UITableViewDataSource{
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableCategoryLIst.dequeueReusableCell(withIdentifier: "CategoryListID", for:indexPath) as! CategoryListTVCell
         let catData = CategoryData[0].categories[indexPath.row]
+        var textSizeSelected = UserDefaults.standard.value(forKey: "textSize") as! Int
         if textSizeSelected == 0{
             cell.lblCategoryName.font = Constants.smallFont
         }
@@ -139,9 +144,10 @@ extension CategoryListVC:UITableViewDelegate, UITableViewDataSource{
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         selectedCat = CategoryData[0].categories[indexPath.row].title!
+        
         if !categories.contains(selectedCat){
             protocolObj?.updateCategoryList(catName: selectedCat)
-            var Homevc = HomeVC()
+            let Homevc = HomeVC()
             Homevc.selectedCategory = selectedCat
         }
         else{
@@ -156,4 +162,3 @@ extension CategoryListVC:IndicatorInfoProvider{
         return IndicatorInfo(title: "MORE")
     }
 }
-

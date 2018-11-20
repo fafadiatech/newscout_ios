@@ -16,6 +16,7 @@ class SettingsTVC: UITableViewController, GIDSignInUIDelegate {
     @IBOutlet weak var segmentTextSize: UISegmentedControl!
     @IBOutlet weak var lblLogin: UILabel!
     @IBOutlet weak var lblLogout: UILabel!
+    var textSizeSelected = UserDefaults.standard.value(forKey: "textSize") as! Int
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -55,14 +56,21 @@ class SettingsTVC: UITableViewController, GIDSignInUIDelegate {
         case 0:
             print("small Segment Selected")
             textSizeSelected = 0
+            UserDefaults.standard.set(0, forKey: "textSize")
+            
         case 1:
             print("normal Segment Selected")
             textSizeSelected = 1
+            UserDefaults.standard.set(1, forKey: "textSize")
+            
         case 2:
             print("large Segment Selected")
             textSizeSelected = 2
+            UserDefaults.standard.set(2, forKey: "textSize")
+            
         default:
             textSizeSelected = 1
+            UserDefaults.standard.set(1, forKey: "textSize")
             break
         }
     }
@@ -138,5 +146,5 @@ class SettingsTVC: UITableViewController, GIDSignInUIDelegate {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    
 }
+

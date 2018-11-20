@@ -8,14 +8,9 @@
 import UIKit
 import XLPagerTabStrip
 
-var newsCurrentIndex = 0
-var textSizeSelected = 1
-var categories = ["FOR YOU"]
-var selectedCat = "FOR YOU"
-var isSearch = false
-var articleId = 0
-
 struct Constants{
+    static let AppName = "NewScout"
+    static let InternetErrorMsg = "The Internet connection appears to be offline"
     static let isPhone = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.phone)
     static let fontSize:CGFloat = isPhone ? 12 :20
     static let fontxLarge:CGFloat = isPhone ? 16:20
@@ -89,7 +84,7 @@ struct APPURL {
         static let Logout = Domains.version + "logout/"
         static let Categories = Domains.version + "categories"
         static let Search = Domains.version + "search/?q="
-        static let recommendation = Domains.version + "articles/" + "\(articleId)" + "/recommendations/"
+        static let recommendation = Domains.version + "articles/" // + "\(articleId)" + "/recommendations/"
         static let bookmark = Domains.version + "articles/bookmark/"
         static let likeDislike =  Domains.version + "articles/vote/"
         static let forgotPassword = Domains.version + "forgot-password/"

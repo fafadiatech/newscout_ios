@@ -89,7 +89,9 @@ class LoginVC: UIViewController, GIDSignInUIDelegate, FBSDKLoginButtonDelegate{
             self.view.makeToast("Please enter valid username and password..", duration: 1.0, position: .center)
         }
         else{
-            APICall().LoginAPI(email: txtUsername.text!, pswd: txtPassword.text!){response in
+            let param = ["email" : txtUsername.text!,
+                         "password" : txtPassword.text!]
+            APICall().LoginAPI(param : param){response in
                 print("Login response:\(response)")
                 if response == "1"{
                     let storyboard = UIStoryboard(name: "Main", bundle: nil)
@@ -139,7 +141,7 @@ class LoginVC: UIViewController, GIDSignInUIDelegate, FBSDKLoginButtonDelegate{
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let forgotVc:ForgotPasswordVC = storyboard.instantiateViewController(withIdentifier: "ForgotPswdID") as! ForgotPasswordVC
         if txtUsername.text != nil{
-        forgotVc.email = txtUsername.text!
+            forgotVc.email = txtUsername.text!
         }
         self.present(forgotVc, animated: true, completion: nil)
         

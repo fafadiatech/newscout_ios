@@ -46,11 +46,16 @@ class ProfileVC: UIViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-
+    
     @IBAction func btnChangePswdActn(_ sender: Any) {
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        let vc:ChangePasswordVC = storyboard.instantiateViewController(withIdentifier: "ChangePswdID") as! ChangePasswordVC
-        present(vc, animated: true, completion: nil)
+        if UserDefaults.standard.value(forKey: "token") != nil ||  UserDefaults.standard.value(forKey: "googleToken") != nil || UserDefaults.standard.value(forKey: "FBToken") != nil{
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let vc:ChangePasswordVC = storyboard.instantiateViewController(withIdentifier: "ChangePswdID") as! ChangePasswordVC
+            present(vc, animated: true, completion: nil)
+        }
+        else{
+            self.view.makeToast("You need to login to continue...", duration: 1.0, position: .center)
+        }
     }
     
     @IBAction func btnBackActn(_ sender: Any) {

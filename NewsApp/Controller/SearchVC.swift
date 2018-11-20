@@ -26,6 +26,8 @@ class SearchVC: UIViewController {
     var nextURL = ""
     var previousURL = ""
     let appDelegate = UIApplication.shared.delegate as? AppDelegate
+    var isSearch = false
+    let textSizeSelected = UserDefaults.standard.value(forKey: "textSize") as! Int
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -55,26 +57,26 @@ class SearchVC: UIViewController {
     
     func BookmarkAPICall()
     {
-            APICall().BookmarkedArticlesAPI(url: APPURL.bookmarkedArticlesURL){ response in
-                switch response {
-                case .Success(let data) :
-                    self.ArticleData = data
-                    print(self.ArticleData[0].body.articles)
-                    if self.ArticleData[0].body.next != nil{
-                        self.nextURL = self.ArticleData[0].body.next!}
-                    if self.ArticleData[0].body.previous != nil{
-                        self.previousURL = self.ArticleData[0].body.previous!}
-                    if self.ArticleData[0].body.articles.count == 0{
-                        self.activityIndicator.stopAnimating()
-                        self.searchResultTV.makeToast("There is not any article bookmarked yet...", duration: 1.0, position: .center)
-                    }else{
-                        self.searchResultTV.reloadData()}
-                case .Failure(let errormessage) :
-                    print(errormessage)
-                    self.activityIndicator.startAnimating()
-                    self.searchResultTV.makeToast(errormessage, duration: 2.0, position: .center)
-                }
+        APICall().BookmarkedArticlesAPI(url: APPURL.bookmarkedArticlesURL){ response in
+            switch response {
+            case .Success(let data) :
+                self.ArticleData = data
+                print(self.ArticleData[0].body.articles)
+                if self.ArticleData[0].body.next != nil{
+                    self.nextURL = self.ArticleData[0].body.next!}
+                if self.ArticleData[0].body.previous != nil{
+                    self.previousURL = self.ArticleData[0].body.previous!}
+                if self.ArticleData[0].body.articles.count == 0{
+                    self.activityIndicator.stopAnimating()
+                    self.searchResultTV.makeToast("There is not any article bookmarked yet...", duration: 1.0, position: .center)
+                }else{
+                    self.searchResultTV.reloadData()}
+            case .Failure(let errormessage) :
+                print(errormessage)
+                self.activityIndicator.startAnimating()
+                self.searchResultTV.makeToast(errormessage, duration: 2.0, position: .center)
             }
+        }
     }
     
     @objc func refreshBookmarkedNews(refreshControl: UIRefreshControl) {
@@ -94,8 +96,6 @@ class SearchVC: UIViewController {
     
     func changeFont()
     {
-        print(textSizeSelected)
-        
         if textSizeSelected == 0{
             lblTitle.font = Constants.NormalFontMedium
             txtSearch.font = Constants.NormalFontMedium
@@ -122,17 +122,16 @@ class SearchVC: UIViewController {
 
 extension SearchVC: UITableViewDelegate, UITableViewDataSource{
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-         return (ArticleData.count != 0) ? self.ArticleData[0].body.articles.count : 0
+        return (ArticleData.count != 0) ? self.ArticleData[0].body.articles.count : 0
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         print("This cell  was selected: \(indexPath.row)")
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let newsDetailvc:NewsDetailVC = storyboard.instantiateViewController(withIdentifier: "NewsDetailID") as! NewsDetailVC
-        newsCurrentIndex = indexPath.row
+        newsDetailvc.newsCurrentIndex = indexPath.row
         newsDetailvc.ArticleData = ArticleData
-        articleId = ArticleData[0].body.articles[indexPath.row].article_id!
-        print("articleId in didselect: \(articleId)")
+        newsDetailvc.articleId = ArticleData[0].body.articles[indexPath.row].article_id!
         present(newsDetailvc, animated: true, completion: nil)
     }
     
@@ -148,16 +147,16 @@ extension SearchVC: UITableViewDelegate, UITableViewDataSource{
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
         dateFormatter.timeZone = NSTimeZone(name: "UTC")! as TimeZone
-          if ArticleData.count != 0{
-        let currentArticle = ArticleData[0].body.articles[indexPath.row]
-        cell.lblSource.text = currentArticle.source
-        let newDate = dateFormatter.date(from: currentArticle.published_on!)
-        let agoDate = timeAgoSinceDate(newDate!)
-        cell.lbltimeAgo.text = agoDate
-        cell.lblNewsDescription.text = currentArticle.title
-        cell.imgNews.downloadedFrom(link: "\(currentArticle.imageURL!)")
+        if ArticleData.count != 0{
+            let currentArticle = ArticleData[0].body.articles[indexPath.row]
+            cell.lblSource.text = currentArticle.source
+            let newDate = dateFormatter.date(from: currentArticle.published_on!)
+            let agoDate = Helper().timeAgoSinceDate(newDate!)
+            cell.lbltimeAgo.text = agoDate
+            cell.lblNewsDescription.text = currentArticle.title
+            cell.imgNews.downloadedFrom(link: "\(currentArticle.imageURL!)")
         }
-
+        
         if textSizeSelected == 0{
             cell.lblSource.font = Constants.xsmallFont
             cell.lblNewsDescription.font = Constants.smallFontMedium
@@ -252,19 +251,26 @@ extension SearchVC: UITextFieldDelegate
     func textFieldShouldReturn(_ textField: UITextField) -> Bool
     {
         txtSearch.resignFirstResponder()
-        APICall().loadSearchAPI(searchTxt: txtSearch.text!){ response in
-            switch response {
-            case .Success(let data) :
-                self.ArticleData = data
-                print(data)
-                self.count = self.ArticleData[0].body.articles.count
-                self.searchResultTV.reloadData()
-            case .Failure(let errormessage) :
-                print(errormessage)
-                self.activityIndicator.startAnimating()
-                self.searchResultTV.makeToast(errormessage, duration: 2.0, position: .center)
+        if txtSearch.text != ""{
+            APICall().loadSearchAPI(searchTxt: txtSearch.text!){ response in
+                switch response {
+                case .Success(let data) :
+                    self.ArticleData = data
+                    print(data)
+                    if self.ArticleData[0].body.articles.count == 0{
+                        self.searchResultTV.makeToast("There is not any news matching with entered keyword", duration: 2.0, position: .center)
+                    }
+                    self.searchResultTV.reloadData()
+                case .Failure(let errormessage) :
+                    print(errormessage)
+                    self.activityIndicator.startAnimating()
+                    self.searchResultTV.makeToast(errormessage, duration: 2.0, position: .center)
+                }
+                self.activityIndicator.stopAnimating()
             }
-            self.activityIndicator.stopAnimating()
+        }
+        else{
+            self.searchResultTV.makeToast("Enter keyword to search", duration: 2.0, position: .center)
         }
         // search text in DB
         /*   let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "NewsArticle")
@@ -282,6 +288,8 @@ extension SearchVC: UITextFieldDelegate
          }
          
          }*/
+        
         return true
     }
 }
+

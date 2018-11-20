@@ -29,9 +29,35 @@ class SignUpVC: UIViewController {
     }
     
     @IBAction func btnSignUpActn(_ sender: Any) {
-        APICall().SignupAPI(fname: txtFname.text!, lname: txtLname.text!, email: txtEmail.text!, pswd: txtPassword.text!){response in
-            print("signup response:\(response)")
-            self.view.makeToast(response, duration: 1.0, position: .center)
+        if txtFname.text != "" && txtLname.text != "" && txtEmail.text != "" && txtPassword.text != "" && txtConfirmPswd.text != ""{
+            if Helper().validateEmail(enteredEmail: txtEmail.text!) ==  true{
+                if txtPassword.text == txtConfirmPswd.text {
+                    let param = ["first_name": txtFname.text!,
+                                 "last_name": txtLname.text!,
+                                 "email" : txtEmail.text!,
+                                 "password" : txtPassword.text!]
+                    APICall().SignupAPI(param : param){response in
+                        print("signup response:\(response)")
+                        if response == "sign up successfully"{
+                            self.txtFname.text = ""
+                            self.txtLname.text = ""
+                            self.txtPassword.text = ""
+                            self.txtConfirmPswd.text = ""
+                            self.txtEmail.text = ""
+                        }
+                        self.view.makeToast(response, duration: 1.0, position: .center)
+                    }
+                }
+                else{
+                    self.view.makeToast("Password and confirm password are not same", duration: 1.0, position: .center)
+                }
+            }
+            else{
+                self.view.makeToast("Please enter valid email address", duration: 1.0, position: .center)
+            }
+        }
+        else{
+            self.view.makeToast("Please enter all the details", duration: 1.0, position: .center)
         }
     }
     

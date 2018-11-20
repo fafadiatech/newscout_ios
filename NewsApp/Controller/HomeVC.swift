@@ -39,10 +39,10 @@ class HomeVC: UIViewController{
         activityIndicator.indicatorMode = .indeterminate
         activityIndicator.progress = 2.0
         view.addSubview(activityIndicator)
-        
+        var settingvc = SettingsTVC()
         // To make the activity indicator appear:
         activityIndicator.startAnimating()
-
+        
         var paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
         print("\(paths[0])")
         let refreshControl = UIRefreshControl()
@@ -125,7 +125,7 @@ class HomeVC: UIViewController{
     }
     
     func ArticlesAPICall(){
-        APICall().loadNewsbyCategoryAPI(category:selectedCategory, url: APPURL.ArticlesByCategoryURL + "\(selectedCategory)" ){ response in
+        APICall().loadNewsbyCategoryAPI(url: APPURL.ArticlesByCategoryURL + "\(selectedCategory)" ){ response in
             switch response {
             case .Success(let data) :
                 self.ArticleData = data
@@ -163,10 +163,9 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
         print("This cell  was selected: \(indexPath.row)")
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let newsDetailvc:NewsDetailVC = storyboard.instantiateViewController(withIdentifier: "NewsDetailID") as! NewsDetailVC
-        newsCurrentIndex = indexPath.row
+        newsDetailvc.newsCurrentIndex = indexPath.row
         newsDetailvc.ArticleData = ArticleData
-        articleId = ArticleData[0].body.articles[indexPath.row].article_id!
-        print("articleId in didselect: \(articleId)")
+        newsDetailvc.articleId = ArticleData[0].body.articles[indexPath.row].article_id!
         present(newsDetailvc, animated: true, completion: nil)
     }
     
@@ -190,10 +189,11 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
             cell.lblNewsHeading.text = currentArticle.title
             cell.lblSource.text = currentArticle.source
             let newDate = dateFormatter.date(from: currentArticle.published_on!)
-            let agoDate = timeAgoSinceDate(newDate!)
+            let agoDate = Helper().timeAgoSinceDate(newDate!)
             cell.lblTimesAgo.text = agoDate
             cell.imgNews.downloadedFrom(link: "\(currentArticle.imageURL!)")
         }
+        let textSizeSelected = UserDefaults.standard.value(forKey: "textSize") as! Int
         if textSizeSelected == 0{
             cell.lblSource.font = Constants.xsmallFont
             cell.lblNewsHeading.font = Constants.smallFontMedium
@@ -219,7 +219,8 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
             print("it's going up")
             if nextURL != "" {
                 self.activityIndicator.startAnimating()
-                APICall().loadNewsbyCategoryAPI(category:selectedCategory, url: nextURL){ response in
+                
+                APICall().loadNewsbyCategoryAPI(url: nextURL){ response in
                     switch response {
                     case .Success(let data) :
                         self.ArticleData = data
@@ -245,13 +246,13 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
                         self.HomeNewsTV.makeToast(errormessage, duration: 2.0, position: .center)
                     }
                 }
-                  self.activityIndicator.stopAnimating()
+                self.activityIndicator.stopAnimating()
             }
         } else {
             print(" it's going down")
             if previousURL != ""{
-                 self.activityIndicator.startAnimating()
-                APICall().loadNewsbyCategoryAPI(category:selectedCategory, url: previousURL){ response in
+                self.activityIndicator.startAnimating()
+                APICall().loadNewsbyCategoryAPI(url: previousURL){ response in
                     switch response {
                     case .Success(let data) :
                         self.ArticleData = data

@@ -29,7 +29,7 @@ class APICall{
                     }
                     catch {
                         print("Error: \(error)")
-                completion(ArticleAPIResult.Failure(error.localizedDescription
+                        completion(ArticleAPIResult.Failure(error.localizedDescription
                         ))
                     }
                 }
@@ -37,7 +37,7 @@ class APICall{
         }
     }
     //load articles by category
-    func loadNewsbyCategoryAPI(category : String,url: String, _ completion : @escaping (ArticleAPIResult) -> ()){
+    func loadNewsbyCategoryAPI(url: String, _ completion : @escaping (ArticleAPIResult) -> ()){
         var headers : [String: String]
         if UserDefaults.standard.value(forKey: "token") != nil{
             let token = "Token " + "\(UserDefaults.standard.value(forKey: "token")!)"
@@ -73,7 +73,7 @@ class APICall{
             else{
                 print(response.result.error!)
                 if let err = response.result.error as? URLError, err.code == .notConnectedToInternet {
-                   completion(ArticleAPIResult.Failure(err.localizedDescription))
+                    completion(ArticleAPIResult.Failure(err.localizedDescription))
                 }
             }
         }
@@ -84,8 +84,8 @@ class APICall{
             completion(cachedImage)
         }
     }
-    func loadRecommendationNewsAPI(_ completion : @escaping (ArticleAPIResult) -> ()){
-        let url = APPURL.recommendationURL
+    func loadRecommendationNewsAPI(articleId : Int,_ completion : @escaping (ArticleAPIResult) -> ()){
+        let url = APPURL.recommendationURL + "\(articleId)" + "/recommendations/"
         print(url)
         Alamofire.request(url,method: .post).responseJSON{
             response in
@@ -110,6 +110,7 @@ class APICall{
             }
         }
     }
+    
     func loadCategoriesAPI(_ completion : @escaping (CategoryAPIResult) -> ()){
         let url = APPURL.CategoriesURL
         print(url)
@@ -130,7 +131,7 @@ class APICall{
             }
             else{
                 if let err = response.result.error as? URLError, err.code == .notConnectedToInternet {
-                    completion(CategoryAPIResult.Failure("The Internet connection appears to be offline"))
+                    completion(CategoryAPIResult.Failure(Constants.InternetErrorMsg))
                 }
             }
         }
@@ -164,12 +165,8 @@ class APICall{
     }
     
     //Signup API
-    func SignupAPI(fname : String, lname : String, email: String, pswd: String,_ completion : @escaping (String) ->()) {
+    func SignupAPI(param : Dictionary<String, String>, _ completion : @escaping (String) ->()) {
         let url = APPURL.SignUpURL
-        let param = ["first_name": fname,
-                     "last_name": lname,
-                     "email" : email,
-                     "password" : pswd]
         print(param)
         Alamofire.request(url,method: .post, parameters: param).responseString{
             response in
@@ -193,18 +190,15 @@ class APICall{
             }
             else{
                 if let err = response.result.error as? URLError, err.code == .notConnectedToInternet {
-                completion("The Internet connection appears to be offline")
+                    completion(Constants.InternetErrorMsg)
                 }
             }
         }
     }
     
     //Login API
-    func LoginAPI(email : String, pswd : String,_ completion : @escaping (String) ->()) {
+    func LoginAPI(param : Dictionary<String, String>,_ completion : @escaping (String) ->()) {
         let url = APPURL.LoginURL
-        let param = ["email" : email,
-                     "password" : pswd]
-        
         print(param)
         Alamofire.request(url,method: .post, parameters: param).responseString{
             response in
@@ -222,8 +216,8 @@ class APICall{
                             UserDefaults.standard.set(jsonData.body?.last_name, forKey: "last_name")
                             UserDefaults.standard.set(jsonData.body?.token, forKey: "token")
                             UserDefaults.standard.set(jsonData.body?.user_id, forKey: "user_id")
-                            UserDefaults.standard.set(email, forKey: "email")
-                            completion("1")
+                            UserDefaults.standard.set(param["email"], forKey: "email")
+                            completion(jsonData.header.status)
                         }
                     }
                     catch {
@@ -233,7 +227,7 @@ class APICall{
             }
             else{
                 if let err = response.result.error as? URLError, err.code == .notConnectedToInternet {
-                     completion("The Internet connection appears to be offline")
+                    completion(Constants.InternetErrorMsg)
                 }
             }
         }
@@ -288,7 +282,7 @@ class APICall{
             }
             else{
                 if let err = response.result.error as? URLError, err.code == .notConnectedToInternet {
-                     completion("0","The Internet connection appears to be offline")
+                    completion("0",Constants.InternetErrorMsg)
                 }
             }
         }
@@ -336,18 +330,16 @@ class APICall{
             }
             else{
                 if let err = response.result.error as? URLError, err.code == .notConnectedToInternet {
-                     completion("0", "The Internet connection appears to be offline")
+                    completion("0", Constants.InternetErrorMsg)
                 }
             }
         }
     }
     
     // Like/dislike API
-    func LikeDislikeAPI(id : Int, isLike : Int,_ completion : @escaping (String, String) -> ()){
+    func LikeDislikeAPI(param : Dictionary<String, Int>, _ completion : @escaping (String, String) -> ()){
         let url = APPURL.likeDislikeURL
         print(url)
-        let param = ["article_id" : id,
-                     "isLike" : isLike]
         print(param)
         var headers : [String: String]
         if UserDefaults.standard.value(forKey: "token") != nil{
@@ -385,7 +377,7 @@ class APICall{
             }
             else{
                 if let err = response.result.error as? URLError, err.code == .notConnectedToInternet {
-                    completion("0", "The Internet connection appears to be offline")
+                    completion("0", Constants.InternetErrorMsg)
                 }
             }
         }
@@ -419,19 +411,15 @@ class APICall{
             }
             else{
                 if let err = response.result.error as? URLError, err.code == .notConnectedToInternet {
-                    completion("The Internet connection appears to be offline")
+                    completion(Constants.InternetErrorMsg)
                 }
             }
         }
     }
     
     //Change Password
-    func ChangePasswordAPI(old_password: String, password: String, confirm_password: String, _ completion : @escaping (String) ->()) {
+    func ChangePasswordAPI(param : Dictionary<String, String>, _ completion : @escaping (String) ->()) {
         let url = APPURL.changePasswordURL
-        let param = ["old_password" : old_password,
-                     "password" : password,
-                     "confirm_password" : confirm_password ]
-        
         print(param)
         var headers : [String: String]
         if UserDefaults.standard.value(forKey: "token") != nil{
@@ -472,7 +460,7 @@ class APICall{
             }
             else{
                 if let err = response.result.error as? URLError, err.code == .notConnectedToInternet {
-                     completion("The Internet connection appears to be offline")
+                    completion(Constants.InternetErrorMsg)
                 }
             }
         }
@@ -508,16 +496,16 @@ class APICall{
                     }
                     catch {
                         print("Error: \(error)")
-                    completion(ArticleAPIResult.Failure(error.localizedDescription
+                        completion(ArticleAPIResult.Failure(error.localizedDescription
                         ))
                     }
                 }
             }
             else{
                 if let err = response.result.error as? URLError, err.code == .notConnectedToInternet {
-                    completion(ArticleAPIResult.Failure("The Internet connection appears to be offline"))
+                    completion(ArticleAPIResult.Failure(Constants.InternetErrorMsg))
+                }
             }
         }
     }
-}
 }

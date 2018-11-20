@@ -35,11 +35,14 @@ class NewsDetailVC: UIViewController {
     var ShowArticle = [NewsArticle]()
     var ArticleDetail = ArticleDict.init(article_id: 0, category: "", source: "", title: "", imageURL: "", url: "", published_on: "", blurb: "", isBookmark: false, isLike: 0)
     var suggestedCVCount = 0
+    var newsCurrentIndex = 0
+    var articleId = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        let settingvc = SettingsTVC()
         ViewWebContainer.isHidden = true
-        APICall().loadRecommendationNewsAPI{ response in
+        APICall().loadRecommendationNewsAPI(articleId: articleId){ response in
             switch response {
             case .Success(let data) :
                 self.RecomArticleData = data
@@ -101,6 +104,7 @@ class NewsDetailVC: UIViewController {
     
     func changeFont()
     {
+        let textSizeSelected = UserDefaults.standard.value(forKey: "textSize") as! Int
         if textSizeSelected == 0{
             lblNewsHeading.font = Constants.smallFontMedium
             lblSource.font = Constants.smallFont
@@ -200,7 +204,10 @@ class NewsDetailVC: UIViewController {
         let currentArticle = ArticleData[0].body.articles[currentIndex]
         let newDate = dateFormatter.date(from: currentArticle.published_on!)
         print("newDAte:\(newDate!)")
-        let agoDate = timeAgoSinceDate(newDate!)
+        let agoDate = Helper().timeAgoSinceDate(newDate!)
+        
+        articleId = currentArticle.article_id!
+        print(articleId)
         lblNewsHeading.text = currentArticle.title
         txtViewNewsDesc.text = currentArticle.blurb
         lblSource.text = currentArticle.source
@@ -236,7 +243,9 @@ class NewsDetailVC: UIViewController {
     @IBAction func btnLikeActn(_ sender: Any) {
         if UserDefaults.standard.value(forKey: "token") != nil{
             if (btnLike.currentImage?.isEqual(UIImage(named: "like.png")))! {
-                APICall().LikeDislikeAPI(id: articleId, isLike: 0){
+                let param = ["article_id" : articleId,
+                             "isLike" : 0]
+                APICall().LikeDislikeAPI(param : param){
                     (status,response) in
                     if status == "0"{
                         self.view.makeToast(response, duration: 1.0, position: .center)
@@ -250,7 +259,9 @@ class NewsDetailVC: UIViewController {
                 }
             }
             else{
-                APICall().LikeDislikeAPI(id: articleId, isLike: 2){
+                let param = ["article_id" : articleId,
+                             "isLike" : 2]
+                APICall().LikeDislikeAPI(param: param){
                     (status,response) in
                     if status == "0"{
                         self.view.makeToast(response, duration: 1.0, position: .center)
@@ -269,8 +280,9 @@ class NewsDetailVC: UIViewController {
     @IBAction func btnDislikeActn(_ sender: Any) {
         if UserDefaults.standard.value(forKey: "token") != nil{
             if (btnDislike.currentImage?.isEqual(UIImage(named: "dislike.png")))! {
-                
-                APICall().LikeDislikeAPI(id: articleId, isLike: 1){
+                let param = ["article_id" : articleId,
+                             "isLike" : 1]
+                APICall().LikeDislikeAPI(param : param ){
                     (status,response) in
                     if status == "0"{
                         self.view.makeToast(response, duration: 1.0, position: .center)
@@ -284,7 +296,9 @@ class NewsDetailVC: UIViewController {
                 }
             }
             else{
-                APICall().LikeDislikeAPI(id: articleId, isLike: 2){
+                let param = ["article_id" : articleId,
+                             "isLike" : 2]
+                APICall().LikeDislikeAPI(param :param){
                     (status,response) in
                     if status == "0"{
                         self.view.makeToast(response, duration: 1.0, position: .center)
@@ -372,4 +386,14 @@ extension NewsDetailVC:UICollectionViewDelegate, UICollectionViewDataSource{
         cell.imgNews.sd_setImage(with: URL(string: currentArticle.imageURL!), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
         return cell
     }
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let newsDetailvc:NewsDetailVC = storyboard.instantiateViewController(withIdentifier: "NewsDetailID") as! NewsDetailVC
+        newsDetailvc.newsCurrentIndex = indexPath.row
+        newsDetailvc.ArticleData = RecomArticleData
+        // articleId = RecomArticleData[0].body.articles[indexPath.row].article_id!
+        print("articleId in didselect: \(articleId)")
+        present(newsDetailvc, animated: true, completion: nil)
+    }
 }
+
