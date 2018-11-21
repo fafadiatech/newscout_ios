@@ -10,6 +10,8 @@ import UIKit
 
 class ChangePasswordVC: UIViewController {
     
+    @IBOutlet weak var lblChangePswd: UILabel!
+    @IBOutlet weak var viewTitle: UIView!
     @IBOutlet weak var lblUsername: UILabel!
     @IBOutlet weak var txtOldPswd: UITextField!
     @IBOutlet weak var txtNewPswd: UITextField!
@@ -21,6 +23,9 @@ class ChangePasswordVC: UIViewController {
         if UserDefaults.standard.value(forKey: "first_name") != nil && (UserDefaults.standard.value(forKey: "last_name") != nil){
             lblUsername.text = "\(UserDefaults.standard.value(forKey: "first_name")!)" + "  \(UserDefaults.standard.value(forKey: "last_name")!)"
         }
+        lblChangePswd.textColor = colorConstants.whiteColor
+        viewTitle.backgroundColor = colorConstants.redColor
+        lblChangePswd.font = FontConstants.viewTitleFont
     }
     
     override var prefersStatusBarHidden: Bool {

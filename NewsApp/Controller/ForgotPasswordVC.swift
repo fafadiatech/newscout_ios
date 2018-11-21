@@ -10,6 +10,8 @@ import UIKit
 
 class ForgotPasswordVC: UIViewController {
     
+    @IBOutlet weak var lblTitle: UILabel!
+    @IBOutlet weak var viewTitle: UIView!
     @IBOutlet weak var btnSubmit: UIButton!
     @IBOutlet weak var txtEmail: UITextField!
     var email = ""
@@ -19,6 +21,9 @@ class ForgotPasswordVC: UIViewController {
         txtEmail.text = email
         btnSubmit.layer.cornerRadius = 15
         btnSubmit.layer.borderWidth = 0
+        viewTitle.backgroundColor = colorConstants.redColor
+        lblTitle.textColor = colorConstants.whiteColor
+        lblTitle.font = FontConstants.viewTitleFont
     }
     
     override var prefersStatusBarHidden: Bool {

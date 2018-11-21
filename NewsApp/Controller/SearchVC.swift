@@ -36,7 +36,11 @@ class SearchVC: UIViewController {
         activityIndicator.indicatorMode = .indeterminate
         activityIndicator.progress = 2.0
         view.addSubview(activityIndicator)
-        lblTitle.font = FontConstants.LargeFontMedium
+        searchView.backgroundColor = colorConstants.redColor
+        txtSearch.backgroundColor = colorConstants.redColor
+        txtSearch.textColor = colorConstants.whiteColor
+        lblTitle.textColor = colorConstants.whiteColor
+        lblTitle.font = FontConstants.viewTitleFont
         //check whether search or bookmark is selected
         if isSearch == true{
             lblTitle.isHidden = true
@@ -96,16 +100,16 @@ class SearchVC: UIViewController {
     func changeFont()
     {
         if textSizeSelected == 0{
-            lblTitle.font = FontConstants.NormalFontMedium
-            txtSearch.font = FontConstants.NormalFontMedium
+            lblTitle.font = FontConstants.NormalFontTitleMedium
+            txtSearch.font = FontConstants.NormalFontTitleMedium
         }
         else if textSizeSelected == 2{
-            lblTitle.font = FontConstants.LargeFontMedium
-            txtSearch.font = FontConstants.LargeFontMedium
+            lblTitle.font = FontConstants.LargeFontTitleMedium
+            txtSearch.font = FontConstants.LargeFontTitleMedium
         }
         else{
-            lblTitle.font = FontConstants.LargeFontMedium
-            txtSearch.font = FontConstants.LargeFontMedium
+            lblTitle.font = FontConstants.LargeFontTitleMedium
+            txtSearch.font = FontConstants.LargeFontTitleMedium
         }
     }
     
@@ -159,19 +163,20 @@ extension SearchVC: UITableViewDelegate, UITableViewDataSource{
         }
         
         if textSizeSelected == 0{
-            cell.lblSource.font = FontConstants.xsmallFont
-            cell.lblNewsDescription.font = FontConstants.smallFont
-            cell.lbltimeAgo.font = FontConstants.xsmallFont
+            cell.lblSource.font = FontConstants.smallFontContent
+            cell.lbltimeAgo.font = FontConstants.smallFontContent
+            cell.lblNewsDescription.font = FontConstants.smallFontHeading
+            
         }
         else if textSizeSelected == 2{
-            cell.lblSource.font = FontConstants.xLargeFont
-            cell.lblNewsDescription.font = FontConstants.LargeFont
-            cell.lbltimeAgo.font = FontConstants.xLargeFont
+            cell.lblSource.font = FontConstants.LargeFontContent
+            cell.lbltimeAgo.font = FontConstants.LargeFontContent
+            cell.lblNewsDescription.font = FontConstants.LargeFontHeading
         }
         else{
-            cell.lblSource.font = FontConstants.xNormalFont
-            cell.lblNewsDescription.font = FontConstants.NormalFont
-            cell.lbltimeAgo.font = FontConstants.xNormalFont
+            cell.lblSource.font = FontConstants.NormalFontContent
+            cell.lbltimeAgo.font = FontConstants.NormalFontContent
+            cell.lblNewsDescription.font = FontConstants.NormalFontHeading
         }
         activityIndicator.stopAnimating()
         return cell
@@ -293,4 +298,3 @@ extension SearchVC: UITextFieldDelegate
         return true
     }
 }
-

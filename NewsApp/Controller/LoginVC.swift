@@ -13,6 +13,8 @@ import FBSDKCoreKit
 
 class LoginVC: UIViewController, GIDSignInUIDelegate, FBSDKLoginButtonDelegate{
     
+    @IBOutlet weak var viewTitle: UIView!
+    @IBOutlet weak var lblTitle: UILabel!
     @IBOutlet weak var txtPassword: UITextField!
     @IBOutlet weak var txtUsername: UITextField!
     @IBOutlet weak var btnForgtPswd: UIButton!
@@ -40,6 +42,9 @@ class LoginVC: UIViewController, GIDSignInUIDelegate, FBSDKLoginButtonDelegate{
         }
         btnFbLogin.setTitle("", for: .normal)
         GIDSignIn.sharedInstance().uiDelegate = self
+        viewTitle.backgroundColor = colorConstants.redColor
+        lblTitle.textColor = colorConstants.whiteColor
+        lblTitle.font = FontConstants.viewTitleFont
     }
     
     override func viewWillAppear(_ animated: Bool) {

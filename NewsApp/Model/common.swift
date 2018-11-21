@@ -20,34 +20,47 @@ struct colorConstants{
 struct FontConstants{
     static let isPhone = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.phone)
     static let fontSize:CGFloat = isPhone ? 12 :20
-    static let fontxLarge:CGFloat = isPhone ? 16:20
-    static let fontxNormal:CGFloat = isPhone ? 14 :20
-    static let fontxSmall:CGFloat = isPhone ? 12 :20
-    static let fontLargeHeading:CGFloat = isPhone ? 25:20
-    static let fontNormalHeading:CGFloat = isPhone ? 22 :20
-    static let fontSmallHeading:CGFloat = isPhone ? 18 :20
-    static let fontLargeTitle:CGFloat = isPhone ? 21:20
-    static let fontNormalTitle:CGFloat = isPhone ? 18 :20
-    static let fontSmallTitle:CGFloat = isPhone ? 14 :20
-    static let fontLargeContent:CGFloat = isPhone ? 18 :20
-    static let fontNormalContent:CGFloat = isPhone ? 14 :20
-    static let fontSmallContent:CGFloat = isPhone ? 10 :20
-    static let  xsmallFont = UIFont(name: AppFontName.regular, size: FontConstants.fontxSmall)
-    static let xLargeFont = UIFont(name: AppFontName.regular, size: FontConstants.fontxLarge)
-    static let xNormalFont = UIFont(name: AppFontName.regular, size: FontConstants.fontxNormal)
-    static let smallFont = UIFont(name: AppFontName.regular, size: FontConstants.fontSmallTitle)
-    static let LargeFont = UIFont(name: AppFontName.regular, size: FontConstants.fontLargeTitle)
-    static let NormalFont = UIFont(name: AppFontName.regular, size: FontConstants.fontNormalTitle)
-    static let smallFontHeading = UIFont(name: AppFontName.regular, size: FontConstants.fontSmallTitle)
-    static let LargeFontHeading = UIFont(name: AppFontName.regular, size: FontConstants.fontLargeTitle)
-    static let NormalFontHeading = UIFont(name: AppFontName.regular, size: FontConstants.fontNormalTitle)
-    static let smallFontMedium = UIFont(name: AppFontName.medium, size: FontConstants.fontSmallTitle)
-    static let LargeFontMedium = UIFont(name: AppFontName.medium, size: FontConstants.fontLargeTitle)
-    static let NormalFontMedium = UIFont(name: AppFontName.medium, size: FontConstants.fontNormalTitle)
-    static let xsmallFontMedium = UIFont(name: AppFontName.medium, size: FontConstants.fontxSmall)
-    static let xLargeFontMedium = UIFont(name: AppFontName.medium, size: FontConstants.fontxLarge)
-    static let xNormalFontMedium = UIFont(name: AppFontName.medium, size: FontConstants.fontxNormal)
-    static let appFont = UIFont(name: AppFontName.bold, size: FontConstants.fontLargeHeading)
+    static let fontxLarge:CGFloat = isPhone ? 16:20 //16
+    static let fontxNormal:CGFloat = isPhone ? 15 :20 //14
+    static let fontxSmall:CGFloat = isPhone ? 12 :20 //12
+    static let fontLargeHeading:CGFloat = isPhone ? 20:20 //25
+    static let fontNormalHeading:CGFloat = isPhone ? 18 :20 //22
+    static let fontSmallHeading:CGFloat = isPhone ? 16 :20 //18
+    static let fontLargeTitle:CGFloat = isPhone ? 21:20 //21
+    static let fontNormalTitle:CGFloat = isPhone ? 17 :20 //18
+    static let fontSmallTitle:CGFloat = isPhone ? 14 :20 //14
+    static let fontLargeContent:CGFloat = isPhone ? 18 :20 //18
+    static let fontNormalContent:CGFloat = isPhone ? 16 :20 //14
+    static let fontSmallContent:CGFloat = isPhone ? 14 :20 //10
+    
+  
+    //for news description
+    static let smallFontTitle = UIFont(name: AppFontName.regular, size: FontConstants.fontSmallTitle)
+    static let LargeFontTitle = UIFont(name: AppFontName.regular, size: FontConstants.fontLargeTitle)
+    static let NormalFontTitle = UIFont(name: AppFontName.regular, size: FontConstants.fontNormalTitle)
+    static let smallFontTitleMedium = UIFont(name: AppFontName.medium, size: FontConstants.fontSmallTitle)
+    static let LargeFontTitleMedium = UIFont(name: AppFontName.medium, size: FontConstants.fontLargeTitle)
+    static let NormalFontTitleMedium = UIFont(name: AppFontName.medium, size: FontConstants.fontNormalTitle)
+    //for news title
+    static let smallFontHeadingBold = UIFont(name: AppFontName.bold, size: FontConstants.fontSmallHeading)
+    static let LargeFontHeadingBold = UIFont(name: AppFontName.bold, size: FontConstants.fontLargeHeading)
+    static let NormalFontHeadingBold = UIFont(name: AppFontName.bold, size: FontConstants.fontNormalHeading)
+    static let smallFontHeading = UIFont(name: AppFontName.regular, size: FontConstants.fontSmallHeading)
+    static let LargeFontHeading = UIFont(name: AppFontName.regular, size: FontConstants.fontLargeHeading)
+    static let NormalFontHeading = UIFont(name: AppFontName.regular, size: FontConstants.fontNormalHeading)
+  
+    //for source, time
+    static let smallFontContentBold = UIFont(name: AppFontName.bold, size: FontConstants.fontSmallContent)
+    static let LargeFontContentBold = UIFont(name: AppFontName.bold, size: FontConstants.fontLargeContent)
+    static let NormalFontContentBold = UIFont(name: AppFontName.bold, size: FontConstants.fontNormalContent)
+    static let smallFontContentMedium = UIFont(name: AppFontName.medium, size: FontConstants.fontSmallContent + 2)
+    static let LargeFontContentMedium = UIFont(name: AppFontName.medium, size: FontConstants.fontLargeContent + 2)
+    static let NormalFontContentMedium = UIFont(name: AppFontName.medium, size: FontConstants.fontNormalContent + 2)
+    static let  smallFontContent = UIFont(name: AppFontName.regular, size: FontConstants.fontSmallContent)
+    static let LargeFontContent = UIFont(name: AppFontName.regular, size: FontConstants.fontLargeContent)
+    static let NormalFontContent = UIFont(name: AppFontName.regular, size: FontConstants.fontNormalContent)
+    static let viewTitleFont = UIFont(name: AppFontName.bold, size: 23)
+    static let appFont = UIFont(name: AppFontName.bold, size: 24)
 }
 
 struct Constants{

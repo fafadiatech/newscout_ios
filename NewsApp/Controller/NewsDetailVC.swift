@@ -23,7 +23,6 @@ class NewsDetailVC: UIViewController {
     @IBOutlet weak var btnShare: UIButton!
     @IBOutlet weak var suggestedView: UIView!
     @IBOutlet weak var suggestedCV: UICollectionView!
-    @IBOutlet weak var lblSuggested: UILabel!
     @IBOutlet weak var WKWebView: WKWebView!
     @IBOutlet weak var viewWebTitle: UIView!
     @IBOutlet weak var ViewWebContainer: UIView!
@@ -103,26 +102,24 @@ class NewsDetailVC: UIViewController {
     func changeFont()
     {
         let textSizeSelected = UserDefaults.standard.value(forKey: "textSize") as! Int
+        txtViewNewsDesc.textColor = colorConstants.txtDarkGrayColor
         if textSizeSelected == 0{
-            lblNewsHeading.font = FontConstants.smallFontMedium
-            lblSource.font = FontConstants.smallFont
-            lblTimeAgo.font = FontConstants.smallFont
-            lblSuggested.font = FontConstants.smallFont
-            txtViewNewsDesc.font = FontConstants.smallFont
+            lblNewsHeading.font = FontConstants.smallFontHeadingBold
+            lblSource.font = FontConstants.smallFontContentMedium
+            lblTimeAgo.font = FontConstants.smallFontContentMedium
+            txtViewNewsDesc.font = FontConstants.smallFontTitle
         }
         else if textSizeSelected == 2{
-            lblNewsHeading.font = FontConstants.LargeFontMedium
-            lblSource.font = FontConstants.LargeFont
-            lblTimeAgo.font = FontConstants.LargeFont
-            lblSuggested.font = FontConstants.LargeFont
-            txtViewNewsDesc.font = FontConstants.LargeFont
+            lblNewsHeading.font = FontConstants.LargeFontHeadingBold
+            lblSource.font = FontConstants.LargeFontContentMedium
+            lblTimeAgo.font = FontConstants.LargeFontContentMedium
+            txtViewNewsDesc.font = FontConstants.LargeFontTitle
         }
         else{
-            lblNewsHeading.font = FontConstants.NormalFontMedium
-            lblSource.font = FontConstants.NormalFont
-            lblTimeAgo.font = FontConstants.NormalFont
-            lblSuggested.font = FontConstants.NormalFont
-            txtViewNewsDesc.font = FontConstants.NormalFont
+            lblNewsHeading.font = FontConstants.NormalFontHeadingBold
+            lblSource.font = FontConstants.NormalFontContentMedium 
+            lblTimeAgo.font = FontConstants.NormalFontContentMedium
+            txtViewNewsDesc.font = FontConstants.NormalFontTitle
         }
     }
     
@@ -372,16 +369,39 @@ class NewsDetailVC: UIViewController {
         // Dispose of any resources that can be recreated.
     }
 }
-extension NewsDetailVC:UICollectionViewDelegate, UICollectionViewDataSource{
+extension NewsDetailVC:UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout{
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize
+    {   var width = 1.0
+        if indexPath.row == 0{
+       width = 100.0
+    }
+        else{
+            width = 170.0
+        }
+         return CGSize(width: width, height: 145.0)
+    }
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return (self.RecomArticleData.count != 0) ? self.RecomArticleData[0].body.articles.count : 0
+        return (self.RecomArticleData.count != 0) ? self.RecomArticleData[0].body.articles.count + 1 : 0
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "SuggestedNewsID", for: indexPath) as! SuggestedNewsCVCell
-        let currentArticle =  RecomArticleData[0].body.articles[indexPath.row]
+        cell.lblTitle.font = FontConstants.NormalFontContent
+        cell.lblMoreStories.font = FontConstants.LargeFontContentBold
+        if indexPath.row == 0
+        {
+            cell.lblMoreStories.isHidden = false
+            cell.imgNews.isHidden = true
+            cell.lblTitle.isHidden = true
+        }
+        else{
+            cell.imgNews.isHidden = false
+            cell.lblTitle.isHidden = false
+            cell.lblMoreStories.isHidden = true
+            let currentArticle =  RecomArticleData[0].body.articles[indexPath.row - 1]
         cell.lblTitle.text = currentArticle.title
         cell.imgNews.sd_setImage(with: URL(string: currentArticle.imageURL!), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
+        }
         return cell
     }
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
@@ -389,7 +409,6 @@ extension NewsDetailVC:UICollectionViewDelegate, UICollectionViewDataSource{
         let newsDetailvc:NewsDetailVC = storyboard.instantiateViewController(withIdentifier: "NewsDetailID") as! NewsDetailVC
         newsDetailvc.newsCurrentIndex = indexPath.row
         newsDetailvc.ArticleData = RecomArticleData
-        // articleId = RecomArticleData[0].body.articles[indexPath.row].article_id!
         print("articleId in didselect: \(articleId)")
         present(newsDetailvc, animated: true, completion: nil)
     }

@@ -126,13 +126,13 @@ extension CategoryListVC:UITableViewDelegate, UITableViewDataSource{
         let catData = CategoryData[0].categories[indexPath.row]
         var textSizeSelected = UserDefaults.standard.value(forKey: "textSize") as! Int
         if textSizeSelected == 0{
-            cell.lblCategoryName.font = FontConstants.smallFont
+            cell.lblCategoryName.font = UIFont(name: AppFontName.regular, size: 15)
         }
         else if textSizeSelected == 2{
-            cell.lblCategoryName.font = FontConstants.LargeFont
+            cell.lblCategoryName.font = UIFont(name: AppFontName.regular, size: 19)
         }
         else{
-            cell.lblCategoryName.font =  FontConstants.NormalFont
+            cell.lblCategoryName.font =  UIFont(name: AppFontName.regular, size: 17)
         }
         cell.lblCategoryName.text = catData.title
         cell.btnDelete.tag = indexPath.row

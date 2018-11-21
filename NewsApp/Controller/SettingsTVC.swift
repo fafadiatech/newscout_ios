@@ -16,12 +16,15 @@ class SettingsTVC: UITableViewController, GIDSignInUIDelegate {
     @IBOutlet weak var segmentTextSize: UISegmentedControl!
     @IBOutlet weak var lblLogin: UILabel!
     @IBOutlet weak var lblLogout: UILabel!
-    var textSizeSelected = UserDefaults.standard.value(forKey: "textSize") as! Int
+    var textSizeSelected = 1
     
     override func viewDidLoad() {
         super.viewDidLoad()
         lblLogout.isHidden = true
         isLoggedIn()
+        if UserDefaults.standard.value(forKey: "textSize") != nil{
+            textSizeSelected = UserDefaults.standard.value(forKey: "textSize") as! Int
+        }
         segmentTextSize.selectedSegmentIndex = textSizeSelected
     segmentTextSize.setTitleTextAttributes([NSAttributedStringKey.foregroundColor: UIColor.black], for: UIControlState.normal)
         // Uncomment the following line to preserve selection between presentations
@@ -82,7 +85,7 @@ class SettingsTVC: UITableViewController, GIDSignInUIDelegate {
     override func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
         let headerView = view as! UITableViewHeaderFooterView
         headerView.textLabel?.textColor = .black
-        headerView.textLabel?.font = FontConstants.NormalFontMedium
+        headerView.textLabel?.font = FontConstants.NormalFontTitle
     }
     
     override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {

@@ -10,11 +10,14 @@ import UIKit
 
 class SettingsVC: UIViewController {
     @IBOutlet weak var lblTitle: UILabel!
-    @IBOutlet weak var viewTextSize: UIView!
+    @IBOutlet weak var viewTitle: UIView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        lblTitle.font = FontConstants.LargeFontMedium
+        lblTitle.textColor = colorConstants.whiteColor
+        lblTitle.font = FontConstants.LargeFontTitleMedium
+        viewTitle.backgroundColor = colorConstants.redColor
+        lblTitle.font = FontConstants.viewTitleFont
     }
     
     override var prefersStatusBarHidden: Bool {

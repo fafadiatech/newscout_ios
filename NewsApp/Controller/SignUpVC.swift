@@ -10,6 +10,8 @@ import UIKit
 
 class SignUpVC: UIViewController {
     
+    @IBOutlet weak var lblTitle: UILabel!
+    @IBOutlet weak var viewTitle: UIView!
     @IBOutlet weak var txtFname: UITextField!
     @IBOutlet weak var txtLname: UITextField!
     @IBOutlet weak var txtEmail: UITextField!
@@ -22,6 +24,9 @@ class SignUpVC: UIViewController {
         txtEmail.autocorrectionType = .no
         txtPassword.autocorrectionType = .no
         txtConfirmPswd.autocorrectionType = .no
+        viewTitle.backgroundColor = colorConstants.redColor
+        lblTitle.textColor = colorConstants.whiteColor
+        lblTitle.font = FontConstants.viewTitleFont
     }
     
     @IBAction func btnBackActn(_ sender: Any) {

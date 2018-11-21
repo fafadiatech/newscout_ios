@@ -197,20 +197,20 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
         }
         let textSizeSelected = UserDefaults.standard.value(forKey: "textSize") as! Int
         if textSizeSelected == 0{
-            cell.lblSource.font = FontConstants.xsmallFont
-            cell.lblNewsHeading.font = FontConstants.smallFont
-            cell.lblTimesAgo.font = FontConstants.xsmallFont
+            cell.lblSource.font = FontConstants.smallFontContent
+            cell.lblTimesAgo.font = FontConstants.smallFontContent
+            cell.lblNewsHeading.font = FontConstants.smallFontHeading
         }
         else if textSizeSelected == 2{
-            cell.lblSource.font = FontConstants.xLargeFont
-            cell.lblNewsHeading.font = FontConstants.LargeFont
-            cell.lblTimesAgo.font = FontConstants.xLargeFont
+            cell.lblSource.font = FontConstants.LargeFontContent
+            cell.lblTimesAgo.font = FontConstants.LargeFontContent
+             cell.lblNewsHeading.font = FontConstants.LargeFontHeading
         }
         else{
-            cell.lblSource.font =  FontConstants.xNormalFont
-            
-            cell.lblNewsHeading.font = FontConstants.NormalFont
-            cell.lblTimesAgo.font = FontConstants.xNormalFont
+            cell.lblSource.font =  FontConstants.NormalFontContent
+             cell.lblTimesAgo.font = FontConstants.NormalFontContent
+            cell.lblNewsHeading.font = FontConstants.NormalFontHeading
+           
         }
         activityIndicator.stopAnimating()
         return cell
