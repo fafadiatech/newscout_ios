@@ -32,8 +32,10 @@ struct FontConstants{
     static let fontLargeContent:CGFloat = isPhone ? 18 :20 //18
     static let fontNormalContent:CGFloat = isPhone ? 16 :20 //14
     static let fontSmallContent:CGFloat = isPhone ? 14 :20 //10
-    
+    static let fontNormalBtn: CGFloat = isPhone ? 18 :20
   
+    //for button titles
+      static let FontBtnTitle = UIFont(name: AppFontName.medium, size: FontConstants.fontNormalBtn)
     //for news description
     static let smallFontTitle = UIFont(name: AppFontName.regular, size: FontConstants.fontSmallTitle)
     static let LargeFontTitle = UIFont(name: AppFontName.regular, size: FontConstants.fontLargeTitle)
@@ -53,13 +55,16 @@ struct FontConstants{
     static let smallFontContentBold = UIFont(name: AppFontName.bold, size: FontConstants.fontSmallContent)
     static let LargeFontContentBold = UIFont(name: AppFontName.bold, size: FontConstants.fontLargeContent)
     static let NormalFontContentBold = UIFont(name: AppFontName.bold, size: FontConstants.fontNormalContent)
-    static let smallFontContentMedium = UIFont(name: AppFontName.medium, size: FontConstants.fontSmallContent + 2)
-    static let LargeFontContentMedium = UIFont(name: AppFontName.medium, size: FontConstants.fontLargeContent + 2)
-    static let NormalFontContentMedium = UIFont(name: AppFontName.medium, size: FontConstants.fontNormalContent + 2)
+    static let smallFontContentMedium = UIFont(name: AppFontName.medium, size: FontConstants.fontSmallContent)
+    static let LargeFontContentMedium = UIFont(name: AppFontName.medium, size: FontConstants.fontLargeContent)
+    static let NormalFontContentMedium = UIFont(name: AppFontName.medium, size: FontConstants.fontNormalContent)
     static let  smallFontContent = UIFont(name: AppFontName.regular, size: FontConstants.fontSmallContent)
     static let LargeFontContent = UIFont(name: AppFontName.regular, size: FontConstants.fontLargeContent)
     static let NormalFontContent = UIFont(name: AppFontName.regular, size: FontConstants.fontNormalContent)
+    //for title labels on each screen
     static let viewTitleFont = UIFont(name: AppFontName.bold, size: 23)
+    //for settings tableview header
+    static let settingsTVHeader = UIFont(name: AppFontName.medium, size: 20)
     static let appFont = UIFont(name: AppFontName.bold, size: 24)
 }
 

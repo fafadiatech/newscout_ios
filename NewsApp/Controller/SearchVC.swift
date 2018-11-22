@@ -37,6 +37,8 @@ class SearchVC: UIViewController {
         activityIndicator.progress = 2.0
         view.addSubview(activityIndicator)
         searchView.backgroundColor = colorConstants.redColor
+        txtSearch.autocorrectionType = .no
+        txtSearch.font = FontConstants.NormalFontContent
         txtSearch.backgroundColor = colorConstants.redColor
         txtSearch.textColor = colorConstants.whiteColor
         lblTitle.textColor = colorConstants.whiteColor

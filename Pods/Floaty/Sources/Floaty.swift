@@ -101,7 +101,7 @@ open class Floaty: UIView {
      Background overlaying color.
      */
     @IBInspectable
-    @objc open var overlayColor: UIColor = UIColor.black.withAlphaComponent(0.3)
+    @objc open var overlayColor: UIColor = UIColor.white.withAlphaComponent(0.3)
     
     /**
      The space between the item and item.
@@ -445,6 +445,7 @@ open class Floaty: UIView {
         itemDefaultSet(item)
         item.titleLabelPosition = titlePosition
         item.title = title
+        item._titleLabel?.font = UIFont(name:"HelveticaNeue-Bold", size: 40.0)
         addItem(item: item)
         return item
     }
@@ -713,6 +714,7 @@ open class Floaty: UIView {
         item.circleShadowColor = itemShadowColor
         item.titleShadowColor = itemShadowColor
         item.size = itemSize
+          item._titleLabel?.font = UIFont(name:"HelveticaNeue-Bold", size: 20.0)
         item._titleLabel?.backgroundColor = UIColor(red: 255, green: 255, blue: 255, alpha: 0.2)
         
     }

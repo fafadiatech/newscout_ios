@@ -23,9 +23,13 @@ class ChangePasswordVC: UIViewController {
         if UserDefaults.standard.value(forKey: "first_name") != nil && (UserDefaults.standard.value(forKey: "last_name") != nil){
             lblUsername.text = "\(UserDefaults.standard.value(forKey: "first_name")!)" + "  \(UserDefaults.standard.value(forKey: "last_name")!)"
         }
+        
         lblChangePswd.textColor = colorConstants.whiteColor
         viewTitle.backgroundColor = colorConstants.redColor
         lblChangePswd.font = FontConstants.viewTitleFont
+        btnChangePswd.backgroundColor = colorConstants.redColor
+        btnChangePswd.setTitleColor(colorConstants.whiteColor, for: .normal)
+        btnChangePswd.titleLabel?.font = FontConstants.FontBtnTitle
     }
     
     override var prefersStatusBarHidden: Bool {

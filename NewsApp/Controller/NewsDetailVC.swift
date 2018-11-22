@@ -12,6 +12,7 @@ import Alamofire
 import SDWebImage
 
 class NewsDetailVC: UIViewController {
+    @IBOutlet weak var viewContainer: UIView!
     @IBOutlet weak var imgNews: UIImageView!
     @IBOutlet var newsView: UIView!
     @IBOutlet weak var lblNewsHeading: UILabel!
@@ -28,6 +29,8 @@ class NewsDetailVC: UIViewController {
     @IBOutlet weak var ViewWebContainer: UIView!
     @IBOutlet weak var lblWebSource: UILabel!
     @IBOutlet weak var btnBookamark: UIButton!
+    @IBOutlet weak var viewLikeDislike: UIView!
+    @IBOutlet weak var viewNewsArea: UIView!
     let imageCache = NSCache<NSString, UIImage>()
     var RecomArticleData = [ArticleStatus]()
     var ArticleData = [ArticleStatus]()
@@ -35,7 +38,7 @@ class NewsDetailVC: UIViewController {
     var ArticleDetail = ArticleDict.init(article_id: 0, category: "", source: "", title: "", imageURL: "", url: "", published_on: "", blurb: "", isBookmark: false, isLike: 0)
     var newsCurrentIndex = 0
     var articleId = 0
-    
+    var tapTerm:UITapGestureRecognizer = UITapGestureRecognizer()
     override func viewDidLoad() {
         super.viewDidLoad()
         let settingvc = SettingsTVC()
@@ -50,6 +53,7 @@ class NewsDetailVC: UIViewController {
                 self.view.makeToast(errormessage, duration: 2.0, position: .center)
             }
         }
+        viewLikeDislike.isHidden =  true
         ShowNews(currentIndex: newsCurrentIndex)
         let swipeUp = UISwipeGestureRecognizer(target: self, action: #selector(self.respondToSwipeGesture))
         swipeUp.direction = UISwipeGestureRecognizerDirection.up
@@ -66,6 +70,19 @@ class NewsDetailVC: UIViewController {
         let swipeDown = UISwipeGestureRecognizer(target: self, action: #selector(self.respondToSwipeGesture))
         swipeDown.direction = UISwipeGestureRecognizerDirection.down
         self.newsView.addGestureRecognizer(swipeDown)
+       
+        let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapped(gestureRecognizer:)))
+        viewContainer.addGestureRecognizer(tapRecognizer)
+        tapRecognizer.delegate = self as! UIGestureRecognizerDelegate
+    }
+    
+    @objc func tapped(gestureRecognizer: UITapGestureRecognizer) {
+        if viewLikeDislike.isHidden == true{
+        viewLikeDislike.isHidden = false
+        }
+        else{
+            viewLikeDislike.isHidden = true
+        }
     }
     
     override var prefersStatusBarHidden: Bool {
@@ -373,7 +390,7 @@ extension NewsDetailVC:UICollectionViewDelegate, UICollectionViewDataSource, UIC
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize
     {   var width = 1.0
         if indexPath.row == 0{
-       width = 100.0
+       width = 120.0
     }
         else{
             width = 170.0
@@ -404,13 +421,23 @@ extension NewsDetailVC:UICollectionViewDelegate, UICollectionViewDataSource, UIC
         }
         return cell
     }
+    
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let newsDetailvc:NewsDetailVC = storyboard.instantiateViewController(withIdentifier: "NewsDetailID") as! NewsDetailVC
-        newsDetailvc.newsCurrentIndex = indexPath.row
+        newsDetailvc.newsCurrentIndex = indexPath.row - 1
         newsDetailvc.ArticleData = RecomArticleData
+        newsDetailvc.articleId = RecomArticleData[0].body.articles[indexPath.row - 1].article_id!
         print("articleId in didselect: \(articleId)")
         present(newsDetailvc, animated: true, completion: nil)
     }
 }
 
+extension NewsDetailVC : UIGestureRecognizerDelegate {
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
+        if touch.view!.superview!.superclass! .isSubclass(of: UIButton.self) {
+            return false
+        }
+        return true
+    }
+}

@@ -14,6 +14,7 @@ class ForgotPasswordVC: UIViewController {
     @IBOutlet weak var viewTitle: UIView!
     @IBOutlet weak var btnSubmit: UIButton!
     @IBOutlet weak var txtEmail: UITextField!
+    
     var email = ""
     
     override func viewDidLoad() {
@@ -21,6 +22,9 @@ class ForgotPasswordVC: UIViewController {
         txtEmail.text = email
         btnSubmit.layer.cornerRadius = 15
         btnSubmit.layer.borderWidth = 0
+        btnSubmit.titleLabel?.font = FontConstants.FontBtnTitle
+        btnSubmit.backgroundColor = colorConstants.redColor
+        btnSubmit.setTitleColor(colorConstants.whiteColor, for: .normal)
         viewTitle.backgroundColor = colorConstants.redColor
         lblTitle.textColor = colorConstants.whiteColor
         lblTitle.font = FontConstants.viewTitleFont

@@ -32,10 +32,10 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
         floaty.itemTitleColor =  .black
         floaty.buttonColor = colorConstants.redColor
         floaty.plusColor = .black
-        
+    
         floaty.addItem("Profile", icon: UIImage(named: "profile")!) { item in
             floaty.autoCloseOnTap = true
-            
+        
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             let searchvc:ProfileVC
                 = storyboard.instantiateViewController(withIdentifier: "ProfileID") as! ProfileVC

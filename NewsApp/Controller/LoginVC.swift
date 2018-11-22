@@ -34,6 +34,18 @@ class LoginVC: UIViewController, GIDSignInUIDelegate, FBSDKLoginButtonDelegate{
         btnSignUp.layer.borderWidth = 0
         btnForgtPswd.layer.cornerRadius = 15
         btnForgtPswd.layer.borderWidth = 0
+        btnLogin.backgroundColor = colorConstants.redColor
+        btnLogin.setTitleColor(colorConstants.whiteColor, for: .normal)
+        btnLogin.titleLabel?.font = FontConstants.FontBtnTitle
+        btnSignUp.backgroundColor = colorConstants.redColor
+        btnSignUp.setTitleColor(colorConstants.whiteColor, for: .normal)
+        btnSignUp.titleLabel?.font = FontConstants.FontBtnTitle
+        btnForgtPswd.backgroundColor = colorConstants.redColor
+        btnForgtPswd.setTitleColor(colorConstants.whiteColor, for: .normal)
+        btnForgtPswd.titleLabel?.font = FontConstants.FontBtnTitle
+        btnFbLogin.backgroundColor = colorConstants.redColor
+        btnFbLogin.setTitleColor(colorConstants.whiteColor, for: .normal)
+        signInButton.backgroundColor = colorConstants.redColor
         btnFbLogin.readPermissions = ["public_profile", "email"]
         if FBSDKAccessToken.current() != nil{
             print(FBSDKAccessToken.current())

@@ -17,6 +17,7 @@ class SignUpVC: UIViewController {
     @IBOutlet weak var txtEmail: UITextField!
     @IBOutlet weak var txtPassword: UITextField!
     @IBOutlet weak var txtConfirmPswd: UITextField!
+    @IBOutlet weak var btnSignUp: UIButton!
     override func viewDidLoad() {
         super.viewDidLoad()
         txtFname.autocorrectionType = .no
@@ -27,6 +28,11 @@ class SignUpVC: UIViewController {
         viewTitle.backgroundColor = colorConstants.redColor
         lblTitle.textColor = colorConstants.whiteColor
         lblTitle.font = FontConstants.viewTitleFont
+        btnSignUp.layer.cornerRadius = 15
+        btnSignUp.layer.borderWidth = 0
+        btnSignUp.backgroundColor = colorConstants.redColor
+        btnSignUp.setTitleColor(colorConstants.whiteColor, for: .normal)
+        btnSignUp.titleLabel?.font = FontConstants.FontBtnTitle
     }
     
     @IBAction func btnBackActn(_ sender: Any) {

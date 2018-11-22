@@ -28,6 +28,9 @@ class ProfileVC: UIViewController {
         btnImgProfile.layer.cornerRadius = 0.5 * btnImgProfile.bounds.size.width
         btnImgProfile.clipsToBounds = true
         btnImgProfile.setImage(UIImage(named:"settings"), for: .normal)
+        btnChangePswd.backgroundColor = colorConstants.redColor
+        btnChangePswd.setTitleColor(colorConstants.whiteColor, for: .normal)
+        btnChangePswd.titleLabel?.font = FontConstants.FontBtnTitle
         if UserDefaults.standard.value(forKey: "first_name") != nil{
             lblNameVal.text = UserDefaults.standard.value(forKey: "first_name") as! String
         }
