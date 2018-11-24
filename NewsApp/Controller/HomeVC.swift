@@ -48,6 +48,12 @@ class HomeVC: UIViewController{
         refreshControl.addTarget(self, action: #selector(refreshNews), for: .valueChanged)
         HomeNewsTV.refreshControl = refreshControl
         refreshControl.attributedTitle = NSAttributedString(string: "Pull  to Refresh...")
+        if (UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad){
+            HomeNewsTV.rowHeight = 190;
+        }
+        else {
+            HomeNewsTV.rowHeight = 129;
+        }
         /* coredataRecordCount = DBManager().IsCoreDataEmpty()
          if coredataRecordCount != 0{
          let result = DBManager().FetchDataFromDB()

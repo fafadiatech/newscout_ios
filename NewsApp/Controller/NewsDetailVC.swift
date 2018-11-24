@@ -41,6 +41,19 @@ class NewsDetailVC: UIViewController {
     var tapTerm:UITapGestureRecognizer = UITapGestureRecognizer()
     override func viewDidLoad() {
         super.viewDidLoad()
+        if (UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad)
+        {
+            if UIDeviceOrientationIsLandscape(UIDevice.current.orientation) {
+                viewLikeDislike.isHidden = true
+            }
+            else{
+           viewLikeDislike.isHidden = false
+            }
+        }
+        else
+        {
+            viewLikeDislike.isHidden = true
+        }
         let settingvc = SettingsTVC()
         ViewWebContainer.isHidden = true
         APICall().loadRecommendationNewsAPI(articleId: articleId){ response in
@@ -53,7 +66,7 @@ class NewsDetailVC: UIViewController {
                 self.view.makeToast(errormessage, duration: 2.0, position: .center)
             }
         }
-        viewLikeDislike.isHidden =  true
+       
         ShowNews(currentIndex: newsCurrentIndex)
         let swipeUp = UISwipeGestureRecognizer(target: self, action: #selector(self.respondToSwipeGesture))
         swipeUp.direction = UISwipeGestureRecognizerDirection.up
@@ -77,12 +90,15 @@ class NewsDetailVC: UIViewController {
     }
     
     @objc func tapped(gestureRecognizer: UITapGestureRecognizer) {
+        if (UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.phone){ //|| UIDeviceOrientationIsLandscape(UIDevice.current.orientation){
         if viewLikeDislike.isHidden == true{
         viewLikeDislike.isHidden = false
         }
         else{
             viewLikeDislike.isHidden = true
         }
+        }
+        
     }
     
     override var prefersStatusBarHidden: Bool {
@@ -390,7 +406,12 @@ extension NewsDetailVC:UICollectionViewDelegate, UICollectionViewDataSource, UIC
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize
     {   var width = 1.0
         if indexPath.row == 0{
+            if (UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad){
+                width = 200.0
+            }
+            else{
        width = 120.0
+            }
     }
         else{
             width = 170.0

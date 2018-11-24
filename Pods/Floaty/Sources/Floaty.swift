@@ -113,10 +113,16 @@ open class Floaty: UIView {
      Child item's default size.
      */
     @IBInspectable
-    @objc open var itemSize: CGFloat = 42 {
+    @objc open var itemSize: CGFloat = 60{
         didSet {
             self.items.forEach { item in
-                item.size = self.itemSize
+                if (UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad){
+                    item.size = 60
+                }
+                else {
+                   item.size = 42
+                }
+                //item.size = self.itemSize
             }
             self.recalculateItemsOrigin()
             self.setNeedsDisplay()
@@ -714,7 +720,13 @@ open class Floaty: UIView {
         item.circleShadowColor = itemShadowColor
         item.titleShadowColor = itemShadowColor
         item.size = itemSize
-          item._titleLabel?.font = UIFont(name:"HelveticaNeue-Bold", size: 20.0)
+        if (UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad){
+          item._titleLabel?.font = UIFont(name:"HelveticaNeue-Bold", size: 28.0)
+        }
+        else {
+           item._titleLabel?.font = UIFont(name:"HelveticaNeue-Bold", size: 20.0)
+        }
+        
         item._titleLabel?.backgroundColor = UIColor(red: 255, green: 255, blue: 255, alpha: 0.2)
         
     }

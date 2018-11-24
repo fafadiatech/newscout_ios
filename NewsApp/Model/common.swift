@@ -20,19 +20,22 @@ struct colorConstants{
 struct FontConstants{
     static let isPhone = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.phone)
     static let fontSize:CGFloat = isPhone ? 12 :20
-    static let fontxLarge:CGFloat = isPhone ? 16:20 //16
-    static let fontxNormal:CGFloat = isPhone ? 15 :20 //14
+    static let fontxLarge:CGFloat = isPhone ? 16:24 //16
+    static let fontxNormal:CGFloat = isPhone ? 15 :22 //14
     static let fontxSmall:CGFloat = isPhone ? 12 :20 //12
-    static let fontLargeHeading:CGFloat = isPhone ? 20:20 //25
-    static let fontNormalHeading:CGFloat = isPhone ? 18 :20 //22
+    static let fontLargeHeading:CGFloat = isPhone ? 20:26 //25
+    static let fontNormalHeading:CGFloat = isPhone ? 18 :28 //22
     static let fontSmallHeading:CGFloat = isPhone ? 16 :20 //18
-    static let fontLargeTitle:CGFloat = isPhone ? 21:20 //21
-    static let fontNormalTitle:CGFloat = isPhone ? 17 :20 //18
+    static let fontLargeTitle:CGFloat = isPhone ? 21:26 //21
+    static let fontNormalTitle:CGFloat = isPhone ? 17 :25//18
     static let fontSmallTitle:CGFloat = isPhone ? 14 :20 //14
-    static let fontLargeContent:CGFloat = isPhone ? 18 :20 //18
-    static let fontNormalContent:CGFloat = isPhone ? 16 :20 //14
-    static let fontSmallContent:CGFloat = isPhone ? 14 :20 //10
-    static let fontNormalBtn: CGFloat = isPhone ? 18 :20
+    static let fontLargeContent:CGFloat = isPhone ? 18 :28 //18
+    static let fontNormalContent:CGFloat = isPhone ? 16 :22 //14
+    static let fontSmallContent:CGFloat = isPhone ? 14 :22 //10
+    static let fontNormalBtn: CGFloat = isPhone ? 18 :26
+    static let fontViewTitle:CGFloat = isPhone ? 23 : 35
+    static let fontSettingsTVHeader:CGFloat = isPhone ? 20 : 23
+    static let fontAppTitle:CGFloat = isPhone ? 24 : 32
   
     //for button titles
       static let FontBtnTitle = UIFont(name: AppFontName.medium, size: FontConstants.fontNormalBtn)
@@ -62,10 +65,10 @@ struct FontConstants{
     static let LargeFontContent = UIFont(name: AppFontName.regular, size: FontConstants.fontLargeContent)
     static let NormalFontContent = UIFont(name: AppFontName.regular, size: FontConstants.fontNormalContent)
     //for title labels on each screen
-    static let viewTitleFont = UIFont(name: AppFontName.bold, size: 23)
+    static let viewTitleFont = UIFont(name: AppFontName.bold, size: FontConstants.fontViewTitle)
     //for settings tableview header
-    static let settingsTVHeader = UIFont(name: AppFontName.medium, size: 20)
-    static let appFont = UIFont(name: AppFontName.bold, size: 24)
+    static let settingsTVHeader = UIFont(name: AppFontName.medium, size: FontConstants.fontSettingsTVHeader)
+    static let appFont = UIFont(name: AppFontName.bold, size: FontConstants.fontAppTitle)
 }
 
 struct Constants{
@@ -122,4 +125,5 @@ struct APPURL {
     static let changePasswordURL = Domains.Local + Routes.changePassword
     static let bookmarkedArticlesURL = Domains.Local + Routes.bookmarkedArticles
 }
+
 

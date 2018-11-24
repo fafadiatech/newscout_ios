@@ -58,6 +58,12 @@ class SearchVC: UIViewController {
         refreshControl.addTarget(self, action: #selector(refreshBookmarkedNews), for: .valueChanged)
         searchResultTV.refreshControl = refreshControl
         refreshControl.attributedTitle = NSAttributedString(string: "Pull  to Refresh...")
+        if (UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad){
+            searchResultTV.rowHeight = 190;
+        }
+        else {
+            searchResultTV.rowHeight = 129;
+        }
     }
     
     func BookmarkAPICall()

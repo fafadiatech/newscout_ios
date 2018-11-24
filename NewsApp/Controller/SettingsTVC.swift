@@ -27,12 +27,23 @@ class SettingsTVC: UITableViewController, GIDSignInUIDelegate {
         }
         segmentTextSize.tintColor = colorConstants.redColor
         segmentTextSize.selectedSegmentIndex = textSizeSelected
-    segmentTextSize.setTitleTextAttributes([NSAttributedStringKey.foregroundColor: UIColor.black], for: UIControlState.normal)
+       
+segmentTextSize.setTitleTextAttributes([NSAttributedStringKey.foregroundColor: UIColor.black], for: UIControlState.normal)
+        if (UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad){
+            tableView.rowHeight = 70
+            segmentTextSize.setWidth(120, forSegmentAt: 0)
+            segmentTextSize.setWidth(120, forSegmentAt: 1)
+            segmentTextSize.setWidth(120, forSegmentAt: 2)
+        }
+        else {
+            tableView.rowHeight = 44
+        }
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
         
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem
+
     }
     
     override func viewWillAppear(_ animated: Bool) {

@@ -36,7 +36,12 @@ class CategoryListVC: UIViewController {
         activityIndicator.progress = 2.0
         view.addSubview(activityIndicator)
         activityIndicator.startAnimating()
-        
+        if (UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad){
+            tableCategoryLIst.rowHeight = 80;
+        }
+        else {
+            tableCategoryLIst.rowHeight = 57;
+        }
         APICall().loadCategoriesAPI{ response in
             switch response {
             case .Success(let data) :
@@ -125,15 +130,29 @@ extension CategoryListVC:UITableViewDelegate, UITableViewDataSource{
         let cell = tableCategoryLIst.dequeueReusableCell(withIdentifier: "CategoryListID", for:indexPath) as! CategoryListTVCell
         let catData = CategoryData[0].categories[indexPath.row]
         var textSizeSelected = UserDefaults.standard.value(forKey: "textSize") as! Int
+        if (UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.phone){
         if textSizeSelected == 0{
-            cell.lblCategoryName.font = UIFont(name: AppFontName.regular, size: 15)
+            cell.lblCategoryName.font = UIFont(name: AppFontName.regular, size: 16)
         }
         else if textSizeSelected == 2{
-            cell.lblCategoryName.font = UIFont(name: AppFontName.regular, size: 19)
+            cell.lblCategoryName.font = UIFont(name: AppFontName.regular, size: 20)
         }
         else{
-            cell.lblCategoryName.font =  UIFont(name: AppFontName.regular, size: 17)
+            cell.lblCategoryName.font =  UIFont(name: AppFontName.regular, size: 18)
+            }
         }
+        else{
+            if textSizeSelected == 0{
+                cell.lblCategoryName.font = UIFont(name: AppFontName.regular, size: 24)
+            }
+            else if textSizeSelected == 2{
+                cell.lblCategoryName.font = UIFont(name: AppFontName.regular, size: 28)
+            }
+            else{
+                cell.lblCategoryName.font =  UIFont(name: AppFontName.regular, size: 26)
+            }
+        }
+        
         cell.lblCategoryName.text = catData.title
         cell.btnDelete.tag = indexPath.row
         if categories.contains(catData.title!){
