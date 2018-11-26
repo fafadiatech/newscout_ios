@@ -113,16 +113,16 @@ open class Floaty: UIView {
      Child item's default size.
      */
     @IBInspectable
-    @objc open var itemSize: CGFloat = 60{
+    @objc open var itemSize : CGFloat = 50{
         didSet {
             self.items.forEach { item in
                 if (UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad){
-                    item.size = 60
+                    itemSize = 60
                 }
                 else {
-                   item.size = 42
+                   itemSize = 50
                 }
-                //item.size = self.itemSize
+                item.size = self.itemSize
             }
             self.recalculateItemsOrigin()
             self.setNeedsDisplay()
@@ -722,11 +722,13 @@ open class Floaty: UIView {
         item.size = itemSize
         if (UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad){
           item._titleLabel?.font = UIFont(name:"HelveticaNeue-Bold", size: 28.0)
+            item.size = 60
         }
         else {
            item._titleLabel?.font = UIFont(name:"HelveticaNeue-Bold", size: 20.0)
+            item.size = 50
         }
-        
+         item.size = itemSize
         item._titleLabel?.backgroundColor = UIColor(red: 255, green: 255, blue: 255, alpha: 0.2)
         
     }
@@ -1053,8 +1055,13 @@ extension Floaty {
                            usingSpringWithDamping: 0.55,
                            initialSpringVelocity: 0.3,
                            options: UIViewAnimationOptions(), animations: { () -> Void in
-                            item.frame.origin.x = self.size/2 - self.itemSize/2
-                            item.alpha = 1
+                             if (UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad){
+                            item.frame.origin.x = self.size/2 - 30
+                            }
+                             else{
+                                item.frame.origin.x = self.size/2 - 25
+                            }
+                             item.alpha = 1
             }, completion: { _ in
                 group.leave()
             })
@@ -1120,7 +1127,13 @@ extension Floaty {
         var itemHeight: CGFloat = 0
         
         if self.size > self.itemSize && verticalDirection == .down {
-            itemHeight = self.size - self.itemSize
+             if (UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad){
+                itemHeight = self.size - self.itemSize //60
+                
+             }
+             else{
+                itemHeight = self.size - self.itemSize //50
+            }
         }
         
         for item in items {

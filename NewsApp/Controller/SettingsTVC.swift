@@ -27,8 +27,8 @@ class SettingsTVC: UITableViewController, GIDSignInUIDelegate {
         }
         segmentTextSize.tintColor = colorConstants.redColor
         segmentTextSize.selectedSegmentIndex = textSizeSelected
-       
-segmentTextSize.setTitleTextAttributes([NSAttributedStringKey.foregroundColor: UIColor.black], for: UIControlState.normal)
+        let font = FontConstants.NormalFontContentMedium
+        segmentTextSize.setTitleTextAttributes([NSAttributedStringKey.font: font],for: .normal)
         if (UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad){
             tableView.rowHeight = 70
             segmentTextSize.setWidth(120, forSegmentAt: 0)
@@ -38,12 +38,6 @@ segmentTextSize.setTitleTextAttributes([NSAttributedStringKey.foregroundColor: U
         else {
             tableView.rowHeight = 44
         }
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-        
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem
-
     }
     
     override func viewWillAppear(_ animated: Bool) {

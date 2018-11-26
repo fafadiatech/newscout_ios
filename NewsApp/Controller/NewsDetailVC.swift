@@ -44,7 +44,19 @@ class NewsDetailVC: UIViewController {
         if (UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad)
         {
             if UIDeviceOrientationIsLandscape(UIDevice.current.orientation) {
-                viewLikeDislike.isHidden = true
+                viewLikeDislike.isHidden = false
+                var bottomConstraint = NSLayoutConstraint (item: viewLikeDislike,
+                                                           attribute: NSLayoutAttribute.bottom,
+                                                           relatedBy: NSLayoutRelation.equal,
+                                                           toItem: self.suggestedView,
+                                                           attribute: NSLayoutAttribute.top,
+                                                           multiplier: 1,
+                                                           constant: 0)
+                // Add the constraint to the view
+                self.view.addConstraint(bottomConstraint)
+                suggestedView.frame.origin.y = 720
+               // self.viewLikeDislike.frame = CGRect(x: 0, y: 589, width: self.view.frame.width, height: 70)
+                
             }
             else{
            viewLikeDislike.isHidden = false

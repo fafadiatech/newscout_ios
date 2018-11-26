@@ -452,7 +452,13 @@ public extension UIView {
         if let title = title {
             titleLabel = UILabel()
             titleLabel?.numberOfLines = style.titleNumberOfLines
-            titleLabel?.font = style.titleFont
+            if (UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad){
+                titleLabel?.font =  UIFont(name:"HelveticaNeue-Light", size: 32.0)//style.messageFont
+            }
+            else{
+                titleLabel?.font =  UIFont(name:"HelveticaNeue-Light", size: 18.0)
+            }
+            //titleLabel?.font = UIFont(name:"HelveticaNeue-Light", size: 32.0) //style.titleFont
             titleLabel?.textAlignment = style.titleAlignment
             titleLabel?.lineBreakMode = .byTruncatingTail
             titleLabel?.textColor = style.titleColor
@@ -470,7 +476,12 @@ public extension UIView {
             messageLabel = UILabel()
             messageLabel?.text = message
             messageLabel?.numberOfLines = style.messageNumberOfLines
-            messageLabel?.font = style.messageFont
+            if (UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad){
+                messageLabel?.font =  UIFont(name:"HelveticaNeue-Light", size: 32.0)//style.messageFont
+            }
+            else{
+                 messageLabel?.font =  UIFont(name:"HelveticaNeue-Light", size: 18.0)
+            }
             messageLabel?.textAlignment = style.messageAlignment
             messageLabel?.lineBreakMode = .byTruncatingTail;
             messageLabel?.textColor = style.messageColor
