@@ -48,8 +48,8 @@ public struct ButtonBarPagerTabStripSettings {
         public var buttonBarLeftContentInset: CGFloat?
         public var buttonBarRightContentInset: CGFloat?
         
-        public var selectedBarBackgroundColor = UIColor.black
-        public var selectedBarHeight: CGFloat = 1 // underline height
+        public var selectedBarBackgroundColor = UIColor.red
+        public var selectedBarHeight: CGFloat = 3 // underline height
         public var selectedBarVerticalAlignment: SelectedBarVerticalAlignment = .bottom
         
         public var buttonBarItemBackgroundColor: UIColor?
@@ -124,7 +124,7 @@ open class ButtonBarPagerTabStripViewController: PagerTabStripViewController, Pa
             let buttonBarHeight = settings.style.buttonBarHeight ?? 44
             let buttonBar = ButtonBarView(frame: CGRect(x: 0, y: 0, width: view.frame.size.width, height: buttonBarHeight), collectionViewLayout: flowLayout)
             buttonBar.backgroundColor = .orange
-            buttonBar.selectedBar.backgroundColor = .black
+            buttonBar.selectedBar.backgroundColor = .red
             buttonBar.autoresizingMask = .flexibleWidth
             var newContainerViewFrame = containerView.frame
             newContainerViewFrame.origin.y = buttonBarHeight
@@ -328,10 +328,10 @@ open class ButtonBarPagerTabStripViewController: PagerTabStripViewController, Pa
         print(cell.label.text)
         cell.accessibilityLabel = indicatorInfo.accessibilityLabel
         if (UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.phone){
-            cell.label.font = UIFont(name:"HelveticaNeue-Light", size: 18.0) //settings.style.buttonBarItemFont}
+            cell.label.font = UIFont(name:"HelveticaNeue-Bold", size: 22.0) //settings.style.buttonBarItemFont}
         }
         else{
-            cell.label.font = UIFont(name:"HelveticaNeue-Light", size: 22.0)
+            cell.label.font = UIFont(name:"HelveticaNeue-Bold", size: 32.0)
         }
         cell.label.textColor = .black //settings.style.buttonBarItemTitleColor ?? cell.label.textColor
         cell.contentView.backgroundColor = settings.style.buttonBarItemBackgroundColor ?? cell.contentView.backgroundColor
@@ -390,7 +390,7 @@ open class ButtonBarPagerTabStripViewController: PagerTabStripViewController, Pa
                 minimumCellWidths.append(width + 100)
                 }
                 else{
-                    minimumCellWidths.append(width)
+                    minimumCellWidths.append(width + 50)
                 }
                 collectionViewContentWidth += width
                 print(collectionViewContentWidth)
@@ -400,7 +400,7 @@ open class ButtonBarPagerTabStripViewController: PagerTabStripViewController, Pa
                 minimumCellWidths.append(width + 100)
                 }
                 else{
-                    minimumCellWidths.append(width)
+                    minimumCellWidths.append(width + 50)
                 }
                 collectionViewContentWidth += width
                 // minimumCellWidths.append(130)

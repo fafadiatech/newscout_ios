@@ -37,10 +37,10 @@ class CategoryListVC: UIViewController {
         view.addSubview(activityIndicator)
         activityIndicator.startAnimating()
         if (UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad){
-            tableCategoryLIst.rowHeight = 80;
+            tableCategoryLIst.rowHeight = 70;
         }
         else {
-            tableCategoryLIst.rowHeight = 57;
+            tableCategoryLIst.rowHeight = 50;
         }
         APICall().loadCategoriesAPI{ response in
             switch response {
@@ -132,13 +132,13 @@ extension CategoryListVC:UITableViewDelegate, UITableViewDataSource{
         var textSizeSelected = UserDefaults.standard.value(forKey: "textSize") as! Int
         if (UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.phone){
         if textSizeSelected == 0{
-            cell.lblCategoryName.font = UIFont(name: AppFontName.regular, size: 16)
+            cell.lblCategoryName.font = UIFont(name: AppFontName.bold, size: 18)
         }
         else if textSizeSelected == 2{
-            cell.lblCategoryName.font = UIFont(name: AppFontName.regular, size: 20)
+            cell.lblCategoryName.font = UIFont(name: AppFontName.bold, size: 20)
         }
         else{
-            cell.lblCategoryName.font =  UIFont(name: AppFontName.regular, size: 18)
+            cell.lblCategoryName.font =  UIFont(name: AppFontName.bold, size: 22)
             }
         }
         else{
@@ -182,6 +182,6 @@ extension CategoryListVC:UITableViewDelegate, UITableViewDataSource{
 extension CategoryListVC:IndicatorInfoProvider{
     
     func indicatorInfo(for pagerTabStripController: PagerTabStripViewController) -> IndicatorInfo {
-        return IndicatorInfo(title: "MORE")
+        return IndicatorInfo(title: "More")
     }
 }

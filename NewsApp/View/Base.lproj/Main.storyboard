@@ -121,7 +121,7 @@
                                 <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                 <color key="sectionIndexBackgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="HomeNewsTVCellID" id="abD-Rk-t09" customClass="HomeNewsTVCell" customModule="NewsApp" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="HomeNewsTVCellID" id="abD-Rk-t09" customClass="HomeNewsTVCell" customModule="NewsApp" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="768" height="137"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="abD-Rk-t09" id="Vzs-jk-Q0E">
@@ -350,10 +350,10 @@
                                 </connections>
                             </button>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="35" translatesAutoresizingMaskIntoConstraints="NO" id="NaK-a7-uz3">
-                                <rect key="frame" x="401" y="272" width="200" height="157"/>
+                                <rect key="frame" x="400.5" y="272" width="200.5" height="157"/>
                                 <subviews>
                                     <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Old password" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="pj7-iO-fZ1">
-                                        <rect key="frame" x="0.0" y="0.0" width="200" height="29"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="200.5" height="29"/>
                                         <nil key="textColor"/>
                                         <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="15"/>
                                         <textInputTraits key="textInputTraits" secureTextEntry="YES"/>
@@ -362,7 +362,7 @@
                                         </variation>
                                     </textField>
                                     <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder=" New Password" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="ewb-rv-yMP">
-                                        <rect key="frame" x="0.0" y="64" width="200" height="29"/>
+                                        <rect key="frame" x="0.0" y="64" width="200.5" height="29"/>
                                         <nil key="textColor"/>
                                         <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="15"/>
                                         <textInputTraits key="textInputTraits" secureTextEntry="YES"/>
@@ -371,7 +371,7 @@
                                         </variation>
                                     </textField>
                                     <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Confirm Passord" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="hAt-tz-wBI">
-                                        <rect key="frame" x="0.0" y="128" width="200" height="29"/>
+                                        <rect key="frame" x="0.0" y="128" width="200.5" height="29"/>
                                         <nil key="textColor"/>
                                         <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="15"/>
                                         <textInputTraits key="textInputTraits" secureTextEntry="YES"/>
@@ -935,7 +935,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="CategoryListID" rowHeight="67" id="O8I-oU-aqi" customClass="CategoryListTVCell" customModule="NewsApp" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="CategoryListID" rowHeight="67" id="O8I-oU-aqi" customClass="CategoryListTVCell" customModule="NewsApp" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="768" height="67"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="O8I-oU-aqi" id="fgR-9q-NVa">
@@ -1063,7 +1063,7 @@
                                         </connections>
                                     </button>
                                     <stackView opaque="NO" contentMode="scaleToFill" spacing="28" translatesAutoresizingMaskIntoConstraints="NO" id="HB2-ri-zPz">
-                                        <rect key="frame" x="261.5" y="157.5" width="246.5" height="81"/>
+                                        <rect key="frame" x="261" y="157.5" width="246.5" height="81"/>
                                         <subviews>
                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="22" translatesAutoresizingMaskIntoConstraints="NO" id="cPx-iJ-1SX">
                                                 <rect key="frame" x="0.0" y="0.0" width="85.5" height="81"/>
@@ -1351,6 +1351,7 @@
                                             <constraint firstItem="q3E-WQ-OR7" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="RN0-l8-Mx1" secondAttribute="leading" constant="20" symbolic="YES" id="bPA-2Y-K3f"/>
                                             <constraint firstItem="22D-cz-AGN" firstAttribute="top" secondItem="RN0-l8-Mx1" secondAttribute="top" constant="21" id="c08-ed-zhf"/>
                                             <constraint firstItem="fW6-pK-tzj" firstAttribute="leading" secondItem="RN0-l8-Mx1" secondAttribute="leading" constant="20" id="eNL-MJ-29k">
+                                                <variation key="heightClass=regular-widthClass=compact" constant="10"/>
                                                 <variation key="heightClass=regular-widthClass=regular" constant="20"/>
                                             </constraint>
                                             <constraint firstItem="22D-cz-AGN" firstAttribute="leading" secondItem="nZz-U0-3iL" secondAttribute="trailing" constant="15" id="guJ-OL-BmC"/>
@@ -1680,7 +1681,7 @@
                                         </connections>
                                     </button>
                                     <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Search here" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Dnl-Te-tOb">
-                                        <rect key="frame" x="115.5" y="26.5" width="537.5" height="32"/>
+                                        <rect key="frame" x="115" y="26.5" width="537.5" height="32"/>
                                         <nil key="textColor"/>
                                         <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="18"/>
                                         <textInputTraits key="textInputTraits"/>
@@ -1697,7 +1698,7 @@
                                         </connections>
                                     </textField>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Bookmark" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ipd-2p-hZt">
-                                        <rect key="frame" x="297.5" y="21.5" width="173.5" height="42"/>
+                                        <rect key="frame" x="297" y="21.5" width="173.5" height="42"/>
                                         <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="17"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
@@ -1722,7 +1723,7 @@
                                 <rect key="frame" x="0.0" y="104" width="768" height="920"/>
                                 <color key="backgroundColor" red="0.96078431372549022" green="0.96078431372549022" blue="0.96078431372549022" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="searchResultID" id="lIw-2Y-cle" customClass="SearchResultTVCell" customModule="NewsApp" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="searchResultID" id="lIw-2Y-cle" customClass="SearchResultTVCell" customModule="NewsApp" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="768" height="137"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="lIw-2Y-cle" id="gnp-63-8Vo">
@@ -1875,7 +1876,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="767.5" height="83.5"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Login" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MRh-dc-s8N">
-                                        <rect key="frame" x="356" y="31" width="55.5" height="27.5"/>
+                                        <rect key="frame" x="356" y="30.5" width="55.5" height="27.5"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="23"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
@@ -1903,70 +1904,63 @@
                                 </constraints>
                                 <viewLayoutGuide key="safeArea" id="3Ck-1g-mOu"/>
                             </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9Qv-Sf-igf">
-                                <rect key="frame" x="191.5" y="83.5" width="384" height="285.5"/>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="23" translatesAutoresizingMaskIntoConstraints="NO" id="ifS-25-mv7">
+                                <rect key="frame" x="60" y="192.5" width="648" height="125"/>
                                 <subviews>
-                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="19" translatesAutoresizingMaskIntoConstraints="NO" id="Jbc-ew-Asq">
-                                        <rect key="frame" x="0.0" y="101" width="113" height="76"/>
-                                        <subviews>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Username:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8Vc-BA-ZAK">
-                                                <rect key="frame" x="0.0" y="0.0" width="113" height="28.5"/>
-                                                <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="18"/>
-                                                <nil key="textColor"/>
-                                                <nil key="highlightedColor"/>
-                                                <variation key="heightClass=regular-widthClass=regular">
-                                                    <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="24"/>
-                                                </variation>
-                                            </label>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Password:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gNk-g9-zNP">
-                                                <rect key="frame" x="0.0" y="47.5" width="113" height="28.5"/>
-                                                <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="18"/>
-                                                <nil key="textColor"/>
-                                                <nil key="highlightedColor"/>
-                                                <variation key="heightClass=regular-widthClass=regular">
-                                                    <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="24"/>
-                                                </variation>
-                                            </label>
-                                        </subviews>
-                                    </stackView>
-                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="IyO-n5-dIr">
-                                        <rect key="frame" x="172" y="101" width="212" height="84"/>
-                                        <subviews>
-                                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="WNS-Ff-LIs">
-                                                <rect key="frame" x="0.0" y="0.0" width="212" height="34"/>
-                                                <nil key="textColor"/>
-                                                <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="25"/>
-                                                <textInputTraits key="textInputTraits"/>
-                                                <variation key="heightClass=regular-widthClass=compact">
-                                                    <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="19"/>
-                                                </variation>
-                                            </textField>
-                                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="dQv-vb-8U3">
-                                                <rect key="frame" x="0.0" y="50" width="212" height="34"/>
-                                                <nil key="textColor"/>
-                                                <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="25"/>
-                                                <textInputTraits key="textInputTraits" secureTextEntry="YES" textContentType="password"/>
-                                                <variation key="heightClass=regular-widthClass=compact">
-                                                    <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="19"/>
-                                                </variation>
-                                            </textField>
-                                        </subviews>
-                                    </stackView>
+                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="line" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="WNS-Ff-LIs" customClass="SkyFloatingLabelTextField" customModule="SkyFloatingLabelTextField">
+                                        <rect key="frame" x="0.0" y="0.0" width="648" height="51"/>
+                                        <nil key="textColor"/>
+                                        <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="30"/>
+                                        <textInputTraits key="textInputTraits"/>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="string" keyPath="placeholder" value="Enter Email"/>
+                                            <userDefinedRuntimeAttribute type="color" keyPath="lineColor">
+                                                <color key="value" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="color" keyPath="titleColor">
+                                                <color key="value" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="color" keyPath="selectedTitleColor">
+                                                <color key="value" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="color" keyPath="selectedLineColor">
+                                                <color key="value" red="0.67843137249999996" green="0.1764705882" blue="0.074509803920000006" alpha="1" colorSpace="calibratedRGB"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                    </textField>
+                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="line" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="dQv-vb-8U3" customClass="SkyFloatingLabelTextField" customModule="SkyFloatingLabelTextField">
+                                        <rect key="frame" x="0.0" y="74" width="648" height="51"/>
+                                        <nil key="textColor"/>
+                                        <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="30"/>
+                                        <textInputTraits key="textInputTraits" secureTextEntry="YES" textContentType="password"/>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="string" keyPath="placeholder" value="Enter Password"/>
+                                            <userDefinedRuntimeAttribute type="color" keyPath="lineColor">
+                                                <color key="value" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="color" keyPath="titleErrorColor">
+                                                <color key="value" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="color" keyPath="titleColor">
+                                                <color key="value" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="color" keyPath="selectedTitleColor">
+                                                <color key="value" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="color" keyPath="selectedLineColor">
+                                                <color key="value" red="0.67843137249999996" green="0.1764705882" blue="0.074509803920000006" alpha="1" colorSpace="calibratedRGB"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                    </textField>
                                 </subviews>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
-                                    <constraint firstItem="IyO-n5-dIr" firstAttribute="width" secondItem="9Qv-Sf-igf" secondAttribute="width" multiplier="0.5" id="DnC-HO-tsS">
-                                        <variation key="heightClass=regular-widthClass=compact" constant="34"/>
-                                        <variation key="heightClass=regular-widthClass=regular" constant="20"/>
-                                    </constraint>
-                                    <constraint firstItem="IyO-n5-dIr" firstAttribute="centerY" secondItem="9Qv-Sf-igf" secondAttribute="centerY" id="GEk-n4-Grn"/>
-                                    <constraint firstItem="Jbc-ew-Asq" firstAttribute="top" secondItem="WNS-Ff-LIs" secondAttribute="top" id="MCu-2h-7LB"/>
-                                    <constraint firstItem="Jbc-ew-Asq" firstAttribute="top" secondItem="WNS-Ff-LIs" secondAttribute="top" id="OHO-Qq-Q86"/>
-                                    <constraint firstItem="IyO-n5-dIr" firstAttribute="centerX" secondItem="9Qv-Sf-igf" secondAttribute="centerX" multiplier="1.3" id="cUB-rp-vY9"/>
-                                    <constraint firstItem="Jbc-ew-Asq" firstAttribute="leading" secondItem="9Qv-Sf-igf" secondAttribute="leading" id="ryy-Rh-HYb"/>
-                                    <constraint firstAttribute="trailing" secondItem="IyO-n5-dIr" secondAttribute="trailing" id="xS6-if-Woe"/>
+                                    <constraint firstItem="dQv-vb-8U3" firstAttribute="leading" secondItem="ifS-25-mv7" secondAttribute="leading" id="4bu-dh-Lyl"/>
+                                    <constraint firstAttribute="trailing" secondItem="WNS-Ff-LIs" secondAttribute="trailing" id="MgR-EO-tVa"/>
+                                    <constraint firstItem="dQv-vb-8U3" firstAttribute="height" secondItem="WNS-Ff-LIs" secondAttribute="height" id="akh-77-9Kc"/>
+                                    <constraint firstItem="WNS-Ff-LIs" firstAttribute="leading" secondItem="ifS-25-mv7" secondAttribute="leading" id="ea2-pw-gAV"/>
+                                    <constraint firstAttribute="trailing" secondItem="dQv-vb-8U3" secondAttribute="trailing" id="hhF-WO-5VL"/>
                                 </constraints>
-                            </view>
+                            </stackView>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="14" translatesAutoresizingMaskIntoConstraints="NO" id="Cg8-RF-y20">
                                 <rect key="frame" x="191.5" y="369" width="384" height="388.5"/>
                                 <subviews>
@@ -2036,21 +2030,24 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="6PM-F7-nTo" firstAttribute="trailing" secondItem="3yi-WA-2AX" secondAttribute="trailing" id="CoG-oB-R1c"/>
-                            <constraint firstItem="Cg8-RF-y20" firstAttribute="top" secondItem="9Qv-Sf-igf" secondAttribute="bottom" id="Dj3-dd-GQ8"/>
                             <constraint firstItem="6PM-F7-nTo" firstAttribute="top" secondItem="3yi-WA-2AX" secondAttribute="top" id="HKH-ow-BEl"/>
                             <constraint firstItem="Cg8-RF-y20" firstAttribute="width" secondItem="6PM-F7-nTo" secondAttribute="width" multiplier="0.8" id="Hx9-5X-x9W">
                                 <variation key="heightClass=regular-widthClass=regular" constant="-230"/>
                             </constraint>
+                            <constraint firstItem="ifS-25-mv7" firstAttribute="height" secondItem="6PM-F7-nTo" secondAttribute="height" multiplier="1.5" id="Ke5-I6-u7V"/>
                             <constraint firstItem="6PM-F7-nTo" firstAttribute="leading" secondItem="3yi-WA-2AX" secondAttribute="leading" id="TDF-LV-4so"/>
+                            <constraint firstItem="ifS-25-mv7" firstAttribute="centerY" secondItem="08k-rv-9qG" secondAttribute="centerY" id="YVk-1o-YiC">
+                                <variation key="heightClass=regular-widthClass=regular" constant="-240"/>
+                            </constraint>
+                            <constraint firstItem="ifS-25-mv7" firstAttribute="centerX" secondItem="08k-rv-9qG" secondAttribute="centerX" id="aeR-OG-kdD"/>
                             <constraint firstItem="6PM-F7-nTo" firstAttribute="height" secondItem="3yi-WA-2AX" secondAttribute="height" multiplier="0.08" constant="1.6400000000000006" id="baa-EK-mNZ"/>
-                            <constraint firstItem="Cg8-RF-y20" firstAttribute="trailing" secondItem="9Qv-Sf-igf" secondAttribute="trailing" id="cBL-Cy-xJZ">
+                            <constraint firstItem="Cg8-RF-y20" firstAttribute="trailing" secondItem="08k-rv-9qG" secondAttribute="trailing" id="cBL-Cy-xJZ">
                                 <variation key="heightClass=regular-widthClass=compact" constant="0.0"/>
+                                <variation key="heightClass=regular-widthClass=regular" constant="-192.5"/>
                             </constraint>
                             <constraint firstItem="Cg8-RF-y20" firstAttribute="centerY" secondItem="3yi-WA-2AX" secondAttribute="centerY" multiplier="1.1" id="nid-Sj-uet"/>
                             <constraint firstItem="JRl-wn-iJV" firstAttribute="height" secondItem="6PM-F7-nTo" secondAttribute="height" multiplier="0.8" constant="1" id="svC-Mu-YpM"/>
                             <constraint firstItem="Cg8-RF-y20" firstAttribute="centerX" secondItem="3yi-WA-2AX" secondAttribute="centerX" id="vb1-j0-o4P"/>
-                            <constraint firstItem="9Qv-Sf-igf" firstAttribute="top" secondItem="6PM-F7-nTo" secondAttribute="bottom" id="wLP-jh-AMO"/>
-                            <constraint firstItem="9Qv-Sf-igf" firstAttribute="leading" secondItem="Cg8-RF-y20" secondAttribute="leading" id="yG4-en-Glm"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="08k-rv-9qG"/>
                     </view>

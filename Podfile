@@ -16,6 +16,7 @@ target 'NewsApp' do
     pod 'MaterialComponents/ActivityIndicator'
     pod 'Toast-Swift'
     pod 'SDWebImage'
+    pod 'SkyFloatingLabelTextField'
     target 'NewsAppTests' do
         inherit! :search_paths
         # Pods for testing

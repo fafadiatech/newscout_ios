@@ -45,6 +45,7 @@ PODS:
   - SDWebImage (4.4.2):
     - SDWebImage/Core (= 4.4.2)
   - SDWebImage/Core (4.4.2)
+  - SkyFloatingLabelTextField (3.5.1)
   - SwiftyJSON (4.1.0)
   - Toast-Swift (3.0.1)
   - XLPagerTabStrip (8.0.1)
@@ -56,6 +57,7 @@ DEPENDENCIES:
   - GoogleSignIn
   - MaterialComponents/ActivityIndicator
   - SDWebImage
+  - SkyFloatingLabelTextField
   - SwiftyJSON
   - Toast-Swift
   - XLPagerTabStrip
@@ -76,6 +78,7 @@ SPEC REPOS:
     - MotionAnimator
     - MotionInterchange
     - SDWebImage
+    - SkyFloatingLabelTextField
     - SwiftyJSON
     - Toast-Swift
     - XLPagerTabStrip
@@ -95,10 +98,11 @@ SPEC CHECKSUMS:
   MotionAnimator: ee16aa30567c5bae0fb2750c132915829cfaaf8a
   MotionInterchange: ead0e3ae1f3a5fb539e289debbc7ae036160a10d
   SDWebImage: 624d6e296c69b244bcede364c72ae0430ac14681
+  SkyFloatingLabelTextField: 4cbeece9c3aae97c6019d8fae511cb5b755874f7
   SwiftyJSON: c29297daf073d2aa016295d5809cdd68045c39b3
   Toast-Swift: ba0b01b095aada709d915f9beb1d38184a2721c3
   XLPagerTabStrip: c908b17cbf42fcd2598ee1adfc49bae25444d88a
 
-PODFILE CHECKSUM: c000400e441361f640561b8de55a8dcfd03217bb
+PODFILE CHECKSUM: e452b1d057bcba3d1dce78c5ac0ac26620e9f8b0
 
 COCOAPODS: 1.5.0

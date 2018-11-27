@@ -15,7 +15,7 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
     @IBOutlet weak var viewAppTitle: UIView!
     @IBOutlet weak var lblAppName: UILabel!
     var childrenVC = [UIViewController]()
-    var categories = ["FOR YOU"]
+    var categories = ["For You"]
     
     override func viewDidLoad() {
         settings.style.buttonBarItemsShouldFillAvailiableWidth = false
@@ -65,7 +65,7 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
             self.present(searchvc, animated: true, completion: nil)
         }
         self.view.addSubview(floaty)
-        buttonBarView.selectedBar.backgroundColor = .black
+        buttonBarView.selectedBar.backgroundColor = .red
         buttonBarView.backgroundColor = colorConstants.whiteColor
         
         changeCurrentIndexProgressive = {[weak self](oldCell:ButtonBarViewCell?, newCell: ButtonBarViewCell?, progressPercentage:CGFloat, changeCurrentIndex:Bool, animated:Bool)-> Void in

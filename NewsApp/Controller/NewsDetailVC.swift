@@ -98,7 +98,7 @@ class NewsDetailVC: UIViewController {
         
         let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapped(gestureRecognizer:)))
         viewContainer.addGestureRecognizer(tapRecognizer)
-        tapRecognizer.delegate = self as! UIGestureRecognizerDelegate
+         tapRecognizer.delegate = self as! UIGestureRecognizerDelegate
     }
     
     @objc func tapped(gestureRecognizer: UITapGestureRecognizer) {
@@ -179,6 +179,9 @@ class NewsDetailVC: UIViewController {
             switch swipeGesture.direction {
             case UISwipeGestureRecognizerDirection.right:
                 ViewWebContainer.isHidden = true
+                let storyboard = UIStoryboard(name: "Main", bundle: nil)
+                let vc:HomeParentVC = storyboard.instantiateViewController(withIdentifier: "HomeParentID") as! HomeParentVC
+                self.present(vc, animated: true, completion: nil)
                 print("Swiped right")
                 
             case UISwipeGestureRecognizerDirection.down:
@@ -313,7 +316,7 @@ class NewsDetailVC: UIViewController {
             }
         }
         else{
-            self.view.makeToast("Please login to continue..", duration: 1.0, position: .center)
+            showMsg(title: "Please login to continue..", msg: "")
         }
     }
     
@@ -350,7 +353,8 @@ class NewsDetailVC: UIViewController {
             }
         }
         else{
-            self.view.makeToast("Please login to continue..", duration: 1.0, position: .center)
+            showMsg(title: "Please login to continue..", msg: "")
+            //self.view.makeToast("Please login to continue..", duration: 1.0, position: .center)
         }
     }
     
@@ -383,7 +387,7 @@ class NewsDetailVC: UIViewController {
             }
         }
         else{
-            self.view.makeToast("Please login to continue..", duration: 1.0, position: .center)
+            showMsg(title: "Please login to continue..", msg: "")
         }
     }
     
@@ -393,14 +397,14 @@ class NewsDetailVC: UIViewController {
         let shareAll = [text ,myUrl] as [Any]
         let activityViewController = UIActivityViewController(activityItems: shareAll, applicationActivities: nil)
         activityViewController.popoverPresentationController?.sourceView = sender as! UIView
-        //UIApplication.shared.delegate!.window!?.rootViewController?.present(activityViewController, animated: true, completion: nil)
-        
-        
         self.present(activityViewController, animated: true, completion: nil)
     }
     
     @IBAction func btnBackAction(_ sender: Any) {
-        self.dismiss(animated: false)
+        //self.dismiss(animated: false)
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let vc:HomeVC = storyboard.instantiateViewController(withIdentifier: "HomeVC") as! HomeVC
+        self.present(vc, animated: true, completion: nil)
     }
     
     @IBAction func btnWebBackAction(_ sender: Any) {
@@ -410,6 +414,31 @@ class NewsDetailVC: UIViewController {
     //btn Back Action
     @IBAction func btnBAckAction(_ sender: Any) {
         self.dismiss(animated: false)
+    }
+    
+    func showMsg(title: String, msg : String)
+    {
+        let alertController = UIAlertController(title: title, message: msg, preferredStyle: .alert)
+        if UI_USER_INTERFACE_IDIOM() == .pad
+        {
+            alertController.popoverPresentationController?.sourceView = self.view
+            alertController.popoverPresentationController?.sourceRect = CGRect(x: self.view.bounds.midX, y: self.view.bounds.midY, width: 0, height: 0)
+            
+        }
+        let action1 = UIAlertAction(title: "OK", style: .default) { (action:UIAlertAction) in
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let vc:LoginVC = storyboard.instantiateViewController(withIdentifier: "LoginID") as! LoginVC
+            self.present(vc, animated: true, completion: nil)
+        }
+        
+        alertController.addAction(action1)
+        
+        let action2 = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.default) { (action:UIAlertAction) in
+            print("You've pressed cancel");
+        }
+        alertController.addAction(action2)
+        
+        self.present(alertController, animated: true, completion: nil)
     }
     
     override func didReceiveMemoryWarning() {

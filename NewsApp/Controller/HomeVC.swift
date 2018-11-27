@@ -117,7 +117,7 @@ class HomeVC: UIViewController{
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        if tabBarTitle == "FOR YOU"{
+        if tabBarTitle == "For You"{
             selectedCategory = "All News"
         }
         else{
@@ -298,7 +298,7 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
 extension HomeVC: IndicatorInfoProvider{
     func indicatorInfo(for pagerTabStripController: PagerTabStripViewController) -> IndicatorInfo {
         print(tabBarTitle)
-        return IndicatorInfo(title: tabBarTitle.uppercased())
+        return IndicatorInfo(title: tabBarTitle)
     }
 }
 
