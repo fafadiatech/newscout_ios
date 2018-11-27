@@ -205,17 +205,17 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
         if textSizeSelected == 0{
             cell.lblSource.font = FontConstants.smallFontContent
             cell.lblTimesAgo.font = FontConstants.smallFontContent
-            cell.lblNewsHeading.font = FontConstants.smallFontHeading
+            cell.lblNewsHeading.font = FontConstants.smallFontHeadingBold
         }
         else if textSizeSelected == 2{
             cell.lblSource.font = FontConstants.LargeFontContent
             cell.lblTimesAgo.font = FontConstants.LargeFontContent
-             cell.lblNewsHeading.font = FontConstants.LargeFontHeading
+             cell.lblNewsHeading.font = FontConstants.LargeFontHeadingBold
         }
         else{
             cell.lblSource.font =  FontConstants.NormalFontContent
              cell.lblTimesAgo.font = FontConstants.NormalFontContent
-            cell.lblNewsHeading.font = FontConstants.NormalFontHeading
+            cell.lblNewsHeading.font = FontConstants.NormalFontHeadingBold
            
         }
         activityIndicator.stopAnimating()

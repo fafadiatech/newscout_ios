@@ -24,8 +24,8 @@ struct FontConstants{
     static let fontxNormal:CGFloat = isPhone ? 15 :22 //14
     static let fontxSmall:CGFloat = isPhone ? 12 :20 //12
     static let fontLargeHeading:CGFloat = isPhone ? 20:26 //25
-    static let fontNormalHeading:CGFloat = isPhone ? 18 :28 //22
-    static let fontSmallHeading:CGFloat = isPhone ? 16 :20 //18
+    static let fontNormalHeading:CGFloat = isPhone ? 18 :24 //22
+    static let fontSmallHeading:CGFloat = isPhone ? 16 :22 //18
     static let fontLargeTitle:CGFloat = isPhone ? 21:26 //21
     static let fontNormalTitle:CGFloat = isPhone ? 17 :25//18
     static let fontSmallTitle:CGFloat = isPhone ? 14 :20 //14

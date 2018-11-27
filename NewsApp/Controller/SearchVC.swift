@@ -173,18 +173,18 @@ extension SearchVC: UITableViewDelegate, UITableViewDataSource{
         if textSizeSelected == 0{
             cell.lblSource.font = FontConstants.smallFontContent
             cell.lbltimeAgo.font = FontConstants.smallFontContent
-            cell.lblNewsDescription.font = FontConstants.smallFontHeading
+            cell.lblNewsDescription.font = FontConstants.smallFontHeadingBold
             
         }
         else if textSizeSelected == 2{
             cell.lblSource.font = FontConstants.LargeFontContent
             cell.lbltimeAgo.font = FontConstants.LargeFontContent
-            cell.lblNewsDescription.font = FontConstants.LargeFontHeading
+            cell.lblNewsDescription.font = FontConstants.LargeFontHeadingBold
         }
         else{
             cell.lblSource.font = FontConstants.NormalFontContent
             cell.lbltimeAgo.font = FontConstants.NormalFontContent
-            cell.lblNewsDescription.font = FontConstants.NormalFontHeading
+            cell.lblNewsDescription.font = FontConstants.NormalFontHeadingBold
         }
         activityIndicator.stopAnimating()
         return cell

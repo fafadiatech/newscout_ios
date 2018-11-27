@@ -27,6 +27,7 @@ class ProfileVC: UIViewController {
         btnChangePswd.layer.borderWidth = 0
         btnImgProfile.layer.cornerRadius = 0.5 * btnImgProfile.bounds.size.width
         btnImgProfile.clipsToBounds = true
+        btnImgProfile.isHidden = true
         btnImgProfile.setImage(UIImage(named:"settings"), for: .normal)
         btnChangePswd.backgroundColor = colorConstants.redColor
         btnChangePswd.setTitleColor(colorConstants.whiteColor, for: .normal)

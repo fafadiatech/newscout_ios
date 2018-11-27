@@ -55,11 +55,11 @@ class NewsDetailVC: UIViewController {
                 // Add the constraint to the view
                 self.view.addConstraint(bottomConstraint)
                 suggestedView.frame.origin.y = 720
-               // self.viewLikeDislike.frame = CGRect(x: 0, y: 589, width: self.view.frame.width, height: 70)
+                // self.viewLikeDislike.frame = CGRect(x: 0, y: 589, width: self.view.frame.width, height: 70)
                 
             }
             else{
-           viewLikeDislike.isHidden = false
+                viewLikeDislike.isHidden = false
             }
         }
         else
@@ -78,7 +78,7 @@ class NewsDetailVC: UIViewController {
                 self.view.makeToast(errormessage, duration: 2.0, position: .center)
             }
         }
-       
+        
         ShowNews(currentIndex: newsCurrentIndex)
         let swipeUp = UISwipeGestureRecognizer(target: self, action: #selector(self.respondToSwipeGesture))
         swipeUp.direction = UISwipeGestureRecognizerDirection.up
@@ -95,7 +95,7 @@ class NewsDetailVC: UIViewController {
         let swipeDown = UISwipeGestureRecognizer(target: self, action: #selector(self.respondToSwipeGesture))
         swipeDown.direction = UISwipeGestureRecognizerDirection.down
         self.newsView.addGestureRecognizer(swipeDown)
-       
+        
         let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapped(gestureRecognizer:)))
         viewContainer.addGestureRecognizer(tapRecognizer)
         tapRecognizer.delegate = self as! UIGestureRecognizerDelegate
@@ -103,12 +103,12 @@ class NewsDetailVC: UIViewController {
     
     @objc func tapped(gestureRecognizer: UITapGestureRecognizer) {
         if (UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.phone){ //|| UIDeviceOrientationIsLandscape(UIDevice.current.orientation){
-        if viewLikeDislike.isHidden == true{
-        viewLikeDislike.isHidden = false
-        }
-        else{
-            viewLikeDislike.isHidden = true
-        }
+            if viewLikeDislike.isHidden == true{
+                viewLikeDislike.isHidden = false
+            }
+            else{
+                viewLikeDislike.isHidden = true
+            }
         }
         
     }
@@ -392,7 +392,10 @@ class NewsDetailVC: UIViewController {
         let myUrl = NSURL(string:ArticleData[0].body.articles[newsCurrentIndex].imageURL!)
         let shareAll = [text ,myUrl] as [Any]
         let activityViewController = UIActivityViewController(activityItems: shareAll, applicationActivities: nil)
-        activityViewController.popoverPresentationController?.sourceView = self.view
+        activityViewController.popoverPresentationController?.sourceView = sender as! UIView
+        //UIApplication.shared.delegate!.window!?.rootViewController?.present(activityViewController, animated: true, completion: nil)
+        
+        
         self.present(activityViewController, animated: true, completion: nil)
     }
     
@@ -422,13 +425,13 @@ extension NewsDetailVC:UICollectionViewDelegate, UICollectionViewDataSource, UIC
                 width = 200.0
             }
             else{
-       width = 120.0
+                width = 120.0
             }
-    }
+        }
         else{
             width = 170.0
         }
-         return CGSize(width: width, height: 145.0)
+        return CGSize(width: width, height: 145.0)
     }
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return (self.RecomArticleData.count != 0) ? self.RecomArticleData[0].body.articles.count + 1 : 0
@@ -449,8 +452,8 @@ extension NewsDetailVC:UICollectionViewDelegate, UICollectionViewDataSource, UIC
             cell.lblTitle.isHidden = false
             cell.lblMoreStories.isHidden = true
             let currentArticle =  RecomArticleData[0].body.articles[indexPath.row - 1]
-        cell.lblTitle.text = currentArticle.title
-        cell.imgNews.sd_setImage(with: URL(string: currentArticle.imageURL!), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
+            cell.lblTitle.text = currentArticle.title
+            cell.imgNews.sd_setImage(with: URL(string: currentArticle.imageURL!), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
         }
         return cell
     }

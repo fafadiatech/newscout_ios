@@ -30,6 +30,8 @@ class ChangePasswordVC: UIViewController {
         btnChangePswd.backgroundColor = colorConstants.redColor
         btnChangePswd.setTitleColor(colorConstants.whiteColor, for: .normal)
         btnChangePswd.titleLabel?.font = FontConstants.FontBtnTitle
+        btnChangePswd.layer.cornerRadius = 15
+        btnChangePswd.layer.borderWidth = 0
     }
     
     override var prefersStatusBarHidden: Bool {
