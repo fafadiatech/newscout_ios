@@ -147,6 +147,13 @@ class SettingsTVC: UITableViewController, GIDSignInUIDelegate {
                 }
             }
         }
+        else if indexPath.section == 2 && indexPath.row == 1{
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let searchvc:ProfileVC
+                = storyboard.instantiateViewController(withIdentifier: "ProfileID") as! ProfileVC
+            self.present(searchvc, animated: true, completion: nil)
+        }
+        
         return indexPath
     }
     

@@ -143,13 +143,13 @@ extension CategoryListVC:UITableViewDelegate, UITableViewDataSource{
         }
         else{
             if textSizeSelected == 0{
-                cell.lblCategoryName.font = UIFont(name: AppFontName.regular, size: 24)
+                cell.lblCategoryName.font = UIFont(name: AppFontName.bold, size: 30)
             }
             else if textSizeSelected == 2{
-                cell.lblCategoryName.font = UIFont(name: AppFontName.regular, size: 28)
+                cell.lblCategoryName.font = UIFont(name: AppFontName.bold, size: 34)
             }
             else{
-                cell.lblCategoryName.font =  UIFont(name: AppFontName.regular, size: 26)
+                cell.lblCategoryName.font =  UIFont(name: AppFontName.bold, size: 32)
             }
         }
         

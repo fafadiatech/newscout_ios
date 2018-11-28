@@ -67,6 +67,7 @@ class NewsDetailVC: UIViewController {
             viewLikeDislike.isHidden = true
         }
         let settingvc = SettingsTVC()
+        viewLikeDislike.backgroundColor = colorConstants.redColor
         ViewWebContainer.isHidden = true
         APICall().loadRecommendationNewsAPI(articleId: articleId){ response in
             switch response {
@@ -393,8 +394,9 @@ class NewsDetailVC: UIViewController {
     
     @IBAction func btnShareActn(_ sender: Any) {
         let text = ArticleData[0].body.articles[newsCurrentIndex].title
-        let myUrl = NSURL(string:ArticleData[0].body.articles[newsCurrentIndex].imageURL!)
-        let shareAll = [text ,myUrl] as [Any]
+        let newText = "Sent via NewsCout (www.newscout.in)"
+        let myUrl = NSURL(string:ArticleData[0].body.articles[newsCurrentIndex].source!)
+        let shareAll = [text ,myUrl, newText] as [Any]
         let activityViewController = UIActivityViewController(activityItems: shareAll, applicationActivities: nil)
         activityViewController.popoverPresentationController?.sourceView = sender as! UIView
         self.present(activityViewController, animated: true, completion: nil)

@@ -72,6 +72,9 @@ class SignUpVC: UIViewController {
         }
     }
     
+    @IBAction func btnLoginActn(_ sender: Any) {
+        self.dismiss(animated: true)
+    }
     //Hide status bar
     override var prefersStatusBarHidden: Bool {
         return true

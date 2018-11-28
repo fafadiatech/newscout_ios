@@ -37,9 +37,6 @@ class LoginVC: UIViewController, GIDSignInUIDelegate, FBSDKLoginButtonDelegate{
         btnLogin.backgroundColor = colorConstants.redColor
         btnLogin.setTitleColor(colorConstants.whiteColor, for: .normal)
         btnLogin.titleLabel?.font = FontConstants.FontBtnTitle
-        btnSignUp.backgroundColor = colorConstants.redColor
-        btnSignUp.setTitleColor(colorConstants.whiteColor, for: .normal)
-        btnSignUp.titleLabel?.font = FontConstants.FontBtnTitle
         btnForgtPswd.backgroundColor = colorConstants.redColor
         btnForgtPswd.setTitleColor(colorConstants.whiteColor, for: .normal)
         btnForgtPswd.titleLabel?.font = FontConstants.FontBtnTitle
