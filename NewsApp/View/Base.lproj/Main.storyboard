@@ -426,6 +426,7 @@
         <!--Sign UpVC-->
         <scene sceneID="wEn-r3-PIS">
             <objects>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Ts9-gs-MDs" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <viewController storyboardIdentifier="SignUpID" id="0Zm-pQ-gue" customClass="SignUpVC" customModule="NewsApp" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="ceU-lZ-zOu">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
@@ -651,7 +652,6 @@
                         <outlet property="viewTitle" destination="JOS-cm-FkD" id="tbK-hp-dNi"/>
                     </connections>
                 </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="Ts9-gs-MDs" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-9043" y="-258"/>
         </scene>
@@ -1884,6 +1884,7 @@
         <!--LoginVC-->
         <scene sceneID="9gu-En-2dP">
             <objects>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="aha-dM-hTD" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <viewController storyboardIdentifier="LoginID" id="tn0-Nk-D95" customClass="LoginVC" customModule="NewsApp" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="3yi-WA-2AX">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
@@ -2084,7 +2085,6 @@
                         <outlet property="viewTitle" destination="6PM-F7-nTo" id="yFz-GA-U5f"/>
                     </connections>
                 </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="aha-dM-hTD" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1158" y="730"/>
         </scene>
