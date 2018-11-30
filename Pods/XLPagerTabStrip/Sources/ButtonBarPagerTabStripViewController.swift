@@ -328,10 +328,10 @@ open class ButtonBarPagerTabStripViewController: PagerTabStripViewController, Pa
         print(cell.label.text)
         cell.accessibilityLabel = indicatorInfo.accessibilityLabel
         if (UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.phone){
-            cell.label.font = UIFont(name:"HelveticaNeue-Bold", size: 22.0) //settings.style.buttonBarItemFont}
+            cell.label.font = UIFont(name:"HelveticaNeue-Light", size: 22.0) //settings.style.buttonBarItemFont}
         }
         else{
-            cell.label.font = UIFont(name:"HelveticaNeue-Bold", size: 32.0)
+            cell.label.font = UIFont(name:"HelveticaNeue-Light", size: 28.0)
         }
         cell.label.textColor = .black //settings.style.buttonBarItemTitleColor ?? cell.label.textColor
         cell.contentView.backgroundColor = settings.style.buttonBarItemBackgroundColor ?? cell.contentView.backgroundColor

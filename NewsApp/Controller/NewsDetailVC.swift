@@ -246,8 +246,8 @@ class NewsDetailVC: UIViewController {
          }*/
         
         let currentArticle = ArticleData[0].body.articles[currentIndex]
+        print(currentArticle)
         let newDate = dateFormatter.date(from: currentArticle.published_on!)
-        print("newDAte:\(newDate!)")
         let agoDate = Helper().timeAgoSinceDate(newDate!)
         
         articleId = currentArticle.article_id!
@@ -261,12 +261,10 @@ class NewsDetailVC: UIViewController {
         if currentArticle.isLike == 0 {
             btnLike.setImage(UIImage(named: "filledLike.png"), for: .normal)
             btnDislike.setImage(UIImage(named: "dislike.png"), for: .normal)
-            self.btnDislike.isUserInteractionEnabled = false
         }
         else if currentArticle.isLike == 1{
             btnLike.setImage(UIImage(named: "like.png"), for: .normal)
             btnDislike.setImage(UIImage(named: "filledDislike.png"), for: .normal)
-            self.btnLike.isUserInteractionEnabled = false
         }
         else if currentArticle.isLike == 2{
             btnLike.setImage(UIImage(named: "like.png"), for: .normal)
@@ -490,6 +488,7 @@ extension NewsDetailVC:UICollectionViewDelegate, UICollectionViewDataSource, UIC
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        if indexPath.row != 0{
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let newsDetailvc:NewsDetailVC = storyboard.instantiateViewController(withIdentifier: "NewsDetailID") as! NewsDetailVC
         newsDetailvc.newsCurrentIndex = indexPath.row - 1
@@ -497,6 +496,7 @@ extension NewsDetailVC:UICollectionViewDelegate, UICollectionViewDataSource, UIC
         newsDetailvc.articleId = RecomArticleData[0].body.articles[indexPath.row - 1].article_id!
         print("articleId in didselect: \(articleId)")
         present(newsDetailvc, animated: true, completion: nil)
+        }
     }
 }
 

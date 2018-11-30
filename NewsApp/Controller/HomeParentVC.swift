@@ -20,6 +20,7 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
     override func viewDidLoad() {
         settings.style.buttonBarItemsShouldFillAvailiableWidth = false
         super.viewDidLoad()
+         self.reloadPagerTabStripView()
         lblAppName.font = FontConstants.appFont
         viewAppTitle.backgroundColor = colorConstants.redColor
         lblAppName.textColor = colorConstants.whiteColor
@@ -59,7 +60,6 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
         self.view.addSubview(floaty)
         buttonBarView.selectedBar.backgroundColor = .red
         buttonBarView.backgroundColor = colorConstants.whiteColor
-        
         changeCurrentIndexProgressive = {[weak self](oldCell:ButtonBarViewCell?, newCell: ButtonBarViewCell?, progressPercentage:CGFloat, changeCurrentIndex:Bool, animated:Bool)-> Void in
             
             guard changeCurrentIndex == true else {return}
