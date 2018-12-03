@@ -15,7 +15,7 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
     @IBOutlet weak var viewAppTitle: UIView!
     @IBOutlet weak var lblAppName: UILabel!
     var childrenVC = [UIViewController]()
-    var categories = ["For You"]
+    var categories : [String] = [] //= ["For You"]
     
     override func viewDidLoad() {
         settings.style.buttonBarItemsShouldFillAvailiableWidth = false
@@ -27,6 +27,14 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
         if UserDefaults.standard.value(forKey: "textSize") == nil{
             UserDefaults.standard.set(1, forKey: "textSize")
         }
+//          if UserDefaults.standard.value(forKey: "token") = nil || UserDefaults.standard.value(forKey: "FBToken") == nil || UserDefaults.standard.value(forKey: "googleToken") == nil{
+//            if !categories.contains("For You"){
+//           categories.insert("For You", at: 0)
+//            }
+//        }
+//          else{
+//            categories = ["Trending"]
+//        }
         lblAppName.text = Constants.AppName
         let floaty = Floaty()
         floaty.itemButtonColor = colorConstants.redColor

@@ -38,6 +38,7 @@ class NewsDetailVC: UIViewController {
     var ArticleDetail = ArticleDict.init(article_id: 0, category: "", source: "", title: "", imageURL: "", url: "", published_on: "", blurb: "", isBookmark: false, isLike: 0)
     var newsCurrentIndex = 0
     var articleId = 0
+    var sourceURL = ""
     var tapTerm:UITapGestureRecognizer = UITapGestureRecognizer()
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -180,9 +181,7 @@ class NewsDetailVC: UIViewController {
             switch swipeGesture.direction {
             case UISwipeGestureRecognizerDirection.right:
                 ViewWebContainer.isHidden = true
-                let storyboard = UIStoryboard(name: "Main", bundle: nil)
-                let vc:HomeParentVC = storyboard.instantiateViewController(withIdentifier: "HomeParentID") as! HomeParentVC
-                self.present(vc, animated: true, completion: nil)
+               //self.dismiss(animated: false)
                 print("Swiped right")
                 
             case UISwipeGestureRecognizerDirection.down:
@@ -200,11 +199,15 @@ class NewsDetailVC: UIViewController {
                 }
             case UISwipeGestureRecognizerDirection.left:
                 ViewWebContainer.isHidden = false
+                viewLikeDislike.isHidden = true
+                var url = URL(string: sourceURL)
+                var domain = url?.host
+                lblWebSource.text = "\(domain!)"
                 print("Swiped left")
                 transition.type = kCATransitionPush
                 transition.subtype = kCATransitionFromRight
                 view.window!.layer.add(transition, forKey: kCATransition)
-                let myURL = URL(string: "https://www.google.com/")!
+                let myURL = URL(string: sourceURL)!
                 let myRequest = URLRequest(url: myURL)
                 WKWebView.load(myRequest)
                 
@@ -256,6 +259,7 @@ class NewsDetailVC: UIViewController {
         txtViewNewsDesc.text = currentArticle.blurb
         lblSource.text = currentArticle.source
         lblTimeAgo.text = agoDate
+        sourceURL = currentArticle.url!
         imgNews.downloadedFrom(link: "\(currentArticle.imageURL!)")
         print("currentArticle.isLike: \(currentArticle.isLike)")
         if currentArticle.isLike == 0 {

@@ -16,14 +16,22 @@ import FBSDKLoginKit
 class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
 
     var window: UIWindow?
-    var categories = ["For You"]
+    var categories : [String] = []
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         GIDSignIn.sharedInstance().clientID = "424337192018-pnik0j5sm85mjg48uf0u02ucrb64e6lc.apps.googleusercontent.com"
         GIDSignIn.sharedInstance().delegate = self as! GIDSignInDelegate
         FBSDKApplicationDelegate.sharedInstance().application(application, didFinishLaunchingWithOptions: launchOptions)
         if UserDefaults.standard.value(forKey: "categories") == nil{
+        
+        if UserDefaults.standard.value(forKey: "token") == nil || UserDefaults.standard.value(forKey: "FBToken") == nil || UserDefaults.standard.value(forKey: "googleToken") == nil{
+            categories = ["Trending"]
          UserDefaults.standard.setValue(categories, forKey: "categories")
+        }
+        else{
+            categories = ["For You"]
+            UserDefaults.standard.setValue(categories, forKey: "categories")
+        }
         }
         return true
     }

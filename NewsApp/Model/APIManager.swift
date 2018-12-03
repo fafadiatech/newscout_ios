@@ -54,10 +54,11 @@ class APICall{
         else{
             headers = ["Authorization": ""]
         }
-        
+        print(headers)
         Alamofire.request(url,method: .get, headers: headers).responseString{
             response in
             if(response.result.isSuccess){
+                print(response.result)
                 if let data = response.data {
                     let jsonDecoder = JSONDecoder()
                     do {
