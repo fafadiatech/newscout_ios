@@ -141,11 +141,11 @@ class SettingsTVC: UITableViewController, GIDSignInUIDelegate {
                             self.lblLogin.text = "Login"
                             var categories : [String] = []
                             
-                                categories = UserDefaults.standard.array(forKey: "categories") as! [String]
-                                if categories.contains("For You"){
-                                    categories.remove(at: 0)
-                                    UserDefaults.standard.setValue(categories, forKey: "categories")
-                                }
+                            categories = UserDefaults.standard.array(forKey: "categories") as! [String]
+                            if categories.contains("For You"){
+                                categories.remove(at: 0)
+                                UserDefaults.standard.setValue(categories, forKey: "categories")
+                            }
                             if categories.contains("Top Stories"){
                                 categories = categories.filter{$0 != "Top Stories"}
                                 UserDefaults.standard.setValue(categories, forKey: "categories")

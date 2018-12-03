@@ -20,28 +20,28 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
     override func viewDidLoad() {
         settings.style.buttonBarItemsShouldFillAvailiableWidth = false
         super.viewDidLoad()
-         self.reloadPagerTabStripView()
+        self.reloadPagerTabStripView()
         lblAppName.font = FontConstants.appFont
         viewAppTitle.backgroundColor = colorConstants.redColor
         lblAppName.textColor = colorConstants.whiteColor
         if UserDefaults.standard.value(forKey: "textSize") == nil{
             UserDefaults.standard.set(1, forKey: "textSize")
         }
-//          if UserDefaults.standard.value(forKey: "token") = nil || UserDefaults.standard.value(forKey: "FBToken") == nil || UserDefaults.standard.value(forKey: "googleToken") == nil{
-//            if !categories.contains("For You"){
-//           categories.insert("For You", at: 0)
-//            }
-//        }
-//          else{
-//            categories = ["Trending"]
-//        }
+        //          if UserDefaults.standard.value(forKey: "token") = nil || UserDefaults.standard.value(forKey: "FBToken") == nil || UserDefaults.standard.value(forKey: "googleToken") == nil{
+        //            if !categories.contains("For You"){
+        //           categories.insert("For You", at: 0)
+        //            }
+        //        }
+        //          else{
+        //            categories = ["Trending"]
+        //        }
         lblAppName.text = Constants.AppName
         let floaty = Floaty()
         floaty.itemButtonColor = colorConstants.redColor
         floaty.itemTitleColor =  .black
         floaty.buttonColor = colorConstants.redColor
         floaty.plusColor = .black
-    
+        
         floaty.addItem("Search", icon: UIImage(named: "search")!) { item in
             floaty.autoCloseOnTap = true
             let storyboard = UIStoryboard(name: "Main", bundle: nil)

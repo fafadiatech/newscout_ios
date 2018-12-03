@@ -28,8 +28,18 @@ class ForgotPasswordVC: UIViewController {
         viewTitle.backgroundColor = colorConstants.redColor
         lblTitle.textColor = colorConstants.whiteColor
         lblTitle.font = FontConstants.viewTitleFont
+        hideKeyboardWhenTappedAround()
     }
     
+    func hideKeyboardWhenTappedAround() {
+        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(ForgotPasswordVC.dismissKeyboard))
+        tap.cancelsTouchesInView = false
+        view.addGestureRecognizer(tap)
+    }
+    
+    @objc func dismissKeyboard() {
+        view.endEditing(true)
+    }
     override var prefersStatusBarHidden: Bool {
         return true
     }

@@ -100,7 +100,7 @@ class NewsDetailVC: UIViewController {
         
         let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapped(gestureRecognizer:)))
         viewContainer.addGestureRecognizer(tapRecognizer)
-         tapRecognizer.delegate = self as! UIGestureRecognizerDelegate
+        tapRecognizer.delegate = self as! UIGestureRecognizerDelegate
     }
     
     @objc func tapped(gestureRecognizer: UITapGestureRecognizer) {
@@ -181,7 +181,7 @@ class NewsDetailVC: UIViewController {
             switch swipeGesture.direction {
             case UISwipeGestureRecognizerDirection.right:
                 ViewWebContainer.isHidden = true
-               //self.dismiss(animated: false)
+                //self.dismiss(animated: false)
                 print("Swiped right")
                 
             case UISwipeGestureRecognizerDirection.down:
@@ -493,13 +493,13 @@ extension NewsDetailVC:UICollectionViewDelegate, UICollectionViewDataSource, UIC
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if indexPath.row != 0{
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        let newsDetailvc:NewsDetailVC = storyboard.instantiateViewController(withIdentifier: "NewsDetailID") as! NewsDetailVC
-        newsDetailvc.newsCurrentIndex = indexPath.row - 1
-        newsDetailvc.ArticleData = RecomArticleData
-        newsDetailvc.articleId = RecomArticleData[0].body.articles[indexPath.row - 1].article_id!
-        print("articleId in didselect: \(articleId)")
-        present(newsDetailvc, animated: true, completion: nil)
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let newsDetailvc:NewsDetailVC = storyboard.instantiateViewController(withIdentifier: "NewsDetailID") as! NewsDetailVC
+            newsDetailvc.newsCurrentIndex = indexPath.row - 1
+            newsDetailvc.ArticleData = RecomArticleData
+            newsDetailvc.articleId = RecomArticleData[0].body.articles[indexPath.row - 1].article_id!
+            print("articleId in didselect: \(articleId)")
+            present(newsDetailvc, animated: true, completion: nil)
         }
     }
 }

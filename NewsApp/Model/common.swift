@@ -36,9 +36,9 @@ struct FontConstants{
     static let fontViewTitle:CGFloat = isPhone ? 23 : 35
     static let fontSettingsTVHeader:CGFloat = isPhone ? 20 : 23
     static let fontAppTitle:CGFloat = isPhone ? 22 : 32
-  
+    
     //for button titles
-      static let FontBtnTitle = UIFont(name: AppFontName.medium, size: FontConstants.fontNormalBtn)
+    static let FontBtnTitle = UIFont(name: AppFontName.medium, size: FontConstants.fontNormalBtn)
     //for news description
     static let smallFontTitle = UIFont(name: AppFontName.regular, size: FontConstants.fontSmallTitle)
     static let LargeFontTitle = UIFont(name: AppFontName.regular, size: FontConstants.fontLargeTitle)
@@ -53,7 +53,7 @@ struct FontConstants{
     static let smallFontHeading = UIFont(name: AppFontName.regular, size: FontConstants.fontSmallHeading)
     static let LargeFontHeading = UIFont(name: AppFontName.regular, size: FontConstants.fontLargeHeading)
     static let NormalFontHeading = UIFont(name: AppFontName.regular, size: FontConstants.fontNormalHeading)
-  
+    
     //for source, time
     static let smallFontContentBold = UIFont(name: AppFontName.bold, size: FontConstants.fontSmallContent)
     static let LargeFontContentBold = UIFont(name: AppFontName.bold, size: FontConstants.fontLargeContent)

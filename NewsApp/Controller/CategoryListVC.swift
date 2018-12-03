@@ -131,14 +131,14 @@ extension CategoryListVC:UITableViewDelegate, UITableViewDataSource{
         let catData = CategoryData[0].categories[indexPath.row]
         var textSizeSelected = UserDefaults.standard.value(forKey: "textSize") as! Int
         if (UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.phone){
-        if textSizeSelected == 0{
-            cell.lblCategoryName.font = UIFont(name: AppFontName.bold, size: 18)
-        }
-        else if textSizeSelected == 2{
-            cell.lblCategoryName.font = UIFont(name: AppFontName.bold, size: 20)
-        }
-        else{
-            cell.lblCategoryName.font =  UIFont(name: AppFontName.bold, size: 22)
+            if textSizeSelected == 0{
+                cell.lblCategoryName.font = UIFont(name: AppFontName.bold, size: 18)
+            }
+            else if textSizeSelected == 2{
+                cell.lblCategoryName.font = UIFont(name: AppFontName.bold, size: 20)
+            }
+            else{
+                cell.lblCategoryName.font =  UIFont(name: AppFontName.bold, size: 22)
             }
         }
         else{

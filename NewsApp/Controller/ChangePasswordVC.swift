@@ -32,6 +32,17 @@ class ChangePasswordVC: UIViewController {
         btnChangePswd.titleLabel?.font = FontConstants.FontBtnTitle
         btnChangePswd.layer.cornerRadius = 15
         btnChangePswd.layer.borderWidth = 0
+        hideKeyboardWhenTappedAround()
+    }
+
+    func hideKeyboardWhenTappedAround() {
+        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(ChangePasswordVC.dismissKeyboard))
+        tap.cancelsTouchesInView = false
+        view.addGestureRecognizer(tap)
+    }
+    
+    @objc func dismissKeyboard() {
+        view.endEditing(true)
     }
     
     override var prefersStatusBarHidden: Bool {

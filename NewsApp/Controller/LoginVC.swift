@@ -54,6 +54,17 @@ class LoginVC: UIViewController, GIDSignInUIDelegate, FBSDKLoginButtonDelegate{
         viewTitle.backgroundColor = colorConstants.redColor
         lblTitle.textColor = colorConstants.whiteColor
         lblTitle.font = FontConstants.viewTitleFont
+        hideKeyboardWhenTappedAround() 
+    }
+    
+    func hideKeyboardWhenTappedAround() {
+        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(LoginVC.dismissKeyboard))
+        tap.cancelsTouchesInView = false
+        view.addGestureRecognizer(tap)
+    }
+    
+    @objc func dismissKeyboard() {
+        view.endEditing(true)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -99,7 +110,7 @@ class LoginVC: UIViewController, GIDSignInUIDelegate, FBSDKLoginButtonDelegate{
     }
     
     @IBAction func btnLoginActn(_ sender: Any) {
-         var categories : [String] = []
+        var categories : [String] = []
         if txtUsername.text == "" || txtPassword.text == ""{
             self.view.makeToast("Please enter valid username and password..", duration: 1.0, position: .center)
         }

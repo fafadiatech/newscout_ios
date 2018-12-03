@@ -8,9 +8,9 @@
 
 import Foundation
 import UIKit
+
 class Helper{
 //for conversion of timestamp
-
 func timeAgoSinceDate(_ date:Date, numericDates:Bool = false) -> String {
     let calendar = NSCalendar.current
     let unitFlags: Set<Calendar.Component> = [.minute, .hour, .day, .weekOfYear, .month, .year, .second]
@@ -28,7 +28,7 @@ func timeAgoSinceDate(_ date:Date, numericDates:Bool = false) -> String {
             return "Last year"
         }
     } else if (components.month! >= 2) {
-        return "\(components.month!) mo ago"
+        return "\(components.month!) months ago"
     } else if (components.month! >= 1){
         if (numericDates){
             return "1mo ago"
@@ -36,7 +36,7 @@ func timeAgoSinceDate(_ date:Date, numericDates:Bool = false) -> String {
             return "Last month"
         }
     } else if (components.weekOfYear! >= 2) {
-        return "\(components.weekOfYear!) w ago"
+        return "\(components.weekOfYear!) weeks ago"
     } else if (components.weekOfYear! >= 1){
         if (numericDates){
             return "1w ago"
