@@ -27,6 +27,8 @@ class DBManager{
                 
             case .Failure(let errormessage) :
                 print(errormessage)
+            case .Change(let code):
+                print(code)
             }
             if self.ArticleData.count != 0{
                 print(self.ArticleData[0].body.articles)

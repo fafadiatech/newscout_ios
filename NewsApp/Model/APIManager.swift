@@ -11,6 +11,16 @@ import Alamofire
 import UIKit
 import SwiftyJSON
 
+extension URLResponse {
+    
+    func getStatusCode() -> Int? {
+        if let httpResponse = self as? HTTPURLResponse {
+            return httpResponse.statusCode
+        }
+        return nil
+    }
+}
+
 class APICall{
     let imageCache = NSCache<NSString, UIImage>()
     
@@ -57,13 +67,22 @@ class APICall{
         print(headers)
         Alamofire.request(url,method: .get, headers: headers).responseString{
             response in
+          
             if(response.result.isSuccess){
                 print(response.result)
                 if let data = response.data {
                     let jsonDecoder = JSONDecoder()
                     do {
+                        if response.response?.statusCode == 404{
+                        //if let httpResponse = response as? HTTPURLResponse {
+                            print("error \(response.response?.statusCode)")
+                            completion(ArticleAPIResult.Change(0))
+                        }
+                        else{
                         let jsonData = try jsonDecoder.decode(ArticleStatus.self, from: data)
+                        print(jsonData)
                         completion(ArticleAPIResult.Success([jsonData]))
+                        }
                     }
                     catch {
                         print("Error: \(error)")

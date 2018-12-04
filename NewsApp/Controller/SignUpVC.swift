@@ -41,7 +41,12 @@ class SignUpVC: UIViewController {
     @objc func keyboardWillShow(notification: NSNotification) {
         if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
             if self.view.frame.origin.y == 0{
+                if UIDevice.current.userInterfaceIdiom == .pad{
                 self.view.frame.origin.y -= keyboardSize.height - 200
+                }
+                else{
+                   // self.view.frame.origin.y -= keyboardSize.height - 100
+                }
             }
         }
     }
@@ -49,7 +54,12 @@ class SignUpVC: UIViewController {
     @objc func keyboardWillHide(notification: NSNotification) {
         if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
             if self.view.frame.origin.y != 0{
+                 if UIDevice.current.userInterfaceIdiom == .pad{
                 self.view.frame.origin.y += keyboardSize.height - 200
+                }
+                 else{
+                    //self.view.frame.origin.y += keyboardSize.height - 100
+                }
             }
         }
     }

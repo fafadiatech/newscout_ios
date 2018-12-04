@@ -144,6 +144,7 @@ enum MainModelError {
 enum ArticleAPIResult {
     case Success([ArticleStatus])
     case Failure(String)
+    case Change(Int)
 }
 
 enum ArticleDBfetchResult {

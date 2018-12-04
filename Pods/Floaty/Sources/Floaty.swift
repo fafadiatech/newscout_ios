@@ -101,7 +101,7 @@ open class Floaty: UIView {
      Background overlaying color.
      */
     @IBInspectable
-    @objc open var overlayColor: UIColor = UIColor.white.withAlphaComponent(0.3)
+    @objc open var overlayColor: UIColor = UIColor.white.withAlphaComponent(0.1)
     
     /**
      The space between the item and item.
@@ -718,7 +718,7 @@ open class Floaty: UIView {
         item.iconImageView.tintColor = itemImageColor ?? plusColor
         item.titleColor = itemTitleColor
         item.circleShadowColor = itemShadowColor
-        item.titleShadowColor = itemShadowColor
+        //item.titleShadowColor = itemShadowColor
         item.size = itemSize
         if (UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad){
           item._titleLabel?.font = UIFont(name:"HelveticaNeue-Bold", size: 28.0)
@@ -729,7 +729,7 @@ open class Floaty: UIView {
             item.size = 50
         }
          item.size = itemSize
-        item._titleLabel?.backgroundColor = UIColor(red: 255, green: 255, blue: 255, alpha: 0.2)
+        item._titleLabel?.backgroundColor = UIColor.black//UIColor(red: 255, green: 255, blue: 255, alpha: 0.2)
         
     }
     

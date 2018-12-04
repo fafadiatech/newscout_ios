@@ -148,10 +148,49 @@ class HomeVC: UIViewController{
                 print(errormessage)
                 self.activityIndicator.startAnimating()
                 self.HomeNewsTV.makeToast(errormessage, duration: 2.0, position: .center)
+            case .Change(let code):
+                print(code)
+                if code == 0{
+                    let defaults = UserDefaults.standard
+                    defaults.removeObject(forKey: "googleToken")
+                    defaults.removeObject(forKey: "FBToken")
+                    defaults.removeObject(forKey: "token")
+                    defaults.removeObject(forKey: "email")
+                    defaults.removeObject(forKey: "first_name")
+                    defaults.removeObject(forKey: "last_name")
+                    defaults.synchronize()
+                    self.showMsg(title: "Please login to continue..", msg: "")
+                }
             }
             
         }
     }
+    
+    func showMsg(title: String, msg : String)
+    {
+        let alertController = UIAlertController(title: title, message: msg, preferredStyle: .alert)
+        if UI_USER_INTERFACE_IDIOM() == .pad
+        {
+            alertController.popoverPresentationController?.sourceView = self.view
+            alertController.popoverPresentationController?.sourceRect = CGRect(x: self.view.bounds.midX, y: self.view.bounds.midY, width: 0, height: 0)
+            
+        }
+        let action1 = UIAlertAction(title: "OK", style: .default) { (action:UIAlertAction) in
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let vc:LoginVC = storyboard.instantiateViewController(withIdentifier: "LoginID") as! LoginVC
+            self.present(vc, animated: true, completion: nil)
+        }
+        
+        alertController.addAction(action1)
+        
+        let action2 = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.default) { (action:UIAlertAction) in
+            print("You've pressed cancel");
+        }
+        alertController.addAction(action2)
+        
+        self.present(alertController, animated: true, completion: nil)
+    }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -253,6 +292,19 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
                         print(errormessage)
                         self.activityIndicator.startAnimating()
                         self.HomeNewsTV.makeToast(errormessage, duration: 2.0, position: .center)
+                    case .Change(let code):
+                        print(code)
+                        if code == 0{
+                            let defaults = UserDefaults.standard
+                            defaults.removeObject(forKey: "googleToken")
+                            defaults.removeObject(forKey: "FBToken")
+                            defaults.removeObject(forKey: "token")
+                            defaults.removeObject(forKey: "email")
+                            defaults.removeObject(forKey: "first_name")
+                            defaults.removeObject(forKey: "last_name")
+                            defaults.synchronize()
+                            self.showMsg(title: "Please login to continue..", msg: "")
+                        }
                     }
                 }
                 self.activityIndicator.stopAnimating()
@@ -287,6 +339,19 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
                         self.HomeNewsTV.makeToast(errormessage, duration: 1.0, position: .center)
                         self.activityIndicator.startAnimating()
                         self.HomeNewsTV.makeToast(errormessage, duration: 2.0, position: .center)
+                    case .Change(let code):
+                        print(code)
+                        if code == 0{
+                            let defaults = UserDefaults.standard
+                            defaults.removeObject(forKey: "googleToken")
+                            defaults.removeObject(forKey: "FBToken")
+                            defaults.removeObject(forKey: "token")
+                            defaults.removeObject(forKey: "email")
+                            defaults.removeObject(forKey: "first_name")
+                            defaults.removeObject(forKey: "last_name")
+                            defaults.synchronize()
+                            self.showMsg(title: "Please login to continue..", msg: "")
+                        }
                     }
                 }
                 self.activityIndicator.stopAnimating()

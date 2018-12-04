@@ -86,6 +86,8 @@ class SearchVC: UIViewController {
                 print(errormessage)
                 self.activityIndicator.startAnimating()
                 self.searchResultTV.makeToast(errormessage, duration: 2.0, position: .center)
+            case .Change(let code) :
+                print(code)
             }
         }
     }
@@ -219,6 +221,8 @@ extension SearchVC: UITableViewDelegate, UITableViewDataSource{
                         print(errormessage)
                         self.activityIndicator.startAnimating()
                         self.searchResultTV.makeToast(errormessage, duration: 2.0, position: .center)
+                    case .Change(let code):
+                        print(code)
                     }
                 }
                 self.activityIndicator.stopAnimating()
@@ -252,6 +256,8 @@ extension SearchVC: UITableViewDelegate, UITableViewDataSource{
                         print(errormessage)
                         self.activityIndicator.startAnimating()
                         self.searchResultTV.makeToast(errormessage, duration: 2.0, position: .center)
+                    case .Change(let code):
+                        print(code)
                     }
                 }
                 self.activityIndicator.stopAnimating()
@@ -279,6 +285,8 @@ extension SearchVC: UITextFieldDelegate
                     print(errormessage)
                     self.activityIndicator.startAnimating()
                     self.searchResultTV.makeToast(errormessage, duration: 2.0, position: .center)
+                case .Change(let code):
+                    print(code)
                 }
                 self.activityIndicator.stopAnimating()
             }

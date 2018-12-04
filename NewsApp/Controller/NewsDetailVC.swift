@@ -40,6 +40,7 @@ class NewsDetailVC: UIViewController {
     var articleId = 0
     var sourceURL = ""
     var tapTerm:UITapGestureRecognizer = UITapGestureRecognizer()
+   
     override func viewDidLoad() {
         super.viewDidLoad()
         if (UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad)
@@ -78,6 +79,8 @@ class NewsDetailVC: UIViewController {
             case .Failure(let errormessage) :
                 print(errormessage)
                 self.view.makeToast(errormessage, duration: 2.0, position: .center)
+            case .Change(let code):
+                print(code)
             }
         }
         
@@ -396,9 +399,15 @@ class NewsDetailVC: UIViewController {
     
     @IBAction func btnShareActn(_ sender: Any) {
         let text = ArticleData[0].body.articles[newsCurrentIndex].title
-        let newText = "Sent via NewsCout (www.newscout.in)"
-        let myUrl = NSURL(string:ArticleData[0].body.articles[newsCurrentIndex].source!)
-        let shareAll = [text ,myUrl, newText] as [Any]
+        let webText = "Sent via NewsCout"
+        let webURL = "Sent via NewsCout : (www.newscout.in)"
+        let items = URL(string: "https://www.apple.com")!
+        let imgStr = URL(string: ArticleData[0].body.articles[newsCurrentIndex].imageURL!)
+        let image = UIImage(named: "\(imgStr)")
+        let sourceURL = URL(string: "\(ArticleData[0].body.articles[newsCurrentIndex].url!)")
+        let myUrl = [URL(string: ArticleData[0].body.articles[newsCurrentIndex].source!)] //NSURL(string:ArticleData[0].body.articles[newsCurrentIndex].source!)")
+        let shareAll = [text , sourceURL , webURL ] as [Any]
+    
         let activityViewController = UIActivityViewController(activityItems: shareAll, applicationActivities: nil)
         activityViewController.popoverPresentationController?.sourceView = sender as! UIView
         self.present(activityViewController, animated: true, completion: nil)
@@ -512,3 +521,55 @@ extension NewsDetailVC : UIGestureRecognizerDelegate {
         return true
     }
 }
+
+/*class ExampleActivity : UIActivity{
+var _activityTitle: String
+var _activityImage: UIImage?
+var activityItems = [Any]()
+var action: ([Any]) -> Void
+
+init(title: String, image: UIImage?, performAction: @escaping ([Any]) -> Void) {
+    _activityTitle = title
+    _activityImage = image
+    action = performAction
+    super.init()
+}
+    override var activityTitle: String? {
+        return _activityTitle
+    }
+    
+    override var activityImage: UIImage? {
+        return _activityImage
+    }
+    override var activityType: UIActivityType? {
+        return UIActivityType(rawValue: "com.yoursite.yourapp.activity")
+    }
+    
+    override class var activityCategory: UIActivityCategory {
+        return .action
+    }
+    override func canPerform(withActivityItems activityItems: [Any]) -> Bool {
+        return true
+    }
+    override func prepare(withActivityItems activityItems: [Any]) {
+        self.activityItems = activityItems
+    }
+    override func perform() {
+        action(activityItems)
+        activityDidFinish(true)
+    }
+    let customItem = ExampleActivity(title: "Tap me!", image: UIImage(named: "bookmark")) { sharedItems in
+        guard let sharedStrings = sharedItems as? [String] else { return }
+        
+        for string in sharedStrings {
+            print("Here's the string: \(string)")
+        }
+    }
+    
+    let items = ["Hello, custom activity!"]
+    
+    //customItem.popoverPresentationController?.sourceView = sender as! UIView
+    //self.present(customItem, animated: true, completion: nil)
+}
+ */
+

@@ -387,7 +387,7 @@ open class ButtonBarPagerTabStripViewController: PagerTabStripViewController, Pa
             case .cellClass(let widthCallback):
                 let width = widthCallback(indicatorInfo)
                 if (UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad){
-                minimumCellWidths.append(width + 100)
+                minimumCellWidths.append(width + 150)
                 }
                 else{
                     minimumCellWidths.append(width + 50)
@@ -397,7 +397,7 @@ open class ButtonBarPagerTabStripViewController: PagerTabStripViewController, Pa
             case .nibFile(_, _, let widthCallback):
                 let width = widthCallback(indicatorInfo)
                 if (UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad){
-                minimumCellWidths.append(width + 100)
+                minimumCellWidths.append(width + 150)
                 }
                 else{
                     minimumCellWidths.append(width + 50)
