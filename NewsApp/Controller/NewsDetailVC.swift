@@ -184,6 +184,7 @@ class NewsDetailVC: UIViewController {
             switch swipeGesture.direction {
             case UISwipeGestureRecognizerDirection.right:
                 ViewWebContainer.isHidden = true
+                viewLikeDislike.isHidden = false
                 //self.dismiss(animated: false)
                 print("Swiped right")
                 
@@ -212,6 +213,7 @@ class NewsDetailVC: UIViewController {
                 view.window!.layer.add(transition, forKey: kCATransition)
                 let myURL = URL(string: sourceURL)!
                 let myRequest = URLRequest(url: myURL)
+               
                 WKWebView.load(myRequest)
                 
             case UISwipeGestureRecognizerDirection.up:
@@ -290,7 +292,7 @@ class NewsDetailVC: UIViewController {
     }
     
     @IBAction func btnLikeActn(_ sender: Any) {
-        if UserDefaults.standard.value(forKey: "token") != nil{
+        if UserDefaults.standard.value(forKey: "token") != nil || UserDefaults.standard.value(forKey: "FBToken") != nil || UserDefaults.standard.value(forKey: "googleToken") != nil{
             if (btnLike.currentImage?.isEqual(UIImage(named: "like.png")))! {
                 let param = ["article_id" : articleId,
                              "isLike" : 0]
@@ -327,7 +329,7 @@ class NewsDetailVC: UIViewController {
     }
     
     @IBAction func btnDislikeActn(_ sender: Any) {
-        if UserDefaults.standard.value(forKey: "token") != nil{
+        if UserDefaults.standard.value(forKey: "token") != nil || UserDefaults.standard.value(forKey: "FBToken") != nil || UserDefaults.standard.value(forKey: "googleToken") != nil{
             if (btnDislike.currentImage?.isEqual(UIImage(named: "dislike.png")))! {
                 let param = ["article_id" : articleId,
                              "isLike" : 1]
@@ -365,7 +367,7 @@ class NewsDetailVC: UIViewController {
     }
     
     @IBAction func btnBookmarkActn(_ sender: Any) {
-        if UserDefaults.standard.value(forKey: "token") != nil{
+        if UserDefaults.standard.value(forKey: "token") != nil || UserDefaults.standard.value(forKey: "FBToken") != nil || UserDefaults.standard.value(forKey: "googleToken") != nil{
             if (btnBookamark.currentImage?.isEqual(UIImage(named: "book.png")))! {
                 
                 APICall().bookmarkAPI(id: articleId){
@@ -401,12 +403,16 @@ class NewsDetailVC: UIViewController {
         let text = ArticleData[0].body.articles[newsCurrentIndex].title
         let webText = "Sent via NewsCout"
         let webURL = "Sent via NewsCout : (www.newscout.in)"
-        let items = URL(string: "https://www.apple.com")!
         let imgStr = URL(string: ArticleData[0].body.articles[newsCurrentIndex].imageURL!)
-        let image = UIImage(named: "\(imgStr)")
+        let url = URL(string:ArticleData[0].body.articles[newsCurrentIndex].imageURL!)
+        var image1 = UIImage(named: "\(url)")
+        var image = UIImage()
+        if let data = try? Data(contentsOf: url!)
+        {
+             image = UIImage(data: data)!
+        }
         let sourceURL = URL(string: "\(ArticleData[0].body.articles[newsCurrentIndex].url!)")
-        let myUrl = [URL(string: ArticleData[0].body.articles[newsCurrentIndex].source!)] //NSURL(string:ArticleData[0].body.articles[newsCurrentIndex].source!)")
-        let shareAll = [text , sourceURL , webURL ] as [Any]
+        let shareAll = [ text , image1, image,  sourceURL , webURL ] as [Any]
     
         let activityViewController = UIActivityViewController(activityItems: shareAll, applicationActivities: nil)
         activityViewController.popoverPresentationController?.sourceView = sender as! UIView
@@ -415,6 +421,7 @@ class NewsDetailVC: UIViewController {
     
     @IBAction func btnBackAction(_ sender: Any) {
         //self.dismiss(animated: false)
+
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let vc:HomeVC = storyboard.instantiateViewController(withIdentifier: "HomeVC") as! HomeVC
         self.present(vc, animated: true, completion: nil)
@@ -422,6 +429,7 @@ class NewsDetailVC: UIViewController {
     
     @IBAction func btnWebBackAction(_ sender: Any) {
         ViewWebContainer.isHidden = true
+        viewLikeDislike.isHidden = false
     }
     
     //btn Back Action

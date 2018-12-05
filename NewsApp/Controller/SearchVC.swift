@@ -52,7 +52,12 @@ class SearchVC: UIViewController {
             txtSearch.isHidden = true
             lblTitle.isHidden = false
             activityIndicator.startAnimating()
+            if UserDefaults.standard.value(forKey: "token") != nil || UserDefaults.standard.value(forKey: "FBToken") != nil || UserDefaults.standard.value(forKey: "googleToken") != nil{
             BookmarkAPICall()
+            }
+            else{
+                self.view.makeToast("You need to login", duration: 1.0, position: .center)
+            }
         }
         let refreshControl = UIRefreshControl()
         refreshControl.addTarget(self, action: #selector(refreshBookmarkedNews), for: .valueChanged)

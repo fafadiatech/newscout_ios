@@ -159,7 +159,15 @@ class APICall{
     
     func loadSearchAPI(searchTxt: String,_ completion : @escaping (ArticleAPIResult) -> ())
     {
-        let url = APPURL.SearchURL + searchTxt
+        var search = searchTxt
+        let whitespace = NSCharacterSet.whitespaces
+        let range = search.rangeOfCharacter(from: whitespace)
+        if let test = range {
+            print("whitespace found")
+            search = search.trimmingCharacters(in: .whitespacesAndNewlines)
+              search = search.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)!
+        }
+        let url = APPURL.SearchURL + search
         Alamofire.request(url,method: .get).responseJSON{
             response in
             if(response.result.isSuccess){

@@ -12,6 +12,7 @@ import XLPagerTabStrip
 import Alamofire
 import CoreData
 import MaterialComponents.MaterialActivityIndicator
+import SDWebImage
 
 class HomeVC: UIViewController{
     
@@ -238,7 +239,8 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
             let newDate = dateFormatter.date(from: currentArticle.published_on!)
             let agoDate = Helper().timeAgoSinceDate(newDate!)
             cell.lblTimesAgo.text = agoDate
-            cell.imgNews.downloadedFrom(link: "\(currentArticle.imageURL!)")
+            //cell.imgNews.downloadedFrom(link: "\(currentArticle.imageURL!)")
+            cell.imgNews.sd_setImage(with: URL(string: currentArticle.imageURL!), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
         }
         let textSizeSelected = UserDefaults.standard.value(forKey: "textSize") as! Int
         if textSizeSelected == 0{

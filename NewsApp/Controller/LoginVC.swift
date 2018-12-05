@@ -112,7 +112,7 @@ class LoginVC: UIViewController, GIDSignInUIDelegate, FBSDKLoginButtonDelegate{
     @IBAction func btnLoginActn(_ sender: Any) {
         var categories : [String] = []
         if txtUsername.text == "" || txtPassword.text == ""{
-            self.view.makeToast("Please enter valid username and password..", duration: 1.0, position: .center)
+            self.view.makeToast("Please enter valid Email and Password..", duration: 1.0, position: .center)
         }
         else{
             let param = ["email" : txtUsername.text!,

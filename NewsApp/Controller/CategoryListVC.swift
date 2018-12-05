@@ -155,8 +155,17 @@ extension CategoryListVC:UITableViewDelegate, UITableViewDataSource{
         
         cell.lblCategoryName.text = catData.title
         cell.btnDelete.tag = indexPath.row
+        //if cell.lblCategoryName.text == "Trending" || cell.lblCategoryName.text == "For You"{
+//        if catData.title == "Trending" || catData.title == "For You"{
+//            cell.btnDelete.isHidden = true
+//        }
+//        else{
+//            cell.btnDelete.isHidden = false
+//        }
         if categories.contains(catData.title!){
+            if catData.title != "Trending"{
             cell.btnDelete.isHidden = false
+            }
         }
         else{
             cell.btnDelete.isHidden = true
