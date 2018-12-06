@@ -10,16 +10,26 @@ import UIKit
 import GoogleSignIn
 import FBSDKLoginKit
 import FBSDKCoreKit
-
+import NightNight
 class SettingsTVC: UITableViewController, GIDSignInUIDelegate {
     
     @IBOutlet weak var segmentTextSize: UISegmentedControl!
     @IBOutlet weak var lblLogin: UILabel!
     @IBOutlet weak var lblLogout: UILabel!
+    @IBOutlet weak var switchNightMode: UISwitch!
     var textSizeSelected = 1
     
     override func viewDidLoad() {
         super.viewDidLoad()
+    
+        let switchStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
+        if switchStatus == true{
+          switchNightMode.isOn = true
+        }
+        else{
+            switchNightMode.isOn = false
+        }
+        switchNightMode.isOn = false
         lblLogout.isHidden = true
         isLoggedIn()
         if UserDefaults.standard.value(forKey: "textSize") != nil{
@@ -168,6 +178,22 @@ class SettingsTVC: UITableViewController, GIDSignInUIDelegate {
         return indexPath
     }
     
+    @IBAction func switchNightModeActn(_ sender: Any) {
+        if switchNightMode.isOn == true {
+            UserDefaults.standard.setValue(true, forKey: "darkModeEnabled")
+        
+        // Post the notification to let all current view controllers that the app has changed to dark mode, and they should theme themselves to reflect this change.
+        NotificationCenter.default.post(name: .darkModeEnabled, object: nil)
+        
+    } else {
+    
+            UserDefaults.standard.setValue(false, forKey: "darkModeEnabled")
+    
+    // Post the notification to let all current view controllers that the app has changed to non-dark mode, and they should theme themselves to reflect this change.
+    NotificationCenter.default.post(name: .darkModeDisabled, object: nil)
+    }
+    }
+
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.

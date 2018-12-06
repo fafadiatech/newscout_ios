@@ -13,6 +13,7 @@ import Alamofire
 import CoreData
 import MaterialComponents.MaterialActivityIndicator
 import SDWebImage
+import NightNight
 
 class HomeVC: UIViewController{
     
@@ -32,7 +33,8 @@ class HomeVC: UIViewController{
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        NotificationCenter.default.addObserver(self, selector: #selector(darkModeEnabled(_:)), name: .darkModeEnabled, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(darkModeDisabled(_:)), name: .darkModeDisabled, object: nil)
         activityIndicator.cycleColors = [.blue]
         activityIndicator.frame = CGRect(x: 166, y: 150, width: 40, height: 40)
         activityIndicator.sizeToFit()
@@ -93,6 +95,24 @@ class HomeVC: UIViewController{
          }
          }
          }*/
+    }
+    
+    @objc private func darkModeEnabled(_ notification: Notification) {
+        // Write your dark mode code here
+         NightNight.theme = .night
+        HomeNewsTV.mixedBackgroundColor = MixedColor(normal: 0xffffff, night:
+            0x000000)
+       
+    }
+    
+    @objc private func darkModeDisabled(_ notification: Notification) {
+        // Write your non-dark mode code here
+         NightNight.theme = .normal
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self, name: .darkModeEnabled, object: nil)
+        NotificationCenter.default.removeObserver(self, name: .darkModeDisabled, object: nil)
     }
     
     @objc func refreshNews(refreshControl: UIRefreshControl) {
@@ -260,6 +280,14 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
             
         }
         activityIndicator.stopAnimating()
+        let darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
+        if  darkModeStatus == false{
+            cell.ViewCellBackground.mixedBackgroundColor = MixedColor(normal: 0xffffff, night:
+                0x000000)
+        }
+        else{
+            NightNight.theme =  .normal
+        }
         return cell
     }
     

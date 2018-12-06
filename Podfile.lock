@@ -42,6 +42,7 @@ PODS:
   - MotionAnimator (2.8.1):
     - MotionInterchange (~> 1.6)
   - MotionInterchange (1.6.0)
+  - NightNight (0.5.0)
   - SDWebImage (4.4.2):
     - SDWebImage/Core (= 4.4.2)
   - SDWebImage/Core (4.4.2)
@@ -56,6 +57,7 @@ DEPENDENCIES:
   - Floaty
   - GoogleSignIn
   - MaterialComponents/ActivityIndicator
+  - NightNight
   - SDWebImage
   - SkyFloatingLabelTextField
   - SwiftyJSON
@@ -63,7 +65,7 @@ DEPENDENCIES:
   - XLPagerTabStrip
 
 SPEC REPOS:
-  https://github.com/CocoaPods/Specs.git:
+  https://github.com/cocoapods/specs.git:
     - Alamofire
     - Bolts
     - FBSDKCoreKit
@@ -77,6 +79,7 @@ SPEC REPOS:
     - MDFInternationalization
     - MotionAnimator
     - MotionInterchange
+    - NightNight
     - SDWebImage
     - SkyFloatingLabelTextField
     - SwiftyJSON
@@ -97,12 +100,13 @@ SPEC CHECKSUMS:
   MDFInternationalization: e355b0cebecf53d60233bd267084e49366c82513
   MotionAnimator: ee16aa30567c5bae0fb2750c132915829cfaaf8a
   MotionInterchange: ead0e3ae1f3a5fb539e289debbc7ae036160a10d
+  NightNight: 2a5550fdd9cf424b75ebaab022c26aaba35304c8
   SDWebImage: 624d6e296c69b244bcede364c72ae0430ac14681
   SkyFloatingLabelTextField: 4cbeece9c3aae97c6019d8fae511cb5b755874f7
   SwiftyJSON: c29297daf073d2aa016295d5809cdd68045c39b3
   Toast-Swift: ba0b01b095aada709d915f9beb1d38184a2721c3
   XLPagerTabStrip: c908b17cbf42fcd2598ee1adfc49bae25444d88a
 
-PODFILE CHECKSUM: e452b1d057bcba3d1dce78c5ac0ac26620e9f8b0
+PODFILE CHECKSUM: 127b3c07bd2cedac337ca79d5f0aff6844d0e426
 
-COCOAPODS: 1.5.0
+COCOAPODS: 1.5.3
