@@ -33,6 +33,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
                 UserDefaults.standard.setValue(categories, forKey: "categories")
             }
         }
+        if UserDefaults.standard.value(forKey: "darkModeEnabled") == nil{
+            UserDefaults.standard.setValue(false, forKey: "darkModeEnabled")
+        }
         return true
     }
     

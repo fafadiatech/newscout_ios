@@ -11,6 +11,7 @@ import GoogleSignIn
 import FBSDKLoginKit
 import FBSDKCoreKit
 import NightNight
+
 class SettingsTVC: UITableViewController, GIDSignInUIDelegate {
     
     @IBOutlet weak var segmentTextSize: UISegmentedControl!
@@ -29,7 +30,6 @@ class SettingsTVC: UITableViewController, GIDSignInUIDelegate {
         else{
             switchNightMode.isOn = false
         }
-        switchNightMode.isOn = false
         lblLogout.isHidden = true
         isLoggedIn()
         if UserDefaults.standard.value(forKey: "textSize") != nil{

@@ -95,6 +95,7 @@ class HomeVC: UIViewController{
          }
          }
          }*/
+      
     }
     
     @objc private func darkModeEnabled(_ notification: Notification) {
@@ -281,6 +282,7 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
             
         }
         activityIndicator.stopAnimating()
+    
         let darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
         if  darkModeStatus == true{
             cell.ViewCellBackground.backgroundColor = colorConstants.grayBackground2

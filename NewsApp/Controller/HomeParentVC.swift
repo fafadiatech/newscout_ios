@@ -30,6 +30,15 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
         if UserDefaults.standard.value(forKey: "textSize") == nil{
             UserDefaults.standard.set(1, forKey: "textSize")
         }
+        let darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
+        if  darkModeStatus == true{
+             buttonBarView.backgroundColor = colorConstants.grayBackground1
+            
+        }
+        else{
+             buttonBarView.backgroundColor = .white
+            
+        }
         //          if UserDefaults.standard.value(forKey: "token") = nil || UserDefaults.standard.value(forKey: "FBToken") == nil || UserDefaults.standard.value(forKey: "googleToken") == nil{
         //            if !categories.contains("For You"){
         //           categories.insert("For You", at: 0)
@@ -41,10 +50,9 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
         lblAppName.text = Constants.AppName
         let floaty = Floaty()
         floaty.itemButtonColor = colorConstants.redColor
-        floaty.itemTitleColor =  .black
+        
         floaty.buttonColor = colorConstants.redColor
         floaty.plusColor = .black
-        
         floaty.addItem("Search", icon: UIImage(named: "search")!) { item in
             floaty.autoCloseOnTap = true
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
@@ -54,7 +62,6 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
         }
         
         floaty.addItem("Settings", icon: UIImage(named: "settings3")!) { item in
-            
             floaty.autoCloseOnTap = true
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             let settingvc:SettingsVC = storyboard.instantiateViewController(withIdentifier: "SettingsID") as! SettingsVC
@@ -69,13 +76,27 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
             self.present(searchvc, animated: true, completion: nil)
         }
         self.view.addSubview(floaty)
-        buttonBarView.selectedBar.backgroundColor = .red
-        buttonBarView.backgroundColor = colorConstants.whiteColor
+       // buttonBarView.selectedBar.backgroundColor = .red
+       // buttonBarView.backgroundColor = colorConstants.whiteColor
         changeCurrentIndexProgressive = {[weak self](oldCell:ButtonBarViewCell?, newCell: ButtonBarViewCell?, progressPercentage:CGFloat, changeCurrentIndex:Bool, animated:Bool)-> Void in
             
             guard changeCurrentIndex == true else {return}
-            oldCell?.label.textColor = colorConstants.blackColor
+            let darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
+            if  darkModeStatus == true{
+            oldCell?.label.textColor = colorConstants.whiteColor
+                oldCell?.label.backgroundColor = colorConstants.grayBackground1
             newCell?.label.textColor =  colorConstants.redColor
+            oldCell?.backgroundColor = colorConstants.grayBackground1
+            newCell?.backgroundColor = colorConstants.grayBackground1
+            }
+            else{
+                oldCell?.label.textColor = colorConstants.blackColor
+                oldCell?.label.backgroundColor = colorConstants.whiteColor
+                newCell?.label.textColor =  colorConstants.redColor
+                oldCell?.backgroundColor = colorConstants.whiteColor
+                newCell?.backgroundColor = colorConstants.whiteColor
+            }
+            
         }
     }
     
@@ -87,12 +108,13 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
     @objc private func darkModeEnabled(_ notification: Notification) {
         // Write your dark mode code here
         NightNight.theme = .night
-        buttonBarView.backgroundColor = colorConstants.blackColor
+        buttonBarView.backgroundColor = colorConstants.grayBackground1
     }
     
     @objc private func darkModeDisabled(_ notification: Notification) {
         // Write your non-dark mode code here
         NightNight.theme = .normal
+          buttonBarView.backgroundColor = colorConstants.whiteColor
     }
     
     override var prefersStatusBarHidden: Bool {

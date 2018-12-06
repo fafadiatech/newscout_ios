@@ -50,7 +50,7 @@
                 <outlet property="imageView" destination="tFG-yJ-6Th" id="Odb-dR-tf4"/>
                 <outlet property="label" destination="s7f-rk-sQl" id="4gU-tb-BMB"/>
             </connections>
-            <point key="canvasLocation" x="307" y="541"/>
+            <point key="canvasLocation" x="305.60000000000002" y="540.62968515742136"/>
         </collectionViewCell>
     </objects>
 </document>

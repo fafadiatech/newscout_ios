@@ -9,6 +9,7 @@
 import UIKit
 import XLPagerTabStrip
 import MaterialComponents.MaterialActivityIndicator
+import NightNight
 
 protocol CategoryListProtocol {
     func updateCategoryList(catName: String)
@@ -27,6 +28,8 @@ class CategoryListVC: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        NotificationCenter.default.addObserver(self, selector: #selector(darkModeEnabled(_:)), name: .darkModeEnabled, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(darkModeDisabled(_:)), name: .darkModeDisabled, object: nil)
         categories = UserDefaults.standard.array(forKey: "categories") as! [String]
         print(UserDefaults.standard.set(categories, forKey: "categories"))
         activityIndicator.cycleColors = [.blue]
@@ -82,6 +85,22 @@ class CategoryListVC: UIViewController {
          }*/
     }
     
+    @objc private func darkModeEnabled(_ notification: Notification) {
+        // Write your dark mode code here
+        NightNight.theme = .night
+        tableCategoryLIst.backgroundColor = colorConstants.grayBackground3
+        
+    }
+    
+    @objc private func darkModeDisabled(_ notification: Notification) {
+        // Write your non-dark mode code here
+        NightNight.theme = .normal
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self, name: .darkModeEnabled, object: nil)
+        NotificationCenter.default.removeObserver(self, name: .darkModeDisabled, object: nil)
+    }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         APICall().loadCategoriesAPI{ response in
@@ -171,6 +190,15 @@ extension CategoryListVC:UITableViewDelegate, UITableViewDataSource{
             cell.btnDelete.isHidden = true
         }
         cell.btnDelete.addTarget(self, action: #selector(deleteCat), for: .touchUpInside)
+        let darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
+        if  darkModeStatus == true{
+            cell.backgroundColor = colorConstants.grayBackground2
+            cell.lblCategoryName.textColor = colorConstants.nightModeText
+            NightNight.theme =  .night
+        }
+        else{
+            NightNight.theme =  .normal
+        }
         return cell
     }
     

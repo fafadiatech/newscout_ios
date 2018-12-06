@@ -54,12 +54,12 @@ open class FloatyItem: UIView {
     /**
      Circle Shadow color.
      */
-    @objc open var circleShadowColor: UIColor = UIColor.black
+    @objc open var circleShadowColor: UIColor = UIColor.white
 
     /**
      Title Shadow color.
      */
-    @objc open var titleShadowColor: UIColor = UIColor.black
+    @objc open var titleShadowColor: UIColor = UIColor.white
 
     /**
      If you touch up inside button, it execute handler.

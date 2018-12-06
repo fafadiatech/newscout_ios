@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import NightNight
 
 class SettingsVC: UIViewController {
     @IBOutlet weak var lblTitle: UILabel!

@@ -133,7 +133,7 @@ open class Floaty: UIView {
      Child item's default button color.
      */
     @IBInspectable
-    @objc open var itemButtonColor: UIColor = UIColor.white
+    @objc open var itemButtonColor: UIColor = UIColor.black
     
     /**
      Child item's default title label color.
@@ -451,6 +451,7 @@ open class Floaty: UIView {
         itemDefaultSet(item)
         item.titleLabelPosition = titlePosition
         item.title = title
+        item._titleLabel?.backgroundColor = .black
         item._titleLabel?.font = UIFont(name:"HelveticaNeue-Bold", size: 40.0)
         addItem(item: item)
         return item
@@ -716,10 +717,19 @@ open class Floaty: UIView {
         
         /// Use separate color (if specified) for item button image, or default to the plusColor
         item.iconImageView.tintColor = itemImageColor ?? plusColor
-        item.titleColor = itemTitleColor
+        
         item.circleShadowColor = itemShadowColor
         //item.titleShadowColor = itemShadowColor
         item.size = itemSize
+        let darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
+        if  darkModeStatus == true{
+             item._titleLabel?.backgroundColor = .white
+            item.titleColor = .black //itemTitleColor
+        }
+        else{
+             item._titleLabel?.backgroundColor = .white
+            item.titleColor = .black
+        }
         if (UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad){
           item._titleLabel?.font = UIFont(name:"HelveticaNeue-Bold", size: 28.0)
             item.size = 60
@@ -729,7 +739,7 @@ open class Floaty: UIView {
             item.size = 50
         }
          item.size = itemSize
-        item._titleLabel?.backgroundColor = UIColor.black//UIColor(red: 255, green: 255, blue: 255, alpha: 0.2)
+        //UIColor(red: 255, green: 255, blue: 255, alpha: 0.2) //UIColor.black//
         
     }
     

@@ -10,6 +10,7 @@ import UIKit
 import WebKit
 import Alamofire
 import SDWebImage
+import NightNight
 
 class NewsDetailVC: UIViewController {
     @IBOutlet weak var viewContainer: UIView!
@@ -84,6 +85,22 @@ class NewsDetailVC: UIViewController {
             }
         }
         
+        NotificationCenter.default.addObserver(self, selector: #selector(darkModeEnabled(_:)), name: .darkModeEnabled, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(darkModeDisabled(_:)), name: .darkModeDisabled, object: nil)
+        let darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
+        if  darkModeStatus == true{
+            suggestedCV.backgroundColor = colorConstants.txtlightGrayColor
+            viewNewsArea.backgroundColor = colorConstants.grayBackground1
+            txtViewNewsDesc.backgroundColor = colorConstants.grayBackground1
+            lblNewsHeading.textColor = colorConstants.whiteColor
+            lblSource.textColor = colorConstants.whiteColor
+            lblTimeAgo.textColor = colorConstants.whiteColor
+            txtViewNewsDesc.textColor = colorConstants.whiteColor
+            NightNight.theme = .night
+        }
+        else{
+             NightNight.theme = .normal
+        }
         ShowNews(currentIndex: newsCurrentIndex)
         let swipeUp = UISwipeGestureRecognizer(target: self, action: #selector(self.respondToSwipeGesture))
         swipeUp.direction = UISwipeGestureRecognizerDirection.up
@@ -104,6 +121,33 @@ class NewsDetailVC: UIViewController {
         let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapped(gestureRecognizer:)))
         viewContainer.addGestureRecognizer(tapRecognizer)
         tapRecognizer.delegate = self as! UIGestureRecognizerDelegate
+    }
+    
+    @objc private func darkModeEnabled(_ notification: Notification) {
+        // Write your dark mode code here
+        NightNight.theme = .night
+        suggestedCV.backgroundColor = colorConstants.txtlightGrayColor
+        newsView.backgroundColor = colorConstants.grayBackground1
+        viewContainer.backgroundColor = colorConstants.grayBackground1
+        viewNewsArea.backgroundColor = colorConstants.grayBackground1
+        txtViewNewsDesc.backgroundColor = colorConstants.grayBackground1
+        lblNewsHeading.textColor = colorConstants.whiteColor
+        lblSource.textColor = colorConstants.whiteColor
+        lblTimeAgo.textColor = colorConstants.whiteColor
+        txtViewNewsDesc.textColor = colorConstants.whiteColor
+        //HomeNewsTV.mixedBackgroundColor = MixedColor(normal: 0xffffff, night:
+        ////  0x000000)
+        
+    }
+    
+    @objc private func darkModeDisabled(_ notification: Notification) {
+        // Write your non-dark mode code here
+        NightNight.theme = .normal
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self, name: .darkModeEnabled, object: nil)
+        NotificationCenter.default.removeObserver(self, name: .darkModeDisabled, object: nil)
     }
     
     @objc func tapped(gestureRecognizer: UITapGestureRecognizer) {
@@ -152,7 +196,7 @@ class NewsDetailVC: UIViewController {
     func changeFont()
     {
         let textSizeSelected = UserDefaults.standard.value(forKey: "textSize") as! Int
-        txtViewNewsDesc.textColor = colorConstants.txtDarkGrayColor
+       // txtViewNewsDesc.textColor = colorConstants.txtDarkGrayColor
         if textSizeSelected == 0{
             lblNewsHeading.font = FontConstants.smallFontHeadingBold
             lblSource.font = FontConstants.smallFontContentMedium
@@ -505,6 +549,13 @@ extension NewsDetailVC:UICollectionViewDelegate, UICollectionViewDataSource, UIC
             cell.lblTitle.text = currentArticle.title
             cell.imgNews.sd_setImage(with: URL(string: currentArticle.imageURL!), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
         }
+        let darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
+        if  darkModeStatus == true{
+            cell.lblMoreStories.textColor = colorConstants.whiteColor
+            cell.lblTitle.textColor = colorConstants.whiteColor
+            cell.backgroundColor = colorConstants.txtlightGrayColor
+        }
+        
         return cell
     }
     

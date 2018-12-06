@@ -48,7 +48,7 @@ public struct ButtonBarPagerTabStripSettings {
         public var buttonBarLeftContentInset: CGFloat?
         public var buttonBarRightContentInset: CGFloat?
         
-        public var selectedBarBackgroundColor = UIColor.red
+        public var selectedBarBackgroundColor = UIColor.white
         public var selectedBarHeight: CGFloat = 3 // underline height
         public var selectedBarVerticalAlignment: SelectedBarVerticalAlignment = .bottom
         
@@ -124,7 +124,7 @@ open class ButtonBarPagerTabStripViewController: PagerTabStripViewController, Pa
             let buttonBarHeight = settings.style.buttonBarHeight ?? 44
             let buttonBar = ButtonBarView(frame: CGRect(x: 0, y: 0, width: view.frame.size.width, height: buttonBarHeight), collectionViewLayout: flowLayout)
             buttonBar.backgroundColor = .orange
-            buttonBar.selectedBar.backgroundColor = .red
+           // buttonBar.selectedBar.backgroundColor = .red
             buttonBar.autoresizingMask = .flexibleWidth
             var newContainerViewFrame = containerView.frame
             newContainerViewFrame.origin.y = buttonBarHeight
@@ -152,7 +152,14 @@ open class ButtonBarPagerTabStripViewController: PagerTabStripViewController, Pa
         flowLayout.sectionInset = UIEdgeInsets(top: sectionInset.top, left: settings.style.buttonBarLeftContentInset ?? sectionInset.left, bottom: sectionInset.bottom, right: settings.style.buttonBarRightContentInset ?? sectionInset.right)
         
         buttonBarView.showsHorizontalScrollIndicator = false
-        buttonBarView.backgroundColor = settings.style.buttonBarBackgroundColor ?? buttonBarView.backgroundColor
+        let darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
+        if darkModeStatus == true{
+        buttonBarView.backgroundColor = .black
+        }
+        else{
+            buttonBarView.backgroundColor = .white
+        }
+      //  buttonBarView.backgroundColor = settings.style.buttonBarBackgroundColor ?? buttonBarView.backgroundColor
         buttonBarView.selectedBar.backgroundColor =  settings.style.selectedBarBackgroundColor
         
         buttonBarView.selectedBarHeight = settings.style.selectedBarHeight
@@ -333,9 +340,17 @@ open class ButtonBarPagerTabStripViewController: PagerTabStripViewController, Pa
         else{
             cell.label.font = UIFont(name:"HelveticaNeue-Light", size: 28.0)
         }
-        cell.label.textColor = .black //settings.style.buttonBarItemTitleColor ?? cell.label.textColor
+        //cell.label.textColor = .black //settings.style.buttonBarItemTitleColor ?? cell.label.textColor
         cell.contentView.backgroundColor = settings.style.buttonBarItemBackgroundColor ?? cell.contentView.backgroundColor
-        cell.backgroundColor = .white ?? .white//.gray ?? .gray//settings.style.buttonBarItemBackgroundColor ?? cell.backgroundColor
+       let darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
+        if darkModeStatus == true{
+        cell.backgroundColor = .black ?? .black
+            cell.label.textColor = .white
+        }
+        else{
+            cell.backgroundColor = .gray ?? .gray
+            cell.label.textColor = .black
+        }//.gray ?? .gray//settings.style.buttonBarItemBackgroundColor ?? cell.backgroundColor
         if let image = indicatorInfo.image {
             cell.imageView.image = image
         }

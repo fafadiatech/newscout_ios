@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import NightNight
 
 class SignUpVC: UIViewController {
     
@@ -36,6 +37,28 @@ class SignUpVC: UIViewController {
         hideKeyboardWhenTappedAround()
         NotificationCenter.default.addObserver(self, selector: #selector(SignUpVC.keyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(SignUpVC.keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
+        let darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
+        if  darkModeStatus == true{
+           view.backgroundColor = colorConstants.grayBackground3
+            btnSignUp.backgroundColor = colorConstants.grayBackground3
+        }
+    }
+    
+    @objc private func darkModeEnabled(_ notification: Notification) {
+        // Write your dark mode code here
+        NightNight.theme = .night
+        view.backgroundColor = colorConstants.grayBackground3
+         btnSignUp.backgroundColor = colorConstants.grayBackground3
+    }
+    
+    @objc private func darkModeDisabled(_ notification: Notification) {
+        // Write your non-dark mode code here
+        NightNight.theme = .normal
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self, name: .darkModeEnabled, object: nil)
+        NotificationCenter.default.removeObserver(self, name: .darkModeDisabled, object: nil)
     }
     
     @objc func keyboardWillShow(notification: NSNotification) {
