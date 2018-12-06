@@ -9,6 +9,7 @@
 import UIKit
 import XLPagerTabStrip
 import Floaty
+import NightNight
 
 class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
     
@@ -20,6 +21,8 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
     override func viewDidLoad() {
         settings.style.buttonBarItemsShouldFillAvailiableWidth = false
         super.viewDidLoad()
+        NotificationCenter.default.addObserver(self, selector: #selector(darkModeEnabled(_:)), name: .darkModeEnabled, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(darkModeDisabled(_:)), name: .darkModeDisabled, object: nil)
         self.reloadPagerTabStripView()
         lblAppName.font = FontConstants.appFont
         viewAppTitle.backgroundColor = colorConstants.redColor
@@ -74,6 +77,22 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
             oldCell?.label.textColor = colorConstants.blackColor
             newCell?.label.textColor =  colorConstants.redColor
         }
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self, name: .darkModeEnabled, object: nil)
+        NotificationCenter.default.removeObserver(self, name: .darkModeDisabled, object: nil)
+    }
+
+    @objc private func darkModeEnabled(_ notification: Notification) {
+        // Write your dark mode code here
+        NightNight.theme = .night
+        buttonBarView.backgroundColor = colorConstants.blackColor
+    }
+    
+    @objc private func darkModeDisabled(_ notification: Notification) {
+        // Write your non-dark mode code here
+        NightNight.theme = .normal
     }
     
     override var prefersStatusBarHidden: Bool {

@@ -13,6 +13,10 @@ struct colorConstants{
     static let redColor = UIColor(hexFromString: "ed1c24")
     static let blackColor = UIColor(hexFromString: "383839")
     static let whiteColor = UIColor.white
+    static let nightModeText = UIColor.white
+    static let grayBackground1 = UIColor(hexFromString: "707070")
+    static let grayBackground2 = UIColor(hexFromString: "A8A8A8")
+    static let grayBackground3 = UIColor(hexFromString: "C0C0C0")
     static let txtlightGrayColor = UIColor(hexFromString: "9B9B9B")
     static let txtDarkGrayColor = UIColor(hexFromString: "424242")
 }

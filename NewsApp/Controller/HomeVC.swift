@@ -100,8 +100,9 @@ class HomeVC: UIViewController{
     @objc private func darkModeEnabled(_ notification: Notification) {
         // Write your dark mode code here
          NightNight.theme = .night
-        HomeNewsTV.mixedBackgroundColor = MixedColor(normal: 0xffffff, night:
-            0x000000)
+        //HomeNewsTV.mixedBackgroundColor = MixedColor(normal: 0xffffff, night:
+          ////  0x000000)
+        HomeNewsTV.backgroundColor = colorConstants.grayBackground3
        
     }
     
@@ -281,9 +282,12 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
         }
         activityIndicator.stopAnimating()
         let darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
-        if  darkModeStatus == false{
-            cell.ViewCellBackground.mixedBackgroundColor = MixedColor(normal: 0xffffff, night:
-                0x000000)
+        if  darkModeStatus == true{
+            cell.ViewCellBackground.backgroundColor = colorConstants.grayBackground2
+            cell.lblSource.textColor = colorConstants.nightModeText
+            cell.lblTimesAgo.textColor = colorConstants.nightModeText
+            cell.lblNewsHeading.textColor = colorConstants.nightModeText
+             NightNight.theme =  .night
         }
         else{
             NightNight.theme =  .normal
