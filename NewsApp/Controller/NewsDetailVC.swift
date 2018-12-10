@@ -41,7 +41,7 @@ class NewsDetailVC: UIViewController {
     var articleId = 0
     var sourceURL = ""
     var tapTerm:UITapGestureRecognizer = UITapGestureRecognizer()
-   
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         if (UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad)
@@ -51,15 +51,14 @@ class NewsDetailVC: UIViewController {
                 var bottomConstraint = NSLayoutConstraint (item: viewLikeDislike,
                                                            attribute: NSLayoutAttribute.bottom,
                                                            relatedBy: NSLayoutRelation.equal,
-                                                           toItem: self.suggestedView,
-                                                           attribute: NSLayoutAttribute.top,
+                                                           toItem: newsView,
+                                                           attribute: NSLayoutAttribute.bottom,
                                                            multiplier: 1,
                                                            constant: 0)
                 // Add the constraint to the view
-                self.view.addConstraint(bottomConstraint)
+                viewLikeDislike.addConstraint(bottomConstraint)
                 suggestedView.frame.origin.y = 720
                 // self.viewLikeDislike.frame = CGRect(x: 0, y: 589, width: self.view.frame.width, height: 70)
-                
             }
             else{
                 viewLikeDislike.isHidden = false
@@ -89,17 +88,7 @@ class NewsDetailVC: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(darkModeDisabled(_:)), name: .darkModeDisabled, object: nil)
         let darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
         if  darkModeStatus == true{
-            suggestedCV.backgroundColor = colorConstants.txtlightGrayColor
-            viewNewsArea.backgroundColor = colorConstants.grayBackground1
-            txtViewNewsDesc.backgroundColor = colorConstants.grayBackground1
-            lblNewsHeading.textColor = colorConstants.whiteColor
-            lblSource.textColor = colorConstants.whiteColor
-            lblTimeAgo.textColor = colorConstants.whiteColor
-            txtViewNewsDesc.textColor = colorConstants.whiteColor
-            NightNight.theme = .night
-        }
-        else{
-             NightNight.theme = .normal
+            changeTheme()
         }
         ShowNews(currentIndex: newsCurrentIndex)
         let swipeUp = UISwipeGestureRecognizer(target: self, action: #selector(self.respondToSwipeGesture))
@@ -126,18 +115,7 @@ class NewsDetailVC: UIViewController {
     @objc private func darkModeEnabled(_ notification: Notification) {
         // Write your dark mode code here
         NightNight.theme = .night
-        suggestedCV.backgroundColor = colorConstants.txtlightGrayColor
-        newsView.backgroundColor = colorConstants.grayBackground1
-        viewContainer.backgroundColor = colorConstants.grayBackground1
-        viewNewsArea.backgroundColor = colorConstants.grayBackground1
-        txtViewNewsDesc.backgroundColor = colorConstants.grayBackground1
-        lblNewsHeading.textColor = colorConstants.whiteColor
-        lblSource.textColor = colorConstants.whiteColor
-        lblTimeAgo.textColor = colorConstants.whiteColor
-        txtViewNewsDesc.textColor = colorConstants.whiteColor
-        //HomeNewsTV.mixedBackgroundColor = MixedColor(normal: 0xffffff, night:
-        ////  0x000000)
-        
+        changeTheme()
     }
     
     @objc private func darkModeDisabled(_ notification: Notification) {
@@ -148,6 +126,20 @@ class NewsDetailVC: UIViewController {
     deinit {
         NotificationCenter.default.removeObserver(self, name: .darkModeEnabled, object: nil)
         NotificationCenter.default.removeObserver(self, name: .darkModeDisabled, object: nil)
+    }
+    
+    func changeTheme(){
+        suggestedCV.backgroundColor = colorConstants.txtlightGrayColor
+        newsView.backgroundColor = colorConstants.grayBackground1
+        viewContainer.backgroundColor = colorConstants.grayBackground1
+        viewNewsArea.backgroundColor = colorConstants.grayBackground1
+        txtViewNewsDesc.backgroundColor = colorConstants.grayBackground1
+        lblNewsHeading.textColor = colorConstants.whiteColor
+        lblSource.textColor = colorConstants.whiteColor
+        lblTimeAgo.textColor = colorConstants.whiteColor
+        txtViewNewsDesc.textColor = colorConstants.whiteColor
+        viewWebTitle.backgroundColor = colorConstants.grayBackground3
+        lblWebSource.textColor = .white
     }
     
     @objc func tapped(gestureRecognizer: UITapGestureRecognizer) {
@@ -196,7 +188,7 @@ class NewsDetailVC: UIViewController {
     func changeFont()
     {
         let textSizeSelected = UserDefaults.standard.value(forKey: "textSize") as! Int
-       // txtViewNewsDesc.textColor = colorConstants.txtDarkGrayColor
+        // txtViewNewsDesc.textColor = colorConstants.txtDarkGrayColor
         if textSizeSelected == 0{
             lblNewsHeading.font = FontConstants.smallFontHeadingBold
             lblSource.font = FontConstants.smallFontContentMedium
@@ -257,7 +249,7 @@ class NewsDetailVC: UIViewController {
                 view.window!.layer.add(transition, forKey: kCATransition)
                 let myURL = URL(string: sourceURL)!
                 let myRequest = URLRequest(url: myURL)
-               
+                
                 WKWebView.load(myRequest)
                 
             case UISwipeGestureRecognizerDirection.up:
@@ -445,7 +437,6 @@ class NewsDetailVC: UIViewController {
     
     @IBAction func btnShareActn(_ sender: Any) {
         let text = ArticleData[0].body.articles[newsCurrentIndex].title
-        let webText = "Sent via NewsCout"
         let webURL = "Sent via NewsCout : (www.newscout.in)"
         let imgStr = URL(string: ArticleData[0].body.articles[newsCurrentIndex].imageURL!)
         let url = URL(string:ArticleData[0].body.articles[newsCurrentIndex].imageURL!)
@@ -453,11 +444,11 @@ class NewsDetailVC: UIViewController {
         var image = UIImage()
         if let data = try? Data(contentsOf: url!)
         {
-             image = UIImage(data: data)!
+            image = UIImage(data: data)!
         }
         let sourceURL = URL(string: "\(ArticleData[0].body.articles[newsCurrentIndex].url!)")
         let shareAll = [ text , image1, image,  sourceURL , webURL ] as [Any]
-    
+        
         let activityViewController = UIActivityViewController(activityItems: shareAll, applicationActivities: nil)
         activityViewController.popoverPresentationController?.sourceView = sender as! UIView
         self.present(activityViewController, animated: true, completion: nil)
@@ -465,7 +456,7 @@ class NewsDetailVC: UIViewController {
     
     @IBAction func btnBackAction(_ sender: Any) {
         //self.dismiss(animated: false)
-
+        
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let vc:HomeVC = storyboard.instantiateViewController(withIdentifier: "HomeVC") as! HomeVC
         self.present(vc, animated: true, completion: nil)
@@ -582,53 +573,53 @@ extension NewsDetailVC : UIGestureRecognizerDelegate {
 }
 
 /*class ExampleActivity : UIActivity{
-var _activityTitle: String
-var _activityImage: UIImage?
-var activityItems = [Any]()
-var action: ([Any]) -> Void
-
-init(title: String, image: UIImage?, performAction: @escaping ([Any]) -> Void) {
-    _activityTitle = title
-    _activityImage = image
-    action = performAction
-    super.init()
-}
-    override var activityTitle: String? {
-        return _activityTitle
-    }
-    
-    override var activityImage: UIImage? {
-        return _activityImage
-    }
-    override var activityType: UIActivityType? {
-        return UIActivityType(rawValue: "com.yoursite.yourapp.activity")
-    }
-    
-    override class var activityCategory: UIActivityCategory {
-        return .action
-    }
-    override func canPerform(withActivityItems activityItems: [Any]) -> Bool {
-        return true
-    }
-    override func prepare(withActivityItems activityItems: [Any]) {
-        self.activityItems = activityItems
-    }
-    override func perform() {
-        action(activityItems)
-        activityDidFinish(true)
-    }
-    let customItem = ExampleActivity(title: "Tap me!", image: UIImage(named: "bookmark")) { sharedItems in
-        guard let sharedStrings = sharedItems as? [String] else { return }
-        
-        for string in sharedStrings {
-            print("Here's the string: \(string)")
-        }
-    }
-    
-    let items = ["Hello, custom activity!"]
-    
-    //customItem.popoverPresentationController?.sourceView = sender as! UIView
-    //self.present(customItem, animated: true, completion: nil)
-}
+ var _activityTitle: String
+ var _activityImage: UIImage?
+ var activityItems = [Any]()
+ var action: ([Any]) -> Void
+ 
+ init(title: String, image: UIImage?, performAction: @escaping ([Any]) -> Void) {
+ _activityTitle = title
+ _activityImage = image
+ action = performAction
+ super.init()
+ }
+ override var activityTitle: String? {
+ return _activityTitle
+ }
+ 
+ override var activityImage: UIImage? {
+ return _activityImage
+ }
+ override var activityType: UIActivityType? {
+ return UIActivityType(rawValue: "com.yoursite.yourapp.activity")
+ }
+ 
+ override class var activityCategory: UIActivityCategory {
+ return .action
+ }
+ override func canPerform(withActivityItems activityItems: [Any]) -> Bool {
+ return true
+ }
+ override func prepare(withActivityItems activityItems: [Any]) {
+ self.activityItems = activityItems
+ }
+ override func perform() {
+ action(activityItems)
+ activityDidFinish(true)
+ }
+ let customItem = ExampleActivity(title: "Tap me!", image: UIImage(named: "bookmark")) { sharedItems in
+ guard let sharedStrings = sharedItems as? [String] else { return }
+ 
+ for string in sharedStrings {
+ print("Here's the string: \(string)")
+ }
+ }
+ 
+ let items = ["Hello, custom activity!"]
+ 
+ //customItem.popoverPresentationController?.sourceView = sender as! UIView
+ //self.present(customItem, animated: true, completion: nil)
+ }
  */
 

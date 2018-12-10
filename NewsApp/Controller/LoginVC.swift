@@ -10,6 +10,7 @@ import UIKit
 import GoogleSignIn
 import FBSDKLoginKit
 import FBSDKCoreKit
+import NightNight
 
 class LoginVC: UIViewController, GIDSignInUIDelegate, FBSDKLoginButtonDelegate{
     
@@ -54,9 +55,33 @@ class LoginVC: UIViewController, GIDSignInUIDelegate, FBSDKLoginButtonDelegate{
         viewTitle.backgroundColor = colorConstants.redColor
         lblTitle.textColor = colorConstants.whiteColor
         lblTitle.font = FontConstants.viewTitleFont
-        hideKeyboardWhenTappedAround() 
+        hideKeyboardWhenTappedAround()
+        
+        let darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
+        if  darkModeStatus == true{
+            view.backgroundColor = colorConstants.grayBackground3
+            btnSignUp.backgroundColor = colorConstants.grayBackground3
+            btnSignUp.titleLabel?.textColor = .white
+            //btnSignUp.setTitleColor(.white, for: .normal)
+        }
     }
     
+    @objc private func darkModeEnabled(_ notification: Notification) {
+        // Write your dark mode code here
+        NightNight.theme = .night
+        view.backgroundColor = colorConstants.grayBackground3
+        // btnSignUp.backgroundColor = colorConstants.grayBackground3
+    }
+    
+    @objc private func darkModeDisabled(_ notification: Notification) {
+        // Write your non-dark mode code here
+        NightNight.theme = .normal
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self, name: .darkModeEnabled, object: nil)
+        NotificationCenter.default.removeObserver(self, name: .darkModeDisabled, object: nil)
+    }
     func hideKeyboardWhenTappedAround() {
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(LoginVC.dismissKeyboard))
         tap.cancelsTouchesInView = false

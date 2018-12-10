@@ -19,6 +19,7 @@ class SignUpVC: UIViewController {
     @IBOutlet weak var txtPassword: UITextField!
     @IBOutlet weak var txtConfirmPswd: UITextField!
     @IBOutlet weak var btnSignUp: UIButton!
+    @IBOutlet weak var btnAlreadyMember: UIButton!
     override func viewDidLoad() {
         super.viewDidLoad()
         txtFname.autocorrectionType = .no
@@ -39,8 +40,8 @@ class SignUpVC: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(SignUpVC.keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
         let darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
         if  darkModeStatus == true{
-           view.backgroundColor = colorConstants.grayBackground3
-            btnSignUp.backgroundColor = colorConstants.grayBackground3
+            view.backgroundColor = colorConstants.grayBackground3
+            btnAlreadyMember.backgroundColor =  colorConstants.grayBackground3
         }
     }
     
@@ -48,7 +49,7 @@ class SignUpVC: UIViewController {
         // Write your dark mode code here
         NightNight.theme = .night
         view.backgroundColor = colorConstants.grayBackground3
-         btnSignUp.backgroundColor = colorConstants.grayBackground3
+        btnAlreadyMember.backgroundColor = colorConstants.grayBackground3
     }
     
     @objc private func darkModeDisabled(_ notification: Notification) {
@@ -65,10 +66,10 @@ class SignUpVC: UIViewController {
         if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
             if self.view.frame.origin.y == 0{
                 if UIDevice.current.userInterfaceIdiom == .pad{
-                self.view.frame.origin.y -= keyboardSize.height - 200
+                    self.view.frame.origin.y -= keyboardSize.height - 200
                 }
                 else{
-                   // self.view.frame.origin.y -= keyboardSize.height - 100
+                    // self.view.frame.origin.y -= keyboardSize.height - 100
                 }
             }
         }
@@ -77,10 +78,10 @@ class SignUpVC: UIViewController {
     @objc func keyboardWillHide(notification: NSNotification) {
         if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
             if self.view.frame.origin.y != 0{
-                 if UIDevice.current.userInterfaceIdiom == .pad{
-                self.view.frame.origin.y += keyboardSize.height - 200
+                if UIDevice.current.userInterfaceIdiom == .pad{
+                    self.view.frame.origin.y += keyboardSize.height - 200
                 }
-                 else{
+                else{
                     //self.view.frame.origin.y += keyboardSize.height - 100
                 }
             }

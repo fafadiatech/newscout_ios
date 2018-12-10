@@ -22,10 +22,10 @@ class SettingsTVC: UITableViewController, GIDSignInUIDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-    
+        
         let switchStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
         if switchStatus == true{
-          switchNightMode.isOn = true
+            switchNightMode.isOn = true
         }
         else{
             switchNightMode.isOn = false
@@ -181,19 +181,19 @@ class SettingsTVC: UITableViewController, GIDSignInUIDelegate {
     @IBAction func switchNightModeActn(_ sender: Any) {
         if switchNightMode.isOn == true {
             UserDefaults.standard.setValue(true, forKey: "darkModeEnabled")
-        
-        // Post the notification to let all current view controllers that the app has changed to dark mode, and they should theme themselves to reflect this change.
-        NotificationCenter.default.post(name: .darkModeEnabled, object: nil)
-        
-    } else {
-    
+            
+            // Post the notification to let all current view controllers that the app has changed to dark mode, and they should theme themselves to reflect this change.
+            NotificationCenter.default.post(name: .darkModeEnabled, object: nil)
+            
+        } else {
+            
             UserDefaults.standard.setValue(false, forKey: "darkModeEnabled")
+            
+            // Post the notification to let all current view controllers that the app has changed to non-dark mode, and they should theme themselves to reflect this change.
+            NotificationCenter.default.post(name: .darkModeDisabled, object: nil)
+        }
+    }
     
-    // Post the notification to let all current view controllers that the app has changed to non-dark mode, and they should theme themselves to reflect this change.
-    NotificationCenter.default.post(name: .darkModeDisabled, object: nil)
-    }
-    }
-
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.

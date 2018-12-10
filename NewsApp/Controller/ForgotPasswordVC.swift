@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import NightNight
 
 class ForgotPasswordVC: UIViewController {
     
@@ -14,6 +15,7 @@ class ForgotPasswordVC: UIViewController {
     @IBOutlet weak var viewTitle: UIView!
     @IBOutlet weak var btnSubmit: UIButton!
     @IBOutlet weak var txtEmail: UITextField!
+    @IBOutlet weak var lblEmail: UILabel!
     
     var email = ""
     
@@ -29,6 +31,28 @@ class ForgotPasswordVC: UIViewController {
         lblTitle.textColor = colorConstants.whiteColor
         lblTitle.font = FontConstants.viewTitleFont
         hideKeyboardWhenTappedAround()
+        let darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
+        if  darkModeStatus == true{
+            view.backgroundColor = colorConstants.grayBackground3
+            lblEmail.textColor = .white
+        }
+    }
+    
+    @objc private func darkModeEnabled(_ notification: Notification) {
+        // Write your dark mode code here
+        NightNight.theme = .night
+        view.backgroundColor = colorConstants.grayBackground3
+        lblEmail.textColor = .white
+    }
+    
+    @objc private func darkModeDisabled(_ notification: Notification) {
+        // Write your non-dark mode code here
+        NightNight.theme = .normal
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self, name: .darkModeEnabled, object: nil)
+        NotificationCenter.default.removeObserver(self, name: .darkModeDisabled, object: nil)
     }
     
     func hideKeyboardWhenTappedAround() {

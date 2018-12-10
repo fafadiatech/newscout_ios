@@ -48,7 +48,7 @@ public struct ButtonBarPagerTabStripSettings {
         public var buttonBarLeftContentInset: CGFloat?
         public var buttonBarRightContentInset: CGFloat?
         
-        public var selectedBarBackgroundColor = UIColor.white
+        public var selectedBarBackgroundColor = UIColor.red
         public var selectedBarHeight: CGFloat = 3 // underline height
         public var selectedBarVerticalAlignment: SelectedBarVerticalAlignment = .bottom
         
@@ -154,13 +154,13 @@ open class ButtonBarPagerTabStripViewController: PagerTabStripViewController, Pa
         buttonBarView.showsHorizontalScrollIndicator = false
         let darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
         if darkModeStatus == true{
-        buttonBarView.backgroundColor = .black
+        buttonBarView.selectedBar.backgroundColor = .black
         }
         else{
-            buttonBarView.backgroundColor = .white
+            buttonBarView.selectedBar.backgroundColor = .red
         }
       //  buttonBarView.backgroundColor = settings.style.buttonBarBackgroundColor ?? buttonBarView.backgroundColor
-        buttonBarView.selectedBar.backgroundColor =  settings.style.selectedBarBackgroundColor
+        //buttonBarView.selectedBar.backgroundColor =  settings.style.selectedBarBackgroundColor
         
         buttonBarView.selectedBarHeight = settings.style.selectedBarHeight
         buttonBarView.selectedBarVerticalAlignment = settings.style.selectedBarVerticalAlignment

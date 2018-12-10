@@ -29,7 +29,7 @@ class ChangePasswordVC: UIViewController {
         }
         let darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
         if  darkModeStatus == true{
-        changeFontColor()
+            changeFontColor()
         }
         lblChangePswd.textColor = colorConstants.whiteColor
         viewTitle.backgroundColor = colorConstants.redColor
@@ -43,7 +43,7 @@ class ChangePasswordVC: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(darkModeEnabled(_:)), name: .darkModeEnabled, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(darkModeDisabled(_:)), name: .darkModeDisabled, object: nil)
     }
-
+    
     func changeFontColor(){
         view.backgroundColor = colorConstants.grayBackground3
         lblUsername.textColor = colorConstants.whiteColor
@@ -58,7 +58,7 @@ class ChangePasswordVC: UIViewController {
     @objc private func darkModeEnabled(_ notification: Notification) {
         // Write your dark mode code here
         NightNight.theme = .night
-       changeFontColor()
+        changeFontColor()
     }
     
     @objc private func darkModeDisabled(_ notification: Notification) {

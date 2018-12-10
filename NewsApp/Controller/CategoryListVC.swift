@@ -33,7 +33,8 @@ class CategoryListVC: UIViewController {
         categories = UserDefaults.standard.array(forKey: "categories") as! [String]
         print(UserDefaults.standard.set(categories, forKey: "categories"))
         activityIndicator.cycleColors = [.blue]
-        activityIndicator.frame = CGRect(x: 166, y: 150, width: 40, height: 40)
+        // activityIndicator.frame = CGRect(x: 166, y: 150, width: 40, height: 40)
+        activityIndicator.frame = CGRect(x: view.frame.width/2, y: view.frame.height/2 - 100, width: 40, height: 40)
         activityIndicator.sizeToFit()
         activityIndicator.indicatorMode = .indeterminate
         activityIndicator.progress = 2.0
@@ -175,15 +176,15 @@ extension CategoryListVC:UITableViewDelegate, UITableViewDataSource{
         cell.lblCategoryName.text = catData.title
         cell.btnDelete.tag = indexPath.row
         //if cell.lblCategoryName.text == "Trending" || cell.lblCategoryName.text == "For You"{
-//        if catData.title == "Trending" || catData.title == "For You"{
-//            cell.btnDelete.isHidden = true
-//        }
-//        else{
-//            cell.btnDelete.isHidden = false
-//        }
+        //        if catData.title == "Trending" || catData.title == "For You"{
+        //            cell.btnDelete.isHidden = true
+        //        }
+        //        else{
+        //            cell.btnDelete.isHidden = false
+        //        }
         if categories.contains(catData.title!){
             if catData.title != "Trending"{
-            cell.btnDelete.isHidden = false
+                cell.btnDelete.isHidden = false
             }
         }
         else{

@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import NightNight
 
 class ProfileVC: UIViewController {
     
@@ -39,7 +40,34 @@ class ProfileVC: UIViewController {
         if UserDefaults.standard.value(forKey: "email") != nil{
             lblemailVal.text = UserDefaults.standard.value(forKey: "email") as! String
         }
-        
+        let darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
+        if  darkModeStatus == true{
+            viewProfileDetails.backgroundColor = colorConstants.grayBackground3
+            lblName.textColor = .white
+            lblEmail.textColor = .white
+            lblNameVal.textColor = .white
+            lblemailVal.textColor = .white
+        }
+    }
+    
+    @objc private func darkModeEnabled(_ notification: Notification) {
+        // Write your dark mode code here
+        NightNight.theme = .night
+        viewProfileDetails.backgroundColor = colorConstants.grayBackground3
+        lblName.textColor = .white
+        lblEmail.textColor = .white
+        lblNameVal.textColor = .white
+        lblemailVal.textColor = .white
+    }
+    
+    @objc private func darkModeDisabled(_ notification: Notification) {
+        // Write your non-dark mode code here
+        NightNight.theme = .normal
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self, name: .darkModeEnabled, object: nil)
+        NotificationCenter.default.removeObserver(self, name: .darkModeDisabled, object: nil)
     }
     
     override var prefersStatusBarHidden: Bool {

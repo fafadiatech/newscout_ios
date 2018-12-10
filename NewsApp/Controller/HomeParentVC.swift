@@ -32,11 +32,12 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
         }
         let darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
         if  darkModeStatus == true{
-             buttonBarView.backgroundColor = colorConstants.grayBackground1
-            
+            buttonBarView.backgroundColor = colorConstants.grayBackground1
+            buttonBarView.selectedBar.backgroundColor = colorConstants.redColor
         }
         else{
-             buttonBarView.backgroundColor = .white
+            buttonBarView.backgroundColor = .white
+            buttonBarView.selectedBar.backgroundColor = .red
             
         }
         //          if UserDefaults.standard.value(forKey: "token") = nil || UserDefaults.standard.value(forKey: "FBToken") == nil || UserDefaults.standard.value(forKey: "googleToken") == nil{
@@ -76,18 +77,19 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
             self.present(searchvc, animated: true, completion: nil)
         }
         self.view.addSubview(floaty)
-       // buttonBarView.selectedBar.backgroundColor = .red
-       // buttonBarView.backgroundColor = colorConstants.whiteColor
+        // buttonBarView.selectedBar.backgroundColor = .red
+        // buttonBarView.backgroundColor = colorConstants.whiteColor
         changeCurrentIndexProgressive = {[weak self](oldCell:ButtonBarViewCell?, newCell: ButtonBarViewCell?, progressPercentage:CGFloat, changeCurrentIndex:Bool, animated:Bool)-> Void in
             
             guard changeCurrentIndex == true else {return}
             let darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
             if  darkModeStatus == true{
-            oldCell?.label.textColor = colorConstants.whiteColor
+                oldCell?.label.textColor = colorConstants.whiteColor
                 oldCell?.label.backgroundColor = colorConstants.grayBackground1
-            newCell?.label.textColor =  colorConstants.redColor
-            oldCell?.backgroundColor = colorConstants.grayBackground1
-            newCell?.backgroundColor = colorConstants.grayBackground1
+                newCell?.label.textColor =  colorConstants.whiteColor
+                oldCell?.backgroundColor = colorConstants.grayBackground1
+                newCell?.backgroundColor = colorConstants.grayBackground1
+                self!.buttonBarView.selectedBar.backgroundColor = .red
             }
             else{
                 oldCell?.label.textColor = colorConstants.blackColor
@@ -95,6 +97,7 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
                 newCell?.label.textColor =  colorConstants.redColor
                 oldCell?.backgroundColor = colorConstants.whiteColor
                 newCell?.backgroundColor = colorConstants.whiteColor
+                self!.buttonBarView.selectedBar.backgroundColor = .red
             }
             
         }
@@ -104,17 +107,19 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
         NotificationCenter.default.removeObserver(self, name: .darkModeEnabled, object: nil)
         NotificationCenter.default.removeObserver(self, name: .darkModeDisabled, object: nil)
     }
-
+    
     @objc private func darkModeEnabled(_ notification: Notification) {
         // Write your dark mode code here
         NightNight.theme = .night
         buttonBarView.backgroundColor = colorConstants.grayBackground1
+        buttonBarView.selectedBar.backgroundColor = .white
     }
     
     @objc private func darkModeDisabled(_ notification: Notification) {
         // Write your non-dark mode code here
         NightNight.theme = .normal
-          buttonBarView.backgroundColor = colorConstants.whiteColor
+        buttonBarView.backgroundColor = colorConstants.whiteColor
+        buttonBarView.selectedBar.backgroundColor = .red
     }
     
     override var prefersStatusBarHidden: Bool {
@@ -159,7 +164,6 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
     
     func notifyChildOfPresentation(in scrollView: UIScrollView?) {
         let presentedViewController = viewControllers[currentIndex]
-        
     }
 }
 

@@ -36,7 +36,7 @@ class HomeVC: UIViewController{
         NotificationCenter.default.addObserver(self, selector: #selector(darkModeEnabled(_:)), name: .darkModeEnabled, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(darkModeDisabled(_:)), name: .darkModeDisabled, object: nil)
         activityIndicator.cycleColors = [.blue]
-        activityIndicator.frame = CGRect(x: 166, y: 150, width: 40, height: 40)
+        activityIndicator.frame = CGRect(x: view.frame.width/2, y: view.frame.height/2 - 100, width: 40, height: 40)
         activityIndicator.sizeToFit()
         activityIndicator.indicatorMode = .indeterminate
         activityIndicator.progress = 2.0
@@ -95,21 +95,21 @@ class HomeVC: UIViewController{
          }
          }
          }*/
-      
+        
     }
     
     @objc private func darkModeEnabled(_ notification: Notification) {
         // Write your dark mode code here
-         NightNight.theme = .night
+        NightNight.theme = .night
         //HomeNewsTV.mixedBackgroundColor = MixedColor(normal: 0xffffff, night:
-          ////  0x000000)
+        ////  0x000000)
         HomeNewsTV.backgroundColor = colorConstants.grayBackground3
-       
+        
     }
     
     @objc private func darkModeDisabled(_ notification: Notification) {
         // Write your non-dark mode code here
-         NightNight.theme = .normal
+        NightNight.theme = .normal
     }
     
     deinit {
@@ -282,14 +282,14 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
             
         }
         activityIndicator.stopAnimating()
-    
+        
         let darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
         if  darkModeStatus == true{
             cell.ViewCellBackground.backgroundColor = colorConstants.grayBackground2
             cell.lblSource.textColor = colorConstants.nightModeText
             cell.lblTimesAgo.textColor = colorConstants.nightModeText
             cell.lblNewsHeading.textColor = colorConstants.nightModeText
-             NightNight.theme =  .night
+            NightNight.theme =  .night
         }
         else{
             NightNight.theme =  .normal

@@ -727,8 +727,8 @@ open class Floaty: UIView {
             item.titleColor = .black //itemTitleColor
         }
         else{
-             item._titleLabel?.backgroundColor = .white
-            item.titleColor = .black
+             item._titleLabel?.backgroundColor = .black
+            item.titleColor = .white
         }
         if (UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad){
           item._titleLabel?.font = UIFont(name:"HelveticaNeue-Bold", size: 28.0)
