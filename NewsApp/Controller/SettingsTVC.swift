@@ -13,7 +13,13 @@ import FBSDKCoreKit
 import NightNight
 
 class SettingsTVC: UITableViewController, GIDSignInUIDelegate {
+    @IBOutlet weak var lblDailyEdition: UILabel!
     
+    @IBOutlet weak var lblNIghtMode: UILabel!
+    @IBOutlet weak var lblProfile: UILabel!
+    @IBOutlet weak var lblPersonlized: UILabel!
+    @IBOutlet weak var lblBreakingNews: UILabel!
+    @IBOutlet var settingsTV: UITableView!
     @IBOutlet weak var segmentTextSize: UISegmentedControl!
     @IBOutlet weak var lblLogin: UILabel!
     @IBOutlet weak var lblLogout: UILabel!
@@ -48,6 +54,47 @@ class SettingsTVC: UITableViewController, GIDSignInUIDelegate {
         else {
             tableView.rowHeight = 44
         }
+        NotificationCenter.default.addObserver(self, selector: #selector(darkModeEnabled(_:)), name: .darkModeEnabled, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(darkModeDisabled(_:)), name: .darkModeDisabled, object: nil)
+        let darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
+        if  darkModeStatus == true{
+            settingsTV.backgroundColor = colorConstants.grayBackground2
+            let cell = UITableViewCell()
+            cell.backgroundColor = .black
+           //changeColor()
+            
+        }
+    }
+   
+    @objc private func darkModeEnabled(_ notification: Notification) {
+        // Write your dark mode code here
+        NightNight.theme = .night
+        let cell = SettingsTVCell()
+        //changeColor()
+        cell.backgroundColor = .black
+        settingsTV.backgroundColor = colorConstants.grayBackground2
+      
+    }
+    
+    @objc private func darkModeDisabled(_ notification: Notification) {
+        // Write your non-dark mode code here
+        NightNight.theme = .normal
+        settingsTV.backgroundColor = colorConstants.grayBackground3
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self, name: .darkModeEnabled, object: nil)
+        NotificationCenter.default.removeObserver(self, name: .darkModeDisabled, object: nil)
+    }
+    
+    func changeColor(){
+        lblLogin.textColor = .red
+        lblLogout.textColor = .red
+        lblProfile.textColor = .red
+        lblNIghtMode.textColor = .white
+        lblPersonlized.textColor = .white
+        lblBreakingNews.textColor = .white
+        lblDailyEdition.textColor = .white
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -102,8 +149,22 @@ class SettingsTVC: UITableViewController, GIDSignInUIDelegate {
         let headerView = view as! UITableViewHeaderFooterView
         headerView.textLabel?.textColor = .black
         headerView.textLabel?.font = FontConstants.settingsTVHeader
+        let cell = UITableViewCell()
     }
     
+//    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+//
+//        let cell = UITableViewCell()
+//        let darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
+//        if  darkModeStatus == true{
+//             cell.backgroundColor = .black
+//        }
+//        else{
+//        cell.backgroundColor = colorConstants.grayBackground3
+//        }
+//        return cell
+//    }
+//
     override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
         if indexPath.section == 2 && indexPath.row == 0{
             if UserDefaults.standard.value(forKey: "token") == nil && UserDefaults.standard.value(forKey: "googleToken") == nil && UserDefaults.standard.value(forKey: "FBToken") == nil {

@@ -67,7 +67,7 @@ class APICall{
         print(headers)
         Alamofire.request(url,method: .get, headers: headers).responseString{
             response in
-          
+          print(response)
             if(response.result.isSuccess){
                 print(response.result)
                 if let data = response.data {

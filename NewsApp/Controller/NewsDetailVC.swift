@@ -57,6 +57,7 @@ class NewsDetailVC: UIViewController {
                                                            constant: 0)
                 // Add the constraint to the view
                 viewLikeDislike.addConstraint(bottomConstraint)
+                
                 suggestedView.frame.origin.y = 720
                 // self.viewLikeDislike.frame = CGRect(x: 0, y: 589, width: self.view.frame.width, height: 70)
             }

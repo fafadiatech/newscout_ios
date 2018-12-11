@@ -220,6 +220,6 @@ extension CategoryListVC:UITableViewDelegate, UITableViewDataSource{
 extension CategoryListVC:IndicatorInfoProvider{
     
     func indicatorInfo(for pagerTabStripController: PagerTabStripViewController) -> IndicatorInfo {
-        return IndicatorInfo(title: "More")
+        return IndicatorInfo(title: "Categories")
     }
 }
