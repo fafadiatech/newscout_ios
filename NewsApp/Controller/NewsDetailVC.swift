@@ -11,6 +11,8 @@ import WebKit
 import Alamofire
 import SDWebImage
 import NightNight
+import AVFoundation
+import AVKit
 
 class NewsDetailVC: UIViewController {
     @IBOutlet weak var viewContainer: UIView!
@@ -32,6 +34,8 @@ class NewsDetailVC: UIViewController {
     @IBOutlet weak var btnBookamark: UIButton!
     @IBOutlet weak var viewLikeDislike: UIView!
     @IBOutlet weak var viewNewsArea: UIView!
+    @IBOutlet weak var btnPlayVideo: UIButton!
+    @IBOutlet weak var newsAreaHeightConstraint: NSLayoutConstraint!
     let imageCache = NSCache<NSString, UIImage>()
     var RecomArticleData = [ArticleStatus]()
     var ArticleData = [ArticleStatus]()
@@ -41,34 +45,40 @@ class NewsDetailVC: UIViewController {
     var articleId = 0
     var sourceURL = ""
     var tapTerm:UITapGestureRecognizer = UITapGestureRecognizer()
-    
+    var player:AVPlayer?
+    var playerItem:AVPlayerItem?
     override func viewDidLoad() {
         super.viewDidLoad()
-        if (UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad)
-        {
-            if UIDeviceOrientationIsLandscape(UIDevice.current.orientation) {
-                viewLikeDislike.isHidden = false
-                var bottomConstraint = NSLayoutConstraint (item: viewLikeDislike,
-                                                           attribute: NSLayoutAttribute.bottom,
-                                                           relatedBy: NSLayoutRelation.equal,
-                                                           toItem: newsView,
-                                                           attribute: NSLayoutAttribute.bottom,
-                                                           multiplier: 1,
-                                                           constant: 0)
-                // Add the constraint to the view
-                viewLikeDislike.addConstraint(bottomConstraint)
-                
-                suggestedView.frame.origin.y = 720
-                // self.viewLikeDislike.frame = CGRect(x: 0, y: 589, width: self.view.frame.width, height: 70)
-            }
-            else{
-                viewLikeDislike.isHidden = false
-            }
-        }
-        else
-        {
+        //        if (UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad) || (UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.phone)
+        //        {
+        if UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad && UIDevice.current.orientation.isLandscape {
+            suggestedView.frame.origin.y = 720
             viewLikeDislike.isHidden = true
         }
+        else if UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.phone  {
+            viewLikeDislike.isHidden = true
+            /*var bottomConstraint = NSLayoutConstraint (item: viewNewsArea,
+             attribute: NSLayoutAttribute.bottom,
+             relatedBy: NSLayoutRelation.equal,
+             toItem: suggestedView,
+             attribute: NSLayoutAttribute.bottom,
+             multiplier: 1,
+             constant: 0)
+             // Add the constraint to the view
+             viewNewsArea.addConstraint(bottomConstraint)//
+             */
+            newsAreaHeightConstraint.constant = 700
+            viewNewsArea.layoutIfNeeded()
+            // self.viewLikeDislike.frame = CGRect(x: 0, y: 589, width: self.view.frame.width, height: 70)
+        }
+        else{
+            viewLikeDislike.isHidden = false
+        }
+        //}
+        //        else
+        //        {
+        //            viewLikeDislike.isHidden = true
+        //        }
         let settingvc = SettingsTVC()
         viewLikeDislike.backgroundColor = colorConstants.redColor
         ViewWebContainer.isHidden = true
@@ -109,10 +119,25 @@ class NewsDetailVC: UIViewController {
         self.newsView.addGestureRecognizer(swipeDown)
         
         let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapped(gestureRecognizer:)))
-        viewContainer.addGestureRecognizer(tapRecognizer)
+        viewNewsArea.addGestureRecognizer(tapRecognizer)
         tapRecognizer.delegate = self as! UIGestureRecognizerDelegate
     }
     
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        
+        super.viewWillTransition(to: size, with: coordinator)
+        
+        if UIDevice.current.orientation.isLandscape {
+            print(UIDevice.current.orientation)
+            print("landscape")
+            
+        } else {
+            print(UIDevice.current.orientation)
+            print("potrait")
+            
+        } // else
+        
+    }
     @objc private func darkModeEnabled(_ notification: Notification) {
         // Write your dark mode code here
         NightNight.theme = .night
@@ -127,6 +152,57 @@ class NewsDetailVC: UIViewController {
     deinit {
         NotificationCenter.default.removeObserver(self, name: .darkModeEnabled, object: nil)
         NotificationCenter.default.removeObserver(self, name: .darkModeDisabled, object: nil)
+    }
+    //detect whether img or video from url
+    func checkImageOrVideo(url : String) -> Bool{
+        
+        let imageExtensions = ["png", "jpg", "gif"]
+        //...
+        // Iterate & match the URL objects from your checking results
+        let url: URL? = NSURL(fileURLWithPath: url) as URL
+        let pathExtention = url?.pathExtension
+        if imageExtensions.contains(pathExtention!)
+        {
+            print("Image URL: \(String(describing: url))")
+            return true
+            // Do something with it
+        }else
+        {
+            print("Movie URL: \(String(describing: url))")
+            return false
+        }
+    }
+    
+    //create thumbnail of video
+    func getThumbnailImage(forUrl url: URL) -> UIImage? {
+        let asset: AVAsset = AVAsset(url: url)
+        let imageGenerator = AVAssetImageGenerator(asset: asset)
+        
+        do {
+            let thumbnailImage = try imageGenerator.copyCGImage(at: CMTimeMake(1, 60) , actualTime: nil)
+            return UIImage(cgImage: thumbnailImage)
+        } catch let error {
+            print(error)
+        }
+        
+        return nil
+    }
+    
+    func createThumbnailOfVideoFromRemoteUrl(url: String) -> UIImage? {
+        let asset = AVAsset(url: URL(string: url)!)
+        let assetImgGenerate = AVAssetImageGenerator(asset: asset)
+        assetImgGenerate.appliesPreferredTrackTransform = true
+        //Can set this to improve performance if target size is known before hand
+        //assetImgGenerate.maximumSize = CGSize(width,height)
+        let time = CMTimeMakeWithSeconds(1.0, 600)
+        do {
+            let img = try assetImgGenerate.copyCGImage(at: time, actualTime: nil)
+            let thumbnail = UIImage(cgImage: img)
+            return thumbnail
+        } catch {
+            print(error.localizedDescription)
+            return nil
+        }
     }
     
     func changeTheme(){
@@ -144,7 +220,7 @@ class NewsDetailVC: UIViewController {
     }
     
     @objc func tapped(gestureRecognizer: UITapGestureRecognizer) {
-        if (UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.phone){ //|| UIDeviceOrientationIsLandscape(UIDevice.current.orientation){
+        if (UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.phone) || UIDeviceOrientationIsLandscape(UIDevice.current.orientation){
             if viewLikeDislike.isHidden == true{
                 viewLikeDislike.isHidden = false
             }
@@ -272,6 +348,32 @@ class NewsDetailVC: UIViewController {
         }
     }
     
+    @IBAction func btnPlayVideo(_ sender: Any) {
+        if player?.rate == 0
+        {
+            player!.play()
+            btnPlayVideo.setImage(UIImage(named:"pause"), for: .normal)
+            //btnPlayVideo!.setTitle("Pause", for: UIControlState.normal)
+        } else {
+            player!.pause()
+            btnPlayVideo.setImage(UIImage(named:"play"), for: .normal)
+            // btnPlayVideo!.setTitle("Play", for: UIControlState.normal)
+        }
+    }
+    
+    @objc func playbackSliderValueChanged(_ playbackSlider:UISlider)
+    {
+        
+        let seconds : Int64 = Int64(playbackSlider.value)
+        let targetTime:CMTime = CMTimeMake(seconds, 1)
+        
+        player!.seek(to: targetTime)
+        
+        if player!.rate == 0
+        {
+            player?.play()
+        }
+    }
     func ShowNews(currentIndex: Int){
         
         let dateFormatter = DateFormatter()
@@ -302,7 +404,44 @@ class NewsDetailVC: UIViewController {
         lblSource.text = currentArticle.source
         lblTimeAgo.text = agoDate
         sourceURL = currentArticle.url!
-        imgNews.downloadedFrom(link: "\(currentArticle.imageURL!)")
+        let checkImg = checkImageOrVideo(url: currentArticle.imageURL!)
+        if checkImg == false{
+            btnPlayVideo.isHidden = false
+            let newURL = NSURL(string: currentArticle.imageURL!)
+            if let thumbnail = createThumbnailOfVideoFromRemoteUrl(url: "https://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4"){
+                imgNews.image = thumbnail
+                let url = URL(string: "https://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4")
+                let playerItem:AVPlayerItem = AVPlayerItem(url: url!)
+                player = AVPlayer(playerItem: playerItem)
+                
+                let playerLayer=AVPlayerLayer(player: player!)
+                playerLayer.frame=CGRect(x:0, y:0, width:imgNews.frame.width, height:imgNews.frame.height)
+                self.imgNews.layer.addSublayer(playerLayer)
+                
+                
+                let playbackSlider = UISlider(frame:CGRect(x:0, y:imgNews.frame.height - 50, width:imgNews.frame.width, height:40))
+                playbackSlider.minimumValue = 0
+                
+                
+                let duration : CMTime = playerItem.asset.duration
+                let seconds : Float64 = CMTimeGetSeconds(duration)
+                
+                playbackSlider.maximumValue = Float(seconds)
+                playbackSlider.isContinuous = true
+                playbackSlider.tintColor = UIColor.green
+                
+                playbackSlider.addTarget(self, action: #selector(NewsDetailVC.playbackSliderValueChanged(_:)), for: .valueChanged)
+                // playbackSlider.addTarget(self, action: "playbackSliderValueChanged:", forControlEvents: .ValueChanged)
+                self.view.addSubview(playbackSlider)
+                
+                //player!.play()
+            }
+           
+        }
+        else{
+            btnPlayVideo.isHidden = true
+            imgNews.downloadedFrom(link: "\(currentArticle.imageURL!)")
+        }
         print("currentArticle.isLike: \(currentArticle.isLike)")
         if currentArticle.isLike == 0 {
             btnLike.setImage(UIImage(named: "filledLike.png"), for: .normal)
