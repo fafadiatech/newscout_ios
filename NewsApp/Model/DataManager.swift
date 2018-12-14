@@ -142,7 +142,8 @@ class DBManager{
     {
         let managedContext =
             appDelegate?.persistentContainer.viewContext
-        APICall().loadCategoriesAPI{ response in
+        APICall().loadCategoriesAPI{
+            (status,response) in
             switch response {
             case .Success(let data) :
                 self.CategoryData = data

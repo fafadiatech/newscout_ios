@@ -46,7 +46,8 @@ class CategoryListVC: UIViewController {
         else {
             tableCategoryLIst.rowHeight = 50;
         }
-        APICall().loadCategoriesAPI{ response in
+        APICall().loadCategoriesAPI{
+            (status,response) in
             switch response {
             case .Success(let data) :
                 self.CategoryData = data
@@ -104,7 +105,8 @@ class CategoryListVC: UIViewController {
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        APICall().loadCategoriesAPI{ response in
+        APICall().loadCategoriesAPI{
+            (status, response) in
             switch response {
             case .Success(let data) :
                 self.CategoryData = data

@@ -67,7 +67,7 @@ class NewsDetailVC: UIViewController {
              // Add the constraint to the view
              viewNewsArea.addConstraint(bottomConstraint)//
              */
-            newsAreaHeightConstraint.constant = 700
+          //  newsAreaHeightConstraint.constant = 700
             viewNewsArea.layoutIfNeeded()
             // self.viewLikeDislike.frame = CGRect(x: 0, y: 589, width: self.view.frame.width, height: 70)
         }
@@ -415,7 +415,7 @@ class NewsDetailVC: UIViewController {
                 player = AVPlayer(playerItem: playerItem)
                 
                 let playerLayer=AVPlayerLayer(player: player!)
-                playerLayer.frame=CGRect(x:0, y:0, width:imgNews.frame.width, height:imgNews.frame.height)
+                playerLayer.frame = CGRect(x:0, y:0, width:imgNews.frame.width, height:imgNews.frame.height)
                 self.imgNews.layer.addSublayer(playerLayer)
                 
                 
@@ -431,9 +431,7 @@ class NewsDetailVC: UIViewController {
                 playbackSlider.tintColor = UIColor.green
                 
                 playbackSlider.addTarget(self, action: #selector(NewsDetailVC.playbackSliderValueChanged(_:)), for: .valueChanged)
-                // playbackSlider.addTarget(self, action: "playbackSliderValueChanged:", forControlEvents: .ValueChanged)
                 self.view.addSubview(playbackSlider)
-                
                 //player!.play()
             }
            
@@ -598,7 +596,7 @@ class NewsDetailVC: UIViewController {
         //self.dismiss(animated: false)
         
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        let vc:HomeVC = storyboard.instantiateViewController(withIdentifier: "HomeVC") as! HomeVC
+        let vc:HomeParentVC = storyboard.instantiateViewController(withIdentifier: "HomeParentID") as! HomeParentVC
         self.present(vc, animated: true, completion: nil)
     }
     

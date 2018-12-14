@@ -230,10 +230,15 @@ class SettingsTVC: UITableViewController, GIDSignInUIDelegate {
             }
         }
         else if indexPath.section == 2 && indexPath.row == 1{
+            if  UserDefaults.standard.value(forKey: "token") != nil{
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             let searchvc:ProfileVC
                 = storyboard.instantiateViewController(withIdentifier: "ProfileID") as! ProfileVC
             self.present(searchvc, animated: true, completion: nil)
+            }
+            else{
+                 self.view.makeToast("You need to login", duration: 1.0, position: .center)
+            }
         }
         
         return indexPath

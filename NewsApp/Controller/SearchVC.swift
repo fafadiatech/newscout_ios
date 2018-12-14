@@ -62,7 +62,7 @@ class SearchVC: UIViewController {
                 BookmarkAPICall()
             }
             else{
-                //activityIndicator.stopAnimating()
+                activityIndicator.stopAnimating()
                 showMsg(title: "Please login to continue..", msg: "")
                 self.view.makeToast("You need to login", duration: 1.0, position: .center)
             }

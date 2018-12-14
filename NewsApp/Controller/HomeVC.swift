@@ -153,7 +153,7 @@ class HomeVC: UIViewController{
     }
     
     func ArticlesAPICall(){
-        APICall().loadNewsbyCategoryAPI(url: APPURL.ArticlesByCategoryURL + "\(selectedCategory)" ){ response in
+        APICall().loadNewsbyCategoryAPI(url: APPURL.ArticlesByCategoryURL + "\(selectedCategory)" ){ (status, response) in
             switch response {
             case .Success(let data) :
                 self.ArticleData = data
@@ -304,7 +304,8 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
             if nextURL != "" {
                 self.activityIndicator.startAnimating()
                 
-                APICall().loadNewsbyCategoryAPI(url: nextURL){ response in
+                APICall().loadNewsbyCategoryAPI(url: nextURL){
+                    (status, response) in
                     switch response {
                     case .Success(let data) :
                         self.ArticleData = data
@@ -349,7 +350,8 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
             print(" it's going down")
             if previousURL != ""{
                 self.activityIndicator.startAnimating()
-                APICall().loadNewsbyCategoryAPI(url: previousURL){ response in
+                APICall().loadNewsbyCategoryAPI(url: previousURL){
+                    (status, response) in
                     switch response {
                     case .Success(let data) :
                         self.ArticleData = data

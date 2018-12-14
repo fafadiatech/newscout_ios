@@ -12,7 +12,6 @@ import UIKit
 import SwiftyJSON
 
 extension URLResponse {
-    
     func getStatusCode() -> Int? {
         if let httpResponse = self as? HTTPURLResponse {
             return httpResponse.statusCode
@@ -47,7 +46,7 @@ class APICall{
         }
     }
     //load articles by category
-    func loadNewsbyCategoryAPI(url: String, _ completion : @escaping (ArticleAPIResult) -> ()){
+    func loadNewsbyCategoryAPI(url: String, _ completion : @escaping (String, ArticleAPIResult) -> ()){
         var headers : [String: String]
         if UserDefaults.standard.value(forKey: "token") != nil{
             let token = "Token " + "\(UserDefaults.standard.value(forKey: "token")!)"
@@ -76,24 +75,24 @@ class APICall{
                         if response.response?.statusCode == 404{
                         //if let httpResponse = response as? HTTPURLResponse {
                             print("error \(response.response?.statusCode)")
-                            completion(ArticleAPIResult.Change(0))
+                            completion("error 404",ArticleAPIResult.Change(0))
                         }
                         else{
                         let jsonData = try jsonDecoder.decode(ArticleStatus.self, from: data)
                         print(jsonData)
-                        completion(ArticleAPIResult.Success([jsonData]))
+                        completion(jsonData.header.status, ArticleAPIResult.Success([jsonData]))
                         }
                     }
                     catch {
                         print("Error: \(error)")
-                        completion(ArticleAPIResult.Failure(error.localizedDescription))
+                        completion("0", ArticleAPIResult.Failure(error.localizedDescription))
                     }
                 }
             }
             else{
                 print(response.result.error!)
                 if let err = response.result.error as? URLError, err.code == .notConnectedToInternet {
-                    completion(ArticleAPIResult.Failure(err.localizedDescription))
+                    completion("0", ArticleAPIResult.Failure(err.localizedDescription))
                 }
             }
         }
@@ -104,6 +103,7 @@ class APICall{
             completion(cachedImage)
         }
     }
+    
     func loadRecommendationNewsAPI(articleId : Int,_ completion : @escaping (ArticleAPIResult) -> ()){
         let url = APPURL.recommendationURL + "\(articleId)" + "/recommendations/"
         print(url)
@@ -131,9 +131,10 @@ class APICall{
         }
     }
     
-    func loadCategoriesAPI(_ completion : @escaping (CategoryAPIResult) -> ()){
+    func loadCategoriesAPI(_ completion : @escaping (Int, CategoryAPIResult) -> ()){
         let url = APPURL.CategoriesURL
         print(url)
+        var status = 0
         Alamofire.request(url,method: .get).responseJSON{
             response in
             if(response.result.isSuccess){
@@ -141,24 +142,26 @@ class APICall{
                     let jsonDecoder = JSONDecoder()
                     do {
                         let jsonData = try jsonDecoder.decode(CategoryList.self, from: data)
-                        completion(CategoryAPIResult.Success([jsonData]))
+                        if response.response?.statusCode == 200{
+                            status = (response.response?.statusCode)!
+                        }
+                        completion(status, CategoryAPIResult.Success([jsonData]))
                     }
                     catch {
                         print("Error: \(error)")
-                        completion(CategoryAPIResult.Failure(error as! String))
+                        completion(status, CategoryAPIResult.Failure(error as! String))
                     }
                 }
             }
             else{
                 if let err = response.result.error as? URLError, err.code == .notConnectedToInternet {
-                    completion(CategoryAPIResult.Failure(Constants.InternetErrorMsg))
+                    completion(status, CategoryAPIResult.Failure(Constants.InternetErrorMsg))
                 }
             }
         }
     }
     
-    func loadSearchAPI(searchTxt: String,_ completion : @escaping (ArticleAPIResult) -> ())
-    {
+    func loadSearchAPI(searchTxt: String,_ completion : @escaping (ArticleAPIResult) -> ()){
         var search = searchTxt
         let whitespace = NSCharacterSet.whitespaces
         let range = search.rangeOfCharacter(from: whitespace)
@@ -237,7 +240,12 @@ class APICall{
                         let jsonData = try jsonDecoder.decode(MainModel.self, from: data)
                         print(jsonData)
                         if jsonData.header.status == "0"{
-                            completion(jsonData.errors!.invalid_credentials!)
+                            if jsonData.errors?.invalid_credentials != nil{
+                                completion((jsonData.errors?.invalid_credentials)!)
+                            }
+                            else{
+                            completion((jsonData.errors?.errorList![0].field_error)!)
+                            }
                         }
                         else{
                             UserDefaults.standard.set(jsonData.body?.first_name, forKey: "first_name")
