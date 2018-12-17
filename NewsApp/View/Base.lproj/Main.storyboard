@@ -884,23 +884,26 @@
                                                         <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="24"/>
                                                     </variation>
                                                 </label>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Logout" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="o9M-98-ou1">
-                                                    <rect key="frame" x="314" y="11" width="55" height="21.5"/>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="P5D-HC-Cxh">
+                                                    <rect key="frame" x="310" y="5" width="55" height="34"/>
                                                     <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="18"/>
-                                                    <nil key="textColor"/>
-                                                    <nil key="highlightedColor"/>
+                                                    <state key="normal" title="Logout">
+                                                        <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                                    </state>
                                                     <variation key="heightClass=regular-widthClass=regular">
                                                         <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="24"/>
                                                     </variation>
-                                                </label>
+                                                    <connections>
+                                                        <action selector="btnLogoutActn:" destination="P8d-DS-r26" eventType="touchUpInside" id="q19-4W-eFn"/>
+                                                    </connections>
+                                                </button>
                                             </subviews>
                                             <constraints>
-                                                <constraint firstItem="o9M-98-ou1" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="OmL-3G-y0w" secondAttribute="leadingMargin" id="2Ln-AA-Oen"/>
                                                 <constraint firstItem="RuB-fe-dLc" firstAttribute="centerY" secondItem="OmL-3G-y0w" secondAttribute="centerY" id="3Fn-3U-vDg"/>
-                                                <constraint firstItem="o9M-98-ou1" firstAttribute="centerY" secondItem="OmL-3G-y0w" secondAttribute="centerY" id="CvR-In-Jjd"/>
                                                 <constraint firstItem="RuB-fe-dLc" firstAttribute="leading" secondItem="OmL-3G-y0w" secondAttribute="leading" constant="41" id="gX4-Z3-rtO"/>
+                                                <constraint firstAttribute="trailing" secondItem="P5D-HC-Cxh" secondAttribute="trailing" constant="10" id="gd9-kW-jdq"/>
                                                 <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="RuB-fe-dLc" secondAttribute="trailing" constant="20" symbolic="YES" id="oIh-54-Dhx"/>
-                                                <constraint firstItem="o9M-98-ou1" firstAttribute="trailing" secondItem="OmL-3G-y0w" secondAttribute="trailingMargin" constant="10" id="wFS-gJ-Z9O"/>
+                                                <constraint firstItem="P5D-HC-Cxh" firstAttribute="centerY" secondItem="OmL-3G-y0w" secondAttribute="centerY" id="vz3-Nn-IPB"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                     </tableViewCell>
@@ -974,10 +977,10 @@
                         </connections>
                     </tableView>
                     <connections>
+                        <outlet property="btnLogout" destination="P5D-HC-Cxh" id="hWd-gm-dfS"/>
                         <outlet property="lblBreakingNews" destination="sXn-NN-y1P" id="a27-0u-1Kd"/>
                         <outlet property="lblDailyEdition" destination="vJD-0i-a7c" id="dlM-Op-imN"/>
                         <outlet property="lblLogin" destination="RuB-fe-dLc" id="olC-Rd-i7x"/>
-                        <outlet property="lblLogout" destination="o9M-98-ou1" id="aS6-Q6-4J9"/>
                         <outlet property="lblNIghtMode" destination="xqn-fe-eMx" id="UT8-wz-ivm"/>
                         <outlet property="lblPersonlized" destination="hkl-sT-zw8" id="nhx-dW-qPL"/>
                         <outlet property="lblProfile" destination="bUt-BB-oZI" id="swz-FJ-aWE"/>
@@ -1502,6 +1505,10 @@
                                                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="27h-ei-fui">
                                                             <rect key="frame" x="0.0" y="0.0" width="190" height="84"/>
                                                         </imageView>
+                                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Iaw-08-67e">
+                                                            <rect key="frame" x="72" y="25" width="56" height="34"/>
+                                                            <state key="normal" image="play"/>
+                                                        </button>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="u54-K9-1c1">
                                                             <rect key="frame" x="0.0" y="84" width="190" height="56"/>
                                                             <attributedString key="attributedText">
@@ -1531,21 +1538,26 @@
                                                     </subviews>
                                                 </view>
                                                 <constraints>
+                                                    <constraint firstItem="Iaw-08-67e" firstAttribute="centerY" secondItem="27h-ei-fui" secondAttribute="centerY" id="1Wt-cE-wTF"/>
                                                     <constraint firstAttribute="bottom" secondItem="u54-K9-1c1" secondAttribute="bottom" id="3m1-Ah-3oF"/>
                                                     <constraint firstItem="27h-ei-fui" firstAttribute="leading" secondItem="Ma6-NY-KU3" secondAttribute="leading" id="428-uq-ho9"/>
                                                     <constraint firstItem="u54-K9-1c1" firstAttribute="top" secondItem="27h-ei-fui" secondAttribute="bottom" id="5Z0-Qm-yUY"/>
+                                                    <constraint firstItem="Iaw-08-67e" firstAttribute="leading" secondItem="Ma6-NY-KU3" secondAttribute="leadingMargin" constant="64" id="Cs3-hW-maW"/>
                                                     <constraint firstAttribute="trailing" secondItem="27h-ei-fui" secondAttribute="trailing" id="LNP-fC-plP"/>
                                                     <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="OXg-4L-mra" secondAttribute="trailing" symbolic="YES" id="PnB-0m-snv"/>
                                                     <constraint firstItem="u54-K9-1c1" firstAttribute="leading" secondItem="Ma6-NY-KU3" secondAttribute="leading" id="SH9-et-LZt"/>
                                                     <constraint firstItem="27h-ei-fui" firstAttribute="top" secondItem="Ma6-NY-KU3" secondAttribute="top" id="f3P-I1-UA8"/>
+                                                    <constraint firstItem="Iaw-08-67e" firstAttribute="centerX" secondItem="27h-ei-fui" secondAttribute="centerX" constant="5" id="gxC-gL-OHu"/>
                                                     <constraint firstItem="27h-ei-fui" firstAttribute="height" secondItem="Ma6-NY-KU3" secondAttribute="height" multiplier="0.6" id="hZ4-CA-mLo"/>
                                                     <constraint firstItem="OXg-4L-mra" firstAttribute="top" secondItem="Ma6-NY-KU3" secondAttribute="top" constant="29" id="hd1-92-oUu"/>
                                                     <constraint firstItem="OXg-4L-mra" firstAttribute="leading" secondItem="Ma6-NY-KU3" secondAttribute="leading" constant="11" id="nY1-80-SfK"/>
                                                     <constraint firstAttribute="trailing" secondItem="u54-K9-1c1" secondAttribute="trailing" id="qYl-Ko-hwH"/>
                                                     <constraint firstItem="u54-K9-1c1" firstAttribute="height" secondItem="Ma6-NY-KU3" secondAttribute="height" multiplier="0.4" id="sMc-kC-PgP"/>
                                                     <constraint firstItem="u54-K9-1c1" firstAttribute="top" secondItem="27h-ei-fui" secondAttribute="bottom" id="wAZ-7r-dC2"/>
+                                                    <constraint firstItem="u54-K9-1c1" firstAttribute="top" secondItem="Iaw-08-67e" secondAttribute="bottom" constant="25" id="wNp-Qc-1Yo"/>
                                                 </constraints>
                                                 <connections>
+                                                    <outlet property="btnCellPlayVIdeo" destination="Iaw-08-67e" id="fzQ-It-drQ"/>
                                                     <outlet property="imgNews" destination="27h-ei-fui" id="x81-eA-aVI"/>
                                                     <outlet property="lblMoreStories" destination="OXg-4L-mra" id="fXd-jd-VlU"/>
                                                     <outlet property="lblTitle" destination="u54-K9-1c1" id="VK0-Os-1lS"/>
@@ -1751,7 +1763,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="HEF-wc-mJk" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3807.8125" y="-664.453125"/>
+            <point key="canvasLocation" x="3807.1999999999998" y="-665.21739130434787"/>
         </scene>
         <!--SearchVC-->
         <scene sceneID="DKc-Hy-Vjp">

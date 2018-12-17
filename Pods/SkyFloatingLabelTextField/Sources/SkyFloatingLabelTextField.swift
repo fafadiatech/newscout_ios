@@ -60,7 +60,7 @@ open class SkyFloatingLabelTextField: UITextField { // swiftlint:disable:this ty
     }
 
     /// A UIColor value that determines text color of the placeholder label
-    @IBInspectable dynamic open var placeholderColor: UIColor = UIColor.lightGray {
+    @IBInspectable dynamic open var placeholderColor: UIColor = UIColor.blue {
         didSet {
             updatePlaceholder()
         }

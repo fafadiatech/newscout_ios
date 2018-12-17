@@ -23,6 +23,7 @@ class SettingsTVC: UITableViewController, GIDSignInUIDelegate {
     @IBOutlet weak var segmentTextSize: UISegmentedControl!
     @IBOutlet weak var lblLogin: UILabel!
     @IBOutlet weak var lblLogout: UILabel!
+    @IBOutlet weak var btnLogout: UIButton!
     @IBOutlet weak var switchNightMode: UISwitch!
     var textSizeSelected = 1
     
@@ -36,7 +37,7 @@ class SettingsTVC: UITableViewController, GIDSignInUIDelegate {
         else{
             switchNightMode.isOn = false
         }
-        lblLogout.isHidden = true
+        btnLogout.isHidden = true
         isLoggedIn()
         if UserDefaults.standard.value(forKey: "textSize") != nil{
             textSizeSelected = UserDefaults.standard.value(forKey: "textSize") as! Int
@@ -59,21 +60,21 @@ class SettingsTVC: UITableViewController, GIDSignInUIDelegate {
         let darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
         if  darkModeStatus == true{
             settingsTV.backgroundColor = colorConstants.grayBackground2
-            let cell = UITableViewCell()
+            let cell = SettingsTVCell()
             cell.backgroundColor = .black
-           //changeColor()
+            changeColor()
             
         }
     }
-   
+    
     @objc private func darkModeEnabled(_ notification: Notification) {
         // Write your dark mode code here
         NightNight.theme = .night
         let cell = SettingsTVCell()
-        //changeColor()
+        changeColor()
         cell.backgroundColor = .black
         settingsTV.backgroundColor = colorConstants.grayBackground2
-      
+        
     }
     
     @objc private func darkModeDisabled(_ notification: Notification) {
@@ -88,13 +89,14 @@ class SettingsTVC: UITableViewController, GIDSignInUIDelegate {
     }
     
     func changeColor(){
-        lblLogin.textColor = .red
-        lblLogout.textColor = .red
-        lblProfile.textColor = .red
-        lblNIghtMode.textColor = .white
-        lblPersonlized.textColor = .white
-        lblBreakingNews.textColor = .white
-        lblDailyEdition.textColor = .white
+        
+        lblLogin.textColor = .black
+        btnLogout.titleLabel?.textColor = .black
+        lblProfile.textColor = .black
+        lblNIghtMode.textColor = .black
+        lblPersonlized.textColor = .black
+        lblBreakingNews.textColor = .black
+        lblDailyEdition.textColor = .black
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -106,12 +108,12 @@ class SettingsTVC: UITableViewController, GIDSignInUIDelegate {
     {
         if UserDefaults.standard.value(forKey: "token") == nil && UserDefaults.standard.value(forKey: "googleToken") == nil && UserDefaults.standard.value(forKey: "FBToken") == nil  {
             lblLogin.text = "Login"
-            lblLogout.isHidden = true
+            btnLogout.isHidden = true
             // userDefault has a value
         }
         else {
             lblLogin.text = "\(UserDefaults.standard.value(forKey: "email")!)"
-            lblLogout.isHidden = false
+            btnLogout.isHidden = false
         }
     }
     
@@ -140,6 +142,62 @@ class SettingsTVC: UITableViewController, GIDSignInUIDelegate {
         }
     }
     
+    @IBAction func btnLogoutActn(_ sender: Any) {
+        if UserDefaults.standard.value(forKey: "googleToken") != nil{
+            GIDSignIn.sharedInstance().signOut()
+            let defaults = UserDefaults.standard
+            defaults.removeObject(forKey: "googleToken")
+            defaults.removeObject(forKey: "email")
+            defaults.removeObject(forKey: "first_name")
+            defaults.removeObject(forKey: "last_name")
+            defaults.synchronize()
+            self.btnLogout.isHidden = true
+            self.lblLogin.text = "Login"
+            print("google sign out successful..")
+        }
+        else if UserDefaults.standard.value(forKey: "FBToken") != nil{
+            let manager = FBSDKLoginManager()
+            manager.logOut()
+            FBSDKAccessToken.setCurrent(nil)//setCurrentAccessToken(nil)
+            FBSDKProfile.setCurrent(nil)
+            self.btnLogout.isHidden = true
+            let defaults = UserDefaults.standard
+            defaults.removeObject(forKey: "FBToken")
+            defaults.removeObject(forKey: "email")
+            defaults.removeObject(forKey: "first_name")
+            defaults.removeObject(forKey: "last_name")
+            defaults.synchronize()
+            self.lblLogin.text = "Login"
+            print("google sign out successful..")
+        }
+        else{
+            APICall().LogoutAPI{(status, response) in
+                print(status,response)
+                if status == "1"{
+                    print("Logout response:\(response)")
+                    self.view.makeToast("successfully logged out", duration: 1.0, position: .center)
+                    
+                    self.btnLogout.isHidden = true
+                    self.lblLogin.text = "Login"
+                    var categories : [String] = []
+                    
+                    categories = UserDefaults.standard.array(forKey: "categories") as! [String]
+                    if categories.contains("For You"){
+                        categories.remove(at: 0)
+                        UserDefaults.standard.setValue(categories, forKey: "categories")
+                    }
+                    if categories.contains("Top Stories"){
+                        categories = categories.filter{$0 != "Top Stories"}
+                        UserDefaults.standard.setValue(categories, forKey: "categories")
+                    }
+                }
+                else{
+                    self.view.makeToast(response, duration: 1.0, position: .center)
+                }
+            }
+        }
+    }
+    
     func tableView(tableView: UITableView,
                    didSelectRowAtIndexPath indexPath: NSIndexPath) {
         
@@ -149,22 +207,30 @@ class SettingsTVC: UITableViewController, GIDSignInUIDelegate {
         let headerView = view as! UITableViewHeaderFooterView
         headerView.textLabel?.textColor = .black
         headerView.textLabel?.font = FontConstants.settingsTVHeader
-        let cell = UITableViewCell()
+        let cell = SettingsTVCell()
+        let darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
+        if  darkModeStatus == true{
+            cell.backgroundColor = .black
+        }
+        else{
+            //cell.backgroundColor = colorConstants.grayBackground3
+        }
     }
     
-//    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-//
-//        let cell = UITableViewCell()
-//        let darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
-//        if  darkModeStatus == true{
-//             cell.backgroundColor = .black
-//        }
-//        else{
-//        cell.backgroundColor = colorConstants.grayBackground3
-//        }
-//        return cell
-//    }
-//
+    //    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    //
+    //        let cell = UITableViewCell()
+    //        let darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
+    //        if  darkModeStatus == true{
+    //             cell.backgroundColor = .black
+    //            changeColor()
+    //        }
+    //        else{
+    //        cell.backgroundColor = colorConstants.grayBackground3
+    //        }
+    //        return cell
+    //    }
+    
     override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
         if indexPath.section == 2 && indexPath.row == 0{
             if UserDefaults.standard.value(forKey: "token") == nil && UserDefaults.standard.value(forKey: "googleToken") == nil && UserDefaults.standard.value(forKey: "FBToken") == nil {
@@ -173,71 +239,17 @@ class SettingsTVC: UITableViewController, GIDSignInUIDelegate {
                 print(indexPath.section)
                 present(vc, animated: true, completion: nil)
             }
-            else{
-                if UserDefaults.standard.value(forKey: "googleToken") != nil{
-                    GIDSignIn.sharedInstance().signOut()
-                    let defaults = UserDefaults.standard
-                    defaults.removeObject(forKey: "googleToken")
-                    defaults.removeObject(forKey: "email")
-                    defaults.removeObject(forKey: "first_name")
-                    defaults.removeObject(forKey: "last_name")
-                    defaults.synchronize()
-                    self.lblLogout.isHidden = true
-                    self.lblLogin.text = "Login"
-                    print("google sign out successful..")
-                }
-                else if UserDefaults.standard.value(forKey: "FBToken") != nil{
-                    let manager = FBSDKLoginManager()
-                    manager.logOut()
-                    FBSDKAccessToken.setCurrent(nil)//setCurrentAccessToken(nil)
-                    FBSDKProfile.setCurrent(nil)
-                    self.lblLogout.isHidden = true
-                    let defaults = UserDefaults.standard
-                    defaults.removeObject(forKey: "FBToken")
-                    defaults.removeObject(forKey: "email")
-                    defaults.removeObject(forKey: "first_name")
-                    defaults.removeObject(forKey: "last_name")
-                    defaults.synchronize()
-                    self.lblLogin.text = "Login"
-                    print("google sign out successful..")
-                }
-                else{
-                    APICall().LogoutAPI{(status, response) in
-                        print(status,response)
-                        if status == "1"{
-                            print("Logout response:\(response)")
-                            self.view.makeToast("successfully logged out", duration: 1.0, position: .center)
-                            
-                            self.lblLogout.isHidden = true
-                            self.lblLogin.text = "Login"
-                            var categories : [String] = []
-                            
-                            categories = UserDefaults.standard.array(forKey: "categories") as! [String]
-                            if categories.contains("For You"){
-                                categories.remove(at: 0)
-                                UserDefaults.standard.setValue(categories, forKey: "categories")
-                            }
-                            if categories.contains("Top Stories"){
-                                categories = categories.filter{$0 != "Top Stories"}
-                                UserDefaults.standard.setValue(categories, forKey: "categories")
-                            }
-                        }
-                        else{
-                            self.view.makeToast(response, duration: 1.0, position: .center)
-                        }
-                    }
-                }
-            }
+            
         }
         else if indexPath.section == 2 && indexPath.row == 1{
             if  UserDefaults.standard.value(forKey: "token") != nil{
-            let storyboard = UIStoryboard(name: "Main", bundle: nil)
-            let searchvc:ProfileVC
-                = storyboard.instantiateViewController(withIdentifier: "ProfileID") as! ProfileVC
-            self.present(searchvc, animated: true, completion: nil)
+                let storyboard = UIStoryboard(name: "Main", bundle: nil)
+                let searchvc:ProfileVC
+                    = storyboard.instantiateViewController(withIdentifier: "ProfileID") as! ProfileVC
+                self.present(searchvc, animated: true, completion: nil)
             }
             else{
-                 self.view.makeToast("You need to login", duration: 1.0, position: .center)
+                self.view.makeToast("You need to login", duration: 1.0, position: .center)
             }
         }
         

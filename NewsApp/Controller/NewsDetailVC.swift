@@ -37,6 +37,7 @@ class NewsDetailVC: UIViewController {
     @IBOutlet weak var btnPlayVideo: UIButton!
     @IBOutlet weak var newsAreaHeightConstraint: NSLayoutConstraint!
     let imageCache = NSCache<NSString, UIImage>()
+    var playbackSlider = UISlider()
     var RecomArticleData = [ArticleStatus]()
     var ArticleData = [ArticleStatus]()
     var ShowArticle = [NewsArticle]()
@@ -67,7 +68,7 @@ class NewsDetailVC: UIViewController {
              // Add the constraint to the view
              viewNewsArea.addConstraint(bottomConstraint)//
              */
-          //  newsAreaHeightConstraint.constant = 700
+            //  newsAreaHeightConstraint.constant = 700
             viewNewsArea.layoutIfNeeded()
             // self.viewLikeDislike.frame = CGRect(x: 0, y: 589, width: self.view.frame.width, height: 70)
         }
@@ -369,8 +370,10 @@ class NewsDetailVC: UIViewController {
         
         player!.seek(to: targetTime)
         
-        if player!.rate == 0
-        {
+        if player!.rate == 0{
+            player?.pause()
+        }
+        else{
             player?.play()
         }
     }
@@ -415,11 +418,12 @@ class NewsDetailVC: UIViewController {
                 player = AVPlayer(playerItem: playerItem)
                 
                 let playerLayer=AVPlayerLayer(player: player!)
-                playerLayer.frame = CGRect(x:0, y:0, width:imgNews.frame.width, height:imgNews.frame.height)
+                
+                playerLayer.frame = CGRect(x:0, y: 0, width:imgNews.frame.width, height:imgNews.frame.height)
                 self.imgNews.layer.addSublayer(playerLayer)
                 
                 
-                let playbackSlider = UISlider(frame:CGRect(x:0, y:imgNews.frame.height - 50, width:imgNews.frame.width, height:40))
+                let playbackSlider = UISlider(frame:CGRect(x:0, y:imgNews.frame.height - 30 , width:imgNews.frame.width, height:20))
                 playbackSlider.minimumValue = 0
                 
                 
@@ -431,10 +435,10 @@ class NewsDetailVC: UIViewController {
                 playbackSlider.tintColor = UIColor.green
                 
                 playbackSlider.addTarget(self, action: #selector(NewsDetailVC.playbackSliderValueChanged(_:)), for: .valueChanged)
-                self.view.addSubview(playbackSlider)
+                self.imgNews.addSubview(playbackSlider)
                 //player!.play()
             }
-           
+            
         }
         else{
             btnPlayVideo.isHidden = true
@@ -594,7 +598,6 @@ class NewsDetailVC: UIViewController {
     
     @IBAction func btnBackAction(_ sender: Any) {
         //self.dismiss(animated: false)
-        
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let vc:HomeParentVC = storyboard.instantiateViewController(withIdentifier: "HomeParentID") as! HomeParentVC
         self.present(vc, animated: true, completion: nil)
@@ -635,11 +638,16 @@ class NewsDetailVC: UIViewController {
         self.present(alertController, animated: true, completion: nil)
     }
     
+    @IBAction func PlayButtonTapped() -> Void {
+        print("Hello Edit Button")
+    }
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+    
 }
+
 extension NewsDetailVC:UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout{
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize
     {   var width = 1.0
@@ -669,6 +677,7 @@ extension NewsDetailVC:UICollectionViewDelegate, UICollectionViewDataSource, UIC
             cell.lblMoreStories.isHidden = false
             cell.imgNews.isHidden = true
             cell.lblTitle.isHidden = true
+            cell.btnCellPlayVIdeo.isHidden = true
         }
         else{
             cell.imgNews.isHidden = false
@@ -676,7 +685,18 @@ extension NewsDetailVC:UICollectionViewDelegate, UICollectionViewDataSource, UIC
             cell.lblMoreStories.isHidden = true
             let currentArticle =  RecomArticleData[0].body.articles[indexPath.row - 1]
             cell.lblTitle.text = currentArticle.title
-            cell.imgNews.sd_setImage(with: URL(string: currentArticle.imageURL!), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
+            let checkImg = checkImageOrVideo(url: currentArticle.imageURL!)
+            if checkImg == false{
+                cell.btnCellPlayVIdeo.isHidden = false
+                if let thumbnail = createThumbnailOfVideoFromRemoteUrl(url: "https://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4"){
+                    cell.imgNews.image = thumbnail
+                }
+            }
+            else{
+                cell.btnCellPlayVIdeo.isHidden = true
+                cell.imgNews.sd_setImage(with: URL(string: currentArticle.imageURL!), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
+            }
+            
         }
         let darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
         if  darkModeStatus == true{
