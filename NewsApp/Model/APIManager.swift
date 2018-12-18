@@ -74,8 +74,8 @@ class APICall{
                     do {
                         if response.response?.statusCode == 404{
                         //if let httpResponse = response as? HTTPURLResponse {
-                            print("error \(response.response?.statusCode)")
-                            completion("error 404",ArticleAPIResult.Change(0))
+                            print("error \(response.response?.statusCode)!")
+                            completion("error 404",ArticleAPIResult.Change(404))
                         }
                         else{
                         let jsonData = try jsonDecoder.decode(ArticleStatus.self, from: data)
@@ -85,14 +85,14 @@ class APICall{
                     }
                     catch {
                         print("Error: \(error)")
-                        completion("0", ArticleAPIResult.Failure(error.localizedDescription))
+                        completion(String((response.response?.statusCode)!), ArticleAPIResult.Failure(error.localizedDescription))
                     }
                 }
             }
             else{
                 print(response.result.error!)
                 if let err = response.result.error as? URLError, err.code == .notConnectedToInternet {
-                    completion("0", ArticleAPIResult.Failure(err.localizedDescription))
+                    completion(String((response.response?.statusCode)!), ArticleAPIResult.Failure(err.localizedDescription))
                 }
             }
         }
@@ -104,7 +104,7 @@ class APICall{
         }
     }
     
-    func loadRecommendationNewsAPI(articleId : Int,_ completion : @escaping (ArticleAPIResult) -> ()){
+    func loadRecommendationNewsAPI(articleId : Int,_ completion : @escaping (String, ArticleAPIResult) -> ()){
         let url = APPURL.recommendationURL + "\(articleId)" + "/recommendations/"
         print(url)
         Alamofire.request(url,method: .post).responseJSON{
@@ -113,19 +113,23 @@ class APICall{
                 if let data = response.data {
                     let jsonDecoder = JSONDecoder()
                     do {
+                         if response.response?.statusCode != 200{
+                            completion(String((response.response?.statusCode)!), ArticleAPIResult.Failure("\(String(describing: response.response?.statusCode))"))
+                        }
+                         else{
                         let jsonData = try jsonDecoder.decode(ArticleStatus.self, from: data)
-                        completion(ArticleAPIResult.Success([jsonData]))
+                        completion(String((response.response?.statusCode)!),ArticleAPIResult.Success([jsonData]))
+                        }
                     }
                     catch {
                         print("Error: \(error)")
-                        completion(ArticleAPIResult.Failure(error.localizedDescription
-                        ))
+                        completion(String((response.response?.statusCode)!), ArticleAPIResult.Failure(error.localizedDescription))
                     }
                 }
             }
             else{
                 if let err = response.result.error as? URLError, err.code == .notConnectedToInternet {
-                    completion(ArticleAPIResult.Failure(err.localizedDescription))
+                    completion(String((response.response?.statusCode)!), ArticleAPIResult.Failure(err.localizedDescription))
                 }
             }
         }
@@ -161,7 +165,7 @@ class APICall{
         }
     }
     
-    func loadSearchAPI(searchTxt: String,_ completion : @escaping (ArticleAPIResult) -> ()){
+    func loadSearchAPI(searchTxt: String,_ completion : @escaping (Int, ArticleAPIResult) -> ()){
         var search = searchTxt
         let whitespace = NSCharacterSet.whitespaces
         let range = search.rangeOfCharacter(from: whitespace)
@@ -177,19 +181,24 @@ class APICall{
                 if let data = response.data {
                     let jsonDecoder = JSONDecoder()
                     do {
+                        if response.response?.statusCode != 200{
+                            completion((response.response?.statusCode)!, ArticleAPIResult.Failure("\(response.response?.statusCode)"))
+                        }
+                        else{
                         let jsonData = try jsonDecoder.decode(ArticleStatus.self, from: data)
                         print(jsonData)
-                        completion(ArticleAPIResult.Success([jsonData]))
+                        completion((response.response?.statusCode)!, ArticleAPIResult.Success([jsonData]))
+                        }
                     }
                     catch {
                         print("Error: \(error)")
-                        completion(ArticleAPIResult.Failure(error as! String))
+                        completion((response.response?.statusCode)!, ArticleAPIResult.Failure(error as! String))
                     }
                 }
             }
             else{
                 if let err = response.result.error as? URLError, err.code == .notConnectedToInternet {
-                    completion(ArticleAPIResult.Failure(err.localizedDescription))
+                    completion((response.response?.statusCode)!, ArticleAPIResult.Failure(err.localizedDescription))
                 }
             }
         }

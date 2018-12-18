@@ -103,16 +103,18 @@ class APITests: XCTestCase{
     
     //recommendation API
     func test_Recommendation_API(){
-        let promise = expectation(description: "1")
+        let promise = expectation(description: "200")
         var recommendationData = [ArticleStatus]()
-        APICall().loadRecommendationNewsAPI(articleId: 43){response in
+        APICall().loadRecommendationNewsAPI(articleId: 43){ (status, response) in
             print(response)
             XCTAssertNotNil(response)
             switch response {
             case .Success(let data) :
                 recommendationData = data
-                if recommendationData[0].header.status == "1"{
+                if status == "200"{
+                    if recommendationData[0].header.status == "1"{
                     promise.fulfill()
+                    }
                 }
                 
             case .Failure(let errormessage) :
@@ -132,7 +134,7 @@ class APITests: XCTestCase{
     func test_Search_API(){
         let promise = expectation(description: "1")
         var searchResultData = [ArticleStatus]()
-        APICall().loadSearchAPI(searchTxt: "oil"){response in
+        APICall().loadSearchAPI(searchTxt: "oil"){(status, response) in
             print(response)
             XCTAssertNotNil(response)
             switch response {

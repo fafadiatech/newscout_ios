@@ -340,7 +340,7 @@ extension SearchVC: UITextFieldDelegate
     {
         txtSearch.resignFirstResponder()
         if txtSearch.text != ""{
-            APICall().loadSearchAPI(searchTxt: txtSearch.text!){ response in
+            APICall().loadSearchAPI(searchTxt: txtSearch.text!){ (Status, response) in
                 switch response {
                 case .Success(let data) :
                     self.ArticleData = data

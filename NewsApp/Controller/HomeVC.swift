@@ -173,7 +173,7 @@ class HomeVC: UIViewController{
                 self.HomeNewsTV.makeToast(errormessage, duration: 2.0, position: .center)
             case .Change(let code):
                 print(code)
-                if code == 0{
+                if code == 404{
                     let defaults = UserDefaults.standard
                     defaults.removeObject(forKey: "googleToken")
                     defaults.removeObject(forKey: "FBToken")
@@ -331,7 +331,7 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
                         self.HomeNewsTV.makeToast(errormessage, duration: 2.0, position: .center)
                     case .Change(let code):
                         print(code)
-                        if code == 0{
+                        if code == 404{
                             let defaults = UserDefaults.standard
                             defaults.removeObject(forKey: "googleToken")
                             defaults.removeObject(forKey: "FBToken")
@@ -379,7 +379,7 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
                         self.HomeNewsTV.makeToast(errormessage, duration: 2.0, position: .center)
                     case .Change(let code):
                         print(code)
-                        if code == 0{
+                        if code == 404{
                             let defaults = UserDefaults.standard
                             defaults.removeObject(forKey: "googleToken")
                             defaults.removeObject(forKey: "FBToken")

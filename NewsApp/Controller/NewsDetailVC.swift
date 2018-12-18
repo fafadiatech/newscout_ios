@@ -83,7 +83,7 @@ class NewsDetailVC: UIViewController {
         let settingvc = SettingsTVC()
         viewLikeDislike.backgroundColor = colorConstants.redColor
         ViewWebContainer.isHidden = true
-        APICall().loadRecommendationNewsAPI(articleId: articleId){ response in
+        APICall().loadRecommendationNewsAPI(articleId: articleId){ (status,response) in
             switch response {
             case .Success(let data) :
                 self.RecomArticleData = data
@@ -92,7 +92,17 @@ class NewsDetailVC: UIViewController {
                 print(errormessage)
                 self.view.makeToast(errormessage, duration: 2.0, position: .center)
             case .Change(let code):
+                if code == 404{
                 print(code)
+                let defaults = UserDefaults.standard
+                defaults.removeObject(forKey: "googleToken")
+                defaults.removeObject(forKey: "FBToken")
+                defaults.removeObject(forKey: "token")
+                defaults.removeObject(forKey: "email")
+                defaults.removeObject(forKey: "first_name")
+                defaults.removeObject(forKey: "last_name")
+                defaults.synchronize()
+                self.showMsg(title: "Please login to continue..", msg: "")
             }
         }
         

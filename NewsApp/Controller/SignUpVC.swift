@@ -100,7 +100,7 @@ class SignUpVC: UIViewController {
     @objc func dismissKeyboard() {
         view.endEditing(true)
     }
-    
+
     @IBAction func btnSignUpActn(_ sender: Any) {
         if txtFname.text != "" && txtLname.text != "" && txtEmail.text != "" && txtPassword.text != "" && txtConfirmPswd.text != ""{
             if Helper().validateEmail(enteredEmail: txtEmail.text!) ==  true{
@@ -145,4 +145,17 @@ class SignUpVC: UIViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+}
+
+extension SignUpVC : UITextFieldDelegate{
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool
+    {
+        if textField ==  txtFname || textField == txtLname{
+            let allowedCharacters = CharacterSet(charactersIn:"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ ")//Here change this characters based on your requirement
+            let characterSet = CharacterSet(charactersIn: string)
+            return allowedCharacters.isSuperset(of: characterSet)
+        }
+        return true
+    }
+    
 }
