@@ -109,7 +109,7 @@ class SignUpVC: UIViewController {
                                  "last_name": txtLname.text!,
                                  "email" : txtEmail.text!,
                                  "password" : txtPassword.text!]
-                    APICall().SignupAPI(param : param){response in
+                    APICall().SignupAPI(param : param){(status,response) in
                         print("signup response:\(response)")
                         if response == "sign up successfully"{
                             self.txtFname.text = ""

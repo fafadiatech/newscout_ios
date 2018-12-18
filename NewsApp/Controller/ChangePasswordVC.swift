@@ -95,9 +95,9 @@ class ChangePasswordVC: UIViewController {
             let param = ["old_password" : txtOldPswd.text!,
                          "password" : txtNewPswd.text!,
                          "confirm_password" : txtConfirmPswd.text! ]
-            APICall().ChangePasswordAPI(param: param){response in
+            APICall().ChangePasswordAPI(param: param){(status, response) in
                 print("change pswd response:\(response)")
-                if response == "1"{
+                if status == "1"{
                     self.view.makeToast(response, duration: 1.0, position: .center)
                     self.txtOldPswd.text = ""
                     self.txtNewPswd.text = ""

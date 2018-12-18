@@ -93,16 +93,17 @@ class NewsDetailVC: UIViewController {
                 self.view.makeToast(errormessage, duration: 2.0, position: .center)
             case .Change(let code):
                 if code == 404{
-                print(code)
-                let defaults = UserDefaults.standard
-                defaults.removeObject(forKey: "googleToken")
-                defaults.removeObject(forKey: "FBToken")
-                defaults.removeObject(forKey: "token")
-                defaults.removeObject(forKey: "email")
-                defaults.removeObject(forKey: "first_name")
-                defaults.removeObject(forKey: "last_name")
-                defaults.synchronize()
-                self.showMsg(title: "Please login to continue..", msg: "")
+                    print(code)
+                    let defaults = UserDefaults.standard
+                    defaults.removeObject(forKey: "googleToken")
+                    defaults.removeObject(forKey: "FBToken")
+                    defaults.removeObject(forKey: "token")
+                    defaults.removeObject(forKey: "email")
+                    defaults.removeObject(forKey: "first_name")
+                    defaults.removeObject(forKey: "last_name")
+                    defaults.synchronize()
+                    self.showMsg(title: "Please login to continue..", msg: "")
+                }
             }
         }
         
@@ -133,6 +134,7 @@ class NewsDetailVC: UIViewController {
         viewNewsArea.addGestureRecognizer(tapRecognizer)
         tapRecognizer.delegate = self as! UIGestureRecognizerDelegate
     }
+    
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         
@@ -655,6 +657,7 @@ class NewsDetailVC: UIViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+    
     
 }
 

@@ -26,10 +26,11 @@ class APITests: XCTestCase{
     
     //articlesSearchByCategory for valid url
     
-    func testValidURL_articlesSearchByCategory_API(){
+    func test_articlesSearchByCategory_API(){
         let incorrect_url = "https://api.myjson.com/bins/l23"
         let correct_url = "https://api.myjson.com/bins/16i4x0"
         let promise = expectation(description: "1")
+        XCTAssertEqual(self.TestArticleData.count, 0, "article data should be empty before API() runs")
         APICall().loadNewsbyCategoryAPI(url: correct_url){
             (status, response) in
             print(response)
@@ -37,8 +38,17 @@ class APITests: XCTestCase{
             switch response {
             case .Success(let data) :
                 self.TestArticleData = data
-                if status == "1"{
-                    promise.fulfill()
+                if status == "200"{
+                    if self.TestArticleData[0].header.status == "1"{
+                        for article in self.TestArticleData[0].body.articles{
+                            
+                            if article.title != nil && article.source != nil && article.article_id != nil && article.blurb != nil && article.category != nil && article.imageURL != nil && article.published_on != nil{
+                                print("all values are present")
+                            }
+                        }
+                        promise.fulfill()
+                    }
+                    
                 }
                 
             case .Failure(let errormessage) :
@@ -49,13 +59,14 @@ class APITests: XCTestCase{
                 print("changed")
                 XCTFail("status code: 404)")
             }
-            
         }
         waitForExpectations(timeout: 5, handler: nil)
+        XCTAssertGreaterThan(self.TestArticleData[0].body.articles.count, 0)
     }
     
     func test_CategoriesURL(){
         let promise = expectation(description: "200")
+        XCTAssertEqual(self.CategoryData.count, 0, "category data should be empty before API() runs")
         APICall().loadCategoriesAPI{
             (status, response) in
             print(response)
@@ -64,6 +75,11 @@ class APITests: XCTestCase{
             case .Success(let data) :
                 self.CategoryData = data
                 if status == 200 {
+                    for cat in self.CategoryData[0].categories{
+                        if cat.cat_id != nil && cat.title != nil {
+                            print("all values are present")
+                        }
+                    }
                     promise.fulfill()
                 }
             case .Failure(let errormessage) :
@@ -72,6 +88,7 @@ class APITests: XCTestCase{
             }
         }
         waitForExpectations(timeout: 2, handler: nil)
+        XCTAssertGreaterThan(self.CategoryData[0].categories.count, 0)
     }
     //sample test
     // Asynchronous test: success fast, failure slow
@@ -103,9 +120,11 @@ class APITests: XCTestCase{
     
     //recommendation API
     func test_Recommendation_API(){
-        let promise = expectation(description: "200")
+        let promise = expectation(description: "1")
         var recommendationData = [ArticleStatus]()
-        APICall().loadRecommendationNewsAPI(articleId: 43){ (status, response) in
+        XCTAssertEqual(recommendationData.count, 0, "recommendation articles data should be empty before API() runs")
+        
+        APICall().loadRecommendationNewsAPI(articleId: 43){(status, response) in
             print(response)
             XCTAssertNotNil(response)
             switch response {
@@ -113,9 +132,15 @@ class APITests: XCTestCase{
                 recommendationData = data
                 if status == "200"{
                     if recommendationData[0].header.status == "1"{
-                    promise.fulfill()
+                        for article in recommendationData[0].body.articles{
+                            if article.article_id != nil && article.blurb != nil && article.category != nil && article.imageURL != nil && article.published_on != nil && article.source != nil{
+                                print("all values are present")
+                            }
+                        }
+                        promise.fulfill()
                     }
                 }
+                
                 
             case .Failure(let errormessage) :
                 print(errormessage)
@@ -128,6 +153,7 @@ class APITests: XCTestCase{
             
         }
         waitForExpectations(timeout: 9, handler: nil)
+        XCTAssertGreaterThan(recommendationData[0].body.articles.count, 0)
     }
     
     //Search API
@@ -140,10 +166,16 @@ class APITests: XCTestCase{
             switch response {
             case .Success(let data) :
                 searchResultData = data
-                if searchResultData[0].header.status == "1"{
-                    promise.fulfill()
+                if status == "200"{
+                    if searchResultData[0].header.status == "1"{
+                        for article in searchResultData[0].body.articles{
+                            if article.article_id != nil && article.blurb != nil && article.category != nil && article.imageURL != nil && article.published_on != nil && article.source != nil{
+                                print("all values are present")
+                            }
+                        }
+                        promise.fulfill()
+                    }
                 }
-                
             case .Failure(let errormessage) :
                 print(errormessage)
                 XCTFail("errormessage code: \(errormessage)")
@@ -154,21 +186,25 @@ class APITests: XCTestCase{
             }
         }
         waitForExpectations(timeout: 9, handler: nil)
+        XCTAssertGreaterThan(searchResultData[0].body.articles.count, 0)
     }
     
     //Signup API
     func test_SignupAPI(){
         let promise = expectation(description: "sign up successfully")
-        let param = ["first_name": "",
-                     "last_name": "",
-                     "email" : "" ,
-                     "password" : ""]
-        APICall().SignupAPI(param: param ){response in
+        let param = ["first_name": "xyz",
+                     "last_name": "xqww",
+                     "email" : "xxuux@gmail.com" ,
+                     "password" : "xxxx"]
+        APICall().SignupAPI(param: param ){(status,response) in
             print(response)
             XCTAssertNotNil(response)
-            if response == "sign up successfully"{
-                promise.fulfill()
-            }else{
+            if status == "200"{
+                if response == "sign up successfully"{
+                    promise.fulfill()
+                }
+            }
+            else{
                 XCTFail(response)
             }
         }
@@ -178,13 +214,15 @@ class APITests: XCTestCase{
     //Login API
     func test_LoginAPI(){
         let promise = expectation(description: "1")
-        let param = ["email" : "v@gmail.com",
-                     "password" : "v1234"]
-        APICall().LoginAPI(param: param ){response in
+        let param = ["email" : "jayashri@fafadiatech.com",
+                     "password" : "jay1234"]
+        APICall().LoginAPI(param: param ){(status, response) in
             print(response)
             XCTAssertNotNil(response)
-            if response  == "1"{
-                promise.fulfill()
+            if status == 200{
+                if response  == "1"{
+                    promise.fulfill()
+                }
             }
             else{
                 XCTFail("errormessage code: \(response)")
@@ -196,109 +234,140 @@ class APITests: XCTestCase{
     //Logout API
     func testLogoutAPI(){
         let promise = expectation(description: "1")
-        
-        APICall().LogoutAPI{(status, response) in
-            print(status,response)
-            XCTAssertNotNil(response)
-            if status  == "1"{
-                promise.fulfill()
+        if UserDefaults.standard.value(forKey: "token") != nil || UserDefaults.standard.value(forKey: "FBToken") != nil || UserDefaults.standard.value(forKey: "googleToken") != nil{
+            APICall().LogoutAPI{(status, response) in
+                print(status,response)
+                XCTAssertNotNil(response)
+                if status  == "1"{
+                    promise.fulfill()
+                }
+                else{
+                    XCTFail("errormessage code: \(response)")
+                }
             }
-            else{
-                XCTFail("errormessage code: \(response)")
-            }
+            waitForExpectations(timeout: 9, handler: nil)
         }
-        waitForExpectations(timeout: 9, handler: nil)
+        else{
+            XCTFail("Login required")
+        }
     }
     
     //Bookmark API
     func test_BookmarkAPI(){
-        let promise = expectation(description: "no Article")
-        APICall().bookmarkAPI(id: 43){
-            (status, response) in
-            XCTAssertNotNil(status, response)
-            if status == "1"{
-                print(response)
-                promise.fulfill()
+        let promise = expectation(description: "Article bookmarked status has been changed")
+        if UserDefaults.standard.value(forKey: "token") != nil || UserDefaults.standard.value(forKey: "FBToken") != nil || UserDefaults.standard.value(forKey: "googleToken") != nil{
+            APICall().bookmarkAPI(id: 43){
+                (status, response) in
+                XCTAssertNotNil(status, response)
+                if status == "1"{
+                    print(response)
+                    promise.fulfill()
+                }
+                else{
+                    print(response)
+                    XCTFail("errormessage code: \(response)")
+                }
             }
-            else{
-                print(response)
-                XCTFail("errormessage code: \(response)")
-            }
+            waitForExpectations(timeout: 9, handler: nil)
         }
-        waitForExpectations(timeout: 9, handler: nil)
+        else{
+            XCTFail("Login required")
+        }
     }
     
     //Like article API
     func test_LikeArticleAPI(){
-        let promise = expectation(description: "no Article")
-        let param = ["article_id" : 42,
-                     "isLike" : 0]
-        APICall().LikeDislikeAPI(param: param){
-            (status, response) in
-            XCTAssertNotNil(status, response)
-            if status == "1"{
-                print(response)
-                promise.fulfill()
+        let promise = expectation(description: "Article Like status has been changed")
+        if UserDefaults.standard.value(forKey: "token") != nil || UserDefaults.standard.value(forKey: "FBToken") != nil || UserDefaults.standard.value(forKey: "googleToken") != nil{
+            let param = ["article_id" : 42,
+                         "isLike" : 0]
+            APICall().LikeDislikeAPI(param: param){
+                (status, response) in
+                XCTAssertNotNil(status, response)
+                if status == "1"{
+                    print(response)
+                    promise.fulfill()
+                }
+                else{
+                    print(response)
+                    XCTFail("errormessage code: \(response)")
+                }
             }
-            else{
-                print(response)
-                XCTFail("errormessage code: \(response)")
-            }
+            waitForExpectations(timeout: 15, handler: nil)
         }
-        waitForExpectations(timeout: 15, handler: nil)
+        else{
+            XCTFail("Login required")
+        }
     }
     
     //dislike article API
     func test_DisLikeArticleAPI(){
-        let promise = expectation(description: "no Article")
-        let param = ["article_id" : 42,
-                     "isLike" : 1]
-        APICall().LikeDislikeAPI(param: param){
-            (status, response) in
-            XCTAssertNotNil(status, response)
-            if status == "1"{
-                print(response)
-                promise.fulfill()
+        let promise = expectation(description: "Article DisLike status has been changed")
+        
+        if UserDefaults.standard.value(forKey: "token") != nil || UserDefaults.standard.value(forKey: "FBToken") != nil || UserDefaults.standard.value(forKey: "googleToken") != nil{
+            let param = ["article_id" : 42,
+                         "isLike" : 1]
+            APICall().LikeDislikeAPI(param: param){
+                (status, response) in
+                XCTAssertNotNil(status, response)
+                if status == "1"{
+                    print(response)
+                    promise.fulfill()
+                }
+                else{
+                    print(response)
+                    XCTFail("errormessage code: \(response)")
+                }
             }
-            else{
-                print(response)
-                XCTFail("errormessage code: \(response)")
-            }
+            waitForExpectations(timeout: 15, handler: nil)
         }
-        waitForExpectations(timeout: 15, handler: nil)
+        else{
+            XCTFail("Login required")
+        }
     }
     
     //forgot pswd API
     func test_forgotPswdAPI(){
         let promise = expectation(description: "New password sent to your email")
-        APICall().ForgotPasswordAPI(email: "jayashri@fafadiatech.com"){response in
-            if response == "New password sent to your email"{
-                print(response)
-                promise.fulfill()
+        
+        if UserDefaults.standard.value(forKey: "token") != nil || UserDefaults.standard.value(forKey: "FBToken") != nil || UserDefaults.standard.value(forKey: "googleToken") != nil{
+            APICall().ForgotPasswordAPI(email: "jayashri@fafadiatech.com"){(status, response) in
+                if status == "1"{
+                    print(response)
+                    promise.fulfill()
+                }
+                else{
+                    XCTFail("errormessage code: \(response)")
+                }
             }
-            else{
-                XCTFail("errormessage code: \(response)")
-            }
+            waitForExpectations(timeout: 15, handler: nil)
         }
-        waitForExpectations(timeout: 15, handler: nil)
+        else{
+            XCTFail("Login required")
+        }
     }
     
     //change pswd API
     func test_changePasswordAPI(){
         let promise = expectation(description: "Password chnaged successfully")
-        let param = ["old_password" : "jay123",
-                     "password" : "jay1234",
-                     "confirm_password" : "jay1234"]
-        APICall().ChangePasswordAPI(param: param){response in
-            print("change pswd response:\(response)")
-            if response == "Password chnaged successfully"{
-                promise.fulfill()
+        if UserDefaults.standard.value(forKey: "token") != nil || UserDefaults.standard.value(forKey: "FBToken") != nil || UserDefaults.standard.value(forKey: "googleToken") != nil{
+            let param = ["old_password" : "EEA2DDE4E8",
+                         "password" : "jay1234",
+                         "confirm_password" : "jay1234"]
+            APICall().ChangePasswordAPI(param: param){(status, response) in
+                print("change pswd response:\(response)")
+                if response == "Password chnaged successfully"{
+                    promise.fulfill()
+                }
+                else{
+                    XCTFail("errormessage code: \(response)")
+                }
             }
-            else{
-                XCTFail("errormessage code: \(response)")
-            }
+            waitForExpectations(timeout: 15, handler: nil)
         }
-        waitForExpectations(timeout: 15, handler: nil)
+        else{
+            XCTFail("Login required")
+        }
     }
     
     override func tearDown() {

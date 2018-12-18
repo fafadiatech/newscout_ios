@@ -73,9 +73,9 @@ class ForgotPasswordVC: UIViewController {
     @IBAction func btnSubmitEmailActn(_ sender: Any) {
         if txtEmail.text != "" {
             
-            APICall().ForgotPasswordAPI(email: txtEmail.text!){response in
+            APICall().ForgotPasswordAPI(email: txtEmail.text!){(status, response) in
                 print("ForgotPassword response:\(response)")
-                if response == "1"{
+                if status == "1"{
                     self.view.makeToast(response, duration: 2.0, position: .center)
                 }
                 else{

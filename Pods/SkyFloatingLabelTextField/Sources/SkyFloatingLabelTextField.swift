@@ -60,7 +60,8 @@ open class SkyFloatingLabelTextField: UITextField { // swiftlint:disable:this ty
     }
 
     /// A UIColor value that determines text color of the placeholder label
-    @IBInspectable dynamic open var placeholderColor: UIColor = UIColor.blue {
+    @IBInspectable dynamic open var placeholderColor = UIColor.gray {
+      
         didSet {
             updatePlaceholder()
         }
@@ -76,6 +77,13 @@ open class SkyFloatingLabelTextField: UITextField { // swiftlint:disable:this ty
     fileprivate func updatePlaceholder() {
         guard let placeholder = placeholder, let font = placeholderFont ?? font else {
             return
+        }
+        let darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
+        if  darkModeStatus == true{
+            placeholderColor = UIColor.white
+        }
+        else{
+            placeholderColor = UIColor.lightGray
         }
         let color = isEnabled ? placeholderColor : disabledColor
         #if swift(>=4.0)
