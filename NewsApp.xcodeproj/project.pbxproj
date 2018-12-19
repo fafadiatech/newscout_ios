@@ -237,6 +237,7 @@
 				421ADFE92156553500C00F6F /* View */,
 				421ADFC22156407600C00F6F /* Assets.xcassets */,
 				421ADFC42156407600C00F6F /* LaunchScreen.storyboard */,
+				421ADFBC2156407400C00F6F /* Main.storyboard */,
 				421ADFC72156407600C00F6F /* Info.plist */,
 				421ADFBF2156407400C00F6F /* NewsApp.xcdatamodeld */,
 			);
@@ -268,7 +269,6 @@
 		421ADFE92156553500C00F6F /* View */ = {
 			isa = PBXGroup;
 			children = (
-				421ADFBC2156407400C00F6F /* Main.storyboard */,
 			);
 			path = View;
 			sourceTree = "<group>";
