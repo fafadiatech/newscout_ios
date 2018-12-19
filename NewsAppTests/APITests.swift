@@ -48,7 +48,6 @@ class APITests: XCTestCase{
                         }
                         promise.fulfill()
                     }
-                    
                 }
                 
             case .Failure(let errormessage) :
@@ -90,6 +89,7 @@ class APITests: XCTestCase{
         waitForExpectations(timeout: 2, handler: nil)
         XCTAssertGreaterThan(self.CategoryData[0].categories.count, 0)
     }
+    
     //sample test
     // Asynchronous test: success fast, failure slow
     func testValidCallToiTunesGetsHTTPStatusCode200() {
@@ -160,7 +160,9 @@ class APITests: XCTestCase{
     func test_Search_API(){
         let promise = expectation(description: "1")
         var searchResultData = [ArticleStatus]()
-        APICall().loadSearchAPI(searchTxt: "oil"){(status, response) in
+        var searchKeyword = "oil"
+        if searchKeyword != nil{
+        APICall().loadSearchAPI(searchTxt: searchKeyword){(status, response) in
             print(response)
             XCTAssertNotNil(response)
             switch response {
@@ -187,15 +189,20 @@ class APITests: XCTestCase{
         }
         waitForExpectations(timeout: 9, handler: nil)
         XCTAssertGreaterThan(searchResultData[0].body.articles.count, 0)
+        }
+        else{
+            XCTFail("No search keyword entered")
+        }
     }
     
     //Signup API
     func test_SignupAPI(){
         let promise = expectation(description: "sign up successfully")
-        let param = ["first_name": "xyz",
+        let param = ["first_name": "yz",
                      "last_name": "xqww",
-                     "email" : "xxuux@gmail.com" ,
+                     "email" : "yubsb@gmail.com" ,
                      "password" : "xxxx"]
+        if param["first_name"] != nil && param["last_name"] != nil && param["email"] != nil && param["password"] != nil{
         APICall().SignupAPI(param: param ){(status,response) in
             print(response)
             XCTAssertNotNil(response)
@@ -209,6 +216,10 @@ class APITests: XCTestCase{
             }
         }
         waitForExpectations(timeout: 9, handler: nil)
+        }
+        else{
+            XCTFail("missing mandatory details")
+        }
     }
     
     //Login API
@@ -216,6 +227,7 @@ class APITests: XCTestCase{
         let promise = expectation(description: "1")
         let param = ["email" : "jayashri@fafadiatech.com",
                      "password" : "jay1234"]
+        if param["email"] != nil && param["password"] != nil {
         APICall().LoginAPI(param: param ){(status, response) in
             print(response)
             XCTAssertNotNil(response)
@@ -229,6 +241,10 @@ class APITests: XCTestCase{
             }
         }
         waitForExpectations(timeout: 9, handler: nil)
+        }
+        else{
+            XCTFail("missing login details")
+        }
     }
     
     //Logout API
@@ -354,6 +370,7 @@ class APITests: XCTestCase{
             let param = ["old_password" : "EEA2DDE4E8",
                          "password" : "jay1234",
                          "confirm_password" : "jay1234"]
+            if param["old_password"] != nil && param["password"] != nil && param["confirm_password"] != nil{
             APICall().ChangePasswordAPI(param: param){(status, response) in
                 print("change pswd response:\(response)")
                 if response == "Password chnaged successfully"{
@@ -364,6 +381,10 @@ class APITests: XCTestCase{
                 }
             }
             waitForExpectations(timeout: 15, handler: nil)
+            }
+            else{
+                XCTFail("Mandatory details are missing")
+            }
         }
         else{
             XCTFail("Login required")
