@@ -35,6 +35,7 @@
 		26ACEA96216738BB000EF3C7 /* CategoryListTVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26ACEA95216738BB000EF3C7 /* CategoryListTVCell.swift */; };
 		26C24721219D95D000A87A3B /* GmailCredentials.plist in Resources */ = {isa = PBXBuildFile; fileRef = 26C24720219D95CF00A87A3B /* GmailCredentials.plist */; };
 		26C24723219DA6C200A87A3B /* ForgotPasswordVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26C24722219DA6C200A87A3B /* ForgotPasswordVC.swift */; };
+		26D3C90A21CBAC9C003F7331 /* AVPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26D3C90921CBAC9C003F7331 /* AVPlayerView.swift */; };
 		40DAD2A94E0870B8278E705F /* Pods_NewsAppUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53DC2E5EA9235D86628350C7 /* Pods_NewsAppUITests.framework */; };
 		421ADFB92156407400C00F6F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 421ADFB82156407400C00F6F /* AppDelegate.swift */; };
 		421ADFBB2156407400C00F6F /* HomeVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 421ADFBA2156407400C00F6F /* HomeVC.swift */; };
@@ -107,6 +108,7 @@
 		26ACEA95216738BB000EF3C7 /* CategoryListTVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryListTVCell.swift; sourceTree = "<group>"; };
 		26C24720219D95CF00A87A3B /* GmailCredentials.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = GmailCredentials.plist; sourceTree = "<group>"; };
 		26C24722219DA6C200A87A3B /* ForgotPasswordVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForgotPasswordVC.swift; sourceTree = "<group>"; };
+		26D3C90921CBAC9C003F7331 /* AVPlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AVPlayerView.swift; sourceTree = "<group>"; };
 		2F9C18092C8836EA83BB9B53 /* Pods-NewsAppTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NewsAppTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-NewsAppTests/Pods-NewsAppTests.release.xcconfig"; sourceTree = "<group>"; };
 		421ADFB52156407400C00F6F /* NewsApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NewsApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		421ADFB82156407400C00F6F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -307,6 +309,7 @@
 		421ADFEC2156553500C00F6F /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				26D3C90921CBAC9C003F7331 /* AVPlayerView.swift */,
 				4265E20721B8E9F800C3F0D7 /* NotificationsName+Extensions.swift */,
 				26C24720219D95CF00A87A3B /* GmailCredentials.plist */,
 				261AA130217F40D20044585C /* APIManager.swift */,
@@ -556,6 +559,7 @@
 				"${BUILT_PRODUCTS_DIR}/NightNight/NightNight.framework",
 				"${BUILT_PRODUCTS_DIR}/SDWebImage/SDWebImage.framework",
 				"${BUILT_PRODUCTS_DIR}/SkyFloatingLabelTextField/SkyFloatingLabelTextField.framework",
+				"${BUILT_PRODUCTS_DIR}/SwiftDevice/SwiftDevice.framework",
 				"${BUILT_PRODUCTS_DIR}/SwiftyJSON/SwiftyJSON.framework",
 				"${BUILT_PRODUCTS_DIR}/Toast-Swift/Toast_Swift.framework",
 				"${BUILT_PRODUCTS_DIR}/XLPagerTabStrip/XLPagerTabStrip.framework",
@@ -577,6 +581,7 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/NightNight.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SDWebImage.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SkyFloatingLabelTextField.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftDevice.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftyJSON.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Toast_Swift.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/XLPagerTabStrip.framework",
@@ -626,6 +631,7 @@
 				421ADFC12156407400C00F6F /* NewsApp.xcdatamodeld in Sources */,
 				4265E20821B8E9F800C3F0D7 /* NotificationsName+Extensions.swift in Sources */,
 				2690F3CC21BF8C12003E65CA /* SettingsTVCell.swift in Sources */,
+				26D3C90A21CBAC9C003F7331 /* AVPlayerView.swift in Sources */,
 				42D12BF4215A0FA60085EF12 /* common.swift in Sources */,
 				263F2D8F216B2DEE00764C45 /* DataModel.swift in Sources */,
 				263F2D9C216B7FC700764C45 /* ProfileVC.swift in Sources */,

@@ -22,6 +22,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
         GIDSignIn.sharedInstance().clientID = "424337192018-pnik0j5sm85mjg48uf0u02ucrb64e6lc.apps.googleusercontent.com"
         GIDSignIn.sharedInstance().delegate = self as! GIDSignInDelegate
         FBSDKApplicationDelegate.sharedInstance().application(application, didFinishLaunchingWithOptions: launchOptions)
+        if UserDefaults.standard.value(forKey: "darkModeEnabled") == nil{
+            UserDefaults.standard.set(false, forKey: "darkModeEnabled")
+        }
         if UserDefaults.standard.value(forKey: "categories") == nil{
             
             if UserDefaults.standard.value(forKey: "token") == nil || UserDefaults.standard.value(forKey: "FBToken") == nil || UserDefaults.standard.value(forKey: "googleToken") == nil{

@@ -78,13 +78,6 @@ open class SkyFloatingLabelTextField: UITextField { // swiftlint:disable:this ty
         guard let placeholder = placeholder, let font = placeholderFont ?? font else {
             return
         }
-        let darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
-        if  darkModeStatus == true{
-            placeholderColor = UIColor.white
-        }
-        else{
-            placeholderColor = UIColor.lightGray
-        }
         let color = isEnabled ? placeholderColor : disabledColor
         #if swift(>=4.0)
             attributedPlaceholder = NSAttributedString(

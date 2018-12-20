@@ -162,33 +162,33 @@ class APITests: XCTestCase{
         var searchResultData = [ArticleStatus]()
         var searchKeyword = "oil"
         if searchKeyword != nil{
-        APICall().loadSearchAPI(searchTxt: searchKeyword){(status, response) in
-            print(response)
-            XCTAssertNotNil(response)
-            switch response {
-            case .Success(let data) :
-                searchResultData = data
-                if status == "200"{
-                    if searchResultData[0].header.status == "1"{
-                        for article in searchResultData[0].body.articles{
-                            if article.article_id != nil && article.blurb != nil && article.category != nil && article.imageURL != nil && article.published_on != nil && article.source != nil{
-                                print("all values are present")
+            APICall().loadSearchAPI(searchTxt: searchKeyword){(status, response) in
+                print(response)
+                XCTAssertNotNil(response)
+                switch response {
+                case .Success(let data) :
+                    searchResultData = data
+                    if status == "200"{
+                        if searchResultData[0].header.status == "1"{
+                            for article in searchResultData[0].body.articles{
+                                if article.article_id != nil && article.blurb != nil && article.category != nil && article.imageURL != nil && article.published_on != nil && article.source != nil{
+                                    print("all values are present")
+                                }
                             }
+                            promise.fulfill()
                         }
-                        promise.fulfill()
                     }
+                case .Failure(let errormessage) :
+                    print(errormessage)
+                    XCTFail("errormessage code: \(errormessage)")
+                    
+                case .Change(_):
+                    print("changed")
+                    XCTFail("status code: 404)")
                 }
-            case .Failure(let errormessage) :
-                print(errormessage)
-                XCTFail("errormessage code: \(errormessage)")
-                
-            case .Change(_):
-                print("changed")
-                XCTFail("status code: 404)")
             }
-        }
-        waitForExpectations(timeout: 9, handler: nil)
-        XCTAssertGreaterThan(searchResultData[0].body.articles.count, 0)
+            waitForExpectations(timeout: 9, handler: nil)
+            XCTAssertGreaterThan(searchResultData[0].body.articles.count, 0)
         }
         else{
             XCTFail("No search keyword entered")
@@ -203,19 +203,19 @@ class APITests: XCTestCase{
                      "email" : "yubsb@gmail.com" ,
                      "password" : "xxxx"]
         if param["first_name"] != nil && param["last_name"] != nil && param["email"] != nil && param["password"] != nil{
-        APICall().SignupAPI(param: param ){(status,response) in
-            print(response)
-            XCTAssertNotNil(response)
-            if status == "200"{
-                if response == "sign up successfully"{
-                    promise.fulfill()
+            APICall().SignupAPI(param: param ){(status,response) in
+                print(response)
+                XCTAssertNotNil(response)
+                if status == "200"{
+                    if response == "sign up successfully"{
+                        promise.fulfill()
+                    }
+                }
+                else{
+                    XCTFail(response)
                 }
             }
-            else{
-                XCTFail(response)
-            }
-        }
-        waitForExpectations(timeout: 9, handler: nil)
+            waitForExpectations(timeout: 9, handler: nil)
         }
         else{
             XCTFail("missing mandatory details")
@@ -228,19 +228,19 @@ class APITests: XCTestCase{
         let param = ["email" : "jayashri@fafadiatech.com",
                      "password" : "jay1234"]
         if param["email"] != nil && param["password"] != nil {
-        APICall().LoginAPI(param: param ){(status, response) in
-            print(response)
-            XCTAssertNotNil(response)
-            if status == 200{
-                if response  == "1"{
-                    promise.fulfill()
+            APICall().LoginAPI(param: param ){(status, response) in
+                print(response)
+                XCTAssertNotNil(response)
+                if status == 200{
+                    if response  == "1"{
+                        promise.fulfill()
+                    }
+                }
+                else{
+                    XCTFail("errormessage code: \(response)")
                 }
             }
-            else{
-                XCTFail("errormessage code: \(response)")
-            }
-        }
-        waitForExpectations(timeout: 9, handler: nil)
+            waitForExpectations(timeout: 9, handler: nil)
         }
         else{
             XCTFail("missing login details")
@@ -371,16 +371,16 @@ class APITests: XCTestCase{
                          "password" : "jay1234",
                          "confirm_password" : "jay1234"]
             if param["old_password"] != nil && param["password"] != nil && param["confirm_password"] != nil{
-            APICall().ChangePasswordAPI(param: param){(status, response) in
-                print("change pswd response:\(response)")
-                if response == "Password chnaged successfully"{
-                    promise.fulfill()
+                APICall().ChangePasswordAPI(param: param){(status, response) in
+                    print("change pswd response:\(response)")
+                    if response == "Password chnaged successfully"{
+                        promise.fulfill()
+                    }
+                    else{
+                        XCTFail("errormessage code: \(response)")
+                    }
                 }
-                else{
-                    XCTFail("errormessage code: \(response)")
-                }
-            }
-            waitForExpectations(timeout: 15, handler: nil)
+                waitForExpectations(timeout: 15, handler: nil)
             }
             else{
                 XCTFail("Mandatory details are missing")

@@ -100,7 +100,7 @@ class SignUpVC: UIViewController {
     @objc func dismissKeyboard() {
         view.endEditing(true)
     }
-
+    
     @IBAction func btnSignUpActn(_ sender: Any) {
         if txtFname.text != "" && txtLname.text != "" && txtEmail.text != "" && txtPassword.text != "" && txtConfirmPswd.text != ""{
             if Helper().validateEmail(enteredEmail: txtEmail.text!) ==  true{

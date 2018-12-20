@@ -47,6 +47,7 @@ PODS:
     - SDWebImage/Core (= 4.4.2)
   - SDWebImage/Core (4.4.2)
   - SkyFloatingLabelTextField (3.5.1)
+  - SwiftDevice (0.3.0)
   - SwiftyJSON (4.1.0)
   - Toast-Swift (3.0.1)
   - XLPagerTabStrip (8.0.1)
@@ -60,12 +61,13 @@ DEPENDENCIES:
   - NightNight
   - SDWebImage
   - SkyFloatingLabelTextField
+  - SwiftDevice
   - SwiftyJSON
   - Toast-Swift
   - XLPagerTabStrip
 
 SPEC REPOS:
-  https://github.com/cocoapods/specs.git:
+  https://github.com/CocoaPods/Specs.git:
     - Alamofire
     - Bolts
     - FBSDKCoreKit
@@ -82,6 +84,7 @@ SPEC REPOS:
     - NightNight
     - SDWebImage
     - SkyFloatingLabelTextField
+    - SwiftDevice
     - SwiftyJSON
     - Toast-Swift
     - XLPagerTabStrip
@@ -94,7 +97,7 @@ SPEC CHECKSUMS:
   Floaty: 82854e1a5ef4fa208281ebd4da2f3d1e51ba67a6
   GoogleSignIn: d9ef55b10f0aa401a5de2747f59b725e4b9732ac
   GoogleToolboxForMac: 91c824d21e85b31c2aae9bb011c5027c9b4e738f
-  GTMOAuth2: c77fe325e4acd453837e72d91e3b5f13116857b2
+  GTMOAuth2: e8b6512c896235149df975c41d9a36c868ab7fba
   GTMSessionFetcher: 0c4baf0a73acd0041bf9f71ea018deedab5ea84e
   MaterialComponents: 3607dd0e952af5c0254798758b6944712465243f
   MDFInternationalization: e355b0cebecf53d60233bd267084e49366c82513
@@ -103,10 +106,11 @@ SPEC CHECKSUMS:
   NightNight: 2a5550fdd9cf424b75ebaab022c26aaba35304c8
   SDWebImage: 624d6e296c69b244bcede364c72ae0430ac14681
   SkyFloatingLabelTextField: 4cbeece9c3aae97c6019d8fae511cb5b755874f7
+  SwiftDevice: ee6e7682db9a6d79aa9e922886b1a5a1ebeb7b3c
   SwiftyJSON: c29297daf073d2aa016295d5809cdd68045c39b3
   Toast-Swift: ba0b01b095aada709d915f9beb1d38184a2721c3
   XLPagerTabStrip: c908b17cbf42fcd2598ee1adfc49bae25444d88a
 
-PODFILE CHECKSUM: 127b3c07bd2cedac337ca79d5f0aff6844d0e426
+PODFILE CHECKSUM: 7d83faae62bdbb77ff95837c4d91e19a711d9436
 
-COCOAPODS: 1.5.3
+COCOAPODS: 1.5.0

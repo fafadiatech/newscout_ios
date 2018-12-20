@@ -60,8 +60,8 @@ class SettingsTVC: UITableViewController, GIDSignInUIDelegate {
         let darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
         if  darkModeStatus == true{
             settingsTV.backgroundColor = colorConstants.grayBackground2
-            let cell = SettingsTVCell()
-            cell.backgroundColor = .black
+            //let cell = SettingsTVCell()
+           //cell.backgroundColor = .black
             changeColor()
             
         }
@@ -70,9 +70,9 @@ class SettingsTVC: UITableViewController, GIDSignInUIDelegate {
     @objc private func darkModeEnabled(_ notification: Notification) {
         // Write your dark mode code here
         NightNight.theme = .night
-        let cell = SettingsTVCell()
+       // let cell = SettingsTVCell()
         changeColor()
-        cell.backgroundColor = .black
+       // cell.backgroundColor = .black
         settingsTV.backgroundColor = colorConstants.grayBackground2
         
     }
@@ -207,10 +207,10 @@ class SettingsTVC: UITableViewController, GIDSignInUIDelegate {
         let headerView = view as! UITableViewHeaderFooterView
         headerView.textLabel?.textColor = .black
         headerView.textLabel?.font = FontConstants.settingsTVHeader
-        let cell = SettingsTVCell()
+       // let cell = SettingsTVCell()
         let darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
         if  darkModeStatus == true{
-            cell.backgroundColor = .black
+        //    cell.backgroundColor = .black
         }
         else{
             //cell.backgroundColor = colorConstants.grayBackground3

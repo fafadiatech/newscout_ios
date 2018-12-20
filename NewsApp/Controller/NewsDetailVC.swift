@@ -13,6 +13,7 @@ import SDWebImage
 import NightNight
 import AVFoundation
 import AVKit
+import SwiftDevice
 
 class NewsDetailVC: UIViewController {
     @IBOutlet weak var viewContainer: UIView!
@@ -37,6 +38,8 @@ class NewsDetailVC: UIViewController {
     @IBOutlet weak var btnPlayVideo: UIButton!
     @IBOutlet weak var newsAreaHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var viewLikeDislikeHeightConstraint: NSLayoutConstraint!
+   
+    @IBOutlet weak var avPlayerView: AVPlayerView!
     let imageCache = NSCache<NSString, UIImage>()
     var playbackSlider = UISlider()
     var RecomArticleData = [ArticleStatus]()
@@ -51,13 +54,27 @@ class NewsDetailVC: UIViewController {
     var playerItem:AVPlayerItem?
     var lblSourceTopConstraint : NSLayoutConstraint!
     var lblTimesTopConstraint : NSLayoutConstraint!
-    var viewLikeDislikeTopConstraint : NSLayoutConstraint!
+    var viewLikeDislikeBottomConstraint : NSLayoutConstraint!
+    var deviceOrientation: UIDeviceOrientation = UIDevice.current.orientation
+    var statusBarOrientation: UIInterfaceOrientation = UIApplication.shared.statusBarOrientation
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        if UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad && UIDevice.current.orientation.isPortrait {
+        if UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad && statusBarOrientation.isPortrait{
             viewLikeDislike.isHidden = false
             addPotraitConstraint()
-    }
+        }
+        else if UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad {
+            
+            if statusBarOrientation.isLandscape{
+                viewLikeDislike.isHidden = true
+                if viewLikeDislikeHeightConstraint != nil{
+                    NSLayoutConstraint.deactivate([viewLikeDislikeHeightConstraint])
+                    viewLikeDislikeHeightConstraint.constant = -9.5
+                    NSLayoutConstraint.activate([viewLikeDislikeHeightConstraint])
+                }
+            }
+        }
         else{
             viewLikeDislike.isHidden = true
         }
@@ -118,59 +135,72 @@ class NewsDetailVC: UIViewController {
     }
     
     func addPotraitConstraint(){
-        if lblSourceTopConstraint != nil && lblSourceTopConstraint != nil && viewLikeDislikeTopConstraint != nil{
-        NSLayoutConstraint.deactivate([lblTimesTopConstraint])
-        NSLayoutConstraint.deactivate([lblSourceTopConstraint])
-        NSLayoutConstraint.deactivate([viewLikeDislikeTopConstraint])
+        if lblSourceTopConstraint != nil && lblSourceTopConstraint != nil && viewLikeDislikeBottomConstraint != nil{
+            NSLayoutConstraint.deactivate([lblTimesTopConstraint])
+            NSLayoutConstraint.deactivate([lblSourceTopConstraint])
+            NSLayoutConstraint.deactivate([viewLikeDislikeBottomConstraint])
         }
-         lblSourceTopConstraint = NSLayoutConstraint (item: lblSource,
-                                                   attribute: NSLayoutAttribute.bottom,
-                                                   relatedBy: NSLayoutRelation.equal,
-                                                   toItem: viewLikeDislike,
-                                                   attribute: NSLayoutAttribute.top,
-                                                   multiplier: 1,
-                                                   constant: -10)//.isActive = true
+        lblSourceTopConstraint = NSLayoutConstraint (item: lblSource,
+                                                     attribute: NSLayoutAttribute.bottom,
+                                                     relatedBy: NSLayoutRelation.equal,
+                                                     toItem: viewLikeDislike,
+                                                     attribute: NSLayoutAttribute.top,
+                                                     multiplier: 1,
+                                                     constant: -10)//.isActive = true
         lblTimesTopConstraint = NSLayoutConstraint (item: lblTimeAgo,
-                                                        attribute: NSLayoutAttribute.bottom,
-                                                        relatedBy: NSLayoutRelation.equal,
-                                                        toItem: viewLikeDislike,
-                                                        attribute: NSLayoutAttribute.top,
-                                                        multiplier: 1,
-                                                        constant: -10)//.isActive = true
+                                                    attribute: NSLayoutAttribute.bottom,
+                                                    relatedBy: NSLayoutRelation.equal,
+                                                    toItem: viewLikeDislike,
+                                                    attribute: NSLayoutAttribute.top,
+                                                    multiplier: 1,
+                                                    constant: -10)//.isActive = true
         newsAreaHeightConstraint.constant = 100
-       
-         viewLikeDislikeTopConstraint = NSLayoutConstraint (item: viewLikeDislike,
-                                                        attribute: NSLayoutAttribute.bottom,
-                                                        relatedBy: NSLayoutRelation.equal,
-                                                        toItem: viewNewsArea,
-                                                        attribute: NSLayoutAttribute.bottom,
-                                                        multiplier: 1,
-                                                        constant: -30)//.isActive = true
+        viewLikeDislikeHeightConstraint.constant = -26.5
+        viewLikeDislikeBottomConstraint = NSLayoutConstraint (item: viewLikeDislike,
+                                                              attribute: NSLayoutAttribute.bottom,
+                                                              relatedBy: NSLayoutRelation.equal,
+                                                              toItem: viewNewsArea,
+                                                              attribute: NSLayoutAttribute.bottom,
+                                                              multiplier: 1,
+                                                              constant: -30)//.isActive = true
         NSLayoutConstraint.activate([lblTimesTopConstraint])
         NSLayoutConstraint.activate([lblSourceTopConstraint])
-        NSLayoutConstraint.activate([viewLikeDislikeTopConstraint])
+        NSLayoutConstraint.activate([viewLikeDislikeBottomConstraint])
     }
     
     func addLandscapeConstraints(){
-        NSLayoutConstraint.deactivate([lblTimesTopConstraint])
-        NSLayoutConstraint.deactivate([lblSourceTopConstraint])
-        NSLayoutConstraint.deactivate([viewLikeDislikeTopConstraint])
-        viewLikeDislikeHeightConstraint.constant = 7
-        /*var lblSourceTopConstraint = NSLayoutConstraint (item: lblSource,
-                                                         attribute: NSLayoutAttribute.bottom,
-                                                         relatedBy: NSLayoutRelation.equal,
-                                                         toItem: suggestedView,
-                                                         attribute: NSLayoutAttribute.top,
-                                                         multiplier: 1,
-                                                         constant: -15).isActive = true
-        var lblTimesTopCOnstraint = NSLayoutConstraint (item: lblTimeAgo,
-                                                        attribute: NSLayoutAttribute.bottom,
-                                                        relatedBy: NSLayoutRelation.equal,
-                                                        toItem: suggestedView,
-                                                        attribute: NSLayoutAttribute.top,
-                                                        multiplier: 1,
-                                                        constant: -10).isActive = true
-     newsAreaHeightConstraint.constant = 120*/
+        if lblSourceTopConstraint != nil && lblSourceTopConstraint != nil{
+            NSLayoutConstraint.deactivate([lblTimesTopConstraint])
+            NSLayoutConstraint.deactivate([lblSourceTopConstraint])
+        }
+        viewLikeDislikeHeightConstraint.constant = -9.5
+        lblSourceTopConstraint = NSLayoutConstraint (item: lblSource,
+                                                     attribute: NSLayoutAttribute.bottom,
+                                                     relatedBy: NSLayoutRelation.equal,
+                                                     toItem: viewNewsArea,
+                                                     attribute: NSLayoutAttribute.bottom,
+                                                     multiplier: 1,
+                                                     constant: -45)
+        lblTimesTopConstraint = NSLayoutConstraint (item: lblTimeAgo,
+                                                    attribute: NSLayoutAttribute.bottom,
+                                                    relatedBy: NSLayoutRelation.equal,
+                                                    toItem: viewNewsArea,
+                                                    attribute: NSLayoutAttribute.bottom,
+                                                    multiplier: 1,
+                                                    constant: -45)
+        NSLayoutConstraint.activate([lblTimesTopConstraint])
+        NSLayoutConstraint.activate([lblSourceTopConstraint])
+        /* viewLikeDislikeBottomConstraint = NSLayoutConstraint (item: viewLikeDislike,
+         attribute: NSLayoutAttribute.bottom,
+         relatedBy: NSLayoutRelation.equal,
+         toItem: lblSource,
+         attribute: NSLayoutAttribute.bottom,
+         multiplier: 1,
+         constant: 0)
+         // newsAreaHeightConstraint.constant = 120
+         NSLayoutConstraint.activate([lblTimesTopConstraint])
+         NSLayoutConstraint.activate([lblSourceTopConstraint])
+         NSLayoutConstraint.activate([viewLikeDislikeBottomConstraint])*/
         
     }
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -273,12 +303,32 @@ class NewsDetailVC: UIViewController {
     }
     
     @objc func tapped(gestureRecognizer: UITapGestureRecognizer) {
-        if (UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.phone) || UIDeviceOrientationIsLandscape(UIDevice.current.orientation){
+        if UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.phone{
             if viewLikeDislike.isHidden == true{
                 viewLikeDislike.isHidden = false
             }
             else{
                 viewLikeDislike.isHidden = true
+            }
+        }
+        //        else{
+        //            viewLikeDislike.isHidden = false
+        //        }
+        if UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad{
+            
+            
+            if statusBarOrientation.isPortrait {
+                if Device.orientationDetail != .unknown{
+                    viewLikeDislike.isHidden = false
+                }
+            }
+            else{
+                if viewLikeDislike.isHidden == true{
+                    viewLikeDislike.isHidden = false
+                }
+                else{
+                    viewLikeDislike.isHidden = true
+                }
             }
         }
         
@@ -370,8 +420,8 @@ class NewsDetailVC: UIViewController {
             case UISwipeGestureRecognizerDirection.left:
                 ViewWebContainer.isHidden = false
                 viewLikeDislike.isHidden = true
-                var url = URL(string: sourceURL)
-                var domain = url?.host
+                let url = URL(string: sourceURL)
+                let domain = url?.host
                 lblWebSource.text = "\(domain!)"
                 print("Swiped left")
                 transition.type = kCATransitionPush
@@ -446,7 +496,9 @@ class NewsDetailVC: UIViewController {
          lblTimeAgo.text = agoDate
          imgNews.downloadedFrom(link: "\(currentArticle.imageURL!)")
          }*/
-        
+         playbackSlider.removeFromSuperview()
+        avPlayerView.isHidden = true
+      
         let currentArticle = ArticleData[0].body.articles[currentIndex]
         print(currentArticle)
         let newDate = dateFormatter.date(from: currentArticle.published_on!)
@@ -466,20 +518,21 @@ class NewsDetailVC: UIViewController {
             if let thumbnail = createThumbnailOfVideoFromRemoteUrl(url: "https://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4"){
                 imgNews.image = thumbnail
                 let url = URL(string: "https://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4")
-                let playerItem:AVPlayerItem = AVPlayerItem(url: url!)
+              let playerItem:AVPlayerItem = AVPlayerItem(url: url!)
                 player = AVPlayer(playerItem: playerItem)
                 
-                let playerLayer=AVPlayerLayer(player: player!)
-                let width = imgNews.frame.width
-                let height = imgNews.frame.height
-                print("height : \(height)")
-                
-                print("width: \(width)")
-                playerLayer.frame = CGRect(x:0, y: 0, width: width, height: height)
-                self.imgNews.layer.addSublayer(playerLayer)
-                
-                
-                let playbackSlider = UISlider(frame:CGRect(x:0, y:imgNews.frame.height - 30 , width:imgNews.frame.width, height:20))
+               // let playerLayer = AVPlayerLayer(player: player!)
+                avPlayerView.isHidden = false
+                let avPlayer = AVPlayerLayer(player: player!)
+                let castedLayer = avPlayerView.layer as! AVPlayerLayer
+                castedLayer.player = player
+                castedLayer.videoGravity = AVLayerVideoGravity.resizeAspect
+//                PlayerVIew.isHidden = false
+//                playerLayer.frame = CGRect(x:PlayerVIew.frame.origin.x, y: PlayerVIew.frame.origin.y, width: PlayerVIew.frame.width, height: PlayerVIew.frame.height)
+//                self.PlayerVIew.layer.addSublayer(playerLayer)
+//
+//
+                 playbackSlider = UISlider(frame:CGRect(x:0, y:avPlayerView.frame.height - 40, width:avPlayerView.frame.width, height: 20))
                 playbackSlider.minimumValue = 0
                 
                 
@@ -491,13 +544,14 @@ class NewsDetailVC: UIViewController {
                 playbackSlider.tintColor = UIColor.green
                 
                 playbackSlider.addTarget(self, action: #selector(NewsDetailVC.playbackSliderValueChanged(_:)), for: .valueChanged)
-                self.imgNews.addSubview(playbackSlider)
+                self.avPlayerView.addSubview(playbackSlider)
                 //player!.play()
             }
             
         }
         else{
             btnPlayVideo.isHidden = true
+            avPlayerView.isHidden = true
             imgNews.downloadedFrom(link: "\(currentArticle.imageURL!)")
         }
         print("currentArticle.isLike: \(currentArticle.isLike)")
