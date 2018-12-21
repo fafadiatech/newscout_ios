@@ -67,6 +67,9 @@
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vYr-jl-1vn">
                                         <rect key="frame" x="490" y="26" width="44" height="37"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <accessibility key="accessibilityConfiguration">
+                                            <bool key="isElement" value="YES"/>
+                                        </accessibility>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="37" id="YyI-Fo-cHs"/>
                                             <constraint firstAttribute="width" constant="44" id="tDO-pp-tAM"/>
@@ -1247,13 +1250,13 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Enter Email" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="D2r-fh-K4O" customClass="SkyFloatingLabelTextField" customModule="SkyFloatingLabelTextField">
-                                <rect key="frame" x="358.5" y="274.5" width="512" height="32"/>
+                                <rect key="frame" x="358.5" y="252" width="512" height="54.5"/>
                                 <nil key="textColor"/>
                                 <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="27"/>
                                 <textInputTraits key="textInputTraits"/>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="color" keyPath="selectedTitleColor">
-                                        <color key="value" red="0.67843137249999996" green="0.1764705882" blue="0.074509803920000006" alpha="1" colorSpace="calibratedRGB"/>
+                                        <color key="value" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     </userDefinedRuntimeAttribute>
                                     <userDefinedRuntimeAttribute type="color" keyPath="selectedLineColor">
                                         <color key="value" red="0.67843137249999996" green="0.1764705882" blue="0.074509803920000006" alpha="1" colorSpace="calibratedRGB"/>
@@ -1306,7 +1309,7 @@
                                 </constraints>
                             </view>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Email: " textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AXr-cg-HxS">
-                                <rect key="frame" x="273" y="293.5" width="75" height="31"/>
+                                <rect key="frame" x="273" y="271" width="75" height="31"/>
                                 <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="26"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>

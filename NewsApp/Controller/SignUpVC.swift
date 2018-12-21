@@ -117,8 +117,13 @@ class SignUpVC: UIViewController {
                             self.txtPassword.text = ""
                             self.txtConfirmPswd.text = ""
                             self.txtEmail.text = ""
+                            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+                            let vc:LoginVC = storyboard.instantiateViewController(withIdentifier: "LoginID") as! LoginVC
+                            self.present(vc, animated: true, completion: nil)
                         }
+                        else{
                         self.view.makeToast(response, duration: 1.0, position: .center)
+                        }
                     }
                 }
                 else{

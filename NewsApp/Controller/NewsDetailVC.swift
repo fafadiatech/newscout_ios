@@ -315,8 +315,6 @@ class NewsDetailVC: UIViewController {
         //            viewLikeDislike.isHidden = false
         //        }
         if UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad{
-            
-            
             if statusBarOrientation.isPortrait {
                 if Device.orientationDetail != .unknown{
                     viewLikeDislike.isHidden = false

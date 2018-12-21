@@ -22,6 +22,9 @@ class APITests: XCTestCase{
     override func setUp() {
         super.setUp()
         sessionUnderTest = URLSession(configuration: URLSessionConfiguration.default)
+        if UserDefaults.standard.value(forKey: "token") == nil{
+            test_LoginAPI()
+        }
     }
     
     //articlesSearchByCategory for valid url
@@ -210,6 +213,7 @@ class APITests: XCTestCase{
                     if response == "sign up successfully"{
                         promise.fulfill()
                     }
+                    
                 }
                 else{
                     XCTFail(response)
@@ -226,7 +230,7 @@ class APITests: XCTestCase{
     func test_LoginAPI(){
         let promise = expectation(description: "1")
         let param = ["email" : "jayashri@fafadiatech.com",
-                     "password" : "jay1234"]
+                     "password" : "D1BD41A177"]
         if param["email"] != nil && param["password"] != nil {
             APICall().LoginAPI(param: param ){(status, response) in
                 print(response)
@@ -287,7 +291,7 @@ class APITests: XCTestCase{
             waitForExpectations(timeout: 9, handler: nil)
         }
         else{
-            XCTFail("Login required")
+            XCTFail("Login required, authentication failure")
         }
     }
     
@@ -312,7 +316,7 @@ class APITests: XCTestCase{
             waitForExpectations(timeout: 15, handler: nil)
         }
         else{
-            XCTFail("Login required")
+            XCTFail("Login required, authentication failure")
         }
     }
     
@@ -338,7 +342,7 @@ class APITests: XCTestCase{
             waitForExpectations(timeout: 15, handler: nil)
         }
         else{
-            XCTFail("Login required")
+            XCTFail("Login required, authentication failure")
         }
     }
     
@@ -347,7 +351,7 @@ class APITests: XCTestCase{
         let promise = expectation(description: "New password sent to your email")
         
         if UserDefaults.standard.value(forKey: "token") != nil || UserDefaults.standard.value(forKey: "FBToken") != nil || UserDefaults.standard.value(forKey: "googleToken") != nil{
-            APICall().ForgotPasswordAPI(email: "jayashri@fafadiatech.com"){(status, response) in
+            APICall().ForgotPasswordAPI(email: "v@gmail.com"){(status, response) in
                 if status == "1"{
                     print(response)
                     promise.fulfill()
@@ -359,7 +363,7 @@ class APITests: XCTestCase{
             waitForExpectations(timeout: 15, handler: nil)
         }
         else{
-            XCTFail("Login required")
+            XCTFail("Login required, authentication failure")
         }
     }
     
@@ -367,7 +371,7 @@ class APITests: XCTestCase{
     func test_changePasswordAPI(){
         let promise = expectation(description: "Password chnaged successfully")
         if UserDefaults.standard.value(forKey: "token") != nil || UserDefaults.standard.value(forKey: "FBToken") != nil || UserDefaults.standard.value(forKey: "googleToken") != nil{
-            let param = ["old_password" : "EEA2DDE4E8",
+            let param = ["old_password" : "D1BD41A177",
                          "password" : "jay1234",
                          "confirm_password" : "jay1234"]
             if param["old_password"] != nil && param["password"] != nil && param["confirm_password"] != nil{
@@ -387,7 +391,7 @@ class APITests: XCTestCase{
             }
         }
         else{
-            XCTFail("Login required")
+            XCTFail("Login required, authentication failure")
         }
     }
     

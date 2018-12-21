@@ -63,6 +63,7 @@ class SearchVC: UIViewController {
             }
             else{
                 activityIndicator.stopAnimating()
+                searchResultTV.isHidden = true
                 showMsg(title: "Please login to continue..", msg: "")
                 self.view.makeToast("You need to login", duration: 1.0, position: .center)
             }
@@ -150,8 +151,10 @@ class SearchVC: UIViewController {
     }
     
     @objc func refreshBookmarkedNews(refreshControl: UIRefreshControl) {
+        if UserDefaults.standard.value(forKey: "token") != nil || UserDefaults.standard.value(forKey: "FBToken") != nil || UserDefaults.standard.value(forKey: "googleToken") != nil{
         BookmarkAPICall()
         refreshControl.endRefreshing()
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {

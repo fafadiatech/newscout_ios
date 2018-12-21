@@ -71,7 +71,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
               withError error: Error!) {
         if let error = error {
             print("\(error.localizedDescription)")
-        } else {
+        }
+        else {
             // Perform any operations on signed in user here.
             let userId = user.userID                  // For client-side use only!
             let idToken = user.authentication.idToken // Safe to send to the server
@@ -88,6 +89,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
             // ...
             print("\(userId!) \n \(idToken) \n \(fullName!) \n \(email!) \n \(pic)")
             print("google sign in successful..")
+
+        /*  let mainStoryboard:UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
+            let HomeVc = mainStoryboard.instantiateViewController(withIdentifier: "HomeParentID") as! HomeParentVC
+            self.window?.rootViewController = HomeVc*/
         }
     }
     

@@ -171,6 +171,11 @@ class LoginVC: UIViewController, GIDSignInUIDelegate, FBSDKLoginButtonDelegate{
     @IBAction func googleSignIn(_ sender: Any) {
         GIDSignIn.sharedInstance().uiDelegate=self
         GIDSignIn.sharedInstance().signIn()
+        if UserDefaults.standard.value(forKey: "googleToken") != nil{
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let HomeVc:HomeParentVC = storyboard.instantiateViewController(withIdentifier: "HomeParentID") as! HomeParentVC
+            self.present(HomeVc, animated: true, completion: nil)
+        }
     }
     
     func loginButton(_ loginButton: FBSDKLoginButton!, didCompleteWith result: FBSDKLoginManagerLoginResult!, error: Error!) {

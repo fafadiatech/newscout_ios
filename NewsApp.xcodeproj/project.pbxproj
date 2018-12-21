@@ -21,6 +21,9 @@
 		264C5396219AAAD60050F79D /* Toast.swift in Sources */ = {isa = PBXBuildFile; fileRef = 264C5395219AAAD60050F79D /* Toast.swift */; };
 		265E218621649ACE0053E5A0 /* SettingsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 265E218521649ACE0053E5A0 /* SettingsVC.swift */; };
 		266C6B302158C2B6009A0A9D /* SearchResultTVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 266C6B2F2158C2B6009A0A9D /* SearchResultTVCell.swift */; };
+		26718D0F21CD0117009CC66E /* HomeUITest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26718D0E21CD0117009CC66E /* HomeUITest.swift */; };
+		26718D1121CD01A0009CC66E /* SignUpUITest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26718D1021CD01A0009CC66E /* SignUpUITest.swift */; };
+		2685744821CCBE9400009252 /* LoginUITest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2685744721CCBE9400009252 /* LoginUITest.swift */; };
 		2685CF0F216DDEB300C2CECF /* HelveticaNeueItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2685CF06216DDEB300C2CECF /* HelveticaNeueItalic.ttf */; };
 		2685CF10216DDEB300C2CECF /* HelveticaNeueLightItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2685CF07216DDEB300C2CECF /* HelveticaNeueLightItalic.ttf */; };
 		2685CF11216DDEB300C2CECF /* HelveticaNeueLight.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2685CF08216DDEB300C2CECF /* HelveticaNeueLight.ttf */; };
@@ -94,6 +97,9 @@
 		264C5395219AAAD60050F79D /* Toast.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Toast.swift; sourceTree = "<group>"; };
 		265E218521649ACE0053E5A0 /* SettingsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsVC.swift; sourceTree = "<group>"; };
 		266C6B2F2158C2B6009A0A9D /* SearchResultTVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultTVCell.swift; sourceTree = "<group>"; };
+		26718D0E21CD0117009CC66E /* HomeUITest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeUITest.swift; sourceTree = "<group>"; };
+		26718D1021CD01A0009CC66E /* SignUpUITest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpUITest.swift; sourceTree = "<group>"; };
+		2685744721CCBE9400009252 /* LoginUITest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginUITest.swift; sourceTree = "<group>"; };
 		2685CF06216DDEB300C2CECF /* HelveticaNeueItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = HelveticaNeueItalic.ttf; sourceTree = "<group>"; };
 		2685CF07216DDEB300C2CECF /* HelveticaNeueLightItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = HelveticaNeueLightItalic.ttf; sourceTree = "<group>"; };
 		2685CF08216DDEB300C2CECF /* HelveticaNeueLight.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = HelveticaNeueLight.ttf; sourceTree = "<group>"; };
@@ -263,7 +269,10 @@
 			isa = PBXGroup;
 			children = (
 				421ADFDB2156407700C00F6F /* NewsAppUITests.swift */,
+				2685744721CCBE9400009252 /* LoginUITest.swift */,
 				421ADFDD2156407700C00F6F /* Info.plist */,
+				26718D0E21CD0117009CC66E /* HomeUITest.swift */,
+				26718D1021CD01A0009CC66E /* SignUpUITest.swift */,
 			);
 			path = NewsAppUITests;
 			sourceTree = "<group>";
@@ -663,6 +672,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				421ADFDC2156407700C00F6F /* NewsAppUITests.swift in Sources */,
+				2685744821CCBE9400009252 /* LoginUITest.swift in Sources */,
+				26718D0F21CD0117009CC66E /* HomeUITest.swift in Sources */,
+				26718D1121CD01A0009CC66E /* SignUpUITest.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
