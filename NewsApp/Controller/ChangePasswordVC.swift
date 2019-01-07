@@ -19,9 +19,6 @@ class ChangePasswordVC: UIViewController {
     @IBOutlet weak var txtConfirmPswd: UITextField!
     @IBOutlet weak var btnChangePswd: UIButton!
     
-    @IBOutlet weak var lblConfirmPswd: UILabel!
-    @IBOutlet weak var lblNewPswd: UILabel!
-    @IBOutlet weak var lblOldPswd: UILabel!
     override func viewDidLoad() {
         super.viewDidLoad()
         if UserDefaults.standard.value(forKey: "first_name") != nil && (UserDefaults.standard.value(forKey: "last_name") != nil){
@@ -47,9 +44,6 @@ class ChangePasswordVC: UIViewController {
     func changeFontColor(){
         view.backgroundColor = colorConstants.grayBackground3
         lblUsername.textColor = colorConstants.whiteColor
-        lblNewPswd.textColor = colorConstants.whiteColor
-        lblConfirmPswd.textColor = colorConstants.whiteColor
-        lblOldPswd.textColor = colorConstants.whiteColor
         txtNewPswd.textColor = colorConstants.whiteColor
         txtConfirmPswd.textColor = colorConstants.whiteColor
         txtOldPswd.textColor = colorConstants.whiteColor

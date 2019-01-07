@@ -15,8 +15,6 @@ class ForgotPasswordVC: UIViewController {
     @IBOutlet weak var viewTitle: UIView!
     @IBOutlet weak var btnSubmit: UIButton!
     @IBOutlet weak var txtEmail: UITextField!
-    @IBOutlet weak var lblEmail: UILabel!
-    
     var email = ""
     
     override func viewDidLoad() {
@@ -36,7 +34,6 @@ class ForgotPasswordVC: UIViewController {
         let darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
         if  darkModeStatus == true{
             view.backgroundColor = colorConstants.grayBackground3
-            lblEmail.textColor = .white
         }
     }
     
@@ -44,7 +41,6 @@ class ForgotPasswordVC: UIViewController {
         // Write your dark mode code here
         NightNight.theme = .night
         view.backgroundColor = colorConstants.grayBackground3
-        lblEmail.textColor = .white
     }
     
     @objc private func darkModeDisabled(_ notification: Notification) {
