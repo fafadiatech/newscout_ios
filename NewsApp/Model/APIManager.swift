@@ -567,4 +567,35 @@ class APICall{
             }
         }
     }
+    
+    func articleDetailAPI(articleId : Int,_ completion : @escaping (String, ArticleDetailAPIResult) -> ()){
+        let url = APPURL.ArticleDetailURL + "\(articleId)"
+        print(url)
+        Alamofire.request(url,method: .get).responseJSON{
+            response in
+            if(response.result.isSuccess){
+                if response.response?.statusCode == 200{
+                    if let data = response.data {
+                        let jsonDecoder = JSONDecoder()
+                        do {
+                            let jsonData = try jsonDecoder.decode(ArticleDict.self, from: data)
+                            completion(String((response.response?.statusCode)!),ArticleDetailAPIResult.Success(jsonData))
+                        }
+                        catch {
+                            print("Error: \(error)")
+                            completion(String((response.response?.statusCode)!), ArticleDetailAPIResult.Failure(error.localizedDescription))
+                        }
+                    }
+                } else{
+                    completion(String((response.response?.statusCode)!), ArticleDetailAPIResult.Failure("\(String(describing: response.response?.statusCode))"))
+                }
+            }
+            else{
+                if let err = response.result.error as? URLError, err.code == .notConnectedToInternet {
+                    completion(String((response.response?.statusCode)!), ArticleDetailAPIResult.Failure(err.localizedDescription))
+                }
+            }
+        }
+    }
+    
 }

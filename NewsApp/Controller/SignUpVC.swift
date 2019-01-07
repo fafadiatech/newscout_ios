@@ -8,16 +8,17 @@
 
 import UIKit
 import NightNight
+import SkyFloatingLabelTextField
 
 class SignUpVC: UIViewController {
     
     @IBOutlet weak var lblTitle: UILabel!
     @IBOutlet weak var viewTitle: UIView!
-    @IBOutlet weak var txtFname: UITextField!
-    @IBOutlet weak var txtLname: UITextField!
-    @IBOutlet weak var txtEmail: UITextField!
-    @IBOutlet weak var txtPassword: UITextField!
-    @IBOutlet weak var txtConfirmPswd: UITextField!
+    @IBOutlet weak var txtFname: SkyFloatingLabelTextField!
+    @IBOutlet weak var txtLname: SkyFloatingLabelTextField!
+    @IBOutlet weak var txtEmail: SkyFloatingLabelTextField!
+    @IBOutlet weak var txtPassword: SkyFloatingLabelTextField!
+    @IBOutlet weak var txtConfirmPswd: SkyFloatingLabelTextField!
     @IBOutlet weak var btnSignUp: UIButton!
     @IBOutlet weak var btnAlreadyMember: UIButton!
     override func viewDidLoad() {
@@ -40,16 +41,27 @@ class SignUpVC: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(SignUpVC.keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
         let darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
         if  darkModeStatus == true{
-            view.backgroundColor = colorConstants.grayBackground3
-            btnAlreadyMember.backgroundColor =  colorConstants.grayBackground3
+           changeColor()
         }
     }
-    
+    func changeColor(){
+        txtFname.selectedTitleColor = colorConstants.grayBackground3
+        txtLname.selectedTitleColor = colorConstants.grayBackground3
+        txtEmail.selectedTitleColor = colorConstants.grayBackground3
+        txtPassword.selectedTitleColor = colorConstants.grayBackground3
+        txtConfirmPswd.selectedTitleColor = colorConstants.grayBackground3
+        txtFname.titleColor = colorConstants.grayBackground3
+        txtLname.titleColor = colorConstants.grayBackground3
+        txtEmail.titleColor = colorConstants.grayBackground3
+        txtPassword.titleColor = colorConstants.grayBackground3
+        txtConfirmPswd.titleColor = colorConstants.grayBackground3
+        view.backgroundColor = colorConstants.grayBackground3
+        btnAlreadyMember.backgroundColor = colorConstants.grayBackground3
+    }
     @objc private func darkModeEnabled(_ notification: Notification) {
         // Write your dark mode code here
         NightNight.theme = .night
-        view.backgroundColor = colorConstants.grayBackground3
-        btnAlreadyMember.backgroundColor = colorConstants.grayBackground3
+       
     }
     
     @objc private func darkModeDisabled(_ notification: Notification) {

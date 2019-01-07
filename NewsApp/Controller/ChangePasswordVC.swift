@@ -8,15 +8,16 @@
 
 import UIKit
 import NightNight
+import SkyFloatingLabelTextField
 
 class ChangePasswordVC: UIViewController {
     
     @IBOutlet weak var lblChangePswd: UILabel!
     @IBOutlet weak var viewTitle: UIView!
     @IBOutlet weak var lblUsername: UILabel!
-    @IBOutlet weak var txtOldPswd: UITextField!
-    @IBOutlet weak var txtNewPswd: UITextField!
-    @IBOutlet weak var txtConfirmPswd: UITextField!
+    @IBOutlet weak var txtOldPswd: SkyFloatingLabelTextField!
+    @IBOutlet weak var txtNewPswd: SkyFloatingLabelTextField!
+    @IBOutlet weak var txtConfirmPswd: SkyFloatingLabelTextField!
     @IBOutlet weak var btnChangePswd: UIButton!
     
     override func viewDidLoad() {
@@ -42,6 +43,12 @@ class ChangePasswordVC: UIViewController {
     }
     
     func changeFontColor(){
+        txtNewPswd.selectedTitleColor = colorConstants.grayBackground3
+        txtOldPswd.selectedTitleColor = colorConstants.grayBackground3
+        txtConfirmPswd.selectedTitleColor = colorConstants.grayBackground3
+        txtNewPswd.titleColor = colorConstants.grayBackground3
+        txtOldPswd.titleColor = colorConstants.grayBackground3
+        txtConfirmPswd.titleColor = colorConstants.grayBackground3
         view.backgroundColor = colorConstants.grayBackground3
         lblUsername.textColor = colorConstants.whiteColor
         txtNewPswd.textColor = colorConstants.whiteColor

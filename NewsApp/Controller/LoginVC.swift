@@ -11,20 +11,21 @@ import GoogleSignIn
 import FBSDKLoginKit
 import FBSDKCoreKit
 import NightNight
+import SkyFloatingLabelTextField
 
-class LoginVC: UIViewController, GIDSignInUIDelegate, FBSDKLoginButtonDelegate{
+class LoginVC: UIViewController, GIDSignInUIDelegate, FBSDKLoginButtonDelegate {
     
     @IBOutlet weak var viewTitle: UIView!
     @IBOutlet weak var lblTitle: UILabel!
-    @IBOutlet weak var txtPassword: UITextField!
-    @IBOutlet weak var txtUsername: UITextField!
+    @IBOutlet weak var txtPassword: SkyFloatingLabelTextField!
+    @IBOutlet weak var txtUsername: SkyFloatingLabelTextField!
     @IBOutlet weak var btnForgtPswd: UIButton!
     @IBOutlet weak var btnSignUp: UIButton!
     @IBOutlet weak var btnLogin: UIButton!
     @IBOutlet weak var signInButton: GIDSignInButton!
     @IBOutlet weak var btnFbLogin: FBSDKLoginButton!
-    
     @IBOutlet weak var gmailView: GIDSignInButton!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         txtUsername.autocorrectionType = .no
@@ -59,17 +60,27 @@ class LoginVC: UIViewController, GIDSignInUIDelegate, FBSDKLoginButtonDelegate{
         
         let darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
         if  darkModeStatus == true{
-            view.backgroundColor = colorConstants.grayBackground3
-            btnSignUp.backgroundColor = colorConstants.grayBackground3
-            btnSignUp.titleLabel?.textColor = .white
-            //btnSignUp.setTitleColor(.white, for: .normal)
+            changeColor()
         }
+        else{
+            txtUsername.selectedTitleColor = .white
+            txtPassword.selectedTitleColor = .white
+        }
+    }
+    
+    func changeColor(){
+        txtUsername.titleColor = colorConstants.grayBackground3
+        txtUsername.selectedTitleColor = colorConstants.grayBackground3
+        txtPassword.selectedTitleColor = colorConstants.grayBackground3
+        txtPassword.titleColor = colorConstants.grayBackground3
+        view.backgroundColor = colorConstants.grayBackground3
+         btnSignUp.backgroundColor = colorConstants.grayBackground3
     }
     
     @objc private func darkModeEnabled(_ notification: Notification) {
         // Write your dark mode code here
         NightNight.theme = .night
-        view.backgroundColor = colorConstants.grayBackground3
+       changeColor()
         // btnSignUp.backgroundColor = colorConstants.grayBackground3
     }
     

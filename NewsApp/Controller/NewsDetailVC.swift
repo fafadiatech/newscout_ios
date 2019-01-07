@@ -134,6 +134,18 @@ class NewsDetailVC: UIViewController {
         tapRecognizer.delegate = self as! UIGestureRecognizerDelegate
     }
     
+    func newsDetailAPICall(){
+        APICall().articleDetailAPI(articleId: articleId){ (status,response) in
+            switch response {
+            case .Success(let data) :
+               // self.ArticleDetail = data
+                self.suggestedCV.reloadData()
+            case .Failure(let errormessage) :
+                print(errormessage)
+                self.view.makeToast(errormessage, duration: 2.0, position: .center)
+            }
+        }
+    }
     func addPotraitConstraint(){
         if lblSourceTopConstraint != nil && lblSourceTopConstraint != nil && viewLikeDislikeBottomConstraint != nil{
             NSLayoutConstraint.deactivate([lblTimesTopConstraint])
@@ -550,7 +562,8 @@ class NewsDetailVC: UIViewController {
         else{
             btnPlayVideo.isHidden = true
             avPlayerView.isHidden = true
-            imgNews.downloadedFrom(link: "\(currentArticle.imageURL!)")
+           // imgNews.downloadedFrom(link: "\(currentArticle.imageURL!)")
+           imgNews.sd_setImage(with: URL(string: currentArticle.imageURL!), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
         }
         print("currentArticle.isLike: \(currentArticle.isLike)")
         if currentArticle.isLike == 0 {

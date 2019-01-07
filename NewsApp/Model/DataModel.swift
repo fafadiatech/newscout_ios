@@ -62,7 +62,7 @@ struct ArticleDetails: Decodable
 }
 
 struct ArticleDict: Decodable{
-    let article_id : Int64?
+    let article_id : Int?
     let category : String?
     let source: String?
     let title : String?
@@ -147,6 +147,10 @@ enum ArticleAPIResult {
     case Change(Int)
 }
 
+enum ArticleDetailAPIResult {
+    case Success(ArticleDict)
+    case Failure(String)
+}
 enum ArticleDBfetchResult {
     case Success([NewsArticle])
     case Failure(String)

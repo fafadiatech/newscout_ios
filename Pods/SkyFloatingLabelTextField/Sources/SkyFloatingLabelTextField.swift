@@ -153,7 +153,8 @@ open class SkyFloatingLabelTextField: UITextField { // swiftlint:disable:this ty
 
     /// A UIColor value that determines the text color of the title label when editing
     
-
+   
+  
     @IBInspectable dynamic open var selectedTitleColor: UIColor = .blue {
         didSet {
             updateTitleColor()

@@ -8,13 +8,14 @@
 
 import UIKit
 import NightNight
+import SkyFloatingLabelTextField
 
 class ForgotPasswordVC: UIViewController {
     
     @IBOutlet weak var lblTitle: UILabel!
     @IBOutlet weak var viewTitle: UIView!
     @IBOutlet weak var btnSubmit: UIButton!
-    @IBOutlet weak var txtEmail: UITextField!
+    @IBOutlet weak var txtEmail: SkyFloatingLabelTextField!
     var email = ""
     
     override func viewDidLoad() {
@@ -34,6 +35,8 @@ class ForgotPasswordVC: UIViewController {
         let darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
         if  darkModeStatus == true{
             view.backgroundColor = colorConstants.grayBackground3
+            txtEmail.selectedTitleColor = colorConstants.grayBackground3
+            txtEmail.titleColor = colorConstants.grayBackground3
         }
     }
     
@@ -41,6 +44,8 @@ class ForgotPasswordVC: UIViewController {
         // Write your dark mode code here
         NightNight.theme = .night
         view.backgroundColor = colorConstants.grayBackground3
+        txtEmail.selectedTitleColor = colorConstants.grayBackground3
+        txtEmail.titleColor = colorConstants.grayBackground3
     }
     
     @objc private func darkModeDisabled(_ notification: Notification) {
