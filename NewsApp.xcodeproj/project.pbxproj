@@ -33,6 +33,8 @@
 		2685CF15216DDEB300C2CECF /* HelveticaNeueUltraLightItal.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2685CF0C216DDEB300C2CECF /* HelveticaNeueUltraLightItal.ttf */; };
 		2685CF16216DDEB300C2CECF /* HelveticaNeueCondensedBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2685CF0D216DDEB300C2CECF /* HelveticaNeueCondensedBold.ttf */; };
 		2685CF17216DDEB300C2CECF /* HelveticaNeueBoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2685CF0E216DDEB300C2CECF /* HelveticaNeueBoldItalic.ttf */; };
+		268C112321E4C0F300C76B9C /* BookmarkVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 268C112221E4C0F200C76B9C /* BookmarkVC.swift */; };
+		268C112521E4C36E00C76B9C /* BookmarkTVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 268C112421E4C36E00C76B9C /* BookmarkTVCell.swift */; };
 		2690F3CC21BF8C12003E65CA /* SettingsTVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2690F3CB21BF8C12003E65CA /* SettingsTVCell.swift */; };
 		26ACEA94216733BA000EF3C7 /* CategoryListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26ACEA93216733BA000EF3C7 /* CategoryListVC.swift */; };
 		26ACEA96216738BB000EF3C7 /* CategoryListTVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26ACEA95216738BB000EF3C7 /* CategoryListTVCell.swift */; };
@@ -109,6 +111,8 @@
 		2685CF0C216DDEB300C2CECF /* HelveticaNeueUltraLightItal.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = HelveticaNeueUltraLightItal.ttf; sourceTree = "<group>"; };
 		2685CF0D216DDEB300C2CECF /* HelveticaNeueCondensedBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = HelveticaNeueCondensedBold.ttf; sourceTree = "<group>"; };
 		2685CF0E216DDEB300C2CECF /* HelveticaNeueBoldItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = HelveticaNeueBoldItalic.ttf; sourceTree = "<group>"; };
+		268C112221E4C0F200C76B9C /* BookmarkVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkVC.swift; sourceTree = "<group>"; };
+		268C112421E4C36E00C76B9C /* BookmarkTVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkTVCell.swift; sourceTree = "<group>"; };
 		2690F3CB21BF8C12003E65CA /* SettingsTVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTVCell.swift; sourceTree = "<group>"; };
 		26ACEA93216733BA000EF3C7 /* CategoryListVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryListVC.swift; sourceTree = "<group>"; };
 		26ACEA95216738BB000EF3C7 /* CategoryListTVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryListTVCell.swift; sourceTree = "<group>"; };
@@ -287,6 +291,7 @@
 		421ADFEA2156553500C00F6F /* Controller */ = {
 			isa = PBXGroup;
 			children = (
+				268C112221E4C0F200C76B9C /* BookmarkVC.swift */,
 				26C24722219DA6C200A87A3B /* ForgotPasswordVC.swift */,
 				423F0A4F2170CF18001D52B5 /* ChangePasswordVC.swift */,
 				263F2D9B216B7FC700764C45 /* ProfileVC.swift */,
@@ -306,6 +311,7 @@
 		421ADFEB2156553500C00F6F /* Cell */ = {
 			isa = PBXGroup;
 			children = (
+				268C112421E4C36E00C76B9C /* BookmarkTVCell.swift */,
 				2690F3CB21BF8C12003E65CA /* SettingsTVCell.swift */,
 				26ACEA95216738BB000EF3C7 /* CategoryListTVCell.swift */,
 				266C6B2F2158C2B6009A0A9D /* SearchResultTVCell.swift */,
@@ -647,10 +653,12 @@
 				421ADFF22156755100C00F6F /* SuggestedNewsCVCell.swift in Sources */,
 				423F0A502170CF19001D52B5 /* ChangePasswordVC.swift in Sources */,
 				7E1D1399216CC79000FE342A /* HomeParentVC.swift in Sources */,
+				268C112321E4C0F300C76B9C /* BookmarkVC.swift in Sources */,
 				26C24723219DA6C200A87A3B /* ForgotPasswordVC.swift in Sources */,
 				421ADFEE2156575300C00F6F /* HomeNewsTVCell.swift in Sources */,
 				421ADFF021566FE000C00F6F /* NewsDetailVC.swift in Sources */,
 				261AA133217F40F20044585C /* DataManager.swift in Sources */,
+				268C112521E4C36E00C76B9C /* BookmarkTVCell.swift in Sources */,
 				265E218621649ACE0053E5A0 /* SettingsVC.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

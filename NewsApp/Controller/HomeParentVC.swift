@@ -17,6 +17,7 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
     @IBOutlet weak var lblAppName: UILabel!
     var childrenVC = [UIViewController]()
     var categories : [String] = [] //= ["For You"]
+
     
     override func viewDidLoad() {
         settings.style.buttonBarItemsShouldFillAvailiableWidth = false
@@ -58,7 +59,6 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
             floaty.autoCloseOnTap = true
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             let searchvc:SearchVC = storyboard.instantiateViewController(withIdentifier: "SearchID") as! SearchVC
-            searchvc.isSearch = true
             self.present(searchvc, animated: true, completion: nil)
         }
         
@@ -72,9 +72,8 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
         floaty.addItem("Bookmark", icon: UIImage(named: "book")!) { item in
             floaty.autoCloseOnTap = true
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
-            let searchvc:SearchVC = storyboard.instantiateViewController(withIdentifier: "SearchID") as! SearchVC
-            searchvc.isSearch = false
-            self.present(searchvc, animated: true, completion: nil)
+            let bookmarkvc:BookmarkVC = storyboard.instantiateViewController(withIdentifier: "BookmarkID") as! BookmarkVC
+            self.present(bookmarkvc, animated: true, completion: nil)
         }
         self.view.addSubview(floaty)
         // buttonBarView.selectedBar.backgroundColor = .red
@@ -90,6 +89,7 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
                 oldCell?.backgroundColor = colorConstants.grayBackground1
                 newCell?.backgroundColor = colorConstants.grayBackground1
                 self!.buttonBarView.selectedBar.backgroundColor = .red
+                
             }
             else{
                 oldCell?.label.textColor = colorConstants.blackColor

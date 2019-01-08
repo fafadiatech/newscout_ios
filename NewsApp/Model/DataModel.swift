@@ -12,7 +12,7 @@ struct ArticleStatus : Decodable
 {
     // let articles : [Article]
     let header : Header
-    let body: articleBody
+    var body: articleBody
     
 }
 struct articleBody : Decodable
@@ -20,7 +20,7 @@ struct articleBody : Decodable
     let count :  Int?
     let next : String?
     let previous : String?
-    let articles : [Article]
+    var articles : [Article]
     
     enum CodingKeys: String, CodingKey{
         case articles = "results"
@@ -39,8 +39,8 @@ struct Article: Decodable
     let url : String?
     let published_on : String?
     let blurb : String?
-    let isBookmark : Bool?
-    let isLike : Int?
+    var isBookmark : Bool?
+    var isLike : Int?
     
     enum CodingKeys: String, CodingKey{
         case article_id = "id"
@@ -58,9 +58,12 @@ struct Article: Decodable
 //for news detail
 struct ArticleDetails: Decodable
 {
-    let article : ArticleDict 
+    let header : Header
+    let body :  DetailedArticle
 }
-
+struct DetailedArticle : Decodable{
+    let article : ArticleDict
+}
 struct ArticleDict: Decodable{
     let article_id : Int?
     let category : String?
@@ -148,7 +151,7 @@ enum ArticleAPIResult {
 }
 
 enum ArticleDetailAPIResult {
-    case Success(ArticleDict)
+    case Success(ArticleDetails)
     case Failure(String)
 }
 enum ArticleDBfetchResult {

@@ -38,14 +38,13 @@ class NewsDetailVC: UIViewController {
     @IBOutlet weak var btnPlayVideo: UIButton!
     @IBOutlet weak var newsAreaHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var viewLikeDislikeHeightConstraint: NSLayoutConstraint!
-   
     @IBOutlet weak var avPlayerView: AVPlayerView!
     let imageCache = NSCache<NSString, UIImage>()
     var playbackSlider = UISlider()
     var RecomArticleData = [ArticleStatus]()
     var ArticleData = [ArticleStatus]()
     var ShowArticle = [NewsArticle]()
-    var ArticleDetail = ArticleDict.init(article_id: 0, category: "", source: "", title: "", imageURL: "", url: "", published_on: "", blurb: "", isBookmark: false, isLike: 0)
+    var ArticleDetail : ArticleDetails!
     var newsCurrentIndex = 0
     var articleId = 0
     var sourceURL = ""
@@ -57,6 +56,7 @@ class NewsDetailVC: UIViewController {
     var viewLikeDislikeBottomConstraint : NSLayoutConstraint!
     var deviceOrientation: UIDeviceOrientation = UIDevice.current.orientation
     var statusBarOrientation: UIInterfaceOrientation = UIApplication.shared.statusBarOrientation
+    var isSearch = ""
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -112,6 +112,7 @@ class NewsDetailVC: UIViewController {
         if  darkModeStatus == true{
             changeTheme()
         }
+        //newsDetailAPICall(currentIndex: articleId)
         ShowNews(currentIndex: newsCurrentIndex)
         let swipeUp = UISwipeGestureRecognizer(target: self, action: #selector(self.respondToSwipeGesture))
         swipeUp.direction = UISwipeGestureRecognizerDirection.up
@@ -134,18 +135,21 @@ class NewsDetailVC: UIViewController {
         tapRecognizer.delegate = self as! UIGestureRecognizerDelegate
     }
     
-    func newsDetailAPICall(){
-        APICall().articleDetailAPI(articleId: articleId){ (status,response) in
+    /*func newsDetailAPICall(currentIndex: Int){
+        
+        APICall().articleDetailAPI(articleId: currentIndex){ (status,response) in
             switch response {
             case .Success(let data) :
-               // self.ArticleDetail = data
-                self.suggestedCV.reloadData()
+                 self.ArticleDetail = data
+                 print(self.ArticleDetail)
+                 self.ShowNews(currentArticle: self.ArticleDetail.body.article)
             case .Failure(let errormessage) :
                 print(errormessage)
                 self.view.makeToast(errormessage, duration: 2.0, position: .center)
             }
         }
-    }
+    }*/
+    
     func addPotraitConstraint(){
         if lblSourceTopConstraint != nil && lblSourceTopConstraint != nil && viewLikeDislikeBottomConstraint != nil{
             NSLayoutConstraint.deactivate([lblTimesTopConstraint])
@@ -353,27 +357,6 @@ class NewsDetailVC: UIViewController {
         changeFont()
     }
     
-    /*func loadArticleDetailsAPI(currentIndex : Int64)
-     {
-     let url = articleURL + "\(article_id)"
-     print(url)
-     Alamofire.request(url,method: .get).responseString{
-     response in
-     if(response.result.isSuccess){
-     if let data = response.data {
-     let jsonDecoder = JSONDecoder()
-     do {
-     let jsonData = try jsonDecoder.decode(ArticleDetails.self, from: data)
-     self.ArticleDetail = jsonData.article
-     self.ShowNews()
-     }
-     catch {
-     print("Error: \(error)")
-     }
-     }
-     }
-     }
-     }*/
     
     func changeFont()
     {
@@ -418,6 +401,8 @@ class NewsDetailVC: UIViewController {
                 if newsCurrentIndex > 0
                 {
                     newsCurrentIndex = newsCurrentIndex - 1
+                    //let id = ArticleData[0].body.articles[newsCurrentIndex].article_id
+                    //newsDetailAPICall(currentIndex : id!)
                     ShowNews(currentIndex : newsCurrentIndex)
                     transition.type = kCATransitionPush
                     transition.subtype = kCATransitionFromBottom
@@ -446,6 +431,8 @@ class NewsDetailVC: UIViewController {
                 if newsCurrentIndex < ArticleData[0].body.articles.count - 1
                 {
                     newsCurrentIndex = newsCurrentIndex + 1
+                    //let id = ArticleData[0].body.articles[newsCurrentIndex].article_id
+                    //newsDetailAPICall(currentIndex : id!)
                     ShowNews(currentIndex : newsCurrentIndex)
                     transition.type = kCATransitionPush
                     transition.subtype = kCATransitionFromTop
@@ -489,8 +476,9 @@ class NewsDetailVC: UIViewController {
             player?.play()
         }
     }
+    
+    //func ShowNews(currentArticle: ArticleDict){ *for detail API pass articleDict
     func ShowNews(currentIndex: Int){
-        
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
         dateFormatter.timeZone = NSTimeZone(name: "UTC")! as TimeZone
@@ -513,9 +501,7 @@ class NewsDetailVC: UIViewController {
         print(currentArticle)
         let newDate = dateFormatter.date(from: currentArticle.published_on!)
         let agoDate = Helper().timeAgoSinceDate(newDate!)
-        
         articleId = currentArticle.article_id!
-        print(articleId)
         lblNewsHeading.text = currentArticle.title
         txtViewNewsDesc.text = currentArticle.blurb
         lblSource.text = currentArticle.source
@@ -604,7 +590,9 @@ class NewsDetailVC: UIViewController {
                         self.btnLike.setImage(UIImage(named: "filledLike.png"), for: .normal)
                         if (self.btnDislike.currentImage?.isEqual(UIImage(named: "filledDislike.png")))! {
                             self.btnDislike.setImage(UIImage(named: "dislike.png"), for: .normal)
+                            
                         }
+                        self.ArticleData[0].body.articles[self.newsCurrentIndex].isLike = 0
                     }
                 }
             }
@@ -618,6 +606,7 @@ class NewsDetailVC: UIViewController {
                     }
                     else{
                         self.btnLike.setImage(UIImage(named: "like.png"), for: .normal)
+                        self.ArticleData[0].body.articles[self.newsCurrentIndex].isLike = 2
                     }
                 }
             }
@@ -642,6 +631,7 @@ class NewsDetailVC: UIViewController {
                         if (self.btnLike.currentImage?.isEqual(UIImage(named: "filledLike.png")))! {
                             self.btnLike.setImage(UIImage(named: "like.png"), for: .normal)
                         }
+                        self.ArticleData[0].body.articles[self.newsCurrentIndex].isLike = 1
                     }
                 }
             }
@@ -655,6 +645,7 @@ class NewsDetailVC: UIViewController {
                     }
                     else{
                         self.btnDislike.setImage(UIImage(named: "dislike.png"), for: .normal)
+                        self.ArticleData[0].body.articles[self.newsCurrentIndex].isLike = 2
                     }
                 }
             }
@@ -718,10 +709,23 @@ class NewsDetailVC: UIViewController {
     }
     
     @IBAction func btnBackAction(_ sender: Any) {
-        //self.dismiss(animated: false)
+        
+       // self.dismiss(animated: false)
+        if isSearch == "search"{
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let vc:SearchVC = storyboard.instantiateViewController(withIdentifier: "SearchID") as! SearchVC
+            self.present(vc, animated: true, completion: nil)
+        }
+        else if isSearch == "bookmark"{
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let vc:BookmarkVC = storyboard.instantiateViewController(withIdentifier: "BookmarkID") as! BookmarkVC
+            self.present(vc, animated: true, completion: nil)
+        }
+        else if isSearch == "" {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let vc:HomeParentVC = storyboard.instantiateViewController(withIdentifier: "HomeParentID") as! HomeParentVC
         self.present(vc, animated: true, completion: nil)
+        }
     }
     
     @IBAction func btnWebBackAction(_ sender: Any) {

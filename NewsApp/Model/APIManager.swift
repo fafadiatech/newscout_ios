@@ -569,16 +569,33 @@ class APICall{
     }
     
     func articleDetailAPI(articleId : Int,_ completion : @escaping (String, ArticleDetailAPIResult) -> ()){
+        var headers : [String: String]
+        if UserDefaults.standard.value(forKey: "token") != nil{
+            let token = "Token " + "\(UserDefaults.standard.value(forKey: "token")!)"
+            headers = ["Authorization": token]
+        }
+        else if UserDefaults.standard.value(forKey: "googleToken") != nil{
+            let token = "Token " + "\(UserDefaults.standard.value(forKey: "googleToken")!)"
+            headers = ["Authorization": token]
+        }
+        else if UserDefaults.standard.value(forKey: "FBToken") != nil{
+            let token = "Token " + "\(UserDefaults.standard.value(forKey: "FBToken")!)"
+            headers = ["Authorization": token]
+        }
+        else{
+            headers = ["Authorization": ""]
+        }
         let url = APPURL.ArticleDetailURL + "\(articleId)"
         print(url)
-        Alamofire.request(url,method: .get).responseJSON{
+        Alamofire.request(url,method: .get, headers: headers).responseJSON{
             response in
+            print("response of articleDetailAPI: \(response)")
             if(response.result.isSuccess){
                 if response.response?.statusCode == 200{
                     if let data = response.data {
                         let jsonDecoder = JSONDecoder()
                         do {
-                            let jsonData = try jsonDecoder.decode(ArticleDict.self, from: data)
+                            let jsonData = try jsonDecoder.decode(ArticleDetails.self, from: data)
                             completion(String((response.response?.statusCode)!),ArticleDetailAPIResult.Success(jsonData))
                         }
                         catch {

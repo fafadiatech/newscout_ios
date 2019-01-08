@@ -1,35 +1,27 @@
 //
-//  SearchVC.swift
+//  BookmarkVC.swift
 //  NewsApp
 //
-//  Created by Jayashri on 25/09/18.
-//  Copyright © 2018 Fafadia Tech. All rights reserved.
+//  Created by Jayashree on 08/01/19.
+//  Copyright © 2019 Fafadia Tech. All rights reserved.
 //
 
 import UIKit
-import Alamofire
-import CoreData
-import NightNight
 import MaterialComponents.MaterialActivityIndicator
+import NightNight
 
-class SearchVC: UIViewController {
-    @IBOutlet weak var searchResultTV: UITableView!
-    @IBOutlet weak var btnSearch: UIButton!
-    @IBOutlet weak var searchView: UIView!
+class BookmarkVC: UIViewController {
+    @IBOutlet weak var lblBookmark: UILabel!
     @IBOutlet weak var titleView: UIView!
-    @IBOutlet weak var txtSearch: UITextField!
-    @IBOutlet weak var lblTitle: UILabel!
-    let activityIndicator = MDCActivityIndicator()
-    //variables
+    @IBOutlet weak var bookmarkResultTV: UITableView!
+    @IBOutlet weak var btnBack: UIButton!
     var ArticleData = [ArticleStatus]()
-    var SearchData = [ArticleStatus]()
-    var results: [NewsArticle] = []
+    let activityIndicator = MDCActivityIndicator()
     var nextURL = ""
     var previousURL = ""
     let appDelegate = UIApplication.shared.delegate as? AppDelegate
     let textSizeSelected = UserDefaults.standard.value(forKey: "textSize") as! Int
-     var newsObj = NewsDetailVC()
-    
+    var newsObj = NewsDetailVC()
     override func viewDidLoad() {
         super.viewDidLoad()
         newsObj.isSearch = ""
@@ -43,18 +35,35 @@ class SearchVC: UIViewController {
         activityIndicator.indicatorMode = .indeterminate
         activityIndicator.progress = 2.0
         view.addSubview(activityIndicator)
+        activityIndicator.startAnimating()
+        if UserDefaults.standard.value(forKey: "token") != nil || UserDefaults.standard.value(forKey: "FBToken") != nil || UserDefaults.standard.value(forKey: "googleToken") != nil{
+            BookmarkAPICall()
+        }
+        else{
+            activityIndicator.stopAnimating()
+            bookmarkResultTV.isHidden = true
+            //showMsg(title: "Please login to continue..", msg: "")
+            self.view.makeToast("You need to login", duration: 1.0, position: .center)
+        }
+        let refreshControl = UIRefreshControl()
+        refreshControl.addTarget(self, action: #selector(refreshBookmarkedNews), for: .valueChanged)
+        bookmarkResultTV.refreshControl = refreshControl
+        refreshControl.attributedTitle = NSAttributedString(string: "Pull  to Refresh...")
+        if (UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad){
+            bookmarkResultTV.rowHeight = 190;
+        }
+        else {
+            bookmarkResultTV.rowHeight = 129;
+        }
+        
+        lblBookmark.textColor = colorConstants.whiteColor
+        lblBookmark.font = FontConstants.viewTitleFont
         titleView.backgroundColor = colorConstants.redColor
-       // txtSearch.autocorrectionType = .no
-        txtSearch.font = FontConstants.NormalFontContent
-       // txtSearch.backgroundColor = colorConstants.whiteColor
-       // txtSearch.textColor = colorConstants.whiteColor
-        lblTitle.textColor = colorConstants.whiteColor
-        lblTitle.font = FontConstants.viewTitleFont
     }
     
     @objc private func darkModeEnabled(_ notification: Notification) {
         NightNight.theme = .night
-        searchResultTV.backgroundColor = colorConstants.grayBackground3
+        bookmarkResultTV.backgroundColor = colorConstants.grayBackground3
     }
     
     @objc private func darkModeDisabled(_ notification: Notification) {
@@ -64,6 +73,16 @@ class SearchVC: UIViewController {
     deinit {
         NotificationCenter.default.removeObserver(self, name: .darkModeEnabled, object: nil)
         NotificationCenter.default.removeObserver(self, name: .darkModeDisabled, object: nil)
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        changeFont()
+        bookmarkResultTV.reloadData() //for tableview
+    }
+    
+    override var prefersStatusBarHidden: Bool {
+        return true
     }
     
     func showMsg(title: String, msg : String)
@@ -91,45 +110,60 @@ class SearchVC: UIViewController {
         self.present(alertController, animated: true, completion: nil)
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        changeFont()
-        searchResultTV.reloadData() //for tableview
-    }
-    
-    override var prefersStatusBarHidden: Bool {
-        return true
-    }
-    
     func changeFont()
     {
         if textSizeSelected == 0{
-            lblTitle.font = FontConstants.NormalFontTitleMedium
-            txtSearch.font = FontConstants.NormalFontTitleMedium
+            lblBookmark.font = FontConstants.NormalFontTitleMedium
         }
         else if textSizeSelected == 2{
-            lblTitle.font = FontConstants.LargeFontTitleMedium
-            txtSearch.font = FontConstants.LargeFontTitleMedium
+            lblBookmark.font = FontConstants.LargeFontTitleMedium
         }
         else{
-            lblTitle.font = FontConstants.LargeFontTitleMedium
-            txtSearch.font = FontConstants.LargeFontTitleMedium
+            lblBookmark.font = FontConstants.LargeFontTitleMedium
         }
     }
     
-    @IBAction func btnSearchAction(_ sender: Any) {
+    func BookmarkAPICall()
+    {
+        APICall().BookmarkedArticlesAPI(url: APPURL.bookmarkedArticlesURL){ response in
+            switch response {
+            case .Success(let data) :
+                self.ArticleData = data
+                print(self.ArticleData[0].body.articles)
+                if self.ArticleData[0].body.next != nil{
+                    self.nextURL = self.ArticleData[0].body.next!}
+                if self.ArticleData[0].body.previous != nil{
+                    self.previousURL = self.ArticleData[0].body.previous!}
+                if self.ArticleData[0].body.articles.count == 0{
+                    self.activityIndicator.stopAnimating()
+                    self.bookmarkResultTV.makeToast("There is not any article bookmarked yet...", duration: 1.0, position: .center)
+                }else{
+                    self.bookmarkResultTV.reloadData()}
+            case .Failure(let errormessage) :
+                print(errormessage)
+                self.activityIndicator.startAnimating()
+                self.bookmarkResultTV.makeToast(errormessage, duration: 2.0, position: .center)
+            case .Change(let code) :
+                print(code)
+            }
+        }
+    }
+    
+    @objc func refreshBookmarkedNews(refreshControl: UIRefreshControl) {
+        if UserDefaults.standard.value(forKey: "token") != nil || UserDefaults.standard.value(forKey: "FBToken") != nil || UserDefaults.standard.value(forKey: "googleToken") != nil{
+            BookmarkAPICall()
+            refreshControl.endRefreshing()
+        }
+    }
+    @IBAction func btnBackActn(_ sender: Any) {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let vc:HomeParentVC = storyboard.instantiateViewController(withIdentifier: "HomeParentID") as! HomeParentVC
         self.present(vc, animated: true, completion: nil)
     }
-    
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
+
 }
 
-extension SearchVC: UITableViewDelegate, UITableViewDataSource{
+extension BookmarkVC: UITableViewDelegate, UITableViewDataSource{
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return (ArticleData.count != 0) ? self.ArticleData[0].body.articles.count : 0
     }
@@ -141,13 +175,13 @@ extension SearchVC: UITableViewDelegate, UITableViewDataSource{
         newsDetailvc.newsCurrentIndex = indexPath.row
         newsDetailvc.ArticleData = ArticleData
         newsDetailvc.articleId = ArticleData[0].body.articles[indexPath.row].article_id!
-        newsDetailvc.isSearch = "search"
+         newsDetailvc.isSearch = "bookmark"
         present(newsDetailvc, animated: true, completion: nil)
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let cell = tableView.dequeueReusableCell(withIdentifier: "searchResultID", for:indexPath) as! SearchResultTVCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: "bookmarkResultID", for:indexPath) as! BookmarkTVCell
         let borderColor: UIColor = UIColor.lightGray
         cell.ViewCellBackground.layer.borderColor = borderColor.cgColor
         cell.ViewCellBackground.layer.borderWidth = 1
@@ -216,7 +250,7 @@ extension SearchVC: UITableViewDelegate, UITableViewDataSource{
                         }
                         else{
                             self.nextURL = ""
-                            self.searchResultTV.makeToast("No more news to show", duration: 1.0, position: .center)
+                            self.bookmarkResultTV.makeToast("No more news to show", duration: 1.0, position: .center)
                         }
                         if self.ArticleData[0].body.previous != nil{
                             self.previousURL = self.ArticleData[0].body.previous!
@@ -224,11 +258,11 @@ extension SearchVC: UITableViewDelegate, UITableViewDataSource{
                         else{
                             self.previousURL = ""
                         }
-                        self.searchResultTV.reloadData()
+                        self.bookmarkResultTV.reloadData()
                     case .Failure(let errormessage) :
                         print(errormessage)
                         self.activityIndicator.startAnimating()
-                        self.searchResultTV.makeToast(errormessage, duration: 2.0, position: .center)
+                        self.bookmarkResultTV.makeToast(errormessage, duration: 2.0, position: .center)
                     case .Change(let code):
                         print(code)
                     }
@@ -251,7 +285,7 @@ extension SearchVC: UITableViewDelegate, UITableViewDataSource{
                         }
                         else{
                             self.previousURL = ""
-                            self.searchResultTV.makeToast("No more news to show", duration: 1.0, position: .center)
+                            self.bookmarkResultTV.makeToast("No more news to show", duration: 1.0, position: .center)
                         }
                         if self.ArticleData[0].body.next != nil{
                             self.nextURL = self.ArticleData[0].body.next!
@@ -259,11 +293,11 @@ extension SearchVC: UITableViewDelegate, UITableViewDataSource{
                         else{
                             self.nextURL = ""
                         }
-                        self.searchResultTV.reloadData()
+                        self.bookmarkResultTV.reloadData()
                     case .Failure(let errormessage) :
                         print(errormessage)
                         self.activityIndicator.startAnimating()
-                        self.searchResultTV.makeToast(errormessage, duration: 2.0, position: .center)
+                        self.bookmarkResultTV.makeToast(errormessage, duration: 2.0, position: .center)
                     case .Change(let code):
                         print(code)
                     }
@@ -271,54 +305,5 @@ extension SearchVC: UITableViewDelegate, UITableViewDataSource{
                 self.activityIndicator.stopAnimating()
             }
         }
-    }
-}
-
-extension SearchVC: UITextFieldDelegate
-{
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool
-    {
-        txtSearch.resignFirstResponder()
-        if txtSearch.text != ""{
-            APICall().loadSearchAPI(searchTxt: txtSearch.text!){ (Status, response) in
-                switch response {
-                case .Success(let data) :
-                    self.ArticleData = data
-                    print(data)
-                    if self.ArticleData[0].body.articles.count == 0{
-                        self.searchResultTV.makeToast("There is not any news matching with entered keyword", duration: 2.0, position: .center)
-                    }
-                    self.searchResultTV.reloadData()
-                case .Failure(let errormessage) :
-                    print(errormessage)
-                    self.activityIndicator.startAnimating()
-                    self.searchResultTV.makeToast(errormessage, duration: 2.0, position: .center)
-                case .Change(let code):
-                    print(code)
-                }
-                self.activityIndicator.stopAnimating()
-            }
-        }
-        else{
-            self.searchResultTV.makeToast("Enter keyword to search", duration: 2.0, position: .center)
-        }
-        // search text in DB
-        /*   let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "NewsArticle")
-         fetchRequest.predicate = NSPredicate(format: "title CONTAINS[c] %@ OR news_description CONTAINS[c] %@",txtSearch.text!, txtSearch.text!)
-         let managedContext =
-         appDelegate?.persistentContainer.viewContext
-         do {
-         results = (try managedContext?.fetch(fetchRequest))! as! [NewsArticle]
-         print("result.count: \(results.count)")
-         print ("results val: \(results)")
-         searchResultTV.reloadData()
-         }
-         catch {
-         print("error executing fetch request: \(error)")
-         }
-         
-         }*/
-        
-        return true
     }
 }
