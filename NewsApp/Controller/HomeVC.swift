@@ -294,6 +294,10 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
         else{
             NightNight.theme =  .normal
         }
+        if cell.imgNews.image == nil
+        {
+              cell.imgNews.image = UIImage(named: "NoImage.png")
+        }
         return cell
     }
     

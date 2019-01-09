@@ -231,6 +231,9 @@ extension BookmarkVC: UITableViewDelegate, UITableViewDataSource{
         else{
             NightNight.theme =  .normal
         }
+        if cell.imgNews.image == nil{
+            cell.imgNews.image = UIImage(named: "NoImage.png")
+        }
         return cell
     }
     //check whether tableview scrolled up or down

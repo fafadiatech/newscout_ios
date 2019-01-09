@@ -21,6 +21,8 @@ class SignUpVC: UIViewController {
     @IBOutlet weak var txtConfirmPswd: SkyFloatingLabelTextField!
     @IBOutlet weak var btnSignUp: UIButton!
     @IBOutlet weak var btnAlreadyMember: UIButton!
+    @IBOutlet weak var containerView: UIView!
+    @IBOutlet weak var scrollView: UIScrollView!
     override func viewDidLoad() {
         super.viewDidLoad()
         txtFname.autocorrectionType = .no
@@ -57,6 +59,7 @@ class SignUpVC: UIViewController {
         txtConfirmPswd.titleColor = colorConstants.grayBackground3
         view.backgroundColor = colorConstants.grayBackground3
         btnAlreadyMember.backgroundColor = colorConstants.grayBackground3
+        containerView.backgroundColor = colorConstants.grayBackground3
     }
     @objc private func darkModeEnabled(_ notification: Notification) {
         // Write your dark mode code here
@@ -174,5 +177,17 @@ extension SignUpVC : UITextFieldDelegate{
         }
         return true
     }
-    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool
+    {
+        // Try to find next responder
+        if let nextField = textField.superview?.viewWithTag(textField.tag + 1) as? UITextField {
+            nextField.becomeFirstResponder()
+        }
+        else {
+            // Not found, so remove keyboard.
+            textField.resignFirstResponder()
+        }
+        // Do not add a line break
+        return false
+    }
 }

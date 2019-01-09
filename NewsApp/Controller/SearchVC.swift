@@ -19,6 +19,8 @@ class SearchVC: UIViewController {
     @IBOutlet weak var titleView: UIView!
     @IBOutlet weak var txtSearch: UITextField!
     @IBOutlet weak var lblTitle: UILabel!
+    @IBOutlet weak var searchAutocompleteTV: UITableView!
+    @IBOutlet weak var lblNoNews: UILabel!
     let activityIndicator = MDCActivityIndicator()
     //variables
     var ArticleData = [ArticleStatus]()
@@ -32,6 +34,8 @@ class SearchVC: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        lblNoNews.isHidden = true
+        searchAutocompleteTV.isHidden = true
         newsObj.isSearch = ""
         NotificationCenter.default.addObserver(self, selector: #selector(darkModeEnabled(_:)), name: .darkModeEnabled, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(darkModeDisabled(_:)), name: .darkModeDisabled, object: nil)
@@ -197,81 +201,12 @@ extension SearchVC: UITableViewDelegate, UITableViewDataSource{
         else{
             NightNight.theme =  .normal
         }
+        if cell.imgNews.image == nil{
+            cell.imgNews.image = UIImage(named: "NoImage.png")
+        }
         return cell
     }
-    //check whether tableview scrolled up or down
-    func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
-        if targetContentOffset.pointee.y < scrollView.contentOffset.y {
-            print("it's going up")
-            if nextURL != "" {
-                self.activityIndicator.startAnimating()
-                APICall().BookmarkedArticlesAPI(url: nextURL){ response in
-                    switch response {
-                    case .Success(let data) :
-                        self.ArticleData = data
-                        print(self.ArticleData[0].body.articles.count)
-                        print("nexturl data: \(self.ArticleData)")
-                        if self.ArticleData[0].body.next != nil{
-                            self.nextURL = self.ArticleData[0].body.next!
-                        }
-                        else{
-                            self.nextURL = ""
-                            self.searchResultTV.makeToast("No more news to show", duration: 1.0, position: .center)
-                        }
-                        if self.ArticleData[0].body.previous != nil{
-                            self.previousURL = self.ArticleData[0].body.previous!
-                        }
-                        else{
-                            self.previousURL = ""
-                        }
-                        self.searchResultTV.reloadData()
-                    case .Failure(let errormessage) :
-                        print(errormessage)
-                        self.activityIndicator.startAnimating()
-                        self.searchResultTV.makeToast(errormessage, duration: 2.0, position: .center)
-                    case .Change(let code):
-                        print(code)
-                    }
-                }
-                self.activityIndicator.stopAnimating()
-            }
-        } else {
-            print(" it's going down")
-            if previousURL != ""{
-                self.activityIndicator.startAnimating()
-                APICall().BookmarkedArticlesAPI(url: nextURL){ response in
-                    switch response {
-                    case .Success(let data) :
-                        self.ArticleData = data
-                        print(self.ArticleData[0].body.articles.count)
-                        print("previous url data: \(self.ArticleData)")
-                        if self.ArticleData[0].body.previous != nil{
-                            self.previousURL = self.ArticleData[0].body.previous!
-                            print(self.previousURL)
-                        }
-                        else{
-                            self.previousURL = ""
-                            self.searchResultTV.makeToast("No more news to show", duration: 1.0, position: .center)
-                        }
-                        if self.ArticleData[0].body.next != nil{
-                            self.nextURL = self.ArticleData[0].body.next!
-                        }
-                        else{
-                            self.nextURL = ""
-                        }
-                        self.searchResultTV.reloadData()
-                    case .Failure(let errormessage) :
-                        print(errormessage)
-                        self.activityIndicator.startAnimating()
-                        self.searchResultTV.makeToast(errormessage, duration: 2.0, position: .center)
-                    case .Change(let code):
-                        print(code)
-                    }
-                }
-                self.activityIndicator.stopAnimating()
-            }
-        }
-    }
+  
 }
 
 extension SearchVC: UITextFieldDelegate
@@ -279,14 +214,21 @@ extension SearchVC: UITextFieldDelegate
     func textFieldShouldReturn(_ textField: UITextField) -> Bool
     {
         txtSearch.resignFirstResponder()
-        if txtSearch.text != ""{
+        if !(txtSearch.text?.isEmpty)!{
+            if txtSearch.text != " "{
             APICall().loadSearchAPI(searchTxt: txtSearch.text!){ (Status, response) in
                 switch response {
                 case .Success(let data) :
                     self.ArticleData = data
                     print(data)
+                  
                     if self.ArticleData[0].body.articles.count == 0{
-                        self.searchResultTV.makeToast("There is not any news matching with entered keyword", duration: 2.0, position: .center)
+                      //  self.searchResultTV.makeToast("There is not any news matching with entered keyword", duration: 2.0, position: .center)
+                        self.lblNoNews.isHidden = false
+                        self.lblNoNews.text = "There is not any news matching with entered keyword"
+                    }
+                    else{
+                          self.lblNoNews.isHidden = true
                     }
                     self.searchResultTV.reloadData()
                 case .Failure(let errormessage) :
@@ -298,10 +240,16 @@ extension SearchVC: UITextFieldDelegate
                 }
                 self.activityIndicator.stopAnimating()
             }
+            }
+            else{
+                self.searchResultTV.makeToast("Enter keyword to search", duration: 2.0, position: .center)
+            }
         }
+        
         else{
             self.searchResultTV.makeToast("Enter keyword to search", duration: 2.0, position: .center)
         }
+        
         // search text in DB
         /*   let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "NewsArticle")
          fetchRequest.predicate = NSPredicate(format: "title CONTAINS[c] %@ OR news_description CONTAINS[c] %@",txtSearch.text!, txtSearch.text!)
@@ -321,4 +269,12 @@ extension SearchVC: UITextFieldDelegate
         
         return true
     }
+    
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        if textField == txtSearch {
+            print("started editing text")
+            lblNoNews.isHidden = true
+        }
+    }
+    
 }

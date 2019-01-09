@@ -35,6 +35,7 @@
 		2685CF17216DDEB300C2CECF /* HelveticaNeueBoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2685CF0E216DDEB300C2CECF /* HelveticaNeueBoldItalic.ttf */; };
 		268C112321E4C0F300C76B9C /* BookmarkVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 268C112221E4C0F200C76B9C /* BookmarkVC.swift */; };
 		268C112521E4C36E00C76B9C /* BookmarkTVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 268C112421E4C36E00C76B9C /* BookmarkTVCell.swift */; };
+		268C112721E5DF0700C76B9C /* SearchAutoCompleteTVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 268C112621E5DF0700C76B9C /* SearchAutoCompleteTVCell.swift */; };
 		2690F3CC21BF8C12003E65CA /* SettingsTVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2690F3CB21BF8C12003E65CA /* SettingsTVCell.swift */; };
 		26ACEA94216733BA000EF3C7 /* CategoryListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26ACEA93216733BA000EF3C7 /* CategoryListVC.swift */; };
 		26ACEA96216738BB000EF3C7 /* CategoryListTVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26ACEA95216738BB000EF3C7 /* CategoryListTVCell.swift */; };
@@ -113,6 +114,7 @@
 		2685CF0E216DDEB300C2CECF /* HelveticaNeueBoldItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = HelveticaNeueBoldItalic.ttf; sourceTree = "<group>"; };
 		268C112221E4C0F200C76B9C /* BookmarkVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkVC.swift; sourceTree = "<group>"; };
 		268C112421E4C36E00C76B9C /* BookmarkTVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkTVCell.swift; sourceTree = "<group>"; };
+		268C112621E5DF0700C76B9C /* SearchAutoCompleteTVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchAutoCompleteTVCell.swift; sourceTree = "<group>"; };
 		2690F3CB21BF8C12003E65CA /* SettingsTVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTVCell.swift; sourceTree = "<group>"; };
 		26ACEA93216733BA000EF3C7 /* CategoryListVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryListVC.swift; sourceTree = "<group>"; };
 		26ACEA95216738BB000EF3C7 /* CategoryListTVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryListTVCell.swift; sourceTree = "<group>"; };
@@ -311,6 +313,7 @@
 		421ADFEB2156553500C00F6F /* Cell */ = {
 			isa = PBXGroup;
 			children = (
+				268C112621E5DF0700C76B9C /* SearchAutoCompleteTVCell.swift */,
 				268C112421E4C36E00C76B9C /* BookmarkTVCell.swift */,
 				2690F3CB21BF8C12003E65CA /* SettingsTVCell.swift */,
 				26ACEA95216738BB000EF3C7 /* CategoryListTVCell.swift */,
@@ -634,6 +637,7 @@
 				421ADFBB2156407400C00F6F /* HomeVC.swift in Sources */,
 				264C5396219AAAD60050F79D /* Toast.swift in Sources */,
 				263421F321624AD200C8510F /* SettingsTVC.swift in Sources */,
+				268C112721E5DF0700C76B9C /* SearchAutoCompleteTVCell.swift in Sources */,
 				26ACEA94216733BA000EF3C7 /* CategoryListVC.swift in Sources */,
 				421ADFB92156407400C00F6F /* AppDelegate.swift in Sources */,
 				263421F12162310D00C8510F /* LoginVC.swift in Sources */,

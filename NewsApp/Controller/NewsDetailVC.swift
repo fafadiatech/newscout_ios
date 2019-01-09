@@ -574,6 +574,9 @@ class NewsDetailVC: UIViewController {
         }else{
             btnBookamark.setImage(UIImage(named: "book.png"), for: .normal)
         }
+        if imgNews.image == nil{
+            imgNews.image = UIImage(named: "NoImage.png")
+        }
     }
     
     @IBAction func btnLikeActn(_ sender: Any) {
@@ -811,6 +814,7 @@ extension NewsDetailVC:UICollectionViewDelegate, UICollectionViewDataSource, UIC
             cell.lblMoreStories.isHidden = true
             let currentArticle =  RecomArticleData[0].body.articles[indexPath.row - 1]
             cell.lblTitle.text = currentArticle.title
+            if currentArticle.imageURL != nil{
             let checkImg = checkImageOrVideo(url: currentArticle.imageURL!)
             if checkImg == false{
                 cell.btnCellPlayVIdeo.isHidden = false
@@ -822,7 +826,11 @@ extension NewsDetailVC:UICollectionViewDelegate, UICollectionViewDataSource, UIC
                 cell.btnCellPlayVIdeo.isHidden = true
                 cell.imgNews.sd_setImage(with: URL(string: currentArticle.imageURL!), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
             }
-            
+            }
+            if cell.imgNews.image == nil{
+                 cell.imgNews.image = UIImage(named: "NoImage.png")
+            }
+           
         }
         let darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
         if  darkModeStatus == true{

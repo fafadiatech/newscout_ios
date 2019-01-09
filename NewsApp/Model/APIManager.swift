@@ -175,6 +175,7 @@ class APICall{
             search = search.trimmingCharacters(in: .whitespacesAndNewlines)
             search = search.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)!
         }
+       
         let url = APPURL.SearchURL + search
         Alamofire.request(url,method: .get).responseJSON{
             response in
