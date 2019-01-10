@@ -168,15 +168,22 @@ class APICall{
     
     func loadSearchAPI(searchTxt: String,_ completion : @escaping (String, ArticleAPIResult) -> ()){
         var search = searchTxt
+        search = search.replacingOccurrences(of: "'", with: "%27")
         let whitespace = NSCharacterSet.whitespaces
-        let range = search.rangeOfCharacter(from: whitespace)
+        var range = search.rangeOfCharacter(from: whitespace)
+        
         if let test = range {
             print("whitespace found")
             search = search.trimmingCharacters(in: .whitespacesAndNewlines)
             search = search.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)!
         }
-       
+        let allowedCharacterSet = (CharacterSet(charactersIn: "!*'();:@&=+$,/?%#[]").inverted)
+        
+        if let escapedString = search.addingPercentEncoding(withAllowedCharacters: allowedCharacterSet) {
+            search = escapedString
+        }
         let url = APPURL.SearchURL + search
+        print("search url : \(url)")
         Alamofire.request(url,method: .get).responseJSON{
             response in
             if(response.result.isSuccess){

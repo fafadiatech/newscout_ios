@@ -526,10 +526,9 @@ class NewsDetailVC: UIViewController {
 //                PlayerVIew.isHidden = false
 //                playerLayer.frame = CGRect(x:PlayerVIew.frame.origin.x, y: PlayerVIew.frame.origin.y, width: PlayerVIew.frame.width, height: PlayerVIew.frame.height)
 //                self.PlayerVIew.layer.addSublayer(playerLayer)
-//
-//
+
                  playbackSlider = UISlider(frame:CGRect(x:0, y:avPlayerView.frame.height - 40, width:avPlayerView.frame.width, height: 20))
-                playbackSlider.minimumValue = 0
+                 playbackSlider.minimumValue = 0
                 
                 
                 let duration : CMTime = playerItem.asset.duration
