@@ -56,7 +56,9 @@ class NewsDetailVC: UIViewController {
     var viewLikeDislikeBottomConstraint : NSLayoutConstraint!
     var deviceOrientation: UIDeviceOrientation = UIDevice.current.orientation
     var statusBarOrientation: UIInterfaceOrientation = UIApplication.shared.statusBarOrientation
-    var isSearch = ""
+   
+    var playerViewWidth = CGFloat()
+    var playerViewHeight = CGFloat()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -271,7 +273,7 @@ class NewsDetailVC: UIViewController {
             return false
         }
     }
-    
+   
     //create thumbnail of video
     func getThumbnailImage(forUrl url: URL) -> UIImage? {
         let asset: AVAsset = AVAsset(url: url)
@@ -516,7 +518,6 @@ class NewsDetailVC: UIViewController {
                 let url = URL(string: "https://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4")
               let playerItem:AVPlayerItem = AVPlayerItem(url: url!)
                 player = AVPlayer(playerItem: playerItem)
-                
                // let playerLayer = AVPlayerLayer(player: player!)
                 avPlayerView.isHidden = false
                 let avPlayer = AVPlayerLayer(player: player!)
@@ -526,8 +527,13 @@ class NewsDetailVC: UIViewController {
 //                PlayerVIew.isHidden = false
 //                playerLayer.frame = CGRect(x:PlayerVIew.frame.origin.x, y: PlayerVIew.frame.origin.y, width: PlayerVIew.frame.width, height: PlayerVIew.frame.height)
 //                self.PlayerVIew.layer.addSublayer(playerLayer)
-
-                 playbackSlider = UISlider(frame:CGRect(x:0, y:avPlayerView.frame.height - 40, width:avPlayerView.frame.width, height: 20))
+                avPlayerView.layoutIfNeeded()
+                if UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad{
+                 playbackSlider = UISlider(frame:CGRect(x:0, y: self.avPlayerView.bounds.size.height - 40, width:self.avPlayerView.bounds.size.width, height: 20))
+                }
+                else{
+                   playbackSlider = UISlider(frame:CGRect(x:0, y: self.avPlayerView.bounds.size.height - 100, width:self.avPlayerView.bounds.size.width, height: 20))
+                }
                  playbackSlider.minimumValue = 0
                 
                 
@@ -711,7 +717,7 @@ class NewsDetailVC: UIViewController {
     }
     
     @IBAction func btnBackAction(_ sender: Any) {
-        
+        var isSearch = UserDefaults.standard.value(forKey: "isSearch") as! String
        // self.dismiss(animated: false)
         if isSearch == "search"{
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
@@ -724,9 +730,12 @@ class NewsDetailVC: UIViewController {
             self.present(vc, animated: true, completion: nil)
         }
         else if isSearch == "" {
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        let vc:HomeParentVC = storyboard.instantiateViewController(withIdentifier: "HomeParentID") as! HomeParentVC
-        self.present(vc, animated: true, completion: nil)
+//        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+//        let vc:HomeParentVC = storyboard.instantiateViewController(withIdentifier: "HomeParentID") as! HomeParentVC
+//        self.present(vc, animated: true, completion: nil)
+            //self.dismiss(animated: false)
+            self.view.window!.rootViewController?.dismiss(animated: false, completion: nil)
+            
         }
     }
     
@@ -837,7 +846,7 @@ extension NewsDetailVC:UICollectionViewDelegate, UICollectionViewDataSource, UIC
             cell.lblTitle.textColor = colorConstants.whiteColor
             cell.backgroundColor = colorConstants.txtlightGrayColor
         }
-        
+    
         return cell
     }
     

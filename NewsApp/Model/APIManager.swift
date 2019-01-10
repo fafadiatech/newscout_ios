@@ -168,7 +168,7 @@ class APICall{
     
     func loadSearchAPI(searchTxt: String,_ completion : @escaping (String, ArticleAPIResult) -> ()){
         var search = searchTxt
-        search = search.replacingOccurrences(of: "'", with: "%27")
+       // search = searchTxt.replacingOccurrences(of: "'", with: "%27")
         let whitespace = NSCharacterSet.whitespaces
         var range = search.rangeOfCharacter(from: whitespace)
         
@@ -177,7 +177,7 @@ class APICall{
             search = search.trimmingCharacters(in: .whitespacesAndNewlines)
             search = search.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)!
         }
-        let allowedCharacterSet = (CharacterSet(charactersIn: "!*'();:@&=+$,/?%#[]").inverted)
+        let allowedCharacterSet = (CharacterSet(charactersIn: "!*();:@&=+$,/?%#[]").inverted)
         
         if let escapedString = search.addingPercentEncoding(withAllowedCharacters: allowedCharacterSet) {
             search = escapedString

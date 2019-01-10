@@ -30,13 +30,11 @@ class SearchVC: UIViewController {
     var previousURL = ""
     let appDelegate = UIApplication.shared.delegate as? AppDelegate
     let textSizeSelected = UserDefaults.standard.value(forKey: "textSize") as! Int
-     var newsObj = NewsDetailVC()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         lblNoNews.isHidden = true
         searchAutocompleteTV.isHidden = true
-        newsObj.isSearch = ""
         NotificationCenter.default.addObserver(self, selector: #selector(darkModeEnabled(_:)), name: .darkModeEnabled, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(darkModeDisabled(_:)), name: .darkModeDisabled, object: nil)
         activityIndicator.cycleColors = [.blue]
@@ -122,9 +120,10 @@ class SearchVC: UIViewController {
     }
     
     @IBAction func btnSearchAction(_ sender: Any) {
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        let vc:HomeParentVC = storyboard.instantiateViewController(withIdentifier: "HomeParentID") as! HomeParentVC
-        self.present(vc, animated: true, completion: nil)
+//        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+//        let vc:HomeParentVC = storyboard.instantiateViewController(withIdentifier: "HomeParentID") as! HomeParentVC
+//        self.present(vc, animated: true, completion: nil)
+        self.view.window!.rootViewController?.dismiss(animated: false, completion: nil)
     }
     
     override func didReceiveMemoryWarning() {
@@ -145,7 +144,7 @@ extension SearchVC: UITableViewDelegate, UITableViewDataSource{
         newsDetailvc.newsCurrentIndex = indexPath.row
         newsDetailvc.ArticleData = ArticleData
         newsDetailvc.articleId = ArticleData[0].body.articles[indexPath.row].article_id!
-        newsDetailvc.isSearch = "search"
+        UserDefaults.standard.set("search", forKey: "isSearch")
         present(newsDetailvc, animated: true, completion: nil)
     }
     

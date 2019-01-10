@@ -2159,14 +2159,18 @@
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0Gt-jj-iAA">
-                                                    <rect key="frame" x="15" y="11" width="333" height="21"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0Gt-jj-iAA">
+                                                    <rect key="frame" x="19" y="11.5" width="337.5" height="21"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
+                                            <constraints>
+                                                <constraint firstItem="0Gt-jj-iAA" firstAttribute="width" secondItem="Td0-8B-M4U" secondAttribute="width" multiplier="0.9" id="VhX-55-2cM"/>
+                                                <constraint firstItem="0Gt-jj-iAA" firstAttribute="centerY" secondItem="Td0-8B-M4U" secondAttribute="centerY" id="gKK-qc-0Dc"/>
+                                                <constraint firstItem="0Gt-jj-iAA" firstAttribute="centerX" secondItem="Td0-8B-M4U" secondAttribute="centerX" id="vwc-9M-ShB"/>
+                                            </constraints>
                                         </tableViewCellContentView>
                                         <connections>
                                             <outlet property="lblTitle" destination="0Gt-jj-iAA" id="XE2-Lh-kV5"/>
