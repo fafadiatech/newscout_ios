@@ -189,7 +189,7 @@ class APICall{
             if(response.result.isSuccess){
                 if response.response?.statusCode == 200{
                     if let data = response.data {
-                        let jsonDecoder = JSONDecoder()
+                        let  jsonDecoder = JSONDecoder()
                         do {
                             let jsonData = try jsonDecoder.decode(ArticleStatus.self, from: data)
                             print(jsonData)

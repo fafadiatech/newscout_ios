@@ -252,6 +252,15 @@ class SettingsTVC: UITableViewController, GIDSignInUIDelegate {
                 self.view.makeToast("You need to login", duration: 1.0, position: .center)
             }
         }
+        else if indexPath.section == 3 && indexPath.row == 1{
+            let text = "checkout newScout app. I found it best for reading news."
+            let url = URL(string: "https://mail.google.com/")
+            let shareAll = [ text, url] as [Any]
+            
+            let activityViewController = UIActivityViewController(activityItems: shareAll, applicationActivities: nil)
+            //activityViewController.popoverPresentationController?.sourceView = sender as! UIView
+            self.present(activityViewController, animated: true, completion: nil)
+        }
         
         return indexPath
     }

@@ -56,7 +56,7 @@ class NewsDetailVC: UIViewController {
     var viewLikeDislikeBottomConstraint : NSLayoutConstraint!
     var deviceOrientation: UIDeviceOrientation = UIDevice.current.orientation
     var statusBarOrientation: UIInterfaceOrientation = UIApplication.shared.statusBarOrientation
-   
+    
     var playerViewWidth = CGFloat()
     var playerViewHeight = CGFloat()
     
@@ -135,22 +135,26 @@ class NewsDetailVC: UIViewController {
         let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapped(gestureRecognizer:)))
         viewNewsArea.addGestureRecognizer(tapRecognizer)
         tapRecognizer.delegate = self as! UIGestureRecognizerDelegate
+        
+        let PlayerTapRecognizer = UITapGestureRecognizer(target: self, action: #selector(PlayerViewtapped(gestureRecognizer:)))
+        avPlayerView.addGestureRecognizer(PlayerTapRecognizer)
+        PlayerTapRecognizer.delegate = self as! UIGestureRecognizerDelegate
     }
     
     /*func newsDetailAPICall(currentIndex: Int){
-        
-        APICall().articleDetailAPI(articleId: currentIndex){ (status,response) in
-            switch response {
-            case .Success(let data) :
-                 self.ArticleDetail = data
-                 print(self.ArticleDetail)
-                 self.ShowNews(currentArticle: self.ArticleDetail.body.article)
-            case .Failure(let errormessage) :
-                print(errormessage)
-                self.view.makeToast(errormessage, duration: 2.0, position: .center)
-            }
-        }
-    }*/
+     
+     APICall().articleDetailAPI(articleId: currentIndex){ (status,response) in
+     switch response {
+     case .Success(let data) :
+     self.ArticleDetail = data
+     print(self.ArticleDetail)
+     self.ShowNews(currentArticle: self.ArticleDetail.body.article)
+     case .Failure(let errormessage) :
+     print(errormessage)
+     self.view.makeToast(errormessage, duration: 2.0, position: .center)
+     }
+     }
+     }*/
     
     func addPotraitConstraint(){
         if lblSourceTopConstraint != nil && lblSourceTopConstraint != nil && viewLikeDislikeBottomConstraint != nil{
@@ -273,7 +277,7 @@ class NewsDetailVC: UIViewController {
             return false
         }
     }
-   
+    
     //create thumbnail of video
     func getThumbnailImage(forUrl url: URL) -> UIImage? {
         let asset: AVAsset = AVAsset(url: url)
@@ -318,6 +322,15 @@ class NewsDetailVC: UIViewController {
         txtViewNewsDesc.textColor = colorConstants.whiteColor
         viewWebTitle.backgroundColor = colorConstants.grayBackground3
         lblWebSource.textColor = .white
+    }
+    
+    @objc func PlayerViewtapped(gestureRecognizer: UITapGestureRecognizer) {
+        if btnPlayVideo.isHidden == true{
+            btnPlayVideo.isHidden = false
+        }
+        else{
+            btnPlayVideo.isHidden = true
+        }
     }
     
     @objc func tapped(gestureRecognizer: UITapGestureRecognizer) {
@@ -455,11 +468,17 @@ class NewsDetailVC: UIViewController {
         {
             player!.play()
             btnPlayVideo.setImage(UIImage(named:"pause"), for: .normal)
-            //btnPlayVideo!.setTitle("Pause", for: UIControlState.normal)
+            btnPlayVideo.isHidden = true
+            Timer.scheduledTimer(timeInterval: 5, target: self, selector: #selector(ShowPausebtn), userInfo: nil, repeats: false)
         } else {
             player!.pause()
             btnPlayVideo.setImage(UIImage(named:"play"), for: .normal)
-            // btnPlayVideo!.setTitle("Play", for: UIControlState.normal)
+        }
+    }
+    
+    @objc func ShowPausebtn() {
+        if (btnPlayVideo.currentImage?.isEqual(UIImage(named: "pause")))! {
+            btnPlayVideo.isHidden = true
         }
     }
     
@@ -468,7 +487,7 @@ class NewsDetailVC: UIViewController {
         
         let seconds : Int64 = Int64(playbackSlider.value)
         let targetTime:CMTime = CMTimeMake(seconds, 1)
-        
+        btnPlayVideo.isHidden = false
         player!.seek(to: targetTime)
         
         if player!.rate == 0{
@@ -496,9 +515,9 @@ class NewsDetailVC: UIViewController {
          lblTimeAgo.text = agoDate
          imgNews.downloadedFrom(link: "\(currentArticle.imageURL!)")
          }*/
-         playbackSlider.removeFromSuperview()
+        playbackSlider.removeFromSuperview()
         avPlayerView.isHidden = true
-      
+        
         let currentArticle = ArticleData[0].body.articles[currentIndex]
         print(currentArticle)
         let newDate = dateFormatter.date(from: currentArticle.published_on!)
@@ -516,25 +535,26 @@ class NewsDetailVC: UIViewController {
             if let thumbnail = createThumbnailOfVideoFromRemoteUrl(url: "https://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4"){
                 imgNews.image = thumbnail
                 let url = URL(string: "https://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4")
-              let playerItem:AVPlayerItem = AVPlayerItem(url: url!)
+                let playerItem:AVPlayerItem = AVPlayerItem(url: url!)
                 player = AVPlayer(playerItem: playerItem)
-               // let playerLayer = AVPlayerLayer(player: player!)
+                
+                // let playerLayer = AVPlayerLayer(player: player!)
                 avPlayerView.isHidden = false
                 let avPlayer = AVPlayerLayer(player: player!)
                 let castedLayer = avPlayerView.layer as! AVPlayerLayer
                 castedLayer.player = player
                 castedLayer.videoGravity = AVLayerVideoGravity.resizeAspect
-//                PlayerVIew.isHidden = false
-//                playerLayer.frame = CGRect(x:PlayerVIew.frame.origin.x, y: PlayerVIew.frame.origin.y, width: PlayerVIew.frame.width, height: PlayerVIew.frame.height)
-//                self.PlayerVIew.layer.addSublayer(playerLayer)
+                //                PlayerVIew.isHidden = false
+                //                playerLayer.frame = CGRect(x:PlayerVIew.frame.origin.x, y: PlayerVIew.frame.origin.y, width: PlayerVIew.frame.width, height: PlayerVIew.frame.height)
+                //                self.PlayerVIew.layer.addSublayer(playerLayer)
                 avPlayerView.layoutIfNeeded()
                 if UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad{
-                 playbackSlider = UISlider(frame:CGRect(x:0, y: self.avPlayerView.bounds.size.height - 40, width:self.avPlayerView.bounds.size.width, height: 20))
+                    playbackSlider = UISlider(frame:CGRect(x:0, y: self.avPlayerView.bounds.size.height - 40, width:self.avPlayerView.bounds.size.width, height: 20))
                 }
                 else{
-                   playbackSlider = UISlider(frame:CGRect(x:0, y: self.avPlayerView.bounds.size.height - 100, width:self.avPlayerView.bounds.size.width, height: 20))
+                    playbackSlider = UISlider(frame:CGRect(x:0, y: self.avPlayerView.bounds.size.height - 100, width:self.avPlayerView.bounds.size.width, height: 20))
                 }
-                 playbackSlider.minimumValue = 0
+                playbackSlider.minimumValue = 0
                 
                 
                 let duration : CMTime = playerItem.asset.duration
@@ -553,8 +573,8 @@ class NewsDetailVC: UIViewController {
         else{
             btnPlayVideo.isHidden = true
             avPlayerView.isHidden = true
-           // imgNews.downloadedFrom(link: "\(currentArticle.imageURL!)")
-           imgNews.sd_setImage(with: URL(string: currentArticle.imageURL!), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
+            // imgNews.downloadedFrom(link: "\(currentArticle.imageURL!)")
+            imgNews.sd_setImage(with: URL(string: currentArticle.imageURL!), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
         }
         print("currentArticle.isLike: \(currentArticle.isLike)")
         if currentArticle.isLike == 0 {
@@ -700,7 +720,6 @@ class NewsDetailVC: UIViewController {
     @IBAction func btnShareActn(_ sender: Any) {
         let text = ArticleData[0].body.articles[newsCurrentIndex].title
         let webURL = "Sent via NewsCout : (www.newscout.in)"
-        let imgStr = URL(string: ArticleData[0].body.articles[newsCurrentIndex].imageURL!)
         let url = URL(string:ArticleData[0].body.articles[newsCurrentIndex].imageURL!)
         var image1 = UIImage(named: "\(url)")
         var image = UIImage()
@@ -717,8 +736,8 @@ class NewsDetailVC: UIViewController {
     }
     
     @IBAction func btnBackAction(_ sender: Any) {
-        var isSearch = UserDefaults.standard.value(forKey: "isSearch") as! String
-       // self.dismiss(animated: false)
+        let isSearch = UserDefaults.standard.value(forKey: "isSearch") as! String
+        // self.dismiss(animated: false)
         if isSearch == "search"{
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             let vc:SearchVC = storyboard.instantiateViewController(withIdentifier: "SearchID") as! SearchVC
@@ -730,9 +749,9 @@ class NewsDetailVC: UIViewController {
             self.present(vc, animated: true, completion: nil)
         }
         else if isSearch == "" {
-//        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-//        let vc:HomeParentVC = storyboard.instantiateViewController(withIdentifier: "HomeParentID") as! HomeParentVC
-//        self.present(vc, animated: true, completion: nil)
+            //        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            //        let vc:HomeParentVC = storyboard.instantiateViewController(withIdentifier: "HomeParentID") as! HomeParentVC
+            //        self.present(vc, animated: true, completion: nil)
             //self.dismiss(animated: false)
             self.view.window!.rootViewController?.dismiss(animated: false, completion: nil)
             
@@ -781,8 +800,6 @@ class NewsDetailVC: UIViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    
-    
 }
 
 extension NewsDetailVC:UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout{
@@ -823,22 +840,22 @@ extension NewsDetailVC:UICollectionViewDelegate, UICollectionViewDataSource, UIC
             let currentArticle =  RecomArticleData[0].body.articles[indexPath.row - 1]
             cell.lblTitle.text = currentArticle.title
             if currentArticle.imageURL != nil{
-            let checkImg = checkImageOrVideo(url: currentArticle.imageURL!)
-            if checkImg == false{
-                cell.btnCellPlayVIdeo.isHidden = false
-                if let thumbnail = createThumbnailOfVideoFromRemoteUrl(url: "https://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4"){
-                    cell.imgNews.image = thumbnail
+                let checkImg = checkImageOrVideo(url: currentArticle.imageURL!)
+                if checkImg == false{
+                    cell.btnCellPlayVIdeo.isHidden = false
+                    if let thumbnail = createThumbnailOfVideoFromRemoteUrl(url: "https://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4"){
+                        cell.imgNews.image = thumbnail
+                    }
+                }
+                else{
+                    cell.btnCellPlayVIdeo.isHidden = true
+                    cell.imgNews.sd_setImage(with: URL(string: currentArticle.imageURL!), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
                 }
             }
-            else{
-                cell.btnCellPlayVIdeo.isHidden = true
-                cell.imgNews.sd_setImage(with: URL(string: currentArticle.imageURL!), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
-            }
-            }
             if cell.imgNews.image == nil{
-                 cell.imgNews.image = UIImage(named: "NoImage.png")
+                cell.imgNews.image = UIImage(named: "NoImage.png")
             }
-           
+            
         }
         let darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
         if  darkModeStatus == true{
@@ -846,7 +863,7 @@ extension NewsDetailVC:UICollectionViewDelegate, UICollectionViewDataSource, UIC
             cell.lblTitle.textColor = colorConstants.whiteColor
             cell.backgroundColor = colorConstants.txtlightGrayColor
         }
-    
+        
         return cell
     }
     
@@ -871,55 +888,3 @@ extension NewsDetailVC : UIGestureRecognizerDelegate {
         return true
     }
 }
-
-/*class ExampleActivity : UIActivity{
- var _activityTitle: String
- var _activityImage: UIImage?
- var activityItems = [Any]()
- var action: ([Any]) -> Void
- 
- init(title: String, image: UIImage?, performAction: @escaping ([Any]) -> Void) {
- _activityTitle = title
- _activityImage = image
- action = performAction
- super.init()
- }
- override var activityTitle: String? {
- return _activityTitle
- }
- 
- override var activityImage: UIImage? {
- return _activityImage
- }
- override var activityType: UIActivityType? {
- return UIActivityType(rawValue: "com.yoursite.yourapp.activity")
- }
- 
- override class var activityCategory: UIActivityCategory {
- return .action
- }
- override func canPerform(withActivityItems activityItems: [Any]) -> Bool {
- return true
- }
- override func prepare(withActivityItems activityItems: [Any]) {
- self.activityItems = activityItems
- }
- override func perform() {
- action(activityItems)
- activityDidFinish(true)
- }
- let customItem = ExampleActivity(title: "Tap me!", image: UIImage(named: "bookmark")) { sharedItems in
- guard let sharedStrings = sharedItems as? [String] else { return }
- 
- for string in sharedStrings {
- print("Here's the string: \(string)")
- }
- }
- 
- let items = ["Hello, custom activity!"]
- 
- //customItem.popoverPresentationController?.sourceView = sender as! UIView
- //self.present(customItem, animated: true, completion: nil)
- }
- */
-
