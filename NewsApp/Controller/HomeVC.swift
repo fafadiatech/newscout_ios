@@ -18,6 +18,7 @@ import NightNight
 class HomeVC: UIViewController{
     
     @IBOutlet weak var HomeNewsTV: UITableView!
+    @IBOutlet weak var lblNonews: UILabel!
     var tabBarTitle: String = ""
     var ShowArticle = [NewsArticle]()
     var ArticleData = [ArticleStatus]()
@@ -33,6 +34,7 @@ class HomeVC: UIViewController{
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        lblNonews.isHidden = true
         NotificationCenter.default.addObserver(self, selector: #selector(darkModeEnabled(_:)), name: .darkModeEnabled, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(darkModeDisabled(_:)), name: .darkModeDisabled, object: nil)
         activityIndicator.cycleColors = [.blue]
@@ -164,7 +166,8 @@ class HomeVC: UIViewController{
                     self.previousURL = self.ArticleData[0].body.previous!}
                 if self.ArticleData[0].body.articles.count == 0{
                     self.activityIndicator.stopAnimating()
-                    self.HomeNewsTV.makeToast("No articles found in this category...", duration: 1.0, position: .center)
+                    //self.HomeNewsTV.makeToast("No articles found in this category...", duration: 1.0, position: .center)
+                    self.lblNonews.isHidden = false
                 }else{
                     self.HomeNewsTV.reloadData()}
             case .Failure(let errormessage) :

@@ -22,7 +22,13 @@ class LoginVC: UIViewController, GIDSignInUIDelegate, FBSDKLoginButtonDelegate {
     @IBOutlet weak var btnForgtPswd: UIButton!
     @IBOutlet weak var btnSignUp: UIButton!
     @IBOutlet weak var btnLogin: UIButton!
-    @IBOutlet weak var signInButton: GIDSignInButton!
+    @IBOutlet weak var imgFBlogo: UIImageView!
+    @IBOutlet weak var btnFBLogin: UIButton!
+    //new gmail view outlets
+    @IBOutlet weak var viewGmailSignIn: UIView!
+    @IBOutlet weak var imgGmailSignIn: UIImageView!
+    @IBOutlet weak var signInButton: UIButton!
+    @IBOutlet weak var viewFBLogin: UIView!
     @IBOutlet weak var btnFbLogin: FBSDKLoginButton!
     @IBOutlet weak var gmailView: GIDSignInButton!
     
@@ -30,6 +36,11 @@ class LoginVC: UIViewController, GIDSignInUIDelegate, FBSDKLoginButtonDelegate {
         super.viewDidLoad()
         txtUsername.autocorrectionType = .no
         txtPassword.autocorrectionType = .no
+        //viewGmailSignIn.layer.cornerRadius = 15
+        viewGmailSignIn.layer.borderWidth = 1
+       
+        viewGmailSignIn.layer.borderColor = UIColor(red:222/255, green:225/255, blue:227/255, alpha: 1).cgColor
+      //  viewGmailSignIn.backgroundColor = colorConstants.redColor
         btnLogin.layer.cornerRadius = 15
         btnLogin.layer.borderWidth = 0
         btnSignUp.layer.cornerRadius = 15
@@ -44,13 +55,16 @@ class LoginVC: UIViewController, GIDSignInUIDelegate, FBSDKLoginButtonDelegate {
         btnForgtPswd.titleLabel?.font = FontConstants.FontBtnTitle
         btnFbLogin.backgroundColor = colorConstants.redColor
         btnFbLogin.setTitleColor(colorConstants.whiteColor, for: .normal)
-        signInButton.backgroundColor = colorConstants.redColor
+        //signInButton.backgroundColor = colorConstants.redColor
         btnFbLogin.readPermissions = ["public_profile", "email"]
         if FBSDKAccessToken.current() != nil{
             print(FBSDKAccessToken.current())
             UserDefaults.standard.set(FBSDKAccessToken.current()?.tokenString, forKey: "FBToken")
             fetchProfile()
         }
+         btnFbLogin.titleLabel?.font = FontConstants.FontBtnTitle
+        signInButton.titleLabel?.font = FontConstants.FontBtnTitle //UIFont(name: AppFontName.medium, size: FontConstants.FontBtnTitle)
+    
         btnFbLogin.setTitle("", for: .normal)
         GIDSignIn.sharedInstance().uiDelegate = self
         viewTitle.backgroundColor = colorConstants.redColor
@@ -139,6 +153,8 @@ class LoginVC: UIViewController, GIDSignInUIDelegate, FBSDKLoginButtonDelegate {
         self.dismiss(animated: true)
     }
     
+    @IBAction func btnNewFBLOgin(_ sender: Any) {
+    }
     @IBAction func btnSignUpActn(_ sender: Any) {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let vc:SignUpVC = storyboard.instantiateViewController(withIdentifier: "SignUpID") as! SignUpVC
@@ -180,6 +196,7 @@ class LoginVC: UIViewController, GIDSignInUIDelegate, FBSDKLoginButtonDelegate {
     }
     
     @IBAction func googleSignIn(_ sender: Any) {
+      //  GIDSignIn.sharedInstance().delegate = self as! GIDSignInDelegate
         GIDSignIn.sharedInstance().uiDelegate=self
         GIDSignIn.sharedInstance().signIn()
         if UserDefaults.standard.value(forKey: "googleToken") != nil{

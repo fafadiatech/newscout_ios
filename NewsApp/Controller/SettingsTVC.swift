@@ -258,8 +258,17 @@ class SettingsTVC: UITableViewController, GIDSignInUIDelegate {
             let shareAll = [ text, url] as [Any]
             
             let activityViewController = UIActivityViewController(activityItems: shareAll, applicationActivities: nil)
-            //activityViewController.popoverPresentationController?.sourceView = sender as! UIView
+            
+            activityViewController.popoverPresentationController?.sourceRect = CGRect(x: settingsTV.center.x , y: settingsTV.center.y + 200, width: 0, height: 0)
+            activityViewController.popoverPresentationController?.sourceView = settingsTV as! UITableView
+           popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection(rawValue: 0)
             self.present(activityViewController, animated: true, completion: nil)
+        }
+            //Replace url with itunes app url
+        else if indexPath.section == 3 && indexPath.row == 2{
+          //  UIApplication.sharedApplication().openURL(NSURL(string : "itms-apps://itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?id=\(0)&onlyLatestVersion=true&pageNumber=0&sortOrdering=1)")!);
+            let url = URL(string: "https://mail.google.com")!
+            UIApplication.shared.openURL(url)
         }
         
         return indexPath

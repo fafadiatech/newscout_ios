@@ -224,7 +224,7 @@ extension SearchVC: UITextFieldDelegate
                     if self.ArticleData[0].body.articles.count == 0{
                       //  self.searchResultTV.makeToast("There is not any news matching with entered keyword", duration: 2.0, position: .center)
                         self.lblNoNews.isHidden = false
-                        self.lblNoNews.text = "There is not any news matching with entered keyword"
+                        self.lblNoNews.text = "No news found"
                     }
                     else{
                           self.lblNoNews.isHidden = true
