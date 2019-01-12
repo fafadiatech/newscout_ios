@@ -112,8 +112,10 @@ class SettingsTVC: UITableViewController, GIDSignInUIDelegate {
             // userDefault has a value
         }
         else {
+            if UserDefaults.standard.value(forKey: "email") != nil{
             lblLogin.text = "\(UserDefaults.standard.value(forKey: "email")!)"
-            btnLogout.isHidden = false
+                btnLogout.isHidden = false
+            }
         }
     }
     

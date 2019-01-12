@@ -29,7 +29,7 @@ class LoginVC: UIViewController, GIDSignInUIDelegate, FBSDKLoginButtonDelegate {
     @IBOutlet weak var signInButton: UIButton!
     @IBOutlet weak var viewFBLogin: UIView!
       @IBOutlet weak var btnFBLogin: FBSDKLoginButton!
-    
+    @IBOutlet weak var tryFBlogin: UIButton!
     override func viewDidLoad() {
         super.viewDidLoad()
         txtUsername.autocorrectionType = .no
@@ -84,6 +84,7 @@ class LoginVC: UIViewController, GIDSignInUIDelegate, FBSDKLoginButtonDelegate {
         txtPassword.titleColor = colorConstants.grayBackground3
         view.backgroundColor = colorConstants.grayBackground3
          btnSignUp.backgroundColor = colorConstants.grayBackground3
+        viewGmailSignIn.backgroundColor =  colorConstants.whiteColor
     }
     
     @objc private func darkModeEnabled(_ notification: Notification) {
@@ -148,6 +149,8 @@ class LoginVC: UIViewController, GIDSignInUIDelegate, FBSDKLoginButtonDelegate {
         self.dismiss(animated: true)
     }
     
+    @IBAction func tryFBLoginActn(_ sender: Any) {
+    }
     @IBAction func btnNewFBLOgin(_ sender: Any) {
     }
     @IBAction func btnSignUpActn(_ sender: Any) {
