@@ -23,14 +23,12 @@ class LoginVC: UIViewController, GIDSignInUIDelegate, FBSDKLoginButtonDelegate {
     @IBOutlet weak var btnSignUp: UIButton!
     @IBOutlet weak var btnLogin: UIButton!
     @IBOutlet weak var imgFBlogo: UIImageView!
-    @IBOutlet weak var btnFBLogin: UIButton!
     //new gmail view outlets
     @IBOutlet weak var viewGmailSignIn: UIView!
     @IBOutlet weak var imgGmailSignIn: UIImageView!
     @IBOutlet weak var signInButton: UIButton!
     @IBOutlet weak var viewFBLogin: UIView!
-    @IBOutlet weak var btnFbLogin: FBSDKLoginButton!
-    @IBOutlet weak var gmailView: GIDSignInButton!
+      @IBOutlet weak var btnFBLogin: FBSDKLoginButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -53,19 +51,16 @@ class LoginVC: UIViewController, GIDSignInUIDelegate, FBSDKLoginButtonDelegate {
         btnForgtPswd.backgroundColor = colorConstants.redColor
         btnForgtPswd.setTitleColor(colorConstants.whiteColor, for: .normal)
         btnForgtPswd.titleLabel?.font = FontConstants.FontBtnTitle
-        btnFbLogin.backgroundColor = colorConstants.redColor
-        btnFbLogin.setTitleColor(colorConstants.whiteColor, for: .normal)
         //signInButton.backgroundColor = colorConstants.redColor
-        btnFbLogin.readPermissions = ["public_profile", "email"]
+        btnFBLogin.readPermissions = ["public_profile", "email"]
         if FBSDKAccessToken.current() != nil{
             print(FBSDKAccessToken.current())
             UserDefaults.standard.set(FBSDKAccessToken.current()?.tokenString, forKey: "FBToken")
             fetchProfile()
         }
-         btnFbLogin.titleLabel?.font = FontConstants.FontBtnTitle
+         btnFBLogin.titleLabel?.font = FontConstants.FontBtnTitle
         signInButton.titleLabel?.font = FontConstants.FontBtnTitle //UIFont(name: AppFontName.medium, size: FontConstants.FontBtnTitle)
     
-        btnFbLogin.setTitle("", for: .normal)
         GIDSignIn.sharedInstance().uiDelegate = self
         viewTitle.backgroundColor = colorConstants.redColor
         lblTitle.textColor = colorConstants.whiteColor
