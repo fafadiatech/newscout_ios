@@ -56,6 +56,7 @@
 		421ADFF22156755100C00F6F /* SuggestedNewsCVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 421ADFF12156755100C00F6F /* SuggestedNewsCVCell.swift */; };
 		423F0A502170CF19001D52B5 /* ChangePasswordVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 423F0A4F2170CF18001D52B5 /* ChangePasswordVC.swift */; };
 		4265E20821B8E9F800C3F0D7 /* NotificationsName+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4265E20721B8E9F800C3F0D7 /* NotificationsName+Extensions.swift */; };
+		4266D16321EEF4DA00CBD61A /* AboutUsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4266D16221EEF4DA00CBD61A /* AboutUsVC.swift */; };
 		427B430B2180840E00F00269 /* Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 427B430A2180840E00F00269 /* Helper.swift */; };
 		42D12BF2215A0AEB0085EF12 /* SearchVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42D12BF1215A0AEB0085EF12 /* SearchVC.swift */; };
 		42D12BF4215A0FA60085EF12 /* common.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42D12BF3215A0FA60085EF12 /* common.swift */; };
@@ -141,6 +142,7 @@
 		421ADFF12156755100C00F6F /* SuggestedNewsCVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuggestedNewsCVCell.swift; sourceTree = "<group>"; };
 		423F0A4F2170CF18001D52B5 /* ChangePasswordVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangePasswordVC.swift; sourceTree = "<group>"; };
 		4265E20721B8E9F800C3F0D7 /* NotificationsName+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NotificationsName+Extensions.swift"; sourceTree = "<group>"; };
+		4266D16221EEF4DA00CBD61A /* AboutUsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutUsVC.swift; sourceTree = "<group>"; };
 		427B430A2180840E00F00269 /* Helper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helper.swift; sourceTree = "<group>"; };
 		42D12BF1215A0AEB0085EF12 /* SearchVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchVC.swift; sourceTree = "<group>"; };
 		42D12BF3215A0FA60085EF12 /* common.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = common.swift; sourceTree = "<group>"; };
@@ -293,6 +295,7 @@
 		421ADFEA2156553500C00F6F /* Controller */ = {
 			isa = PBXGroup;
 			children = (
+				4266D16221EEF4DA00CBD61A /* AboutUsVC.swift */,
 				268C112221E4C0F200C76B9C /* BookmarkVC.swift */,
 				26C24722219DA6C200A87A3B /* ForgotPasswordVC.swift */,
 				423F0A4F2170CF18001D52B5 /* ChangePasswordVC.swift */,
@@ -662,6 +665,7 @@
 				421ADFEE2156575300C00F6F /* HomeNewsTVCell.swift in Sources */,
 				421ADFF021566FE000C00F6F /* NewsDetailVC.swift in Sources */,
 				261AA133217F40F20044585C /* DataManager.swift in Sources */,
+				4266D16321EEF4DA00CBD61A /* AboutUsVC.swift in Sources */,
 				268C112521E4C36E00C76B9C /* BookmarkTVCell.swift in Sources */,
 				265E218621649ACE0053E5A0 /* SettingsVC.swift in Sources */,
 			);
