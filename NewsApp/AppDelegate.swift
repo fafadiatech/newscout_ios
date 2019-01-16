@@ -39,6 +39,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
         if UserDefaults.standard.value(forKey: "darkModeEnabled") == nil{
             UserDefaults.standard.setValue(false, forKey: "darkModeEnabled")
         }
+        
+        let notificationTypes: UIUserNotificationType = [UIUserNotificationType.alert, UIUserNotificationType.badge, UIUserNotificationType.sound]
+        let pushNotificationSettings = UIUserNotificationSettings(types: notificationTypes, categories: nil)
+        application.registerUserNotificationSettings(pushNotificationSettings)
+        application.registerForRemoteNotifications()
+      
         return true
     }
     

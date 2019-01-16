@@ -99,6 +99,7 @@
 		2648C69421C915F300CCB657 /* SocialLoginTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocialLoginTests.swift; sourceTree = "<group>"; };
 		2648C69621C917D500CCB657 /* FunctionalityTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FunctionalityTests.swift; sourceTree = "<group>"; };
 		264C5395219AAAD60050F79D /* Toast.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Toast.swift; sourceTree = "<group>"; };
+		2652532921EF5C950061F8E0 /* NewsApp.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = NewsApp.entitlements; sourceTree = "<group>"; };
 		265E218521649ACE0053E5A0 /* SettingsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsVC.swift; sourceTree = "<group>"; };
 		266C6B2F2158C2B6009A0A9D /* SearchResultTVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultTVCell.swift; sourceTree = "<group>"; };
 		26718D0E21CD0117009CC66E /* HomeUITest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeUITest.swift; sourceTree = "<group>"; };
@@ -245,6 +246,7 @@
 		421ADFB72156407400C00F6F /* NewsApp */ = {
 			isa = PBXGroup;
 			children = (
+				2652532921EF5C950061F8E0 /* NewsApp.entitlements */,
 				263F2D9A216B737800764C45 /* Font */,
 				421ADFB82156407400C00F6F /* AppDelegate.swift */,
 				421ADFEB2156553500C00F6F /* Cell */,
@@ -431,6 +433,11 @@
 					421ADFB42156407400C00F6F = {
 						CreatedOnToolsVersion = 9.4.1;
 						ProvisioningStyle = Automatic;
+						SystemCapabilities = {
+							com.apple.Push = {
+								enabled = 1;
+							};
+						};
 					};
 					421ADFCB2156407600C00F6F = {
 						CreatedOnToolsVersion = 9.4.1;
@@ -851,12 +858,13 @@
 			baseConfigurationReference = D2728CD09D4106E0B1B64696 /* Pods-NewsApp.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = NewsApp/NewsApp.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = FHCLSYM87Q;
 				INFOPLIST_FILE = NewsApp/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.fafadiatech.fairbridge.NewsApp;
+				PRODUCT_BUNDLE_IDENTIFIER = com.fafadiatech.Newscout;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 4.0;
@@ -869,12 +877,13 @@
 			baseConfigurationReference = B4E2A515011B7DEE6BB2C6C0 /* Pods-NewsApp.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = NewsApp/NewsApp.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = FHCLSYM87Q;
 				INFOPLIST_FILE = NewsApp/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.fafadiatech.fairbridge.NewsApp;
+				PRODUCT_BUNDLE_IDENTIFIER = com.fafadiatech.Newscout;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 4.0;
