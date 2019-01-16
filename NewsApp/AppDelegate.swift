@@ -65,7 +65,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
      sourceApplication: sourceApplication,
      annotation: annotation)
      }*/
-    
+    func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+        let deviceTokenString = deviceToken.hexString
+        print(deviceTokenString)
+    }
     
     func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!,
               withError error: Error!) {

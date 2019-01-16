@@ -256,7 +256,7 @@ class SettingsTVC: UITableViewController, GIDSignInUIDelegate {
         }
         else if indexPath.section == 3 && indexPath.row == 1{
             let text = "checkout newScout app. I found it best for reading news."
-            let url = URL(string: "https://mail.google.com/")
+            let url = URL(string: "http://www.fafadiatech.com/")
             let shareAll = [ text, url] as [Any]
             
             let activityViewController = UIActivityViewController(activityItems: shareAll, applicationActivities: nil)
@@ -271,6 +271,12 @@ class SettingsTVC: UITableViewController, GIDSignInUIDelegate {
           //  UIApplication.sharedApplication().openURL(NSURL(string : "itms-apps://itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?id=\(0)&onlyLatestVersion=true&pageNumber=0&sortOrdering=1)")!);
             let url = URL(string: "https://mail.google.com")!
             UIApplication.shared.openURL(url)
+        }
+        else if indexPath.section == 3 && indexPath.row == 3{
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let AboutUsvc:AboutUsVC
+                = storyboard.instantiateViewController(withIdentifier: "AboutUsID") as! AboutUsVC
+            self.present(AboutUsvc, animated: true, completion: nil)
         }
         
         return indexPath

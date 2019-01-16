@@ -7,9 +7,18 @@
 //
 
 import UIKit
+import NightNight
+
+extension Data {
+    var hexString: String {
+        let hexString = map { String(format: "%02.2hhx", $0) }.joined()
+        return hexString
+    }
+}
 
 class AboutUsVC: UIViewController {
 
+    @IBOutlet weak var titleView: UIView!
     @IBOutlet weak var lblTitle: UILabel!
     @IBOutlet weak var txtViewAboutUs: UITextView!
     @IBOutlet weak var containerView: UIView!
@@ -20,12 +29,44 @@ class AboutUsVC: UIViewController {
     @IBOutlet weak var lblLastUpdatedVal: UILabel!
     @IBOutlet weak var lblDDbyVal: UILabel!
     
+    @IBOutlet weak var viewLblContainer: UIView!
     override func viewDidLoad() {
         super.viewDidLoad()
-        lblTitle.font = 
+        titleView.backgroundColor = colorConstants.redColor
+        NotificationCenter.default.addObserver(self, selector: #selector(darkModeEnabled(_:)), name: .darkModeEnabled, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(darkModeDisabled(_:)), name: .darkModeDisabled, object: nil)
+        
+        lblTitle.textColor = .white
+        lblTitle.font = FontConstants.viewTitleFont
+        let darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
+        if  darkModeStatus == true{
+            containerView.backgroundColor = colorConstants.grayBackground3
+            txtViewAboutUs.backgroundColor = colorConstants.grayBackground3
+            viewLblContainer.backgroundColor = colorConstants.grayBackground3
+        }
+    }
+    
+    @objc private func darkModeEnabled(_ notification: Notification) {
+        NightNight.theme = .night
+        containerView.backgroundColor = colorConstants.grayBackground3
+        txtViewAboutUs.backgroundColor = colorConstants.grayBackground3
+        viewLblContainer.backgroundColor = colorConstants.grayBackground3
+    }
+    
+    @objc private func darkModeDisabled(_ notification: Notification) {
+        NightNight.theme = .normal
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self, name: .darkModeEnabled, object: nil)
+        NotificationCenter.default.removeObserver(self, name: .darkModeDisabled, object: nil)
+    }
+    
+    override var prefersStatusBarHidden: Bool {
+        return true
     }
     
     @IBAction func btnBackActn(_ sender: Any) {
-        
+        self.dismiss(animated: false)
     }
 }

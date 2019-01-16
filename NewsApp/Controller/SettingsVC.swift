@@ -16,7 +16,6 @@ class SettingsVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         lblTitle.textColor = colorConstants.whiteColor
-        lblTitle.font = FontConstants.LargeFontTitleMedium
         viewTitle.backgroundColor = colorConstants.redColor
         lblTitle.font = FontConstants.viewTitleFont
     }
