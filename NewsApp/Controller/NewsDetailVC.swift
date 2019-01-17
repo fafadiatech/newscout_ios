@@ -166,14 +166,14 @@ class NewsDetailVC: UIViewController {
                                                      toItem: viewLikeDislike,
                                                      attribute: NSLayoutAttribute.top,
                                                      multiplier: 1,
-                                                     constant: -10)//.isActive = true
+                                                     constant: -10)
         lblTimesTopConstraint = NSLayoutConstraint (item: lblTimeAgo,
                                                     attribute: NSLayoutAttribute.bottom,
                                                     relatedBy: NSLayoutRelation.equal,
                                                     toItem: viewLikeDislike,
                                                     attribute: NSLayoutAttribute.top,
                                                     multiplier: 1,
-                                                    constant: -10)//.isActive = true
+                                                    constant: -10)
         newsAreaHeightConstraint.constant = 100
         viewLikeDislikeHeightConstraint.constant = -26.5
         viewLikeDislikeBottomConstraint = NSLayoutConstraint (item: viewLikeDislike,
@@ -182,7 +182,7 @@ class NewsDetailVC: UIViewController {
                                                               toItem: viewNewsArea,
                                                               attribute: NSLayoutAttribute.bottom,
                                                               multiplier: 1,
-                                                              constant: -30)//.isActive = true
+                                                              constant: -30)
         NSLayoutConstraint.activate([lblTimesTopConstraint])
         NSLayoutConstraint.activate([lblSourceTopConstraint])
         NSLayoutConstraint.activate([viewLikeDislikeBottomConstraint])
@@ -385,7 +385,6 @@ class NewsDetailVC: UIViewController {
             case UISwipeGestureRecognizerDirection.right:
                 ViewWebContainer.isHidden = true
                 viewLikeDislike.isHidden = false
-                //self.dismiss(animated: false)
                 print("Swiped right")
                 
             case UISwipeGestureRecognizerDirection.down:
@@ -538,14 +537,12 @@ class NewsDetailVC: UIViewController {
                 
                 playbackSlider.addTarget(self, action: #selector(NewsDetailVC.playbackSliderValueChanged(_:)), for: .valueChanged)
                 self.avPlayerView.addSubview(playbackSlider)
-                //player!.play()
             }
             
         }
         else{
             btnPlayVideo.isHidden = true
             avPlayerView.isHidden = true
-            // imgNews.downloadedFrom(link: "\(currentArticle.imageURL!)")
             imgNews.sd_setImage(with: URL(string: currentArticle.imageURL), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
         }
         print("currentArticle.isLike: \(currentArticle.isLike)")
@@ -721,7 +718,6 @@ class NewsDetailVC: UIViewController {
     
     @IBAction func btnBackAction(_ sender: Any) {
         let isSearch = UserDefaults.standard.value(forKey: "isSearch") as! String
-        // self.dismiss(animated: false)
         if isSearch == "search"{
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             let vc:SearchVC = storyboard.instantiateViewController(withIdentifier: "SearchID") as! SearchVC
@@ -733,10 +729,6 @@ class NewsDetailVC: UIViewController {
             self.present(vc, animated: true, completion: nil)
         }
         else if isSearch == "" {
-            //        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-            //        let vc:HomeParentVC = storyboard.instantiateViewController(withIdentifier: "HomeParentID") as! HomeParentVC
-            //        self.present(vc, animated: true, completion: nil)
-            //self.dismiss(animated: false)
             self.view.window!.rootViewController?.dismiss(animated: false, completion: nil)
             
         }
@@ -780,9 +772,9 @@ class NewsDetailVC: UIViewController {
     @IBAction func PlayButtonTapped() -> Void {
         print("Hello Edit Button")
     }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
 }
 
@@ -856,7 +848,7 @@ extension NewsDetailVC:UICollectionViewDelegate, UICollectionViewDataSource, UIC
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             let newsDetailvc:NewsDetailVC = storyboard.instantiateViewController(withIdentifier: "NewsDetailID") as! NewsDetailVC
             newsDetailvc.newsCurrentIndex = indexPath.row - 1
-            newsDetailvc.ArticleData = RecomArticleData
+            newsDetailvc.articleArr = RecomArticleData[0].body.articles
             newsDetailvc.articleId = RecomArticleData[0].body.articles[indexPath.row - 1].article_id!
             present(newsDetailvc, animated: true, completion: nil)
         }

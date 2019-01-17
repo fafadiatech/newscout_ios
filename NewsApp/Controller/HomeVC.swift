@@ -21,7 +21,6 @@ class HomeVC: UIViewController{
     @IBOutlet weak var lblNonews: UILabel!
     var tabBarTitle: String = ""
     var ShowArticle = [NewsArticle]()
-    var ArticleData = [ArticleStatus]()
     let appDelegate = UIApplication.shared.delegate as? AppDelegate
     let activityIndicator = MDCActivityIndicator()
     var pageNum = 0
@@ -29,9 +28,9 @@ class HomeVC: UIViewController{
     var currentCategory = "All News"
     var selectedCategory = ""
     var nextURL = ""
-  //  var previousURL = ""
     var lastContentOffset: CGFloat = 0
     var articlesArr = [Article]()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         lblNonews.isHidden = true
@@ -151,12 +150,11 @@ class HomeVC: UIViewController{
         APICall().loadNewsbyCategoryAPI(url: APPURL.ArticlesByCategoryURL + "\(selectedCategory)" ){ (status, response) in
             switch response {
             case .Success(let data) :
-                self.ArticleData = data
-                self.articlesArr = self.ArticleData[0].body.articles
-                if self.ArticleData[0].body.next != nil{
-                    self.nextURL = self.ArticleData[0].body.next!
+                self.articlesArr = data[0].body.articles
+                if data[0].body.next != nil{
+                    self.nextURL = data[0].body.next!
                 }
-                if self.ArticleData[0].body.articles.count == 0{
+                if data[0].body.articles.count == 0{
                     self.activityIndicator.stopAnimating()
                     self.lblNonews.isHidden = false
                 }
@@ -213,7 +211,7 @@ class HomeVC: UIViewController{
 
 extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelegate{
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return (ArticleData.count != 0) ? self.articlesArr.count : 0
+        return (articlesArr.count != 0) ? self.articlesArr.count : 0
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -240,11 +238,10 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
         dateFormatter.timeZone = NSTimeZone(name: "UTC")! as TimeZone
-        //set label colors
         cell.lblSource.textColor = colorConstants.txtDarkGrayColor
         cell.lblTimesAgo.textColor = colorConstants.txtDarkGrayColor
         //display data using API
-        if ArticleData.count != 0{
+        if articlesArr.count != 0{
             let currentArticle = articlesArr[indexPath.row]
             cell.lblNewsHeading.text = currentArticle.title
             cell.lblSource.text = currentArticle.source
@@ -300,10 +297,9 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
                     (status, response) in
                     switch response {
                     case .Success(let data) :
-                        self.ArticleData = data
-                        self.articlesArr.append(contentsOf: self.ArticleData[0].body.articles)
-                        if self.ArticleData[0].body.next != nil{
-                            self.nextURL = self.ArticleData[0].body.next!
+                        self.articlesArr.append(contentsOf: data[0].body.articles)
+                        if data[0].body.next != nil{
+                            self.nextURL = data[0].body.next!
                         }
                         else{
                             self.nextURL = ""

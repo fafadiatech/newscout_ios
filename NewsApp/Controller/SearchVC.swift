@@ -39,17 +39,12 @@ class SearchVC: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(darkModeDisabled(_:)), name: .darkModeDisabled, object: nil)
         activityIndicator.cycleColors = [.blue]
         activityIndicator.frame = CGRect(x: view.frame.width/2, y: view.frame.height/2 - 100, width: 40, height: 40)
-        //activityIndicator.frame = CGRect(x: view.frame.width/2, y: view.frame.height/2 - 100, width: 40, height: 40)
-        
         activityIndicator.sizeToFit()
         activityIndicator.indicatorMode = .indeterminate
         activityIndicator.progress = 2.0
         view.addSubview(activityIndicator)
         titleView.backgroundColor = colorConstants.redColor
-       // txtSearch.autocorrectionType = .no
         txtSearch.font = FontConstants.NormalFontContent
-       // txtSearch.backgroundColor = colorConstants.whiteColor
-       // txtSearch.textColor = colorConstants.whiteColor
         lblTitle.textColor = colorConstants.whiteColor
         lblTitle.font = FontConstants.viewTitleFont
     }
@@ -96,7 +91,7 @@ class SearchVC: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         changeFont()
-        searchResultTV.reloadData() //for tableview
+        searchResultTV.reloadData()
     }
     
     override var prefersStatusBarHidden: Bool {
@@ -120,15 +115,11 @@ class SearchVC: UIViewController {
     }
     
     @IBAction func btnSearchAction(_ sender: Any) {
-//        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-//        let vc:HomeParentVC = storyboard.instantiateViewController(withIdentifier: "HomeParentID") as! HomeParentVC
-//        self.present(vc, animated: true, completion: nil)
         self.view.window!.rootViewController?.dismiss(animated: false, completion: nil)
     }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
 }
 
@@ -222,7 +213,6 @@ extension SearchVC: UITextFieldDelegate
                     print(data)
                   
                     if self.ArticleData[0].body.articles.count == 0{
-                      //  self.searchResultTV.makeToast("There is not any news matching with entered keyword", duration: 2.0, position: .center)
                         self.lblNoNews.isHidden = false
                         self.lblNoNews.text = "No news found"
                     }

@@ -60,25 +60,18 @@ class SettingsTVC: UITableViewController, GIDSignInUIDelegate {
         let darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
         if  darkModeStatus == true{
             settingsTV.backgroundColor = colorConstants.grayBackground2
-            //let cell = SettingsTVCell()
-           //cell.backgroundColor = .black
             changeColor()
             
         }
     }
     
     @objc private func darkModeEnabled(_ notification: Notification) {
-        // Write your dark mode code here
         NightNight.theme = .night
-       // let cell = SettingsTVCell()
         changeColor()
-       // cell.backgroundColor = .black
         settingsTV.backgroundColor = colorConstants.grayBackground2
-        
     }
     
     @objc private func darkModeDisabled(_ notification: Notification) {
-        // Write your non-dark mode code here
         NightNight.theme = .normal
         settingsTV.backgroundColor = colorConstants.grayBackground3
     }
@@ -89,7 +82,6 @@ class SettingsTVC: UITableViewController, GIDSignInUIDelegate {
     }
     
     func changeColor(){
-        
         lblLogin.textColor = .black
         btnLogout.titleLabel?.textColor = .black
         lblProfile.textColor = .black
@@ -109,7 +101,6 @@ class SettingsTVC: UITableViewController, GIDSignInUIDelegate {
         if UserDefaults.standard.value(forKey: "token") == nil && UserDefaults.standard.value(forKey: "googleToken") == nil && UserDefaults.standard.value(forKey: "FBToken") == nil  {
             lblLogin.text = "Login"
             btnLogout.isHidden = true
-            // userDefault has a value
         }
         else {
             if UserDefaults.standard.value(forKey: "email") != nil{
@@ -160,7 +151,7 @@ class SettingsTVC: UITableViewController, GIDSignInUIDelegate {
         else if UserDefaults.standard.value(forKey: "FBToken") != nil{
             let manager = FBSDKLoginManager()
             manager.logOut()
-            FBSDKAccessToken.setCurrent(nil)//setCurrentAccessToken(nil)
+            FBSDKAccessToken.setCurrent(nil)
             FBSDKProfile.setCurrent(nil)
             self.btnLogout.isHidden = true
             let defaults = UserDefaults.standard
@@ -285,22 +276,16 @@ class SettingsTVC: UITableViewController, GIDSignInUIDelegate {
     @IBAction func switchNightModeActn(_ sender: Any) {
         if switchNightMode.isOn == true {
             UserDefaults.standard.setValue(true, forKey: "darkModeEnabled")
-            
-            // Post the notification to let all current view controllers that the app has changed to dark mode, and they should theme themselves to reflect this change.
             NotificationCenter.default.post(name: .darkModeEnabled, object: nil)
-            
-        } else {
-            
+        }
+        else {
             UserDefaults.standard.setValue(false, forKey: "darkModeEnabled")
-            
-            // Post the notification to let all current view controllers that the app has changed to non-dark mode, and they should theme themselves to reflect this change.
             NotificationCenter.default.post(name: .darkModeDisabled, object: nil)
         }
     }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
 }
 
