@@ -90,11 +90,9 @@ class NewsDetailVC: UIViewController {
                 self.RecomArticleData = data
                 self.suggestedCV.reloadData()
             case .Failure(let errormessage) :
-                print(errormessage)
                 self.view.makeToast(errormessage, duration: 2.0, position: .center)
             case .Change(let code):
                 if code == 404{
-                    print(code)
                     let defaults = UserDefaults.standard
                     defaults.removeObject(forKey: "googleToken")
                     defaults.removeObject(forKey: "FBToken")
@@ -212,19 +210,8 @@ class NewsDetailVC: UIViewController {
                                                     constant: -45)
         NSLayoutConstraint.activate([lblTimesTopConstraint])
         NSLayoutConstraint.activate([lblSourceTopConstraint])
-        /* viewLikeDislikeBottomConstraint = NSLayoutConstraint (item: viewLikeDislike,
-         attribute: NSLayoutAttribute.bottom,
-         relatedBy: NSLayoutRelation.equal,
-         toItem: lblSource,
-         attribute: NSLayoutAttribute.bottom,
-         multiplier: 1,
-         constant: 0)
-         // newsAreaHeightConstraint.constant = 120
-         NSLayoutConstraint.activate([lblTimesTopConstraint])
-         NSLayoutConstraint.activate([lblSourceTopConstraint])
-         NSLayoutConstraint.activate([viewLikeDislikeBottomConstraint])*/
-        
     }
+    
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         
         super.viewWillTransition(to: size, with: coordinator)
@@ -234,23 +221,20 @@ class NewsDetailVC: UIViewController {
             viewLikeDislike.isHidden = true
             print("landscape")
             addLandscapeConstraints()
-            
         } else {
             print(UIDevice.current.orientation)
             print("potrait")
             viewLikeDislike.isHidden = false
             addPotraitConstraint()
-        } // else
-        
+        }
     }
+    
     @objc private func darkModeEnabled(_ notification: Notification) {
-        // Write your dark mode code here
         NightNight.theme = .night
         changeTheme()
     }
     
     @objc private func darkModeDisabled(_ notification: Notification) {
-        // Write your non-dark mode code here
         NightNight.theme = .normal
     }
     
@@ -262,15 +246,12 @@ class NewsDetailVC: UIViewController {
     func checkImageOrVideo(url : String) -> Bool{
         
         let imageExtensions = ["png", "jpg", "gif"]
-        //...
-        // Iterate & match the URL objects from your checking results
         let url: URL? = NSURL(fileURLWithPath: url) as URL
         let pathExtention = url?.pathExtension
         if imageExtensions.contains(pathExtention!)
         {
             print("Image URL: \(String(describing: url))")
             return true
-            // Do something with it
         }else
         {
             print("Movie URL: \(String(describing: url))")
@@ -297,8 +278,6 @@ class NewsDetailVC: UIViewController {
         let asset = AVAsset(url: URL(string: url)!)
         let assetImgGenerate = AVAssetImageGenerator(asset: asset)
         assetImgGenerate.appliesPreferredTrackTransform = true
-        //Can set this to improve performance if target size is known before hand
-        //assetImgGenerate.maximumSize = CGSize(width,height)
         let time = CMTimeMakeWithSeconds(1.0, 600)
         do {
             let img = try assetImgGenerate.copyCGImage(at: time, actualTime: nil)
@@ -342,9 +321,6 @@ class NewsDetailVC: UIViewController {
                 viewLikeDislike.isHidden = true
             }
         }
-        //        else{
-        //            viewLikeDislike.isHidden = false
-        //        }
         if UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad{
             if statusBarOrientation.isPortrait {
                 if Device.orientationDetail != .unknown{
@@ -376,7 +352,7 @@ class NewsDetailVC: UIViewController {
     func changeFont()
     {
         let textSizeSelected = UserDefaults.standard.value(forKey: "textSize") as! Int
-        // txtViewNewsDesc.textColor = colorConstants.txtDarkGrayColor
+        
         if textSizeSelected == 0{
             lblNewsHeading.font = FontConstants.smallFontHeadingBold
             lblSource.font = FontConstants.smallFontContentMedium
@@ -416,8 +392,6 @@ class NewsDetailVC: UIViewController {
                 if newsCurrentIndex > 0
                 {
                     newsCurrentIndex = newsCurrentIndex - 1
-                    //let id = ArticleData[0].body.articles[newsCurrentIndex].article_id
-                    //newsDetailAPICall(currentIndex : id!)
                     ShowNews(currentIndex : newsCurrentIndex)
                     transition.type = kCATransitionPush
                     transition.subtype = kCATransitionFromBottom
@@ -443,11 +417,9 @@ class NewsDetailVC: UIViewController {
                 WKWebView.load(myRequest)
                 
             case UISwipeGestureRecognizerDirection.up:
-                if newsCurrentIndex < articleArr.count - 1//ArticleData[0].body.articles.count - 1
+                if newsCurrentIndex < articleArr.count - 1
                 {
                     newsCurrentIndex = newsCurrentIndex + 1
-                    //let id = ArticleData[0].body.articles[newsCurrentIndex].article_id
-                    //newsDetailAPICall(currentIndex : id!)
                     ShowNews(currentIndex : newsCurrentIndex)
                     transition.type = kCATransitionPush
                     transition.subtype = kCATransitionFromTop
@@ -518,7 +490,7 @@ class NewsDetailVC: UIViewController {
         playbackSlider.removeFromSuperview()
         avPlayerView.isHidden = true
         
-        let currentArticle = articleArr[currentIndex] //ArticleData[0].body.articles[currentIndex]
+        let currentArticle = articleArr[currentIndex]
         print(currentArticle)
         let newDate = dateFormatter.date(from: currentArticle.published_on!)
         let agoDate = Helper().timeAgoSinceDate(newDate!)
@@ -621,7 +593,6 @@ class NewsDetailVC: UIViewController {
                             
                         }
                         self.articleArr[self.newsCurrentIndex].isLike = 0
-                        //self.ArticleData[0].body.articles[self.newsCurrentIndex].isLike = 0
                     }
                 }
             }
@@ -875,7 +846,6 @@ extension NewsDetailVC:UICollectionViewDelegate, UICollectionViewDataSource, UIC
             newsDetailvc.newsCurrentIndex = indexPath.row - 1
             newsDetailvc.ArticleData = RecomArticleData
             newsDetailvc.articleId = RecomArticleData[0].body.articles[indexPath.row - 1].article_id!
-            print("articleId in didselect: \(articleId)")
             present(newsDetailvc, animated: true, completion: nil)
         }
     }

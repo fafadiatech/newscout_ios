@@ -26,7 +26,6 @@ class APICall{
     //API call to load all articles on HomeVC
     func loadNewsAPI(page: Int, _ completion : @escaping (ArticleAPIResult) -> ()){
         let url = APPURL.ArticlesURL + "\(page)"
-        print("Load API url: \(url)")
         Alamofire.request(url,method: .get).responseString{
             response in
             if(response.result.isSuccess){
@@ -63,23 +62,18 @@ class APICall{
         else{
             headers = ["Authorization": ""]
         }
-        print(headers)
         Alamofire.request(url,method: .get, headers: headers).responseString{
             response in
-            print(response)
             if(response.result.isSuccess){
-                print(response.result)
                 if let data = response.data {
                     let jsonDecoder = JSONDecoder()
                     do {
                         if response.response?.statusCode == 404{
-                            //if let httpResponse = response as? HTTPURLResponse {
                             print("error \(response.response?.statusCode)")
                             completion("error 404",ArticleAPIResult.Change(404))
                         }
                         else{
                             let jsonData = try jsonDecoder.decode(ArticleStatus.self, from: data)
-                            print(jsonData)
                             completion(String((response.response?.statusCode)!), ArticleAPIResult.Success([jsonData]))
                         }
                     }
@@ -168,7 +162,7 @@ class APICall{
     
     func loadSearchAPI(searchTxt: String,_ completion : @escaping (String, ArticleAPIResult) -> ()){
         var search = searchTxt
-       // search = searchTxt.replacingOccurrences(of: "'", with: "%27")
+        // search = searchTxt.replacingOccurrences(of: "'", with: "%27")
         let whitespace = NSCharacterSet.whitespaces
         var range = search.rangeOfCharacter(from: whitespace)
         
@@ -192,7 +186,6 @@ class APICall{
                         let  jsonDecoder = JSONDecoder()
                         do {
                             let jsonData = try jsonDecoder.decode(ArticleStatus.self, from: data)
-                            print(jsonData)
                             completion(String((response.response?.statusCode)!), ArticleAPIResult.Success([jsonData]))
                             
                         }
@@ -221,27 +214,26 @@ class APICall{
         Alamofire.request(url,method: .post, parameters: param).responseString{
             response in
             if(response.result.isSuccess){
-//                if response.response?.statusCode != 200{
-//                    completion(String((response.response?.statusCode)!),"")
-//                }
-//                else{
-                    if let data = response.data {
-                        let jsonDecoder = JSONDecoder()
-                        do {
-                            let jsonData = try jsonDecoder.decode(MainModel.self, from: data)
-                            print(jsonData)
-                            if jsonData.header.status == "0"{
-                                completion(String((response.response?.statusCode)!),jsonData.errors!.errorList![0].field_error)
-                            }
-                            else{
-                                completion(String((response.response?.statusCode)!), jsonData.body!.Msg!)
-                            }
-                            
+                //                if response.response?.statusCode != 200{
+                //                    completion(String((response.response?.statusCode)!),"")
+                //                }
+                //                else{
+                if let data = response.data {
+                    let jsonDecoder = JSONDecoder()
+                    do {
+                        let jsonData = try jsonDecoder.decode(MainModel.self, from: data)
+                        if jsonData.header.status == "0"{
+                            completion(String((response.response?.statusCode)!),jsonData.errors!.errorList![0].field_error)
                         }
-                        catch {
-                            print("Error: \(error)")
+                        else{
+                            completion(String((response.response?.statusCode)!), jsonData.body!.Msg!)
                         }
+                        
                     }
+                    catch {
+                        print("Error: \(error)")
+                    }
+                }
                 //}
             }
             else{
@@ -259,38 +251,37 @@ class APICall{
         Alamofire.request(url,method: .post, parameters: param).responseString{
             response in
             if(response.result.isSuccess){
-               // if response.response?.statusCode == 200{
-                    
-                    if let data = response.data {
-                        let jsonDecoder = JSONDecoder()
-                        do {
-                            let jsonData = try jsonDecoder.decode(MainModel.self, from: data)
-                            print(jsonData)
-                            if jsonData.header.status == "0"{
-                                if jsonData.errors?.invalid_credentials != nil{
-                                    completion((response.response?.statusCode)!, (jsonData.errors?.invalid_credentials)!)
-                                }
-                                else{
-                                    completion((response.response?.statusCode)!, (jsonData.errors?.errorList![0].field_error)!)
-                                }
+                // if response.response?.statusCode == 200{
+                
+                if let data = response.data {
+                    let jsonDecoder = JSONDecoder()
+                    do {
+                        let jsonData = try jsonDecoder.decode(MainModel.self, from: data)
+                        if jsonData.header.status == "0"{
+                            if jsonData.errors?.invalid_credentials != nil{
+                                completion((response.response?.statusCode)!, (jsonData.errors?.invalid_credentials)!)
                             }
                             else{
-                                UserDefaults.standard.set(jsonData.body?.first_name, forKey: "first_name")
-                                UserDefaults.standard.set(jsonData.body?.last_name, forKey: "last_name")
-                                UserDefaults.standard.set(jsonData.body?.token, forKey: "token")
-                                UserDefaults.standard.set(jsonData.body?.user_id, forKey: "user_id")
-                                UserDefaults.standard.set(param["email"], forKey: "email")
-                                completion((response.response?.statusCode)!, jsonData.header.status)
+                                completion((response.response?.statusCode)!, (jsonData.errors?.errorList![0].field_error)!)
                             }
                         }
-                        catch {
-                            print("Error: \(error)")
+                        else{
+                            UserDefaults.standard.set(jsonData.body?.first_name, forKey: "first_name")
+                            UserDefaults.standard.set(jsonData.body?.last_name, forKey: "last_name")
+                            UserDefaults.standard.set(jsonData.body?.token, forKey: "token")
+                            UserDefaults.standard.set(jsonData.body?.user_id, forKey: "user_id")
+                            UserDefaults.standard.set(param["email"], forKey: "email")
+                            completion((response.response?.statusCode)!, jsonData.header.status)
                         }
                     }
-           //     }
-//                else{
-//                    completion((response.response?.statusCode)!,"")
-//                }
+                    catch {
+                        print("Error: \(error)")
+                    }
+                }
+                //     }
+                //                else{
+                //                    completion((response.response?.statusCode)!,"")
+                //                }
             }
             else{
                 if let err = response.result.error as? URLError, err.code == .notConnectedToInternet {
@@ -327,7 +318,6 @@ class APICall{
                     let jsonDecoder = JSONDecoder()
                     do {
                         let jsonData = try jsonDecoder.decode(MainModel.self, from: data)
-                        print(jsonData)
                         if jsonData.header.status == "0"{
                             completion(jsonData.header.status,jsonData.errors!.invalid_credentials!)
                         }
@@ -455,7 +445,6 @@ class APICall{
         let url = APPURL.forgotPasswordURL
         let param = ["email" : email]
         
-        print(param)
         Alamofire.request(url,method: .post, parameters: param).responseString{
             response in
             if(response.result.isSuccess){
@@ -463,7 +452,6 @@ class APICall{
                     let jsonDecoder = JSONDecoder()
                     do {
                         let jsonData = try jsonDecoder.decode(MainModel.self, from: data)
-                        print(jsonData)
                         if jsonData.header.status == "0"{
                             completion(jsonData.header.status, jsonData.errors!.Msg!)
                         }
@@ -487,7 +475,6 @@ class APICall{
     //Change Password
     func ChangePasswordAPI(param : Dictionary<String, String>, _ completion : @escaping (String, String) ->()) {
         let url = APPURL.changePasswordURL
-        print(param)
         var headers : [String: String]
         if UserDefaults.standard.value(forKey: "token") != nil{
             let token = "Token " + "\(UserDefaults.standard.value(forKey: "token")!)"
@@ -504,7 +491,6 @@ class APICall{
         else{
             headers = ["Authorization": ""]
         }
-        print(headers)
         Alamofire.request(url,method: .post, parameters: param, headers: headers).responseString{
             response in
             if(response.result.isSuccess){
@@ -512,7 +498,6 @@ class APICall{
                     let jsonDecoder = JSONDecoder()
                     do {
                         let jsonData = try jsonDecoder.decode(MainModel.self, from: data)
-                        print(jsonData)
                         if jsonData.header.status == "0"{
                             completion(jsonData.header.status, jsonData.errors!.Msg!)
                         }
@@ -597,7 +582,6 @@ class APICall{
         print(url)
         Alamofire.request(url,method: .get, headers: headers).responseJSON{
             response in
-            print("response of articleDetailAPI: \(response)")
             if(response.result.isSuccess){
                 if response.response?.statusCode == 200{
                     if let data = response.data {
