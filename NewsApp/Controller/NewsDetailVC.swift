@@ -56,7 +56,7 @@ class NewsDetailVC: UIViewController {
     var viewLikeDislikeBottomConstraint : NSLayoutConstraint!
     var deviceOrientation: UIDeviceOrientation = UIDevice.current.orientation
     var statusBarOrientation: UIInterfaceOrientation = UIApplication.shared.statusBarOrientation
-    
+    var articleArr = [Article]()
     var playerViewWidth = CGFloat()
     var playerViewHeight = CGFloat()
     
@@ -443,7 +443,7 @@ class NewsDetailVC: UIViewController {
                 WKWebView.load(myRequest)
                 
             case UISwipeGestureRecognizerDirection.up:
-                if newsCurrentIndex < ArticleData[0].body.articles.count - 1
+                if newsCurrentIndex < articleArr.count - 1//ArticleData[0].body.articles.count - 1
                 {
                     newsCurrentIndex = newsCurrentIndex + 1
                     //let id = ArticleData[0].body.articles[newsCurrentIndex].article_id
@@ -518,7 +518,7 @@ class NewsDetailVC: UIViewController {
         playbackSlider.removeFromSuperview()
         avPlayerView.isHidden = true
         
-        let currentArticle = ArticleData[0].body.articles[currentIndex]
+        let currentArticle = articleArr[currentIndex] //ArticleData[0].body.articles[currentIndex]
         print(currentArticle)
         let newDate = dateFormatter.date(from: currentArticle.published_on!)
         let agoDate = Helper().timeAgoSinceDate(newDate!)
@@ -620,7 +620,8 @@ class NewsDetailVC: UIViewController {
                             self.btnDislike.setImage(UIImage(named: "dislike.png"), for: .normal)
                             
                         }
-                        self.ArticleData[0].body.articles[self.newsCurrentIndex].isLike = 0
+                        self.articleArr[self.newsCurrentIndex].isLike = 0
+                        //self.ArticleData[0].body.articles[self.newsCurrentIndex].isLike = 0
                     }
                 }
             }
@@ -634,7 +635,7 @@ class NewsDetailVC: UIViewController {
                     }
                     else{
                         self.btnLike.setImage(UIImage(named: "like.png"), for: .normal)
-                        self.ArticleData[0].body.articles[self.newsCurrentIndex].isLike = 2
+                        self.articleArr[self.newsCurrentIndex].isLike = 2
                     }
                 }
             }
@@ -659,7 +660,7 @@ class NewsDetailVC: UIViewController {
                         if (self.btnLike.currentImage?.isEqual(UIImage(named: "filledLike.png")))! {
                             self.btnLike.setImage(UIImage(named: "like.png"), for: .normal)
                         }
-                        self.ArticleData[0].body.articles[self.newsCurrentIndex].isLike = 1
+                        self.articleArr[self.newsCurrentIndex].isLike = 1
                     }
                 }
             }
@@ -673,7 +674,7 @@ class NewsDetailVC: UIViewController {
                     }
                     else{
                         self.btnDislike.setImage(UIImage(named: "dislike.png"), for: .normal)
-                        self.ArticleData[0].body.articles[self.newsCurrentIndex].isLike = 2
+                        self.articleArr[self.newsCurrentIndex].isLike = 2
                     }
                 }
             }
@@ -718,16 +719,16 @@ class NewsDetailVC: UIViewController {
     }
     
     @IBAction func btnShareActn(_ sender: Any) {
-        let text = ArticleData[0].body.articles[newsCurrentIndex].title
+        let text = articleArr[newsCurrentIndex].title
         let webURL = "Sent via NewsCout : (www.newscout.in)"
-        let url = URL(string:ArticleData[0].body.articles[newsCurrentIndex].imageURL!)
+        let url = URL(string:articleArr[newsCurrentIndex].imageURL!)
         var image1 = UIImage(named: "\(url)")
         var image = UIImage()
         if let data = try? Data(contentsOf: url!)
         {
             image = UIImage(data: data)!
         }
-        let sourceURL = URL(string: "\(ArticleData[0].body.articles[newsCurrentIndex].url!)")
+        let sourceURL = URL(string: "\(articleArr[newsCurrentIndex].url!)")
         let shareAll = [ text , image1, image,  sourceURL , webURL ] as [Any]
         
         let activityViewController = UIActivityViewController(activityItems: shareAll, applicationActivities: nil)

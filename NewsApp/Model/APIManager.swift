@@ -92,7 +92,7 @@ class APICall{
             else{
                 print(response.result.error!)
                 if let err = response.result.error as? URLError, err.code == .notConnectedToInternet {
-                    completion(String((response.response?.statusCode)!), ArticleAPIResult.Failure(err.localizedDescription))
+                    completion("no net", ArticleAPIResult.Failure(err.localizedDescription))
                 }
             }
         }
@@ -128,7 +128,7 @@ class APICall{
             }
             else{
                 if let err = response.result.error as? URLError, err.code == .notConnectedToInternet {
-                    completion(String((response.response?.statusCode)!), ArticleAPIResult.Failure(err.localizedDescription))
+                    completion("no net", ArticleAPIResult.Failure(err.localizedDescription))
                 }
             }
         }
@@ -160,7 +160,7 @@ class APICall{
             }
             else{
                 if let err = response.result.error as? URLError, err.code == .notConnectedToInternet {
-                    completion((response.response?.statusCode)!, CategoryAPIResult.Failure(Constants.InternetErrorMsg))
+                    completion(0, CategoryAPIResult.Failure(Constants.InternetErrorMsg))
                 }
             }
         }
@@ -208,7 +208,7 @@ class APICall{
             }
             else{
                 if let err = response.result.error as? URLError, err.code == .notConnectedToInternet {
-                    completion(String((response.response?.statusCode)!), ArticleAPIResult.Failure(err.localizedDescription))
+                    completion("no net", ArticleAPIResult.Failure(err.localizedDescription))
                 }
             }
         }
@@ -246,7 +246,7 @@ class APICall{
             }
             else{
                 if let err = response.result.error as? URLError, err.code == .notConnectedToInternet {
-                    completion(String((response.response?.statusCode)!), Constants.InternetErrorMsg)
+                    completion("no net", Constants.InternetErrorMsg)
                 }
             }
         }
@@ -294,7 +294,7 @@ class APICall{
             }
             else{
                 if let err = response.result.error as? URLError, err.code == .notConnectedToInternet {
-                    completion((response.response?.statusCode)!,Constants.InternetErrorMsg)
+                    completion(0,Constants.InternetErrorMsg)
                 }
             }
         }
@@ -617,7 +617,7 @@ class APICall{
             }
             else{
                 if let err = response.result.error as? URLError, err.code == .notConnectedToInternet {
-                    completion(String((response.response?.statusCode)!), ArticleDetailAPIResult.Failure(err.localizedDescription))
+                    completion("no net", ArticleDetailAPIResult.Failure(err.localizedDescription))
                 }
             }
         }

@@ -30,6 +30,7 @@ class LoginVC: UIViewController, GIDSignInUIDelegate, FBSDKLoginButtonDelegate {
     @IBOutlet weak var viewFBLogin: UIView!
       @IBOutlet weak var btnFBLogin: FBSDKLoginButton!
     @IBOutlet weak var tryFBlogin: UIButton!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         txtUsername.autocorrectionType = .no
@@ -53,6 +54,7 @@ class LoginVC: UIViewController, GIDSignInUIDelegate, FBSDKLoginButtonDelegate {
         btnForgtPswd.titleLabel?.font = FontConstants.FontBtnTitle
         //signInButton.backgroundColor = colorConstants.redColor
         btnFBLogin.readPermissions = ["public_profile", "email"]
+        tryFBlogin.isHidden = true
         if FBSDKAccessToken.current() != nil{
             print(FBSDKAccessToken.current())
             UserDefaults.standard.set(FBSDKAccessToken.current()?.tokenString, forKey: "FBToken")
