@@ -35,8 +35,8 @@ struct Article: Decodable
     let category : String?
     let source: String?
     let title : String?
-    let imageURL : String?
-    let url : String?
+    let imageURL : String!
+    let url : String!
     let published_on : String?
     let blurb : String?
     var isBookmark : Bool?

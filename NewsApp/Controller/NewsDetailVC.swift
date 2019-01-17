@@ -499,11 +499,11 @@ class NewsDetailVC: UIViewController {
         txtViewNewsDesc.text = currentArticle.blurb
         lblSource.text = currentArticle.source
         lblTimeAgo.text = agoDate
-        sourceURL = currentArticle.url!
-        let checkImg = checkImageOrVideo(url: currentArticle.imageURL!)
+        sourceURL = currentArticle.url
+        let checkImg = checkImageOrVideo(url: currentArticle.imageURL)
         if checkImg == false{
             btnPlayVideo.isHidden = false
-            let newURL = NSURL(string: currentArticle.imageURL!)
+            let newURL = NSURL(string: currentArticle.imageURL)
             if let thumbnail = createThumbnailOfVideoFromRemoteUrl(url: "https://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4"){
                 imgNews.image = thumbnail
                 let url = URL(string: "https://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4")
@@ -546,7 +546,7 @@ class NewsDetailVC: UIViewController {
             btnPlayVideo.isHidden = true
             avPlayerView.isHidden = true
             // imgNews.downloadedFrom(link: "\(currentArticle.imageURL!)")
-            imgNews.sd_setImage(with: URL(string: currentArticle.imageURL!), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
+            imgNews.sd_setImage(with: URL(string: currentArticle.imageURL), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
         }
         print("currentArticle.isLike: \(currentArticle.isLike)")
         if currentArticle.isLike == 0 {
@@ -692,15 +692,27 @@ class NewsDetailVC: UIViewController {
     @IBAction func btnShareActn(_ sender: Any) {
         let text = articleArr[newsCurrentIndex].title
         let webURL = "Sent via NewsCout : (www.newscout.in)"
-        let url = URL(string:articleArr[newsCurrentIndex].imageURL!)
-        var image1 = UIImage(named: "\(url)")
-        var image = UIImage()
-        if let data = try? Data(contentsOf: url!)
-        {
-            image = UIImage(data: data)!
+        var shareAll : [Any]
+        var sourceURL : URL!
+        if articleArr[newsCurrentIndex].imageURL != nil{
+            let url = URL(string:articleArr[newsCurrentIndex].imageURL)
+            let image1 = UIImage(named: "\(url)")
+            var image = UIImage()
+            if let data = try? Data(contentsOf: url!)
+            {
+                image = UIImage(data: data)!
+            }
+            if articleArr[newsCurrentIndex].url != nil{
+                sourceURL = URL(string: "\(articleArr[newsCurrentIndex].url)")
+            }
+            shareAll = [ text , image1, image,  sourceURL , webURL ] as [Any]
         }
-        let sourceURL = URL(string: "\(articleArr[newsCurrentIndex].url!)")
-        let shareAll = [ text , image1, image,  sourceURL , webURL ] as [Any]
+        else{
+            if articleArr[newsCurrentIndex].url != nil{
+                 sourceURL = URL(string: "\(articleArr[newsCurrentIndex].url)")
+            }
+            shareAll = [ text , sourceURL , webURL ] as [Any]
+        }
         
         let activityViewController = UIActivityViewController(activityItems: shareAll, applicationActivities: nil)
         activityViewController.popoverPresentationController?.sourceView = sender as! UIView
@@ -812,7 +824,7 @@ extension NewsDetailVC:UICollectionViewDelegate, UICollectionViewDataSource, UIC
             let currentArticle =  RecomArticleData[0].body.articles[indexPath.row - 1]
             cell.lblTitle.text = currentArticle.title
             if currentArticle.imageURL != nil{
-                let checkImg = checkImageOrVideo(url: currentArticle.imageURL!)
+                let checkImg = checkImageOrVideo(url: currentArticle.imageURL)
                 if checkImg == false{
                     cell.btnCellPlayVIdeo.isHidden = false
                     if let thumbnail = createThumbnailOfVideoFromRemoteUrl(url: "https://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4"){
@@ -821,7 +833,7 @@ extension NewsDetailVC:UICollectionViewDelegate, UICollectionViewDataSource, UIC
                 }
                 else{
                     cell.btnCellPlayVIdeo.isHidden = true
-                    cell.imgNews.sd_setImage(with: URL(string: currentArticle.imageURL!), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
+                    cell.imgNews.sd_setImage(with: URL(string: currentArticle.imageURL), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
                 }
             }
             if cell.imgNews.image == nil{

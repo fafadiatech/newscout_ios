@@ -214,10 +214,6 @@ class APICall{
         Alamofire.request(url,method: .post, parameters: param).responseString{
             response in
             if(response.result.isSuccess){
-                //                if response.response?.statusCode != 200{
-                //                    completion(String((response.response?.statusCode)!),"")
-                //                }
-                //                else{
                 if let data = response.data {
                     let jsonDecoder = JSONDecoder()
                     do {
@@ -234,7 +230,6 @@ class APICall{
                         print("Error: \(error)")
                     }
                 }
-                //}
             }
             else{
                 if let err = response.result.error as? URLError, err.code == .notConnectedToInternet {
@@ -251,8 +246,6 @@ class APICall{
         Alamofire.request(url,method: .post, parameters: param).responseString{
             response in
             if(response.result.isSuccess){
-                // if response.response?.statusCode == 200{
-                
                 if let data = response.data {
                     let jsonDecoder = JSONDecoder()
                     do {
@@ -278,10 +271,6 @@ class APICall{
                         print("Error: \(error)")
                     }
                 }
-                //     }
-                //                else{
-                //                    completion((response.response?.statusCode)!,"")
-                //                }
             }
             else{
                 if let err = response.result.error as? URLError, err.code == .notConnectedToInternet {
