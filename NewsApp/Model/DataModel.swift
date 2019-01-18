@@ -17,9 +17,9 @@ struct ArticleStatus : Decodable
 }
 struct articleBody : Decodable
 {
-    let count :  Int?
-    let next : String?
-    let previous : String?
+    let count :  Int!
+    let next : String!
+    let previous : String!
     var articles : [Article]
     
     enum CodingKeys: String, CodingKey{
@@ -31,16 +31,16 @@ struct articleBody : Decodable
 }
 struct Article: Decodable
 {
-    let article_id : Int?
-    let category : String?
-    let source: String?
-    let title : String?
+    let article_id : Int!
+    let category : String!
+    let source: String!
+    let title : String!
     let imageURL : String!
     let url : String!
-    let published_on : String?
-    let blurb : String?
-    var isBookmark : Bool?
-    var isLike : Int?
+    let published_on : String!
+    let blurb : String!
+    var isBookmark : Bool!
+    var isLike : Int!
     
     enum CodingKeys: String, CodingKey{
         case article_id = "id"

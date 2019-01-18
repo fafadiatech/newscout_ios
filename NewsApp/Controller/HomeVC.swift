@@ -42,8 +42,6 @@ class HomeVC: UIViewController{
         activityIndicator.indicatorMode = .indeterminate
         activityIndicator.progress = 2.0
         view.addSubview(activityIndicator)
-        var settingvc = SettingsTVC()
-        // To make the activity indicator appear:
         activityIndicator.startAnimating()
         
         var paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
@@ -150,10 +148,10 @@ class HomeVC: UIViewController{
         APICall().loadNewsbyCategoryAPI(url: APPURL.ArticlesByCategoryURL + "\(selectedCategory)" ){ (status, response) in
             switch response {
             case .Success(let data) :
-                if data.count != 0{
+                if data.count > 0{
                     self.articlesArr = data[0].body.articles
                     if data[0].body.next != nil{
-                        self.nextURL = data[0].body.next!
+                        self.nextURL = data[0].body.next
                     }
                     if data[0].body.articles.count == 0{
                         self.activityIndicator.stopAnimating()
@@ -221,7 +219,7 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
         let newsDetailvc:NewsDetailVC = storyboard.instantiateViewController(withIdentifier: "NewsDetailID") as! NewsDetailVC
         newsDetailvc.newsCurrentIndex = indexPath.row
         newsDetailvc.articleArr = articlesArr
-        newsDetailvc.articleId = articlesArr[indexPath.row].article_id!
+        newsDetailvc.articleId = articlesArr[indexPath.row].article_id
         UserDefaults.standard.set("", forKey: "isSearch")
         present(newsDetailvc, animated: true, completion: nil)
     }
@@ -243,14 +241,14 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
         cell.lblSource.textColor = colorConstants.txtDarkGrayColor
         cell.lblTimesAgo.textColor = colorConstants.txtDarkGrayColor
         //display data using API
-        if articlesArr.count != 0{
+        if articlesArr.count > 0{
             let currentArticle = articlesArr[indexPath.row]
             cell.lblNewsHeading.text = currentArticle.title
             cell.lblSource.text = currentArticle.source
-            let newDate = dateFormatter.date(from: currentArticle.published_on!)
+            let newDate = dateFormatter.date(from: currentArticle.published_on)
             let agoDate = Helper().timeAgoSinceDate(newDate!)
             cell.lblTimesAgo.text = agoDate
-            cell.imgNews.sd_setImage(with: URL(string: currentArticle.imageURL!), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
+            cell.imgNews.sd_setImage(with: URL(string: currentArticle.imageURL), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
         }
         let textSizeSelected = UserDefaults.standard.value(forKey: "textSize") as! Int
         if textSizeSelected == 0{
@@ -299,10 +297,10 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
                     (status, response) in
                     switch response {
                     case .Success(let data) :
-                        if data.count != 0 {
+                        if data.count > 0 {
                             self.articlesArr.append(contentsOf: data[0].body.articles)
                             if data[0].body.next != nil{
-                                self.nextURL = data[0].body.next!
+                                self.nextURL = data[0].body.next
                             }
                             else{
                                 self.nextURL = ""

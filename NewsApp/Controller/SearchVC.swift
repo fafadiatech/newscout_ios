@@ -135,7 +135,7 @@ extension SearchVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDele
         let newsDetailvc:NewsDetailVC = storyboard.instantiateViewController(withIdentifier: "NewsDetailID") as! NewsDetailVC
         newsDetailvc.newsCurrentIndex = indexPath.row
         newsDetailvc.articleArr = searchArticlesArr
-        newsDetailvc.articleId = searchArticlesArr[indexPath.row].article_id!
+        newsDetailvc.articleId = searchArticlesArr[indexPath.row].article_id
         UserDefaults.standard.set("search", forKey: "isSearch")
         present(newsDetailvc, animated: true, completion: nil)
     }
@@ -157,11 +157,11 @@ extension SearchVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDele
         if searchArticlesArr.count != 0{
             let currentArticle = searchArticlesArr[indexPath.row]
             cell.lblSource.text = currentArticle.source
-            let newDate = dateFormatter.date(from: currentArticle.published_on!)
+            let newDate = dateFormatter.date(from: currentArticle.published_on)
             let agoDate = Helper().timeAgoSinceDate(newDate!)
             cell.lbltimeAgo.text = agoDate
             cell.lblNewsDescription.text = currentArticle.title
-            cell.imgNews.downloadedFrom(link: "\(currentArticle.imageURL!)")
+            cell.imgNews.downloadedFrom(link: "\(currentArticle.imageURL)")
         }
         
         if textSizeSelected == 0{
@@ -205,10 +205,10 @@ extension SearchVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDele
                 APICall().loadSearchAPI(url: nextURL){ (Status, response) in
                     switch response {
                     case .Success(let data) :
-                        if data.count != 0 {
+                        if data.count > 0 {
                             self.searchArticlesArr.append(contentsOf: data[0].body.articles)
                             if data[0].body.next != nil{
-                                self.nextURL = data[0].body.next!
+                                self.nextURL = data[0].body.next
                             }
                             else{
                                 self.nextURL = ""
@@ -266,10 +266,10 @@ extension SearchVC: UITextFieldDelegate
                 APICall().loadSearchAPI(url: url){ (Status, response) in
                     switch response {
                     case .Success(let data) :
-                        if data.count != 0{
+                        if data.count > 0{
                             self.searchArticlesArr = data[0].body.articles
                             if data[0].body.next != nil{
-                                self.nextURL = data[0].body.next!
+                                self.nextURL = data[0].body.next
                             }
                             if data[0].body.articles.count == 0{
                                 self.lblNoNews.isHidden = false
@@ -305,7 +305,8 @@ extension SearchVC: UITextFieldDelegate
          let managedContext =
          appDelegate?.persistentContainer.viewContext
          do {
-         results = (try managedContext?.fetch(fetchRequest))! as! [NewsArticle]
+         results = (try managedContext?.fetch(fetchRequest))
+         as! [NewsArticle]
          print("result.count: \(results.count)")
          print ("results val: \(results)")
          searchResultTV.reloadData()

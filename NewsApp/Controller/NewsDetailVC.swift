@@ -491,9 +491,9 @@ class NewsDetailVC: UIViewController {
         
         let currentArticle = articleArr[currentIndex]
         print(currentArticle)
-        let newDate = dateFormatter.date(from: currentArticle.published_on!)
+        let newDate = dateFormatter.date(from: currentArticle.published_on)
         let agoDate = Helper().timeAgoSinceDate(newDate!)
-        articleId = currentArticle.article_id!
+        articleId = currentArticle.article_id
         lblNewsHeading.text = currentArticle.title
         txtViewNewsDesc.text = currentArticle.blurb
         lblSource.text = currentArticle.source
@@ -846,7 +846,7 @@ extension NewsDetailVC:UICollectionViewDelegate, UICollectionViewDataSource, UIC
             let newsDetailvc:NewsDetailVC = storyboard.instantiateViewController(withIdentifier: "NewsDetailID") as! NewsDetailVC
             newsDetailvc.newsCurrentIndex = indexPath.row - 1
             newsDetailvc.articleArr = RecomArticleData[0].body.articles
-            newsDetailvc.articleId = RecomArticleData[0].body.articles[indexPath.row - 1].article_id!
+            newsDetailvc.articleId = RecomArticleData[0].body.articles[indexPath.row - 1].article_id
             present(newsDetailvc, animated: true, completion: nil)
         }
     }

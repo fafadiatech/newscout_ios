@@ -27,8 +27,6 @@ class BookmarkVC: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(darkModeDisabled(_:)), name: .darkModeDisabled, object: nil)
         activityIndicator.cycleColors = [.blue]
         activityIndicator.frame = CGRect(x: view.frame.width/2, y: view.frame.height/2 - 100, width: 40, height: 40)
-        //activityIndicator.frame = CGRect(x: view.frame.width/2, y: view.frame.height/2 - 100, width: 40, height: 40)
-        
         activityIndicator.sizeToFit()
         activityIndicator.indicatorMode = .indeterminate
         activityIndicator.progress = 2.0
@@ -76,7 +74,7 @@ class BookmarkVC: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         changeFont()
-        bookmarkResultTV.reloadData() //for tableview
+        bookmarkResultTV.reloadData()
     }
     
     override var prefersStatusBarHidden: Bool {
@@ -126,7 +124,7 @@ class BookmarkVC: UIViewController {
         APICall().BookmarkedArticlesAPI(url: APPURL.bookmarkedArticlesURL){ response in
             switch response {
             case .Success(let data) :
-                if data.count != 0{
+                if data.count > 0{
                     self.bookmarkedArticlesArr = data[0].body.articles
                     if data[0].body.next != nil{
                         self.nextURL = data[0].body.next!
@@ -154,10 +152,8 @@ class BookmarkVC: UIViewController {
             refreshControl.endRefreshing()
         }
     }
+    
     @IBAction func btnBackActn(_ sender: Any) {
-        //        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        //        let vc:HomeParentVC = storyboard.instantiateViewController(withIdentifier: "HomeParentID") as! HomeParentVC
-        //        self.present(vc, animated: true, completion: nil)
         self.view.window!.rootViewController?.dismiss(animated: false, completion: nil)
     }
     
@@ -245,7 +241,7 @@ extension BookmarkVC: UITableViewDelegate, UITableViewDataSource{
                 APICall().BookmarkedArticlesAPI(url: nextURL){ response in
                     switch response {
                     case .Success(let data) :
-                        if data.count != 0{
+                        if data.count > 0{
                             self.bookmarkedArticlesArr.append(contentsOf: data[0].body.articles)
                             if data[0].body.next != nil{
                                 self.nextURL = data[0].body.next!
