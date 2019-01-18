@@ -150,16 +150,18 @@ class HomeVC: UIViewController{
         APICall().loadNewsbyCategoryAPI(url: APPURL.ArticlesByCategoryURL + "\(selectedCategory)" ){ (status, response) in
             switch response {
             case .Success(let data) :
-                self.articlesArr = data[0].body.articles
-                if data[0].body.next != nil{
-                    self.nextURL = data[0].body.next!
-                }
-                if data[0].body.articles.count == 0{
-                    self.activityIndicator.stopAnimating()
-                    self.lblNonews.isHidden = false
-                }
-                else{
-                    self.HomeNewsTV.reloadData()
+                if data.count != 0{
+                    self.articlesArr = data[0].body.articles
+                    if data[0].body.next != nil{
+                        self.nextURL = data[0].body.next!
+                    }
+                    if data[0].body.articles.count == 0{
+                        self.activityIndicator.stopAnimating()
+                        self.lblNonews.isHidden = false
+                    }
+                    else{
+                        self.HomeNewsTV.reloadData()
+                    }
                 }
             case .Failure(let errormessage) :
                 self.activityIndicator.startAnimating()
@@ -281,7 +283,7 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
         }
         if cell.imgNews.image == nil
         {
-              cell.imgNews.image = UIImage(named: "NoImage.png")
+            cell.imgNews.image = UIImage(named: "NoImage.png")
         }
         
         activityIndicator.stopAnimating()
@@ -297,16 +299,17 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
                     (status, response) in
                     switch response {
                     case .Success(let data) :
-                        self.articlesArr.append(contentsOf: data[0].body.articles)
-                        if data[0].body.next != nil{
-                            self.nextURL = data[0].body.next!
+                        if data.count != 0 {
+                            self.articlesArr.append(contentsOf: data[0].body.articles)
+                            if data[0].body.next != nil{
+                                self.nextURL = data[0].body.next!
+                            }
+                            else{
+                                self.nextURL = ""
+                                self.view.makeToast("No more news to show", duration: 1.0, position: .center)
+                            }
+                            self.HomeNewsTV.reloadData()
                         }
-                        else{
-                            self.nextURL = ""
-                             self.view.makeToast("No more news to show", duration: 1.0, position: .center)
-                        }
-                        self.HomeNewsTV.reloadData()
-                       
                     case .Failure(let errormessage) :
                         print(errormessage)
                         self.activityIndicator.startAnimating()

@@ -706,7 +706,7 @@ class NewsDetailVC: UIViewController {
         }
         else{
             if articleArr[newsCurrentIndex].url != nil{
-                 sourceURL = URL(string: "\(articleArr[newsCurrentIndex].url)")
+                sourceURL = URL(string: "\(articleArr[newsCurrentIndex].url)")
             }
             shareAll = [ text , sourceURL , webURL ] as [Any]
         }
@@ -719,9 +719,7 @@ class NewsDetailVC: UIViewController {
     @IBAction func btnBackAction(_ sender: Any) {
         let isSearch = UserDefaults.standard.value(forKey: "isSearch") as! String
         if isSearch == "search"{
-            let storyboard = UIStoryboard(name: "Main", bundle: nil)
-            let vc:SearchVC = storyboard.instantiateViewController(withIdentifier: "SearchID") as! SearchVC
-            self.present(vc, animated: true, completion: nil)
+            self.dismiss(animated: false)
         }
         else if isSearch == "bookmark"{
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
@@ -730,7 +728,6 @@ class NewsDetailVC: UIViewController {
         }
         else if isSearch == "" {
             self.view.window!.rootViewController?.dismiss(animated: false, completion: nil)
-            
         }
     }
     

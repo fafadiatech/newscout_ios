@@ -39,7 +39,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
         if UserDefaults.standard.value(forKey: "darkModeEnabled") == nil{
             UserDefaults.standard.setValue(false, forKey: "darkModeEnabled")
         }
-        
+        if UserDefaults.standard.value(forKey: "searchTxt") != nil{
+            UserDefaults.standard.set("", forKey: "searchTxt")
+        }
         let notificationTypes: UIUserNotificationType = [UIUserNotificationType.alert, UIUserNotificationType.badge, UIUserNotificationType.sound]
         let pushNotificationSettings = UIUserNotificationSettings(types: notificationTypes, categories: nil)
         application.registerUserNotificationSettings(pushNotificationSettings)
