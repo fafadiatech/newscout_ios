@@ -46,6 +46,7 @@ class SignUpVC: UIViewController {
            changeColor()
         }
     }
+    
     func changeColor(){
         txtFname.selectedTitleColor = colorConstants.grayBackground3
         txtLname.selectedTitleColor = colorConstants.grayBackground3
@@ -61,14 +62,13 @@ class SignUpVC: UIViewController {
         btnAlreadyMember.backgroundColor = colorConstants.grayBackground3
         containerView.backgroundColor = colorConstants.grayBackground3
     }
+    
     @objc private func darkModeEnabled(_ notification: Notification) {
-        // Write your dark mode code here
         NightNight.theme = .night
        
     }
     
     @objc private func darkModeDisabled(_ notification: Notification) {
-        // Write your non-dark mode code here
         NightNight.theme = .normal
     }
     
@@ -157,13 +157,13 @@ class SignUpVC: UIViewController {
     @IBAction func btnLoginActn(_ sender: Any) {
         self.dismiss(animated: true)
     }
-    //Hide status bar
+   
     override var prefersStatusBarHidden: Bool {
         return true
     }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
 }
 
@@ -171,7 +171,7 @@ extension SignUpVC : UITextFieldDelegate{
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool
     {
         if textField ==  txtFname || textField == txtLname{
-            let allowedCharacters = CharacterSet(charactersIn:"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ ")//Here change this characters based on your requirement
+            let allowedCharacters = CharacterSet(charactersIn:"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ ")
             let characterSet = CharacterSet(charactersIn: string)
             return allowedCharacters.isSuperset(of: characterSet)
         }
@@ -184,10 +184,8 @@ extension SignUpVC : UITextFieldDelegate{
             nextField.becomeFirstResponder()
         }
         else {
-            // Not found, so remove keyboard.
             textField.resignFirstResponder()
         }
-        // Do not add a line break
         return false
     }
 }

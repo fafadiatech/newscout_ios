@@ -15,12 +15,11 @@ class BookmarkVC: UIViewController {
     @IBOutlet weak var titleView: UIView!
     @IBOutlet weak var bookmarkResultTV: UITableView!
     @IBOutlet weak var btnBack: UIButton!
-    var ArticleData = [ArticleStatus]()
     let activityIndicator = MDCActivityIndicator()
-    var nextURL = ""
-    var previousURL = ""
     let appDelegate = UIApplication.shared.delegate as? AppDelegate
     let textSizeSelected = UserDefaults.standard.value(forKey: "textSize") as! Int
+    var bookmarkedArticlesArr = [Article]()
+    var nextURL = ""
    
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -28,8 +27,6 @@ class BookmarkVC: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(darkModeDisabled(_:)), name: .darkModeDisabled, object: nil)
         activityIndicator.cycleColors = [.blue]
         activityIndicator.frame = CGRect(x: view.frame.width/2, y: view.frame.height/2 - 100, width: 40, height: 40)
-        //activityIndicator.frame = CGRect(x: view.frame.width/2, y: view.frame.height/2 - 100, width: 40, height: 40)
-        
         activityIndicator.sizeToFit()
         activityIndicator.indicatorMode = .indeterminate
         activityIndicator.progress = 2.0
@@ -77,7 +74,7 @@ class BookmarkVC: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         changeFont()
-        bookmarkResultTV.reloadData() //for tableview
+        bookmarkResultTV.reloadData()
     }
     
     override var prefersStatusBarHidden: Bool {
@@ -127,17 +124,18 @@ class BookmarkVC: UIViewController {
         APICall().BookmarkedArticlesAPI(url: APPURL.bookmarkedArticlesURL){ response in
             switch response {
             case .Success(let data) :
-                self.ArticleData = data
-                print(self.ArticleData[0].body.articles)
-                if self.ArticleData[0].body.next != nil{
-                    self.nextURL = self.ArticleData[0].body.next!}
-                if self.ArticleData[0].body.previous != nil{
-                    self.previousURL = self.ArticleData[0].body.previous!}
-                if self.ArticleData[0].body.articles.count == 0{
-                    self.activityIndicator.stopAnimating()
-                    self.bookmarkResultTV.makeToast("There is not any article bookmarked yet...", duration: 1.0, position: .center)
-                }else{
-                    self.bookmarkResultTV.reloadData()}
+                if data.count > 0{
+                    self.bookmarkedArticlesArr = data[0].body.articles
+                    if data[0].body.next != nil{
+                        self.nextURL = data[0].body.next!
+                    }
+                    if data[0].body.articles.count == 0{
+                        self.activityIndicator.stopAnimating()
+                        self.bookmarkResultTV.makeToast("There is not any article bookmarked yet...", duration: 1.0, position: .center)
+                    }else{
+                        self.bookmarkResultTV.reloadData()
+                    }
+                }
             case .Failure(let errormessage) :
                 print(errormessage)
                 self.activityIndicator.startAnimating()
@@ -154,18 +152,16 @@ class BookmarkVC: UIViewController {
             refreshControl.endRefreshing()
         }
     }
+    
     @IBAction func btnBackActn(_ sender: Any) {
-//        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-//        let vc:HomeParentVC = storyboard.instantiateViewController(withIdentifier: "HomeParentID") as! HomeParentVC
-//        self.present(vc, animated: true, completion: nil)
         self.view.window!.rootViewController?.dismiss(animated: false, completion: nil)
     }
-
+    
 }
 
 extension BookmarkVC: UITableViewDelegate, UITableViewDataSource{
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return (ArticleData.count != 0) ? self.ArticleData[0].body.articles.count : 0
+        return (bookmarkedArticlesArr.count != 0) ? bookmarkedArticlesArr.count : 0
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -173,8 +169,8 @@ extension BookmarkVC: UITableViewDelegate, UITableViewDataSource{
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let newsDetailvc:NewsDetailVC = storyboard.instantiateViewController(withIdentifier: "NewsDetailID") as! NewsDetailVC
         newsDetailvc.newsCurrentIndex = indexPath.row
-        newsDetailvc.ArticleData = ArticleData
-        newsDetailvc.articleId = ArticleData[0].body.articles[indexPath.row].article_id!
+        newsDetailvc.articleArr = bookmarkedArticlesArr
+        newsDetailvc.articleId = bookmarkedArticlesArr[indexPath.row].article_id!
         UserDefaults.standard.set("bookmark", forKey: "isSearch")
         present(newsDetailvc, animated: true, completion: nil)
     }
@@ -193,8 +189,8 @@ extension BookmarkVC: UITableViewDelegate, UITableViewDataSource{
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
         dateFormatter.timeZone = NSTimeZone(name: "UTC")! as TimeZone
-        if ArticleData.count != 0{
-            let currentArticle = ArticleData[0].body.articles[indexPath.row]
+        if bookmarkedArticlesArr.count != 0{
+            let currentArticle = bookmarkedArticlesArr[indexPath.row]
             cell.lblSource.text = currentArticle.source
             let newDate = dateFormatter.date(from: currentArticle.published_on!)
             let agoDate = Helper().timeAgoSinceDate(newDate!)
@@ -245,58 +241,17 @@ extension BookmarkVC: UITableViewDelegate, UITableViewDataSource{
                 APICall().BookmarkedArticlesAPI(url: nextURL){ response in
                     switch response {
                     case .Success(let data) :
-                        self.ArticleData = data
-                        print(self.ArticleData[0].body.articles.count)
-                        print("nexturl data: \(self.ArticleData)")
-                        if self.ArticleData[0].body.next != nil{
-                            self.nextURL = self.ArticleData[0].body.next!
+                        if data.count > 0{
+                            self.bookmarkedArticlesArr.append(contentsOf: data[0].body.articles)
+                            if data[0].body.next != nil{
+                                self.nextURL = data[0].body.next!
+                            }
+                            else{
+                                self.nextURL = ""
+                                self.bookmarkResultTV.makeToast("No more news to show", duration: 1.0, position: .center)
+                            }
+                            self.bookmarkResultTV.reloadData()
                         }
-                        else{
-                            self.nextURL = ""
-                            self.bookmarkResultTV.makeToast("No more news to show", duration: 1.0, position: .center)
-                        }
-                        if self.ArticleData[0].body.previous != nil{
-                            self.previousURL = self.ArticleData[0].body.previous!
-                        }
-                        else{
-                            self.previousURL = ""
-                        }
-                        self.bookmarkResultTV.reloadData()
-                    case .Failure(let errormessage) :
-                        print(errormessage)
-                        self.activityIndicator.startAnimating()
-                        self.bookmarkResultTV.makeToast(errormessage, duration: 2.0, position: .center)
-                    case .Change(let code):
-                        print(code)
-                    }
-                }
-                self.activityIndicator.stopAnimating()
-            }
-        } else {
-            print(" it's going down")
-            if previousURL != ""{
-                self.activityIndicator.startAnimating()
-                APICall().BookmarkedArticlesAPI(url: nextURL){ response in
-                    switch response {
-                    case .Success(let data) :
-                        self.ArticleData = data
-                        print(self.ArticleData[0].body.articles.count)
-                        print("previous url data: \(self.ArticleData)")
-                        if self.ArticleData[0].body.previous != nil{
-                            self.previousURL = self.ArticleData[0].body.previous!
-                            print(self.previousURL)
-                        }
-                        else{
-                            self.previousURL = ""
-                            self.bookmarkResultTV.makeToast("No more news to show", duration: 1.0, position: .center)
-                        }
-                        if self.ArticleData[0].body.next != nil{
-                            self.nextURL = self.ArticleData[0].body.next!
-                        }
-                        else{
-                            self.nextURL = ""
-                        }
-                        self.bookmarkResultTV.reloadData()
                     case .Failure(let errormessage) :
                         print(errormessage)
                         self.activityIndicator.startAnimating()

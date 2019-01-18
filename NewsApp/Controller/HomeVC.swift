@@ -21,7 +21,6 @@ class HomeVC: UIViewController{
     @IBOutlet weak var lblNonews: UILabel!
     var tabBarTitle: String = ""
     var ShowArticle = [NewsArticle]()
-    var ArticleData = [ArticleStatus]()
     let appDelegate = UIApplication.shared.delegate as? AppDelegate
     let activityIndicator = MDCActivityIndicator()
     var pageNum = 0
@@ -29,8 +28,8 @@ class HomeVC: UIViewController{
     var currentCategory = "All News"
     var selectedCategory = ""
     var nextURL = ""
-    var previousURL = ""
     var lastContentOffset: CGFloat = 0
+    var articlesArr = [Article]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -43,8 +42,6 @@ class HomeVC: UIViewController{
         activityIndicator.indicatorMode = .indeterminate
         activityIndicator.progress = 2.0
         view.addSubview(activityIndicator)
-        var settingvc = SettingsTVC()
-        // To make the activity indicator appear:
         activityIndicator.startAnimating()
         
         var paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
@@ -101,16 +98,11 @@ class HomeVC: UIViewController{
     }
     
     @objc private func darkModeEnabled(_ notification: Notification) {
-        // Write your dark mode code here
         NightNight.theme = .night
-        //HomeNewsTV.mixedBackgroundColor = MixedColor(normal: 0xffffff, night:
-        ////  0x000000)
         HomeNewsTV.backgroundColor = colorConstants.grayBackground3
-        
     }
     
     @objc private func darkModeDisabled(_ notification: Notification) {
-        // Write your non-dark mode code here
         NightNight.theme = .normal
     }
     
@@ -132,7 +124,6 @@ class HomeVC: UIViewController{
             self.appDelegate?.persistentContainer.viewContext
         do {
             self.ShowArticle = (try managedContext?.fetch(fetchRequest))! as! [NewsArticle]
-            print("result.count: \(self.ShowArticle.count)")
         }
         catch {
             print("error executing fetch request: \(error)")
@@ -149,7 +140,6 @@ class HomeVC: UIViewController{
             selectedCategory = tabBarTitle
         }
         selectedCategory = selectedCategory.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)!
-        print("selectedcat: \(tabBarTitle)")
         ArticlesAPICall()
         
     }
@@ -158,24 +148,23 @@ class HomeVC: UIViewController{
         APICall().loadNewsbyCategoryAPI(url: APPURL.ArticlesByCategoryURL + "\(selectedCategory)" ){ (status, response) in
             switch response {
             case .Success(let data) :
-                self.ArticleData = data
-                print(self.ArticleData[0].body.articles)
-                if self.ArticleData[0].body.next != nil{
-                    self.nextURL = self.ArticleData[0].body.next!}
-                if self.ArticleData[0].body.previous != nil{
-                    self.previousURL = self.ArticleData[0].body.previous!}
-                if self.ArticleData[0].body.articles.count == 0{
-                    self.activityIndicator.stopAnimating()
-                    //self.HomeNewsTV.makeToast("No articles found in this category...", duration: 1.0, position: .center)
-                    self.lblNonews.isHidden = false
-                }else{
-                    self.HomeNewsTV.reloadData()}
+                if data.count > 0{
+                    self.articlesArr = data[0].body.articles
+                    if data[0].body.next != nil{
+                        self.nextURL = data[0].body.next!
+                    }
+                    if data[0].body.articles.count == 0{
+                        self.activityIndicator.stopAnimating()
+                        self.lblNonews.isHidden = false
+                    }
+                    else{
+                        self.HomeNewsTV.reloadData()
+                    }
+                }
             case .Failure(let errormessage) :
-                print(errormessage)
                 self.activityIndicator.startAnimating()
                 self.HomeNewsTV.makeToast(errormessage, duration: 2.0, position: .center)
             case .Change(let code):
-                print(code)
                 if code == 404{
                     let defaults = UserDefaults.standard
                     defaults.removeObject(forKey: "googleToken")
@@ -188,7 +177,6 @@ class HomeVC: UIViewController{
                     self.showMsg(title: "Please login to continue..", msg: "")
                 }
             }
-            
         }
     }
     
@@ -199,7 +187,6 @@ class HomeVC: UIViewController{
         {
             alertController.popoverPresentationController?.sourceView = self.view
             alertController.popoverPresentationController?.sourceRect = CGRect(x: self.view.bounds.midX, y: self.view.bounds.midY, width: 0, height: 0)
-            
         }
         let action1 = UIAlertAction(title: "OK", style: .default) { (action:UIAlertAction) in
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
@@ -219,23 +206,20 @@ class HomeVC: UIViewController{
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
-    
 }
 
 extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelegate{
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return (ArticleData.count != 0) ? self.ArticleData[0].body.articles.count : 0
+        return (articlesArr.count != 0) ? self.articlesArr.count : 0
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        print("This cell  was selected: \(indexPath.row)")
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let newsDetailvc:NewsDetailVC = storyboard.instantiateViewController(withIdentifier: "NewsDetailID") as! NewsDetailVC
         newsDetailvc.newsCurrentIndex = indexPath.row
-        newsDetailvc.ArticleData = ArticleData
-        newsDetailvc.articleId = ArticleData[0].body.articles[indexPath.row].article_id!
+        newsDetailvc.articleArr = articlesArr
+        newsDetailvc.articleId = articlesArr[indexPath.row].article_id!
         UserDefaults.standard.set("", forKey: "isSearch")
         present(newsDetailvc, animated: true, completion: nil)
     }
@@ -254,18 +238,16 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
         dateFormatter.timeZone = NSTimeZone(name: "UTC")! as TimeZone
-        //set label colors
         cell.lblSource.textColor = colorConstants.txtDarkGrayColor
         cell.lblTimesAgo.textColor = colorConstants.txtDarkGrayColor
         //display data using API
-        if ArticleData.count != 0{
-            let currentArticle = ArticleData[0].body.articles[indexPath.row]
+        if articlesArr.count > 0{
+            let currentArticle = articlesArr[indexPath.row]
             cell.lblNewsHeading.text = currentArticle.title
             cell.lblSource.text = currentArticle.source
             let newDate = dateFormatter.date(from: currentArticle.published_on!)
             let agoDate = Helper().timeAgoSinceDate(newDate!)
             cell.lblTimesAgo.text = agoDate
-            //cell.imgNews.downloadedFrom(link: "\(currentArticle.imageURL!)")
             cell.imgNews.sd_setImage(with: URL(string: currentArticle.imageURL!), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
         }
         let textSizeSelected = UserDefaults.standard.value(forKey: "textSize") as! Int
@@ -283,7 +265,6 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
             cell.lblSource.font =  FontConstants.NormalFontContent
             cell.lblTimesAgo.font = FontConstants.NormalFontContent
             cell.lblNewsHeading.font = FontConstants.NormalFontHeadingBold
-            
         }
         activityIndicator.stopAnimating()
         
@@ -300,8 +281,10 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
         }
         if cell.imgNews.image == nil
         {
-              cell.imgNews.image = UIImage(named: "NoImage.png")
+            cell.imgNews.image = UIImage(named: "NoImage.png")
         }
+        
+        activityIndicator.stopAnimating()
         return cell
     }
     
@@ -310,35 +293,26 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
         if targetContentOffset.pointee.y < scrollView.contentOffset.y {
             print("it's going up")
             if nextURL != "" {
-                self.activityIndicator.startAnimating()
-                
                 APICall().loadNewsbyCategoryAPI(url: nextURL){
                     (status, response) in
                     switch response {
                     case .Success(let data) :
-                        self.ArticleData = data
-                        print(self.ArticleData[0].body.articles.count)
-                        print("nexturl data: \(self.ArticleData)")
-                        if self.ArticleData[0].body.next != nil{
-                            self.nextURL = self.ArticleData[0].body.next!
+                        if data.count > 0 {
+                            self.articlesArr.append(contentsOf: data[0].body.articles)
+                            if data[0].body.next != nil{
+                                self.nextURL = data[0].body.next!
+                            }
+                            else{
+                                self.nextURL = ""
+                                self.view.makeToast("No more news to show", duration: 1.0, position: .center)
+                            }
+                            self.HomeNewsTV.reloadData()
                         }
-                        else{
-                            self.nextURL = ""
-                            self.HomeNewsTV.makeToast("No more news to show", duration: 1.0, position: .center)
-                        }
-                        if self.ArticleData[0].body.previous != nil{
-                            self.previousURL = self.ArticleData[0].body.previous!
-                        }
-                        else{
-                            self.previousURL = ""
-                        }
-                        self.HomeNewsTV.reloadData()
                     case .Failure(let errormessage) :
                         print(errormessage)
                         self.activityIndicator.startAnimating()
-                        self.HomeNewsTV.makeToast(errormessage, duration: 2.0, position: .center)
+                        self.view.makeToast(errormessage, duration: 2.0, position: .center)
                     case .Change(let code):
-                        print(code)
                         if code == 404{
                             let defaults = UserDefaults.standard
                             defaults.removeObject(forKey: "googleToken")
@@ -352,55 +326,6 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
                         }
                     }
                 }
-                self.activityIndicator.stopAnimating()
-            }
-        } else {
-            print(" it's going down")
-            if previousURL != ""{
-                self.activityIndicator.startAnimating()
-                APICall().loadNewsbyCategoryAPI(url: previousURL){
-                    (status, response) in
-                    switch response {
-                    case .Success(let data) :
-                        self.ArticleData = data
-                        print(self.ArticleData[0].body.articles.count)
-                        print("previous url data: \(self.ArticleData)")
-                        if self.ArticleData[0].body.previous != nil{
-                            self.previousURL = self.ArticleData[0].body.previous!
-                            print(self.previousURL)
-                        }
-                        else{
-                            self.previousURL = ""
-                            self.HomeNewsTV.makeToast("No more news to show", duration: 1.0, position: .center)
-                        }
-                        if self.ArticleData[0].body.next != nil{
-                            self.nextURL = self.ArticleData[0].body.next!
-                        }
-                        else{
-                            self.nextURL = ""
-                        }
-                        self.HomeNewsTV.reloadData()
-                    case .Failure(let errormessage) :
-                        print(errormessage)
-                        self.HomeNewsTV.makeToast(errormessage, duration: 1.0, position: .center)
-                        self.activityIndicator.startAnimating()
-                        self.HomeNewsTV.makeToast(errormessage, duration: 2.0, position: .center)
-                    case .Change(let code):
-                        print(code)
-                        if code == 404{
-                            let defaults = UserDefaults.standard
-                            defaults.removeObject(forKey: "googleToken")
-                            defaults.removeObject(forKey: "FBToken")
-                            defaults.removeObject(forKey: "token")
-                            defaults.removeObject(forKey: "email")
-                            defaults.removeObject(forKey: "first_name")
-                            defaults.removeObject(forKey: "last_name")
-                            defaults.synchronize()
-                            self.showMsg(title: "Please login to continue..", msg: "")
-                        }
-                    }
-                }
-                self.activityIndicator.stopAnimating()
             }
         }
     }
@@ -408,7 +333,6 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
 
 extension HomeVC: IndicatorInfoProvider{
     func indicatorInfo(for pagerTabStripController: PagerTabStripViewController) -> IndicatorInfo {
-        print(tabBarTitle)
         return IndicatorInfo(title: tabBarTitle)
     }
 }

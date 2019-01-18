@@ -30,15 +30,14 @@ class LoginVC: UIViewController, GIDSignInUIDelegate, FBSDKLoginButtonDelegate {
     @IBOutlet weak var viewFBLogin: UIView!
       @IBOutlet weak var btnFBLogin: FBSDKLoginButton!
     @IBOutlet weak var tryFBlogin: UIButton!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         txtUsername.autocorrectionType = .no
         txtPassword.autocorrectionType = .no
-        //viewGmailSignIn.layer.cornerRadius = 15
         viewGmailSignIn.layer.borderWidth = 1
        
         viewGmailSignIn.layer.borderColor = UIColor(red:222/255, green:225/255, blue:227/255, alpha: 1).cgColor
-      //  viewGmailSignIn.backgroundColor = colorConstants.redColor
         btnLogin.layer.cornerRadius = 15
         btnLogin.layer.borderWidth = 0
         btnSignUp.layer.cornerRadius = 15
@@ -51,15 +50,15 @@ class LoginVC: UIViewController, GIDSignInUIDelegate, FBSDKLoginButtonDelegate {
         btnForgtPswd.backgroundColor = colorConstants.redColor
         btnForgtPswd.setTitleColor(colorConstants.whiteColor, for: .normal)
         btnForgtPswd.titleLabel?.font = FontConstants.FontBtnTitle
-        //signInButton.backgroundColor = colorConstants.redColor
         btnFBLogin.readPermissions = ["public_profile", "email"]
+        tryFBlogin.isHidden = true
         if FBSDKAccessToken.current() != nil{
             print(FBSDKAccessToken.current())
             UserDefaults.standard.set(FBSDKAccessToken.current()?.tokenString, forKey: "FBToken")
             fetchProfile()
         }
          btnFBLogin.titleLabel?.font = FontConstants.FontBtnTitle
-        signInButton.titleLabel?.font = FontConstants.FontBtnTitle //UIFont(name: AppFontName.medium, size: FontConstants.FontBtnTitle)
+        signInButton.titleLabel?.font = FontConstants.FontBtnTitle
     
         GIDSignIn.sharedInstance().uiDelegate = self
         viewTitle.backgroundColor = colorConstants.redColor
@@ -88,14 +87,11 @@ class LoginVC: UIViewController, GIDSignInUIDelegate, FBSDKLoginButtonDelegate {
     }
     
     @objc private func darkModeEnabled(_ notification: Notification) {
-        // Write your dark mode code here
         NightNight.theme = .night
        changeColor()
-        // btnSignUp.backgroundColor = colorConstants.grayBackground3
     }
     
     @objc private func darkModeDisabled(_ notification: Notification) {
-        // Write your non-dark mode code here
         NightNight.theme = .normal
     }
     
@@ -141,9 +137,9 @@ class LoginVC: UIViewController, GIDSignInUIDelegate, FBSDKLoginButtonDelegate {
     override var prefersStatusBarHidden: Bool {
         return true
     }
+    
     //default gmail button
     @IBAction func btnGSignInActn(_ sender: Any) {
-        //
     }
     @IBAction func btnBackActn(_ sender: Any) {
         self.dismiss(animated: true)
@@ -194,7 +190,6 @@ class LoginVC: UIViewController, GIDSignInUIDelegate, FBSDKLoginButtonDelegate {
     }
     
     @IBAction func googleSignIn(_ sender: Any) {
-      //  GIDSignIn.sharedInstance().delegate = self as! GIDSignInDelegate
         GIDSignIn.sharedInstance().uiDelegate=self
         GIDSignIn.sharedInstance().signIn()
         if UserDefaults.standard.value(forKey: "googleToken") != nil{
@@ -237,9 +232,7 @@ class LoginVC: UIViewController, GIDSignInUIDelegate, FBSDKLoginButtonDelegate {
     }
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
-    
 }
 
 extension LoginVC : UITextFieldDelegate{
@@ -250,10 +243,8 @@ extension LoginVC : UITextFieldDelegate{
             nextField.becomeFirstResponder()
         }
         else {
-            // Not found, so remove keyboard.
             textField.resignFirstResponder()
         }
-        // Do not add a line break
         return false
     }
 }

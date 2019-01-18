@@ -101,14 +101,12 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
     }
     
     @objc private func darkModeEnabled(_ notification: Notification) {
-        // Write your dark mode code here
         NightNight.theme = .night
         buttonBarView.backgroundColor = colorConstants.grayBackground1
         buttonBarView.selectedBar.backgroundColor = .white
     }
     
     @objc private func darkModeDisabled(_ notification: Notification) {
-        // Write your non-dark mode code here
         NightNight.theme = .normal
         buttonBarView.backgroundColor = colorConstants.whiteColor
         buttonBarView.selectedBar.backgroundColor = .red
@@ -160,7 +158,6 @@ extension HomeParentVC:CategoryListProtocol{
     }
     
     func deleteCategory(currentCategory: String) {
-        // ParentCatArr.remove(at:currentCategory)
         categories = categories.filter{$0 != currentCategory}
         UserDefaults.standard.set(categories, forKey: "categories")
         print(categories)
