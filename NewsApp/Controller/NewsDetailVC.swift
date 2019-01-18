@@ -491,18 +491,18 @@ class NewsDetailVC: UIViewController {
         
         let currentArticle = articleArr[currentIndex]
         print(currentArticle)
-        let newDate = dateFormatter.date(from: currentArticle.published_on)
+        let newDate = dateFormatter.date(from: currentArticle.published_on!)
         let agoDate = Helper().timeAgoSinceDate(newDate!)
-        articleId = currentArticle.article_id
+        articleId = currentArticle.article_id!
         lblNewsHeading.text = currentArticle.title
         txtViewNewsDesc.text = currentArticle.blurb
         lblSource.text = currentArticle.source
         lblTimeAgo.text = agoDate
-        sourceURL = currentArticle.url
-        let checkImg = checkImageOrVideo(url: currentArticle.imageURL)
+        sourceURL = currentArticle.url!
+        let checkImg = checkImageOrVideo(url: currentArticle.imageURL!)
         if checkImg == false{
             btnPlayVideo.isHidden = false
-            let newURL = NSURL(string: currentArticle.imageURL)
+            let newURL = NSURL(string: currentArticle.imageURL!)
             if let thumbnail = createThumbnailOfVideoFromRemoteUrl(url: "https://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4"){
                 imgNews.image = thumbnail
                 let url = URL(string: "https://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4")
@@ -543,7 +543,7 @@ class NewsDetailVC: UIViewController {
         else{
             btnPlayVideo.isHidden = true
             avPlayerView.isHidden = true
-            imgNews.sd_setImage(with: URL(string: currentArticle.imageURL), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
+            imgNews.sd_setImage(with: URL(string: currentArticle.imageURL!), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
         }
         print("currentArticle.isLike: \(currentArticle.isLike)")
         if currentArticle.isLike == 0 {
@@ -692,7 +692,7 @@ class NewsDetailVC: UIViewController {
         var shareAll : [Any]
         var sourceURL : URL!
         if articleArr[newsCurrentIndex].imageURL != nil{
-            let url = URL(string:articleArr[newsCurrentIndex].imageURL)
+            let url = URL(string:articleArr[newsCurrentIndex].imageURL!)
             let image1 = UIImage(named: "\(url)")
             var image = UIImage()
             if let data = try? Data(contentsOf: url!)
@@ -813,7 +813,7 @@ extension NewsDetailVC:UICollectionViewDelegate, UICollectionViewDataSource, UIC
             let currentArticle =  RecomArticleData[0].body.articles[indexPath.row - 1]
             cell.lblTitle.text = currentArticle.title
             if currentArticle.imageURL != nil{
-                let checkImg = checkImageOrVideo(url: currentArticle.imageURL)
+                let checkImg = checkImageOrVideo(url: currentArticle.imageURL!)
                 if checkImg == false{
                     cell.btnCellPlayVIdeo.isHidden = false
                     if let thumbnail = createThumbnailOfVideoFromRemoteUrl(url: "https://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4"){
@@ -822,7 +822,7 @@ extension NewsDetailVC:UICollectionViewDelegate, UICollectionViewDataSource, UIC
                 }
                 else{
                     cell.btnCellPlayVIdeo.isHidden = true
-                    cell.imgNews.sd_setImage(with: URL(string: currentArticle.imageURL), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
+                    cell.imgNews.sd_setImage(with: URL(string: currentArticle.imageURL!), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
                 }
             }
             if cell.imgNews.image == nil{
@@ -846,7 +846,7 @@ extension NewsDetailVC:UICollectionViewDelegate, UICollectionViewDataSource, UIC
             let newsDetailvc:NewsDetailVC = storyboard.instantiateViewController(withIdentifier: "NewsDetailID") as! NewsDetailVC
             newsDetailvc.newsCurrentIndex = indexPath.row - 1
             newsDetailvc.articleArr = RecomArticleData[0].body.articles
-            newsDetailvc.articleId = RecomArticleData[0].body.articles[indexPath.row - 1].article_id
+            newsDetailvc.articleId = RecomArticleData[0].body.articles[indexPath.row - 1].article_id!
             present(newsDetailvc, animated: true, completion: nil)
         }
     }
