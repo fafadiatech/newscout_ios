@@ -32,6 +32,7 @@ class LoginVC: UIViewController, GIDSignInUIDelegate, FBSDKLoginButtonDelegate {
     @IBOutlet weak var tryFBlogin: UIButton!
     override func viewDidLoad() {
         super.viewDidLoad()
+        tryFBlogin.isHidden = true
         txtUsername.autocorrectionType = .no
         txtPassword.autocorrectionType = .no
         //viewGmailSignIn.layer.cornerRadius = 15

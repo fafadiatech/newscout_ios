@@ -30,6 +30,8 @@ class AboutUsVC: UIViewController {
     @IBOutlet weak var lblDDbyVal: UILabel!
     
     @IBOutlet weak var viewLblContainer: UIView!
+    @IBOutlet weak var txtViewLink: UITextView!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         titleView.backgroundColor = colorConstants.redColor
@@ -44,6 +46,7 @@ class AboutUsVC: UIViewController {
             txtViewAboutUs.backgroundColor = colorConstants.grayBackground3
             viewLblContainer.backgroundColor = colorConstants.grayBackground3
         }
+        
     }
     
     @objc private func darkModeEnabled(_ notification: Notification) {
@@ -69,4 +72,5 @@ class AboutUsVC: UIViewController {
     @IBAction func btnBackActn(_ sender: Any) {
         self.dismiss(animated: false)
     }
+    
 }
