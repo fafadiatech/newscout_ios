@@ -169,7 +169,10 @@ class HomeVC: UIViewController{
                     //self.HomeNewsTV.makeToast("No articles found in this category...", duration: 1.0, position: .center)
                     self.lblNonews.isHidden = false
                 }else{
-                    self.HomeNewsTV.reloadData()}
+                    self.lblNonews.isHidden = true
+                    self.HomeNewsTV.reloadData()
+                    
+                }
             case .Failure(let errormessage) :
                 print(errormessage)
                 self.activityIndicator.startAnimating()

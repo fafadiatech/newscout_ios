@@ -592,12 +592,12 @@ class NewsDetailVC: UIViewController {
         else{
             btnLike.setImage(UIImage(named: "thumb_up.png"), for: .normal)
             btnDislike.setImage(UIImage(named: "thumb_down.png"), for: .normal)
-            btnBookamark.setImage(UIImage(named: "book.png"), for: .normal)
+            btnBookamark.setImage(UIImage(named: "bookmark.png"), for: .normal)
         }
         if currentArticle.isBookmark == true{
-            btnBookamark.setImage(UIImage(named: "filledBookmrk.png"), for: .normal)
+            btnBookamark.setImage(UIImage(named: "filledBookmark.png"), for: .normal)
         }else{
-            btnBookamark.setImage(UIImage(named: "book.png"), for: .normal)
+            btnBookamark.setImage(UIImage(named: "bookmark.png"), for: .normal)
         }
         if imgNews.image == nil{
             imgNews.image = UIImage(named: "NoImage.png")
@@ -686,7 +686,7 @@ class NewsDetailVC: UIViewController {
     
     @IBAction func btnBookmarkActn(_ sender: Any) {
         if UserDefaults.standard.value(forKey: "token") != nil || UserDefaults.standard.value(forKey: "FBToken") != nil || UserDefaults.standard.value(forKey: "googleToken") != nil{
-            if (btnBookamark.currentImage?.isEqual(UIImage(named: "book.png")))! {
+            if (btnBookamark.currentImage?.isEqual(UIImage(named: "bookmark.png")))! {
                 
                 APICall().bookmarkAPI(id: articleId){
                     (status, response) in
@@ -694,7 +694,7 @@ class NewsDetailVC: UIViewController {
                         self.view.makeToast(response, duration: 1.0, position: .center)
                     }
                     else{
-                        self.btnBookamark.setImage(UIImage(named: "filledBookmrk.png"), for: .normal)
+                        self.btnBookamark.setImage(UIImage(named: "filledBookmark.png"), for: .normal)
                         self.view.makeToast(response, duration: 1.0, position: .center)
                     }
                 }
@@ -706,7 +706,7 @@ class NewsDetailVC: UIViewController {
                         self.view.makeToast(response, duration: 1.0, position: .center)
                     }
                     else{
-                        self.btnBookamark.setImage(UIImage(named: "book.png"), for: .normal)
+                        self.btnBookamark.setImage(UIImage(named: "bookmark.png"), for: .normal)
                         self.view.makeToast(response, duration: 1.0, position: .center)
                     }
                 }
