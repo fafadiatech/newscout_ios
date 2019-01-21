@@ -2167,24 +2167,22 @@
                                 <rect key="frame" x="0.0" y="406" width="320" height="42.5"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wVK-oY-EQo">
-                                        <rect key="frame" x="75" y="-1" width="45" height="45"/>
-                                        <state key="normal" image="dislike"/>
+                                        <rect key="frame" x="65" y="7.5" width="28" height="28"/>
                                         <connections>
                                             <action selector="btnDislikeActn:" destination="yxW-qj-gIF" eventType="touchUpInside" id="Tx3-LF-DAc"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mNk-M4-IU3">
-                                        <rect key="frame" x="20" y="-1" width="45" height="45"/>
+                                        <rect key="frame" x="20" y="7.5" width="28" height="28"/>
                                         <constraints>
-                                            <constraint firstAttribute="height" constant="45" id="8BK-pe-Qtd">
-                                                <variation key="heightClass=regular-widthClass=regular" constant="55"/>
+                                            <constraint firstAttribute="height" constant="28" id="8BK-pe-Qtd">
+                                                <variation key="heightClass=regular-widthClass=regular" constant="38"/>
                                             </constraint>
-                                            <constraint firstAttribute="width" constant="45" id="Pfz-h7-kkd">
-                                                <variation key="heightClass=regular-widthClass=regular" constant="55"/>
+                                            <constraint firstAttribute="width" constant="28" id="Pfz-h7-kkd">
+                                                <variation key="heightClass=regular-widthClass=regular" constant="38"/>
                                             </constraint>
                                         </constraints>
                                         <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        <state key="normal" image="like"/>
                                         <connections>
                                             <action selector="btnLikeActn:" destination="yxW-qj-gIF" eventType="touchUpInside" id="tbT-Ep-xtn"/>
                                         </connections>
@@ -2207,7 +2205,7 @@
                                 </subviews>
                                 <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
-                                    <constraint firstItem="wVK-oY-EQo" firstAttribute="leading" secondItem="mNk-M4-IU3" secondAttribute="trailing" constant="10" id="1Tv-26-Oc7"/>
+                                    <constraint firstItem="wVK-oY-EQo" firstAttribute="leading" secondItem="mNk-M4-IU3" secondAttribute="trailing" constant="17" id="1Tv-26-Oc7"/>
                                     <constraint firstItem="mNk-M4-IU3" firstAttribute="leading" secondItem="ZdY-Zp-FHd" secondAttribute="leading" constant="20" id="6w4-91-HgQ"/>
                                     <constraint firstAttribute="trailing" secondItem="2Y2-a1-Kyv" secondAttribute="trailing" constant="20" id="BSi-gZ-V4b"/>
                                     <constraint firstItem="wVK-oY-EQo" firstAttribute="width" secondItem="mNk-M4-IU3" secondAttribute="width" id="CZR-E4-Bax"/>
@@ -2841,10 +2839,8 @@
         <image name="NoImage" width="512" height="512"/>
         <image name="back1" width="256" height="256"/>
         <image name="cross" width="512" height="512"/>
-        <image name="dislike" width="37.5" height="37.5"/>
         <image name="facebook-48" width="36" height="36"/>
         <image name="gmailsignin" width="512" height="512"/>
-        <image name="like" width="37.5" height="37.5"/>
         <image name="logo" width="512" height="512"/>
         <image name="play" width="256" height="256"/>
         <image name="search" width="37.5" height="37.5"/>

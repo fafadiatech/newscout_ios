@@ -578,20 +578,20 @@ class NewsDetailVC: UIViewController {
         }
         print("currentArticle.isLike: \(currentArticle.isLike)")
         if currentArticle.isLike == 0 {
-            btnLike.setImage(UIImage(named: "filledLike.png"), for: .normal)
-            btnDislike.setImage(UIImage(named: "dislike.png"), for: .normal)
+            btnLike.setImage(UIImage(named: "thumb_up_filled.png"), for: .normal)
+            btnDislike.setImage(UIImage(named: "thumb_down.png"), for: .normal)
         }
         else if currentArticle.isLike == 1{
-            btnLike.setImage(UIImage(named: "like.png"), for: .normal)
-            btnDislike.setImage(UIImage(named: "filledDislike.png"), for: .normal)
+            btnLike.setImage(UIImage(named: "thumb_up.png"), for: .normal)
+            btnDislike.setImage(UIImage(named: "thumb_down_filled.png"), for: .normal)
         }
         else if currentArticle.isLike == 2{
-            btnLike.setImage(UIImage(named: "like.png"), for: .normal)
-            btnDislike.setImage(UIImage(named: "dislike.png"), for: .normal)
+            btnLike.setImage(UIImage(named: "thumb_up.png"), for: .normal)
+            btnDislike.setImage(UIImage(named: "thumb_down.png"), for: .normal)
         }
         else{
-            btnLike.setImage(UIImage(named: "like.png"), for: .normal)
-            btnDislike.setImage(UIImage(named: "dislike.png"), for: .normal)
+            btnLike.setImage(UIImage(named: "thumb_up.png"), for: .normal)
+            btnDislike.setImage(UIImage(named: "thumb_down.png"), for: .normal)
             btnBookamark.setImage(UIImage(named: "book.png"), for: .normal)
         }
         if currentArticle.isBookmark == true{
@@ -606,7 +606,7 @@ class NewsDetailVC: UIViewController {
     
     @IBAction func btnLikeActn(_ sender: Any) {
         if UserDefaults.standard.value(forKey: "token") != nil || UserDefaults.standard.value(forKey: "FBToken") != nil || UserDefaults.standard.value(forKey: "googleToken") != nil{
-            if (btnLike.currentImage?.isEqual(UIImage(named: "like.png")))! {
+            if (btnLike.currentImage?.isEqual(UIImage(named: "thumb_up.png")))! {
                 let param = ["article_id" : articleId,
                              "isLike" : 0]
                 APICall().LikeDislikeAPI(param : param){
@@ -615,9 +615,9 @@ class NewsDetailVC: UIViewController {
                         self.view.makeToast(response, duration: 1.0, position: .center)
                     }
                     else{
-                        self.btnLike.setImage(UIImage(named: "filledLike.png"), for: .normal)
-                        if (self.btnDislike.currentImage?.isEqual(UIImage(named: "filledDislike.png")))! {
-                            self.btnDislike.setImage(UIImage(named: "dislike.png"), for: .normal)
+                        self.btnLike.setImage(UIImage(named: "thumb_up_filled.png"), for: .normal)
+                        if (self.btnDislike.currentImage?.isEqual(UIImage(named: "thumb_down_filled.png")))! {
+                            self.btnDislike.setImage(UIImage(named: "thumb_down.png"), for: .normal)
                             
                         }
                         self.ArticleData[0].body.articles[self.newsCurrentIndex].isLike = 0
@@ -633,7 +633,7 @@ class NewsDetailVC: UIViewController {
                         self.view.makeToast(response, duration: 1.0, position: .center)
                     }
                     else{
-                        self.btnLike.setImage(UIImage(named: "like.png"), for: .normal)
+                        self.btnLike.setImage(UIImage(named: "thumb_up.png"), for: .normal)
                         self.ArticleData[0].body.articles[self.newsCurrentIndex].isLike = 2
                     }
                 }
@@ -646,7 +646,7 @@ class NewsDetailVC: UIViewController {
     
     @IBAction func btnDislikeActn(_ sender: Any) {
         if UserDefaults.standard.value(forKey: "token") != nil || UserDefaults.standard.value(forKey: "FBToken") != nil || UserDefaults.standard.value(forKey: "googleToken") != nil{
-            if (btnDislike.currentImage?.isEqual(UIImage(named: "dislike.png")))! {
+            if (btnDislike.currentImage?.isEqual(UIImage(named: "thumb_down.png")))! {
                 let param = ["article_id" : articleId,
                              "isLike" : 1]
                 APICall().LikeDislikeAPI(param : param ){
@@ -655,9 +655,9 @@ class NewsDetailVC: UIViewController {
                         self.view.makeToast(response, duration: 1.0, position: .center)
                     }
                     else{
-                        self.btnDislike.setImage(UIImage(named: "filledDislike.png"), for: .normal)
-                        if (self.btnLike.currentImage?.isEqual(UIImage(named: "filledLike.png")))! {
-                            self.btnLike.setImage(UIImage(named: "like.png"), for: .normal)
+                        self.btnDislike.setImage(UIImage(named: "thumb_down_filled.png"), for: .normal)
+                        if (self.btnLike.currentImage?.isEqual(UIImage(named: "thumb_up_filled.png")))! {
+                            self.btnLike.setImage(UIImage(named: "thumb_up.png"), for: .normal)
                         }
                         self.ArticleData[0].body.articles[self.newsCurrentIndex].isLike = 1
                     }
@@ -672,7 +672,7 @@ class NewsDetailVC: UIViewController {
                         self.view.makeToast(response, duration: 1.0, position: .center)
                     }
                     else{
-                        self.btnDislike.setImage(UIImage(named: "dislike.png"), for: .normal)
+                        self.btnDislike.setImage(UIImage(named: "thumb_down.png"), for: .normal)
                         self.ArticleData[0].body.articles[self.newsCurrentIndex].isLike = 2
                     }
                 }
