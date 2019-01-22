@@ -126,6 +126,7 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
         super.viewDidAppear(animated)
     }
     
+    
     override func viewControllers(for pagerTabStripController: PagerTabStripViewController) -> [UIViewController] {
         
         //Clear children viewcontrollers

@@ -123,6 +123,7 @@ class CategoryListVC: UIViewController {
         self.dismiss(animated:false)
     }
     
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -130,6 +131,18 @@ class CategoryListVC: UIViewController {
 }
 
 extension CategoryListVC:UITableViewDelegate, UITableViewDataSource{
+    func SaveRemoveCategoryAPICall(type: String){
+        APICall().saveRemoveCategoryAPI(category: selectedCat, type: type){response in
+            print("saveRemoveCategoryAPI response:\(response)")
+            
+            switch response {
+            case .Success(let msg) :
+                print(msg)
+            case .Failure(let error) :
+                print(error)
+            }
+        }
+    }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return (CategoryData.count != 0) ? self.CategoryData[0].categories.count : 0
@@ -189,11 +202,13 @@ extension CategoryListVC:UITableViewDelegate, UITableViewDataSource{
         
         if !categories.contains(selectedCat){
             protocolObj?.updateCategoryList(catName: selectedCat)
+            SaveRemoveCategoryAPICall(type: "save")
             let Homevc = HomeVC()
             Homevc.selectedCategory = selectedCat
         }
         else{
             protocolObj?.deleteCategory(currentCategory: selectedCat)
+            SaveRemoveCategoryAPICall(type: "delete")
            categories = UserDefaults.standard.array(forKey: "categories") as! [String]
             tableCategoryLIst.reloadData()
         }

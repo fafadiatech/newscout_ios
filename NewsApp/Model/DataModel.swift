@@ -166,3 +166,7 @@ enum CategoryDBfetchResult {
     case Success([Category])
     case Failure(String)
 }
+enum SaveRemoveCategoryResult {
+    case Success(String)
+    case Failure(String)
+}

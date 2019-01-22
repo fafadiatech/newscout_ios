@@ -320,7 +320,7 @@ class APICall{
             headers = ["Authorization": ""]
         }
         
-        Alamofire.request(url,method: .get, parameters: nil, headers: headers).responseString{
+        Alamofire.request(url,method: .get, parameters: nil, headers: nil).responseString{
             response in
             if(response.result.isSuccess){
                 if let data = response.data {
@@ -329,7 +329,7 @@ class APICall{
                         let jsonData = try jsonDecoder.decode(MainModel.self, from: data)
                         print(jsonData)
                         if jsonData.header.status == "0"{
-                            completion(jsonData.header.status,jsonData.errors!.invalid_credentials!)
+                            completion(jsonData.header.status,jsonData.errors!.Msg!)
                         }
                         else{
                             let defaults = UserDefaults.standard
@@ -618,6 +618,64 @@ class APICall{
             else{
                 if let err = response.result.error as? URLError, err.code == .notConnectedToInternet {
                     completion(String((response.response?.statusCode)!), ArticleDetailAPIResult.Failure(err.localizedDescription))
+                }
+            }
+        }
+    }
+    
+    //save and remove category (user specific)
+    func saveRemoveCategoryAPI(category: String,type: String,_ completion : @escaping (SaveRemoveCategoryResult) -> ()){
+        var headers : [String: String]
+        var method : HTTPMethod
+        if UserDefaults.standard.value(forKey: "token") != nil{
+            let token = "Token " + "\(UserDefaults.standard.value(forKey: "token")!)"
+            headers = ["Authorization": token]
+        }
+        else if UserDefaults.standard.value(forKey: "googleToken") != nil{
+            let token = "Token " + "\(UserDefaults.standard.value(forKey: "googleToken")!)"
+            headers = ["Authorization": token]
+        }
+        else if UserDefaults.standard.value(forKey: "FBToken") != nil{
+            let token = "Token " + "\(UserDefaults.standard.value(forKey: "FBToken")!)"
+            headers = ["Authorization": token]
+        }
+        else{
+            headers = ["Authorization": ""]
+        }
+        
+        let url = APPURL.saveRemoveCategoryURL
+        let param = ["category" : category]
+        if type == "save"{
+            method = .post
+        }
+        else{
+            method = .delete
+        }
+        Alamofire.request(url,method: method, parameters: param, headers: headers).responseString{
+            response in
+            if(response.result.isSuccess){
+               
+                    if let data = response.data {
+                        let  jsonDecoder = JSONDecoder()
+                        do {
+                            let jsonData = try jsonDecoder.decode(MainModel.self, from: data)
+                            
+                            if jsonData.header.status == "1" {
+                                completion(SaveRemoveCategoryResult.Success((jsonData.body?.Msg)!))
+                            }
+                            else{
+                                completion(SaveRemoveCategoryResult.Failure((jsonData.errors?.Msg)!))
+                            }
+                            
+                        }
+                        catch {
+                    completion(SaveRemoveCategoryResult.Failure(("error")))
+                        }
+                    }
+            }
+            else{
+                if let err = response.result.error as? URLError, err.code == .notConnectedToInternet {
+                    completion(SaveRemoveCategoryResult.Failure(err.localizedDescription))
                 }
             }
         }
