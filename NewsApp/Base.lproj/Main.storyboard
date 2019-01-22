@@ -1511,29 +1511,28 @@
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tcf-qE-64k">
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="cross" translatesAutoresizingMaskIntoConstraints="NO" id="FgY-PE-PEg">
                                                     <rect key="frame" x="192" y="22.5" width="23" height="22"/>
                                                     <constraints>
-                                                        <constraint firstAttribute="height" constant="22" id="Ejx-QE-w2B">
+                                                        <constraint firstAttribute="width" constant="23" id="YmS-n8-MCl">
                                                             <variation key="heightClass=regular-widthClass=regular" constant="33"/>
                                                         </constraint>
-                                                        <constraint firstAttribute="width" constant="23" id="hSN-E0-Cfp">
+                                                        <constraint firstAttribute="height" constant="22" id="yhG-7z-kQC">
                                                             <variation key="heightClass=regular-widthClass=regular" constant="33"/>
                                                         </constraint>
                                                     </constraints>
-                                                    <state key="normal" backgroundImage="cross"/>
-                                                </button>
+                                                </imageView>
                                             </subviews>
                                             <constraints>
                                                 <constraint firstItem="2yK-82-s2H" firstAttribute="leading" secondItem="fgR-9q-NVa" secondAttribute="leadingMargin" constant="15" id="4B9-H1-luQ"/>
-                                                <constraint firstItem="tcf-qE-64k" firstAttribute="trailing" secondItem="fgR-9q-NVa" secondAttribute="trailingMargin" constant="-90" id="Zxu-04-19X"/>
+                                                <constraint firstItem="FgY-PE-PEg" firstAttribute="centerY" secondItem="fgR-9q-NVa" secondAttribute="centerY" id="gah-lu-rRe"/>
                                                 <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="2yK-82-s2H" secondAttribute="trailingMargin" id="h6a-Uy-dof"/>
-                                                <constraint firstItem="tcf-qE-64k" firstAttribute="centerY" secondItem="fgR-9q-NVa" secondAttribute="centerY" id="k8T-Hy-KMM"/>
+                                                <constraint firstAttribute="trailingMargin" secondItem="FgY-PE-PEg" secondAttribute="trailing" constant="90" id="mkw-Qf-PKT"/>
                                                 <constraint firstItem="2yK-82-s2H" firstAttribute="centerY" secondItem="fgR-9q-NVa" secondAttribute="centerY" id="sQq-OH-IJV"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>
-                                            <outlet property="btnDelete" destination="tcf-qE-64k" id="Urs-Kb-Gqe"/>
+                                            <outlet property="imgDelete" destination="FgY-PE-PEg" id="aO8-VL-aza"/>
                                             <outlet property="lblCategoryName" destination="2yK-82-s2H" id="MTo-dL-hEv"/>
                                         </connections>
                                     </tableViewCell>
@@ -1563,7 +1562,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="mmx-er-e1X" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2534" y="731"/>
+            <point key="canvasLocation" x="2533.125" y="730.9859154929577"/>
         </scene>
         <!--ProfileVC-->
         <scene sceneID="fVr-A7-lG0">

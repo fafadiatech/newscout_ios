@@ -753,8 +753,10 @@ class NewsDetailVC: UIViewController {
             //        let vc:HomeParentVC = storyboard.instantiateViewController(withIdentifier: "HomeParentID") as! HomeParentVC
             //        self.present(vc, animated: true, completion: nil)
             //self.dismiss(animated: false)
-            self.view.window!.rootViewController?.dismiss(animated: false, completion: nil)
-            
+            //self.view.window!.rootViewController?.dismiss(animated: false, completion: nil)
+        
+            self.view.window!.rootViewController?.dismiss(animated: false
+                , completion: nil)
         }
     }
     

@@ -168,6 +168,7 @@ class HomeVC: UIViewController{
                     self.activityIndicator.stopAnimating()
                     //self.HomeNewsTV.makeToast("No articles found in this category...", duration: 1.0, position: .center)
                     self.lblNonews.isHidden = false
+                    self.HomeNewsTV.reloadData()
                 }else{
                     self.lblNonews.isHidden = true
                     self.HomeNewsTV.reloadData()

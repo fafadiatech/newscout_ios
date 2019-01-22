@@ -165,5 +165,6 @@ extension HomeParentVC:CategoryListProtocol{
         UserDefaults.standard.set(categories, forKey: "categories")
         print(categories)
         print(UserDefaults.standard.set(categories, forKey: "categories"))
+        self.reloadPagerTabStripView()
     }
 }

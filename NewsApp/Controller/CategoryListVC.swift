@@ -33,7 +33,6 @@ class CategoryListVC: UIViewController {
         categories = UserDefaults.standard.array(forKey: "categories") as! [String]
         print(UserDefaults.standard.set(categories, forKey: "categories"))
         activityIndicator.cycleColors = [.blue]
-        // activityIndicator.frame = CGRect(x: 166, y: 150, width: 40, height: 40)
         activityIndicator.frame = CGRect(x: view.frame.width/2, y: view.frame.height/2 - 100, width: 40, height: 40)
         activityIndicator.sizeToFit()
         activityIndicator.indicatorMode = .indeterminate
@@ -88,14 +87,11 @@ class CategoryListVC: UIViewController {
     }
     
     @objc private func darkModeEnabled(_ notification: Notification) {
-        // Write your dark mode code here
         NightNight.theme = .night
         tableCategoryLIst.backgroundColor = colorConstants.grayBackground3
-        
     }
     
     @objc private func darkModeDisabled(_ notification: Notification) {
-        // Write your non-dark mode code here
         NightNight.theme = .normal
     }
     
@@ -125,15 +121,6 @@ class CategoryListVC: UIViewController {
     
     @IBAction func btnBackAction(_ sender: Any) {
         self.dismiss(animated:false)
-    }
-    
-    @objc func deleteCat(sender: UIButton){
-        let indexPath = sender.tag
-        let selectedCategory = CategoryData[0].categories[indexPath].title!
-        protocolObj?.deleteCategory(currentCategory: selectedCategory)
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        let vc:HomeParentVC = storyboard.instantiateViewController(withIdentifier: "HomeParentID") as! HomeParentVC
-        present(vc, animated: true, completion: nil)
     }
     
     override func didReceiveMemoryWarning() {
@@ -176,23 +163,15 @@ extension CategoryListVC:UITableViewDelegate, UITableViewDataSource{
         }
         
         cell.lblCategoryName.text = catData.title
-        cell.btnDelete.tag = indexPath.row
-        //if cell.lblCategoryName.text == "Trending" || cell.lblCategoryName.text == "For You"{
-        //        if catData.title == "Trending" || catData.title == "For You"{
-        //            cell.btnDelete.isHidden = true
-        //        }
-        //        else{
-        //            cell.btnDelete.isHidden = false
-        //        }
         if categories.contains(catData.title!){
             if catData.title != "Trending"{
-                cell.btnDelete.isHidden = false
+                cell.imgDelete.isHidden = false
             }
         }
         else{
-            cell.btnDelete.isHidden = true
+            cell.imgDelete.isHidden = true
         }
-        cell.btnDelete.addTarget(self, action: #selector(deleteCat), for: .touchUpInside)
+       
         let darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
         if  darkModeStatus == true{
             cell.backgroundColor = colorConstants.grayBackground2
@@ -214,7 +193,9 @@ extension CategoryListVC:UITableViewDelegate, UITableViewDataSource{
             Homevc.selectedCategory = selectedCat
         }
         else{
-            self.view.makeToast("Category is already added..", duration: 1.0, position: .center)
+            protocolObj?.deleteCategory(currentCategory: selectedCat)
+           categories = UserDefaults.standard.array(forKey: "categories") as! [String]
+            tableCategoryLIst.reloadData()
         }
     }
 }
