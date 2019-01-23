@@ -56,7 +56,7 @@ class NewsDetailVC: UIViewController {
     var viewLikeDislikeBottomConstraint : NSLayoutConstraint!
     var deviceOrientation: UIDeviceOrientation = UIDevice.current.orientation
     var statusBarOrientation: UIInterfaceOrientation = UIApplication.shared.statusBarOrientation
-    
+     var darkModeStatus = Bool()
     var playerViewWidth = CGFloat()
     var playerViewHeight = CGFloat()
     
@@ -110,7 +110,7 @@ class NewsDetailVC: UIViewController {
         
         NotificationCenter.default.addObserver(self, selector: #selector(darkModeEnabled(_:)), name: .darkModeEnabled, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(darkModeDisabled(_:)), name: .darkModeDisabled, object: nil)
-        let darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
+         darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
         if  darkModeStatus == true{
             changeTheme()
         }
@@ -247,6 +247,7 @@ class NewsDetailVC: UIViewController {
         // Write your dark mode code here
         NightNight.theme = .night
         changeTheme()
+        darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
     }
     
     @objc private func darkModeDisabled(_ notification: Notification) {
@@ -592,12 +593,11 @@ class NewsDetailVC: UIViewController {
         else{
             btnLike.setImage(UIImage(named: "thumb_up.png"), for: .normal)
             btnDislike.setImage(UIImage(named: "thumb_down.png"), for: .normal)
-            btnBookamark.setImage(UIImage(named: "bookmark.png"), for: .normal)
-        }
+    }
         if currentArticle.isBookmark == true{
-            btnBookamark.setImage(UIImage(named: "filledBookmark.png"), for: .normal)
+           setBookmarkImg()
         }else{
-            btnBookamark.setImage(UIImage(named: "bookmark.png"), for: .normal)
+            ResetBookmarkImg()
         }
         if imgNews.image == nil{
             imgNews.image = UIImage(named: "NoImage.png")
@@ -686,7 +686,7 @@ class NewsDetailVC: UIViewController {
     
     @IBAction func btnBookmarkActn(_ sender: Any) {
         if UserDefaults.standard.value(forKey: "token") != nil || UserDefaults.standard.value(forKey: "FBToken") != nil || UserDefaults.standard.value(forKey: "googleToken") != nil{
-            if (btnBookamark.currentImage?.isEqual(UIImage(named: "bookmark.png")))! {
+            if (((btnBookamark.currentImage?.isEqual(UIImage(named: "bookmark.png")))!) || ((btnBookamark.currentImage?.isEqual(UIImage(named: "Bookmark_white.png")))!)) {
                 
                 APICall().bookmarkAPI(id: articleId){
                     (status, response) in
@@ -694,19 +694,19 @@ class NewsDetailVC: UIViewController {
                         self.view.makeToast(response, duration: 1.0, position: .center)
                     }
                     else{
-                        self.btnBookamark.setImage(UIImage(named: "filledBookmark.png"), for: .normal)
+                        self.setBookmarkImg()
                         self.view.makeToast(response, duration: 1.0, position: .center)
                     }
                 }
             }
-            else{
+            else if (((btnBookamark.currentImage?.isEqual(UIImage(named: "filledBookmark.png")))!) || ((btnBookamark.currentImage?.isEqual(UIImage(named: "Bookmark_white_fill.png")))!)){
                 APICall().bookmarkAPI(id: articleId){
                     (status, response) in
                     if status == "0"{
                         self.view.makeToast(response, duration: 1.0, position: .center)
                     }
                     else{
-                        self.btnBookamark.setImage(UIImage(named: "bookmark.png"), for: .normal)
+                        self.ResetBookmarkImg()
                         self.view.makeToast(response, duration: 1.0, position: .center)
                     }
                 }
@@ -717,6 +717,23 @@ class NewsDetailVC: UIViewController {
         }
     }
     
+    func setBookmarkImg(){
+        if darkModeStatus == true{
+            btnBookamark.setImage(UIImage(named: "Bookmark_white_fill.png"), for: .normal)
+        }
+        else{
+            btnBookamark.setImage(UIImage(named: "filledBookmark.png"), for: .normal)
+        }
+    }
+    
+    func ResetBookmarkImg(){
+        if darkModeStatus == true{
+            btnBookamark.setImage(UIImage(named: "Bookmark_white.png"), for: .normal)
+        }
+        else{
+            btnBookamark.setImage(UIImage(named: "bookmark.png"), for: .normal)
+        }
+    }
     @IBAction func btnShareActn(_ sender: Any) {
         let text = ArticleData[0].body.articles[newsCurrentIndex].title
         let webURL = "Sent via NewsCout : (www.newscout.in)"
@@ -859,7 +876,7 @@ extension NewsDetailVC:UICollectionViewDelegate, UICollectionViewDataSource, UIC
             }
             
         }
-        let darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
+        //let darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
         if  darkModeStatus == true{
             cell.lblMoreStories.textColor = colorConstants.whiteColor
             cell.lblTitle.textColor = colorConstants.whiteColor

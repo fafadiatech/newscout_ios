@@ -260,7 +260,7 @@ class APICall{
             response in
             if(response.result.isSuccess){
                // if response.response?.statusCode == 200{
-                    
+                print("Login response: \(response)")
                     if let data = response.data {
                         let jsonDecoder = JSONDecoder()
                         do {
@@ -275,10 +275,10 @@ class APICall{
                                 }
                             }
                             else{
-                                UserDefaults.standard.set(jsonData.body?.first_name, forKey: "first_name")
-                                UserDefaults.standard.set(jsonData.body?.last_name, forKey: "last_name")
-                                UserDefaults.standard.set(jsonData.body?.token, forKey: "token")
-                                UserDefaults.standard.set(jsonData.body?.user_id, forKey: "user_id")
+                                UserDefaults.standard.set(jsonData.body!.user!.first_name, forKey: "first_name")
+                                UserDefaults.standard.set(jsonData.body!.user!.last_name, forKey: "last_name")
+                                UserDefaults.standard.set(jsonData.body!.user!.token, forKey: "token")
+                                UserDefaults.standard.set(jsonData.body!.user!.user_id, forKey: "user_id")
                                 UserDefaults.standard.set(param["email"], forKey: "email")
                                 completion((response.response?.statusCode)!, jsonData.header.status)
                             }

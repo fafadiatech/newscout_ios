@@ -130,15 +130,32 @@ struct ErrorItem : Decodable
     let field: String
     let field_error : String
 }
-struct Body : Decodable{
-    //signup
-    let Msg : String?
-    //login
+
+struct User : Decodable{
     let token : String?
     let user_id : Int?
     let first_name : String?
     let last_name : String?
+    let passion: [Passion]?
     
+    enum CodingKeys: String, CodingKey{
+        case user_id = "id"
+        case token = "token"
+        case first_name = "first_name"
+        case last_name = "last_name"
+        case passion = "passion"
+        
+    }
+}
+
+struct  Passion: Decodable {
+    let id : Int
+    let name : String
+}
+struct Body : Decodable{
+    //signup
+    let Msg : String?
+    let user: User?
 }
 
 enum MainModelError {
