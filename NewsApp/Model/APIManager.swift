@@ -215,6 +215,8 @@ class APICall{
     //Login API
     func LoginAPI(param : Dictionary<String, String>,_ completion : @escaping (Int , String) ->()) {
         let url = APPURL.LoginURL
+        var categories : [String] = []
+        var catArr = [String]()
         Alamofire.request(url,method: .post, parameters: param).responseString{
             response in
             if(response.result.isSuccess){
@@ -231,6 +233,22 @@ class APICall{
                             }
                         }
                         else{
+                            UserDefaults.standard.removeObject(forKey: "categories")
+                            UserDefaults.standard.synchronize()
+                            
+                           
+                            if UserDefaults.standard.value(forKey: "token") == nil || UserDefaults.standard.value(forKey: "FBToken") == nil || UserDefaults.standard.value(forKey: "googleToken") == nil{
+                                categories = ["Trending"]
+                                UserDefaults.standard.setValue(categories, forKey: "categories")
+                            }
+                            else{
+                                categories = ["For You"]
+                                UserDefaults.standard.setValue(categories, forKey: "categories")
+                            }
+                            for cat in (jsonData.body?.user?.passion)!{
+                                categories.append(cat.name)
+                            }
+                           UserDefaults.standard.setValue(categories, forKey: "categories")
                             UserDefaults.standard.set(jsonData.body!.user!.first_name, forKey: "first_name")
                             UserDefaults.standard.set(jsonData.body!.user!.last_name, forKey: "last_name")
                             UserDefaults.standard.set(jsonData.body!.user!.token, forKey: "token")
@@ -273,7 +291,7 @@ class APICall{
             headers = ["Authorization": ""]
         }
         
-        Alamofire.request(url,method: .get, parameters: nil, headers: nil).responseString{
+        Alamofire.request(url,method: .get, parameters: nil, headers: headers).responseString{
             response in
             if(response.result.isSuccess){
                 if let data = response.data {
