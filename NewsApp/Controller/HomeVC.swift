@@ -197,7 +197,6 @@ class HomeVC: UIViewController{
         alertController.addAction(action1)
         
         let action2 = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.default) { (action:UIAlertAction) in
-            print("You've pressed cancel");
         }
         alertController.addAction(action2)
         
@@ -291,7 +290,6 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
     //check whether tableview scrolled up or down
     func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
         if targetContentOffset.pointee.y < scrollView.contentOffset.y {
-            print("it's going up")
             if nextURL != "" {
                 APICall().loadNewsbyCategoryAPI(url: nextURL){
                     (status, response) in
@@ -309,7 +307,6 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
                             self.HomeNewsTV.reloadData()
                         }
                     case .Failure(let errormessage) :
-                        print(errormessage)
                         self.activityIndicator.startAnimating()
                         self.view.makeToast(errormessage, duration: 2.0, position: .center)
                     case .Change(let code):

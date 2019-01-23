@@ -56,9 +56,9 @@ class NewsDetailVC: UIViewController {
     var viewLikeDislikeBottomConstraint : NSLayoutConstraint!
     var deviceOrientation: UIDeviceOrientation = UIDevice.current.orientation
     var statusBarOrientation: UIInterfaceOrientation = UIApplication.shared.statusBarOrientation
-     var darkModeStatus = Bool()
+    var darkModeStatus = Bool()
     var articleArr = [Article]()
-
+    
     var playerViewWidth = CGFloat()
     var playerViewHeight = CGFloat()
     
@@ -110,7 +110,7 @@ class NewsDetailVC: UIViewController {
         
         NotificationCenter.default.addObserver(self, selector: #selector(darkModeEnabled(_:)), name: .darkModeEnabled, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(darkModeDisabled(_:)), name: .darkModeDisabled, object: nil)
-         darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
+        darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
         if  darkModeStatus == true{
             changeTheme()
         }
@@ -253,11 +253,9 @@ class NewsDetailVC: UIViewController {
         let pathExtention = url?.pathExtension
         if imageExtensions.contains(pathExtention!)
         {
-            print("Image URL: \(String(describing: url))")
             return true
         }else
         {
-            print("Movie URL: \(String(describing: url))")
             return false
         }
     }
@@ -287,7 +285,6 @@ class NewsDetailVC: UIViewController {
             let thumbnail = UIImage(cgImage: img)
             return thumbnail
         } catch {
-            print(error.localizedDescription)
             return nil
         }
     }
@@ -388,7 +385,6 @@ class NewsDetailVC: UIViewController {
             case UISwipeGestureRecognizerDirection.right:
                 ViewWebContainer.isHidden = true
                 viewLikeDislike.isHidden = false
-                print("Swiped right")
                 
             case UISwipeGestureRecognizerDirection.down:
                 if newsCurrentIndex > 0
@@ -398,7 +394,6 @@ class NewsDetailVC: UIViewController {
                     transition.type = kCATransitionPush
                     transition.subtype = kCATransitionFromBottom
                     view.window!.layer.add(transition, forKey: kCATransition)
-                    print("swipe down")
                 }
                 else{
                     self.view.makeToast("No more news to show", duration: 1.0, position: .center)
@@ -409,7 +404,6 @@ class NewsDetailVC: UIViewController {
                 let url = URL(string: sourceURL)
                 let domain = url?.host
                 lblWebSource.text = "\(domain!)"
-                print("Swiped left")
                 transition.type = kCATransitionPush
                 transition.subtype = kCATransitionFromRight
                 view.window!.layer.add(transition, forKey: kCATransition)
@@ -426,7 +420,6 @@ class NewsDetailVC: UIViewController {
                     transition.type = kCATransitionPush
                     transition.subtype = kCATransitionFromTop
                     view.window!.layer.add(transition, forKey: kCATransition)
-                    print("Swiped up")
                 }
                 else{
                     self.view.makeToast("No more news to show", duration: 1.0, position: .center)
@@ -493,7 +486,6 @@ class NewsDetailVC: UIViewController {
         avPlayerView.isHidden = true
         
         let currentArticle = articleArr[currentIndex]
-        print(currentArticle)
         let newDate = dateFormatter.date(from: currentArticle.published_on!)
         let agoDate = Helper().timeAgoSinceDate(newDate!)
         articleId = currentArticle.article_id!
@@ -512,15 +504,11 @@ class NewsDetailVC: UIViewController {
                 let playerItem:AVPlayerItem = AVPlayerItem(url: url!)
                 player = AVPlayer(playerItem: playerItem)
                 
-                // let playerLayer = AVPlayerLayer(player: player!)
                 avPlayerView.isHidden = false
                 let avPlayer = AVPlayerLayer(player: player!)
                 let castedLayer = avPlayerView.layer as! AVPlayerLayer
                 castedLayer.player = player
                 castedLayer.videoGravity = AVLayerVideoGravity.resizeAspect
-                //                PlayerVIew.isHidden = false
-                //                playerLayer.frame = CGRect(x:PlayerVIew.frame.origin.x, y: PlayerVIew.frame.origin.y, width: PlayerVIew.frame.width, height: PlayerVIew.frame.height)
-                //                self.PlayerVIew.layer.addSublayer(playerLayer)
                 avPlayerView.layoutIfNeeded()
                 if UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad{
                     playbackSlider = UISlider(frame:CGRect(x:0, y: self.avPlayerView.bounds.size.height - 40, width:self.avPlayerView.bounds.size.width, height: 20))
@@ -548,7 +536,7 @@ class NewsDetailVC: UIViewController {
             avPlayerView.isHidden = true
             imgNews.sd_setImage(with: URL(string: currentArticle.imageURL!), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
         }
-        print("currentArticle.isLike: \(currentArticle.isLike)")
+        
         if currentArticle.isLike == 0 {
             btnLike.setImage(UIImage(named: "thumb_up_filled.png"), for: .normal)
             btnDislike.setImage(UIImage(named: "thumb_down.png"), for: .normal)
@@ -564,9 +552,9 @@ class NewsDetailVC: UIViewController {
         else{
             btnLike.setImage(UIImage(named: "thumb_up.png"), for: .normal)
             btnDislike.setImage(UIImage(named: "thumb_down.png"), for: .normal)
-    }
+        }
         if currentArticle.isBookmark == true{
-           setBookmarkImg()
+            setBookmarkImg()
         }else{
             ResetBookmarkImg()
         }
@@ -651,7 +639,6 @@ class NewsDetailVC: UIViewController {
         }
         else{
             showMsg(title: "Please login to continue..", msg: "")
-            //self.view.makeToast("Please login to continue..", duration: 1.0, position: .center)
         }
     }
     
@@ -778,7 +765,6 @@ class NewsDetailVC: UIViewController {
         alertController.addAction(action1)
         
         let action2 = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.default) { (action:UIAlertAction) in
-            print("You've pressed cancel");
         }
         alertController.addAction(action2)
         
@@ -786,7 +772,6 @@ class NewsDetailVC: UIViewController {
     }
     
     @IBAction func PlayButtonTapped() -> Void {
-        print("Hello Edit Button")
     }
     
     override func didReceiveMemoryWarning() {
@@ -849,7 +834,7 @@ extension NewsDetailVC:UICollectionViewDelegate, UICollectionViewDataSource, UIC
             }
             
         }
-        //let darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
+        
         if  darkModeStatus == true{
             cell.lblMoreStories.textColor = colorConstants.whiteColor
             cell.lblTitle.textColor = colorConstants.whiteColor

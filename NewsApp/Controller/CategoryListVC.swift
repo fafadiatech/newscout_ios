@@ -31,7 +31,6 @@ class CategoryListVC: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(darkModeEnabled(_:)), name: .darkModeEnabled, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(darkModeDisabled(_:)), name: .darkModeDisabled, object: nil)
         categories = UserDefaults.standard.array(forKey: "categories") as! [String]
-        print(UserDefaults.standard.set(categories, forKey: "categories"))
         activityIndicator.cycleColors = [.blue]
         activityIndicator.frame = CGRect(x: view.frame.width/2, y: view.frame.height/2 - 100, width: 40, height: 40)
         activityIndicator.sizeToFit()
@@ -52,7 +51,6 @@ class CategoryListVC: UIViewController {
                 self.CategoryData = data
                 self.tableCategoryLIst.reloadData()
             case .Failure(let errormessage) :
-                print(errormessage)
                 self.tableCategoryLIst.makeToast(errormessage, duration: 2.0, position: .center)
             }
             self.activityIndicator.stopAnimating()
@@ -108,7 +106,6 @@ class CategoryListVC: UIViewController {
                 self.CategoryData = data
                 self.tableCategoryLIst.reloadData()
             case .Failure(let errormessage) :
-                print(errormessage)
                 self.tableCategoryLIst.makeToast(errormessage, duration: 2.0, position: .center)
             }
             self.activityIndicator.stopAnimating()
@@ -133,13 +130,11 @@ class CategoryListVC: UIViewController {
 extension CategoryListVC:UITableViewDelegate, UITableViewDataSource{
     func SaveRemoveCategoryAPICall(type: String){
         APICall().saveRemoveCategoryAPI(category: selectedCat, type: type){response in
-            print("saveRemoveCategoryAPI response:\(response)")
-            
             switch response {
             case .Success(let msg) :
-                print(msg)
+                self.tableCategoryLIst.makeToast(msg, duration: 2.0, position: .center)
             case .Failure(let error) :
-                print(error)
+                self.tableCategoryLIst.makeToast(error, duration: 2.0, position: .center)
             }
         }
     }
@@ -184,7 +179,7 @@ extension CategoryListVC:UITableViewDelegate, UITableViewDataSource{
         else{
             cell.imgDelete.isHidden = true
         }
-       
+        
         let darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
         if  darkModeStatus == true{
             cell.backgroundColor = colorConstants.grayBackground2
@@ -209,7 +204,7 @@ extension CategoryListVC:UITableViewDelegate, UITableViewDataSource{
         else{
             protocolObj?.deleteCategory(currentCategory: selectedCat)
             SaveRemoveCategoryAPICall(type: "delete")
-           categories = UserDefaults.standard.array(forKey: "categories") as! [String]
+            categories = UserDefaults.standard.array(forKey: "categories") as! [String]
             tableCategoryLIst.reloadData()
         }
     }
