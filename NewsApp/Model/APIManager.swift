@@ -36,7 +36,6 @@ class APICall{
                         completion(ArticleAPIResult.Success([jsonData]))
                     }
                     catch {
-                        print("Error: \(error)")
                         completion(ArticleAPIResult.Failure(error.localizedDescription
                         ))
                     }
@@ -69,7 +68,6 @@ class APICall{
                     let jsonDecoder = JSONDecoder()
                     do {
                         if response.response?.statusCode == 404{
-                            print("error \(response.response?.statusCode)")
                             completion("error 404",ArticleAPIResult.Change(404))
                         }
                         else{
@@ -78,13 +76,11 @@ class APICall{
                         }
                     }
                     catch {
-                        print("Error: \(error)")
                         completion(String((response.response?.statusCode)!), ArticleAPIResult.Failure(error.localizedDescription))
                     }
                 }
             }
             else{
-                print(response.result.error!)
                 if let err = response.result.error as? URLError, err.code == .notConnectedToInternet {
                     completion("no net", ArticleAPIResult.Failure(err.localizedDescription))
                 }
@@ -100,7 +96,6 @@ class APICall{
     
     func loadRecommendationNewsAPI(articleId : Int,_ completion : @escaping (String, ArticleAPIResult) -> ()){
         let url = APPURL.recommendationURL + "\(articleId)" + "/recommendations/"
-        print(url)
         Alamofire.request(url,method: .post).responseJSON{
             response in
             if(response.result.isSuccess){
@@ -112,7 +107,6 @@ class APICall{
                             completion(String((response.response?.statusCode)!),ArticleAPIResult.Success([jsonData]))
                         }
                         catch {
-                            print("Error: \(error)")
                             completion(String((response.response?.statusCode)!), ArticleAPIResult.Failure(error.localizedDescription))
                         }
                     }
@@ -130,7 +124,6 @@ class APICall{
     
     func loadCategoriesAPI(_ completion : @escaping (Int, CategoryAPIResult) -> ()){
         let url = APPURL.CategoriesURL
-        print(url)
         Alamofire.request(url,method: .get).responseJSON{
             response in
             if(response.result.isSuccess){
@@ -143,7 +136,6 @@ class APICall{
                             completion((response.response?.statusCode)!, CategoryAPIResult.Success([jsonData]))
                         }
                         catch {
-                            print("Error: \(error)")
                             completion((response.response?.statusCode)!, CategoryAPIResult.Failure(error as! String))
                         }
                     }
@@ -161,8 +153,6 @@ class APICall{
     }
     
     func loadSearchAPI(url: String,_ completion : @escaping (String, ArticleAPIResult) -> ()){
-        
-        print("search url : \(url)")
         Alamofire.request(url,method: .get).responseJSON{
             response in
             if(response.result.isSuccess){
@@ -175,7 +165,6 @@ class APICall{
                             
                         }
                         catch {
-                            print("Error: \(error)")
                             completion(String((response.response?.statusCode)!), ArticleAPIResult.Failure(error as! String))
                         }
                     }
@@ -195,7 +184,6 @@ class APICall{
     //Signup API
     func SignupAPI(param : Dictionary<String, String>, _ completion : @escaping (String, String) ->()) {
         let url = APPURL.SignUpURL
-        print(param)
         Alamofire.request(url,method: .post, parameters: param).responseString{
             response in
             if(response.result.isSuccess){
@@ -212,7 +200,7 @@ class APICall{
                         
                     }
                     catch {
-                        print("Error: \(error)")
+                        completion("0",error.localizedDescription)
                     }
                 }
             }
@@ -227,7 +215,6 @@ class APICall{
     //Login API
     func LoginAPI(param : Dictionary<String, String>,_ completion : @escaping (Int , String) ->()) {
         let url = APPURL.LoginURL
-        print(param)
         Alamofire.request(url,method: .post, parameters: param).responseString{
             response in
             if(response.result.isSuccess){
@@ -244,16 +231,17 @@ class APICall{
                             }
                         }
                         else{
-                            UserDefaults.standard.set(jsonData.body?.first_name, forKey: "first_name")
-                            UserDefaults.standard.set(jsonData.body?.last_name, forKey: "last_name")
-                            UserDefaults.standard.set(jsonData.body?.token, forKey: "token")
-                            UserDefaults.standard.set(jsonData.body?.user_id, forKey: "user_id")
+                            UserDefaults.standard.set(jsonData.body!.user!.first_name, forKey: "first_name")
+                            UserDefaults.standard.set(jsonData.body!.user!.last_name, forKey: "last_name")
+                            UserDefaults.standard.set(jsonData.body!.user!.token, forKey: "token")
+                            UserDefaults.standard.set(jsonData.body!.user!.user_id, forKey: "user_id")
                             UserDefaults.standard.set(param["email"], forKey: "email")
                             completion((response.response?.statusCode)!, jsonData.header.status)
                         }
+                        
                     }
                     catch {
-                        print("Error: \(error)")
+                        completion(0,error.localizedDescription)
                     }
                 }
             }
@@ -285,7 +273,7 @@ class APICall{
             headers = ["Authorization": ""]
         }
         
-        Alamofire.request(url,method: .get, parameters: nil, headers: headers).responseString{
+        Alamofire.request(url,method: .get, parameters: nil, headers: nil).responseString{
             response in
             if(response.result.isSuccess){
                 if let data = response.data {
@@ -293,7 +281,7 @@ class APICall{
                     do {
                         let jsonData = try jsonDecoder.decode(MainModel.self, from: data)
                         if jsonData.header.status == "0"{
-                            completion(jsonData.header.status,jsonData.errors!.invalid_credentials!)
+                            completion(jsonData.header.status,jsonData.errors!.Msg!)
                         }
                         else{
                             let defaults = UserDefaults.standard
@@ -307,7 +295,7 @@ class APICall{
                         }
                     }
                     catch {
-                        print("Error: \(error)")
+                        completion("0", error.localizedDescription)
                     }
                 }
             }
@@ -322,7 +310,6 @@ class APICall{
     //bookmark API
     func bookmarkAPI(id : Int, _ completion : @escaping (String, String) -> ()){
         let url = APPURL.bookmarkURL
-        print(url)
         let param = ["article_id" : id]
         var headers : [String: String]
         if UserDefaults.standard.value(forKey: "token") != nil{
@@ -355,7 +342,7 @@ class APICall{
                         }
                     }
                     catch {
-                        print("Error: \(error)")
+                        completion("0", error.localizedDescription)
                     }
                 }
             }
@@ -370,8 +357,6 @@ class APICall{
     // Like/dislike API
     func LikeDislikeAPI(param : Dictionary<String, Int>, _ completion : @escaping (String, String) -> ()){
         let url = APPURL.likeDislikeURL
-        print(url)
-        print(param)
         var headers : [String: String]
         if UserDefaults.standard.value(forKey: "token") != nil{
             let token = "Token " + "\(UserDefaults.standard.value(forKey: "token")!)"
@@ -402,7 +387,7 @@ class APICall{
                         }
                     }
                     catch {
-                        print("Error: \(error)")
+                        completion("0", error.localizedDescription)
                     }
                 }
             }
@@ -434,7 +419,7 @@ class APICall{
                         }
                     }
                     catch {
-                        print("Error: \(error)")
+                        completion("0", error.localizedDescription)
                     }
                 }
             }
@@ -480,7 +465,7 @@ class APICall{
                         }
                     }
                     catch {
-                        print("Error: \(error)")
+                        completion("0", error.localizedDescription)
                     }
                 }
             }
@@ -521,7 +506,6 @@ class APICall{
                         completion(ArticleAPIResult.Success([jsonData]))
                     }
                     catch {
-                        print("Error: \(error)")
                         completion(ArticleAPIResult.Failure(error.localizedDescription
                         ))
                     }
@@ -553,7 +537,6 @@ class APICall{
             headers = ["Authorization": ""]
         }
         let url = APPURL.ArticleDetailURL + "\(articleId)"
-        print(url)
         Alamofire.request(url,method: .get, headers: headers).responseJSON{
             response in
             if(response.result.isSuccess){
@@ -565,7 +548,6 @@ class APICall{
                             completion(String((response.response?.statusCode)!),ArticleDetailAPIResult.Success(jsonData))
                         }
                         catch {
-                            print("Error: \(error)")
                             completion(String((response.response?.statusCode)!), ArticleDetailAPIResult.Failure(error.localizedDescription))
                         }
                     }
@@ -576,6 +558,63 @@ class APICall{
             else{
                 if let err = response.result.error as? URLError, err.code == .notConnectedToInternet {
                     completion("no net", ArticleDetailAPIResult.Failure(err.localizedDescription))
+                }
+            }
+        }
+    }
+    
+    //save and remove category (user specific)
+    func saveRemoveCategoryAPI(category: String,type: String,_ completion : @escaping (SaveRemoveCategoryResult) -> ()){
+        var headers : [String: String]
+        var method : HTTPMethod
+        if UserDefaults.standard.value(forKey: "token") != nil{
+            let token = "Token " + "\(UserDefaults.standard.value(forKey: "token")!)"
+            headers = ["Authorization": token]
+        }
+        else if UserDefaults.standard.value(forKey: "googleToken") != nil{
+            let token = "Token " + "\(UserDefaults.standard.value(forKey: "googleToken")!)"
+            headers = ["Authorization": token]
+        }
+        else if UserDefaults.standard.value(forKey: "FBToken") != nil{
+            let token = "Token " + "\(UserDefaults.standard.value(forKey: "FBToken")!)"
+            headers = ["Authorization": token]
+        }
+        else{
+            headers = ["Authorization": ""]
+        }
+        
+        let url = APPURL.saveRemoveCategoryURL
+        let param = ["category" : category]
+        if type == "save"{
+            method = .post
+        }
+        else{
+            method = .delete
+        }
+        Alamofire.request(url,method: method, parameters: param, headers: headers).responseString{
+            response in
+            if(response.result.isSuccess){
+                
+                if let data = response.data {
+                    let  jsonDecoder = JSONDecoder()
+                    do {
+                        let jsonData = try jsonDecoder.decode(MainModel.self, from: data)
+                        
+                        if jsonData.header.status == "1" {
+                        completion(SaveRemoveCategoryResult.Success((jsonData.body?.Msg)!))
+                        }
+                        else{
+                            completion(SaveRemoveCategoryResult.Failure((jsonData.errors?.Msg)!))
+                        }
+                    }
+                    catch {
+                        completion(SaveRemoveCategoryResult.Failure(("error")))
+                    }
+                }
+            }
+            else{
+                if let err = response.result.error as? URLError, err.code == .notConnectedToInternet {
+                    completion(SaveRemoveCategoryResult.Failure(err.localizedDescription))
                 }
             }
         }

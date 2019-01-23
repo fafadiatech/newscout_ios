@@ -48,21 +48,21 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
         floaty.buttonColor = colorConstants.redColor
         floaty.plusColor = .black
         
-        floaty.addItem("Search", icon: UIImage(named: "search")!) { item in
+        floaty.addItem("Search", icon: UIImage(named: "newsearch")!) { item in
             floaty.autoCloseOnTap = true
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             let searchvc:SearchVC = storyboard.instantiateViewController(withIdentifier: "SearchID") as! SearchVC
             self.present(searchvc, animated: true, completion: nil)
         }
         
-        floaty.addItem("Settings", icon: UIImage(named: "settings3")!) { item in
+        floaty.addItem("Settings", icon: UIImage(named: "settings")!) { item in
             floaty.autoCloseOnTap = true
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             let settingvc:SettingsVC = storyboard.instantiateViewController(withIdentifier: "SettingsID") as! SettingsVC
             self.present(settingvc, animated: true, completion: nil)
         }
         
-        floaty.addItem("Bookmark", icon: UIImage(named: "book")!) { item in
+        floaty.addItem("Bookmark", icon: UIImage(named: "bookmark")!) { item in
             floaty.autoCloseOnTap = true
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             let bookmarkvc:BookmarkVC = storyboard.instantiateViewController(withIdentifier: "BookmarkID") as! BookmarkVC
@@ -124,6 +124,7 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
         super.viewDidAppear(animated)
     }
     
+    
     override func viewControllers(for pagerTabStripController: PagerTabStripViewController) -> [UIViewController] {
         
         //Clear children viewcontrollers
@@ -162,5 +163,6 @@ extension HomeParentVC:CategoryListProtocol{
         UserDefaults.standard.set(categories, forKey: "categories")
         print(categories)
         print(UserDefaults.standard.set(categories, forKey: "categories"))
+        self.reloadPagerTabStripView()
     }
 }

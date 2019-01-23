@@ -37,8 +37,7 @@ class BookmarkVC: UIViewController {
         }
         else{
             activityIndicator.stopAnimating()
-            bookmarkResultTV.isHidden = true
-            //showMsg(title: "Please login to continue..", msg: "")
+            self.showMsg(title: "Please login to continue..", msg: "")
             self.view.makeToast("You need to login", duration: 1.0, position: .center)
         }
         let refreshControl = UIRefreshControl()

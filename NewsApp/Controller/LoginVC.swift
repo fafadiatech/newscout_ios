@@ -33,6 +33,7 @@ class LoginVC: UIViewController, GIDSignInUIDelegate, FBSDKLoginButtonDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        tryFBlogin.isHidden = true
         txtUsername.autocorrectionType = .no
         txtPassword.autocorrectionType = .no
         viewGmailSignIn.layer.borderWidth = 1
