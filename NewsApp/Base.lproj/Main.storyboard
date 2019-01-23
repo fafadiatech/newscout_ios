@@ -2490,7 +2490,7 @@
                                             <constraint firstAttribute="width" constant="25" id="bTE-0w-t8H"/>
                                             <constraint firstAttribute="height" constant="27" id="vZB-bO-cHM"/>
                                         </constraints>
-                                        <state key="normal" image="iconfinder_icon-search_211885"/>
+                                        <state key="normal" image="newsearch"/>
                                     </button>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -2849,8 +2849,8 @@
         <image name="cross" width="512" height="512"/>
         <image name="flogo" width="512" height="512"/>
         <image name="glogo" width="48" height="48"/>
-        <image name="iconfinder_icon-search_211885" width="512" height="512"/>
         <image name="logo" width="512" height="512"/>
+        <image name="newsearch" width="512" height="512"/>
         <image name="play" width="256" height="256"/>
         <image name="share" width="512" height="512"/>
     </resources>
