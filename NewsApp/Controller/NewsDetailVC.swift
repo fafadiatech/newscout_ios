@@ -57,6 +57,8 @@ class NewsDetailVC: UIViewController {
     var deviceOrientation: UIDeviceOrientation = UIDevice.current.orientation
     var statusBarOrientation: UIInterfaceOrientation = UIApplication.shared.statusBarOrientation
      var darkModeStatus = Bool()
+    var articleArr = [Article]()
+
     var playerViewWidth = CGFloat()
     var playerViewHeight = CGFloat()
     
@@ -90,11 +92,9 @@ class NewsDetailVC: UIViewController {
                 self.RecomArticleData = data
                 self.suggestedCV.reloadData()
             case .Failure(let errormessage) :
-                print(errormessage)
                 self.view.makeToast(errormessage, duration: 2.0, position: .center)
             case .Change(let code):
                 if code == 404{
-                    print(code)
                     let defaults = UserDefaults.standard
                     defaults.removeObject(forKey: "googleToken")
                     defaults.removeObject(forKey: "FBToken")
@@ -168,14 +168,14 @@ class NewsDetailVC: UIViewController {
                                                      toItem: viewLikeDislike,
                                                      attribute: NSLayoutAttribute.top,
                                                      multiplier: 1,
-                                                     constant: -10)//.isActive = true
+                                                     constant: -10)
         lblTimesTopConstraint = NSLayoutConstraint (item: lblTimeAgo,
                                                     attribute: NSLayoutAttribute.bottom,
                                                     relatedBy: NSLayoutRelation.equal,
                                                     toItem: viewLikeDislike,
                                                     attribute: NSLayoutAttribute.top,
                                                     multiplier: 1,
-                                                    constant: -10)//.isActive = true
+                                                    constant: -10)
         newsAreaHeightConstraint.constant = 100
         viewLikeDislikeHeightConstraint.constant = -26.5
         viewLikeDislikeBottomConstraint = NSLayoutConstraint (item: viewLikeDislike,
@@ -184,7 +184,7 @@ class NewsDetailVC: UIViewController {
                                                               toItem: viewNewsArea,
                                                               attribute: NSLayoutAttribute.bottom,
                                                               multiplier: 1,
-                                                              constant: -30)//.isActive = true
+                                                              constant: -30)
         NSLayoutConstraint.activate([lblTimesTopConstraint])
         NSLayoutConstraint.activate([lblSourceTopConstraint])
         NSLayoutConstraint.activate([viewLikeDislikeBottomConstraint])
@@ -212,19 +212,8 @@ class NewsDetailVC: UIViewController {
                                                     constant: -45)
         NSLayoutConstraint.activate([lblTimesTopConstraint])
         NSLayoutConstraint.activate([lblSourceTopConstraint])
-        /* viewLikeDislikeBottomConstraint = NSLayoutConstraint (item: viewLikeDislike,
-         attribute: NSLayoutAttribute.bottom,
-         relatedBy: NSLayoutRelation.equal,
-         toItem: lblSource,
-         attribute: NSLayoutAttribute.bottom,
-         multiplier: 1,
-         constant: 0)
-         // newsAreaHeightConstraint.constant = 120
-         NSLayoutConstraint.activate([lblTimesTopConstraint])
-         NSLayoutConstraint.activate([lblSourceTopConstraint])
-         NSLayoutConstraint.activate([viewLikeDislikeBottomConstraint])*/
-        
     }
+    
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         
         super.viewWillTransition(to: size, with: coordinator)
@@ -234,24 +223,21 @@ class NewsDetailVC: UIViewController {
             viewLikeDislike.isHidden = true
             print("landscape")
             addLandscapeConstraints()
-            
         } else {
             print(UIDevice.current.orientation)
             print("potrait")
             viewLikeDislike.isHidden = false
             addPotraitConstraint()
-        } // else
-        
+        }
     }
+    
     @objc private func darkModeEnabled(_ notification: Notification) {
-        // Write your dark mode code here
         NightNight.theme = .night
         changeTheme()
         darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
     }
     
     @objc private func darkModeDisabled(_ notification: Notification) {
-        // Write your non-dark mode code here
         NightNight.theme = .normal
     }
     
@@ -263,15 +249,12 @@ class NewsDetailVC: UIViewController {
     func checkImageOrVideo(url : String) -> Bool{
         
         let imageExtensions = ["png", "jpg", "gif"]
-        //...
-        // Iterate & match the URL objects from your checking results
         let url: URL? = NSURL(fileURLWithPath: url) as URL
         let pathExtention = url?.pathExtension
         if imageExtensions.contains(pathExtention!)
         {
             print("Image URL: \(String(describing: url))")
             return true
-            // Do something with it
         }else
         {
             print("Movie URL: \(String(describing: url))")
@@ -298,8 +281,6 @@ class NewsDetailVC: UIViewController {
         let asset = AVAsset(url: URL(string: url)!)
         let assetImgGenerate = AVAssetImageGenerator(asset: asset)
         assetImgGenerate.appliesPreferredTrackTransform = true
-        //Can set this to improve performance if target size is known before hand
-        //assetImgGenerate.maximumSize = CGSize(width,height)
         let time = CMTimeMakeWithSeconds(1.0, 600)
         do {
             let img = try assetImgGenerate.copyCGImage(at: time, actualTime: nil)
@@ -343,9 +324,6 @@ class NewsDetailVC: UIViewController {
                 viewLikeDislike.isHidden = true
             }
         }
-        //        else{
-        //            viewLikeDislike.isHidden = false
-        //        }
         if UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad{
             if statusBarOrientation.isPortrait {
                 if Device.orientationDetail != .unknown{
@@ -377,7 +355,7 @@ class NewsDetailVC: UIViewController {
     func changeFont()
     {
         let textSizeSelected = UserDefaults.standard.value(forKey: "textSize") as! Int
-        // txtViewNewsDesc.textColor = colorConstants.txtDarkGrayColor
+        
         if textSizeSelected == 0{
             lblNewsHeading.font = FontConstants.smallFontHeadingBold
             lblSource.font = FontConstants.smallFontContentMedium
@@ -410,15 +388,12 @@ class NewsDetailVC: UIViewController {
             case UISwipeGestureRecognizerDirection.right:
                 ViewWebContainer.isHidden = true
                 viewLikeDislike.isHidden = false
-                //self.dismiss(animated: false)
                 print("Swiped right")
                 
             case UISwipeGestureRecognizerDirection.down:
                 if newsCurrentIndex > 0
                 {
                     newsCurrentIndex = newsCurrentIndex - 1
-                    //let id = ArticleData[0].body.articles[newsCurrentIndex].article_id
-                    //newsDetailAPICall(currentIndex : id!)
                     ShowNews(currentIndex : newsCurrentIndex)
                     transition.type = kCATransitionPush
                     transition.subtype = kCATransitionFromBottom
@@ -444,11 +419,9 @@ class NewsDetailVC: UIViewController {
                 WKWebView.load(myRequest)
                 
             case UISwipeGestureRecognizerDirection.up:
-                if newsCurrentIndex < ArticleData[0].body.articles.count - 1
+                if newsCurrentIndex < articleArr.count - 1
                 {
                     newsCurrentIndex = newsCurrentIndex + 1
-                    //let id = ArticleData[0].body.articles[newsCurrentIndex].article_id
-                    //newsDetailAPICall(currentIndex : id!)
                     ShowNews(currentIndex : newsCurrentIndex)
                     transition.type = kCATransitionPush
                     transition.subtype = kCATransitionFromTop
@@ -519,7 +492,7 @@ class NewsDetailVC: UIViewController {
         playbackSlider.removeFromSuperview()
         avPlayerView.isHidden = true
         
-        let currentArticle = ArticleData[0].body.articles[currentIndex]
+        let currentArticle = articleArr[currentIndex]
         print(currentArticle)
         let newDate = dateFormatter.date(from: currentArticle.published_on!)
         let agoDate = Helper().timeAgoSinceDate(newDate!)
@@ -567,14 +540,12 @@ class NewsDetailVC: UIViewController {
                 
                 playbackSlider.addTarget(self, action: #selector(NewsDetailVC.playbackSliderValueChanged(_:)), for: .valueChanged)
                 self.avPlayerView.addSubview(playbackSlider)
-                //player!.play()
             }
             
         }
         else{
             btnPlayVideo.isHidden = true
             avPlayerView.isHidden = true
-            // imgNews.downloadedFrom(link: "\(currentArticle.imageURL!)")
             imgNews.sd_setImage(with: URL(string: currentArticle.imageURL!), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
         }
         print("currentArticle.isLike: \(currentArticle.isLike)")
@@ -620,7 +591,7 @@ class NewsDetailVC: UIViewController {
                             self.btnDislike.setImage(UIImage(named: "thumb_down.png"), for: .normal)
                             
                         }
-                        self.ArticleData[0].body.articles[self.newsCurrentIndex].isLike = 0
+                        self.articleArr[self.newsCurrentIndex].isLike = 0
                     }
                 }
             }
@@ -633,8 +604,8 @@ class NewsDetailVC: UIViewController {
                         self.view.makeToast(response, duration: 1.0, position: .center)
                     }
                     else{
-                        self.btnLike.setImage(UIImage(named: "thumb_up.png"), for: .normal)
-                        self.ArticleData[0].body.articles[self.newsCurrentIndex].isLike = 2
+                        self.btnLike.setImage(UIImage(named: "like.png"), for: .normal)
+                        self.articleArr[self.newsCurrentIndex].isLike = 2
                     }
                 }
             }
@@ -659,7 +630,7 @@ class NewsDetailVC: UIViewController {
                         if (self.btnLike.currentImage?.isEqual(UIImage(named: "thumb_up_filled.png")))! {
                             self.btnLike.setImage(UIImage(named: "thumb_up.png"), for: .normal)
                         }
-                        self.ArticleData[0].body.articles[self.newsCurrentIndex].isLike = 1
+                        self.articleArr[self.newsCurrentIndex].isLike = 1
                     }
                 }
             }
@@ -672,8 +643,8 @@ class NewsDetailVC: UIViewController {
                         self.view.makeToast(response, duration: 1.0, position: .center)
                     }
                     else{
-                        self.btnDislike.setImage(UIImage(named: "thumb_down.png"), for: .normal)
-                        self.ArticleData[0].body.articles[self.newsCurrentIndex].isLike = 2
+                        self.btnDislike.setImage(UIImage(named: "dislike.png"), for: .normal)
+                        self.articleArr[self.newsCurrentIndex].isLike = 2
                     }
                 }
             }
@@ -735,17 +706,29 @@ class NewsDetailVC: UIViewController {
         }
     }
     @IBAction func btnShareActn(_ sender: Any) {
-        let text = ArticleData[0].body.articles[newsCurrentIndex].title
+        let text = articleArr[newsCurrentIndex].title
         let webURL = "Sent via NewsCout : (www.newscout.in)"
-        let url = URL(string:ArticleData[0].body.articles[newsCurrentIndex].imageURL!)
-        var image1 = UIImage(named: "\(url)")
-        var image = UIImage()
-        if let data = try? Data(contentsOf: url!)
-        {
-            image = UIImage(data: data)!
+        var shareAll : [Any]
+        var sourceURL : URL!
+        if articleArr[newsCurrentIndex].imageURL != nil{
+            let url = URL(string:articleArr[newsCurrentIndex].imageURL!)
+            let image1 = UIImage(named: "\(url)")
+            var image = UIImage()
+            if let data = try? Data(contentsOf: url!)
+            {
+                image = UIImage(data: data)!
+            }
+            if articleArr[newsCurrentIndex].url != nil{
+                sourceURL = URL(string: "\(articleArr[newsCurrentIndex].url)")
+            }
+            shareAll = [ text , image1, image,  sourceURL , webURL ] as [Any]
         }
-        let sourceURL = URL(string: "\(ArticleData[0].body.articles[newsCurrentIndex].url!)")
-        let shareAll = [ text , image1, image,  sourceURL , webURL ] as [Any]
+        else{
+            if articleArr[newsCurrentIndex].url != nil{
+                sourceURL = URL(string: "\(articleArr[newsCurrentIndex].url)")
+            }
+            shareAll = [ text , sourceURL , webURL ] as [Any]
+        }
         
         let activityViewController = UIActivityViewController(activityItems: shareAll, applicationActivities: nil)
         activityViewController.popoverPresentationController?.sourceView = sender as! UIView
@@ -754,11 +737,8 @@ class NewsDetailVC: UIViewController {
     
     @IBAction func btnBackAction(_ sender: Any) {
         let isSearch = UserDefaults.standard.value(forKey: "isSearch") as! String
-        // self.dismiss(animated: false)
         if isSearch == "search"{
-            let storyboard = UIStoryboard(name: "Main", bundle: nil)
-            let vc:SearchVC = storyboard.instantiateViewController(withIdentifier: "SearchID") as! SearchVC
-            self.present(vc, animated: true, completion: nil)
+            self.dismiss(animated: false)
         }
         else if isSearch == "bookmark"{
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
@@ -766,14 +746,7 @@ class NewsDetailVC: UIViewController {
             self.present(vc, animated: true, completion: nil)
         }
         else if isSearch == "" {
-            //        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-            //        let vc:HomeParentVC = storyboard.instantiateViewController(withIdentifier: "HomeParentID") as! HomeParentVC
-            //        self.present(vc, animated: true, completion: nil)
-            //self.dismiss(animated: false)
-            //self.view.window!.rootViewController?.dismiss(animated: false, completion: nil)
-        
-            self.view.window!.rootViewController?.dismiss(animated: false
-                , completion: nil)
+            self.view.window!.rootViewController?.dismiss(animated: false, completion: nil)
         }
     }
     
@@ -815,9 +788,9 @@ class NewsDetailVC: UIViewController {
     @IBAction func PlayButtonTapped() -> Void {
         print("Hello Edit Button")
     }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
 }
 
@@ -891,9 +864,8 @@ extension NewsDetailVC:UICollectionViewDelegate, UICollectionViewDataSource, UIC
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             let newsDetailvc:NewsDetailVC = storyboard.instantiateViewController(withIdentifier: "NewsDetailID") as! NewsDetailVC
             newsDetailvc.newsCurrentIndex = indexPath.row - 1
-            newsDetailvc.ArticleData = RecomArticleData
+            newsDetailvc.articleArr = RecomArticleData[0].body.articles
             newsDetailvc.articleId = RecomArticleData[0].body.articles[indexPath.row - 1].article_id!
-            print("articleId in didselect: \(articleId)")
             present(newsDetailvc, animated: true, completion: nil)
         }
     }
