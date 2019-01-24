@@ -106,10 +106,10 @@ class HomeVC: UIViewController{
         NightNight.theme = .normal
     }
     
-//    deinit {
-//        NotificationCenter.default.removeObserver(self, name: .darkModeEnabled, object: nil)
-//        NotificationCenter.default.removeObserver(self, name: .darkModeDisabled, object: nil)
-//    }
+    deinit {
+        NotificationCenter.default.removeObserver(self, name: .darkModeEnabled, object: nil)
+        NotificationCenter.default.removeObserver(self, name: .darkModeDisabled, object: nil)
+    }
     
     @objc func refreshNews(refreshControl: UIRefreshControl) {
         ArticlesAPICall()
@@ -141,7 +141,6 @@ class HomeVC: UIViewController{
         }
         selectedCategory = selectedCategory.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)!
         ArticlesAPICall()
-        
     }
     
     func ArticlesAPICall(){
@@ -276,6 +275,10 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
             NightNight.theme =  .night
         }
         else{
+            cell.ViewCellBackground.backgroundColor = .white
+            cell.lblSource.textColor = colorConstants.blackColor
+            cell.lblTimesAgo.textColor = colorConstants.blackColor
+            cell.lblNewsHeading.textColor = colorConstants.blackColor
             NightNight.theme =  .normal
         }
         if cell.imgNews.image == nil

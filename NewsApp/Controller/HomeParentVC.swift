@@ -35,9 +35,11 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
         if  darkModeStatus == true{
             buttonBarView.backgroundColor = colorConstants.grayBackground1
             buttonBarView.selectedBar.backgroundColor = colorConstants.redColor
+            buttonBarView.backgroundView?.backgroundColor = colorConstants.grayBackground1
         }
         else{
             buttonBarView.backgroundColor = .white
+            buttonBarView.backgroundView?.backgroundColor = .white
             buttonBarView.selectedBar.backgroundColor = .red
             
         }
@@ -99,21 +101,23 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
         }
     }
     
-//    deinit {
-//        NotificationCenter.default.removeObserver(self, name: .darkModeEnabled, object: nil)
-//        NotificationCenter.default.removeObserver(self, name: .darkModeDisabled, object: nil)
-//    }
+    deinit {
+        NotificationCenter.default.removeObserver(self, name: .darkModeEnabled, object: nil)
+        NotificationCenter.default.removeObserver(self, name: .darkModeDisabled, object: nil)
+    }
     
     @objc private func darkModeEnabled(_ notification: Notification) {
         NightNight.theme = .night
         buttonBarView.backgroundColor = colorConstants.grayBackground1
-        buttonBarView.selectedBar.backgroundColor = .white
+        buttonBarView.selectedBar.backgroundColor = .red
+        buttonBarView.layoutIfNeeded()
     }
     
     @objc private func darkModeDisabled(_ notification: Notification) {
         NightNight.theme = .normal
         buttonBarView.backgroundColor = colorConstants.whiteColor
         buttonBarView.selectedBar.backgroundColor = .red
+        buttonBarView.layoutIfNeeded()
     }
     
     override var prefersStatusBarHidden: Bool {

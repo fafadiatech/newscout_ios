@@ -345,6 +345,7 @@ class NewsDetailVC: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        let vc = HomeVC()
         changeFont()
     }
     
@@ -732,8 +733,16 @@ class NewsDetailVC: UIViewController {
             let vc:BookmarkVC = storyboard.instantiateViewController(withIdentifier: "BookmarkID") as! BookmarkVC
             self.present(vc, animated: true, completion: nil)
         }
-        else if isSearch == "" {
-            self.view.window!.rootViewController?.dismiss(animated: false, completion: nil)
+        else if isSearch == "recommend" {
+           self.view.window!.rootViewController?.dismiss(animated: false, completion: nil)
+//            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+//            let vc:HomeParentVC = storyboard.instantiateViewController(withIdentifier: "HomeParentID") as! HomeParentVC
+//            present(vc, animated: true, completion: nil)
+        }
+        else if isSearch == ""{
+              self.dismiss(animated: false)
+            
+           
         }
     }
     
@@ -848,6 +857,7 @@ extension NewsDetailVC:UICollectionViewDelegate, UICollectionViewDataSource, UIC
         if indexPath.row != 0{
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             let newsDetailvc:NewsDetailVC = storyboard.instantiateViewController(withIdentifier: "NewsDetailID") as! NewsDetailVC
+            UserDefaults.standard.set("recommend", forKey: "isSearch")
             newsDetailvc.newsCurrentIndex = indexPath.row - 1
             newsDetailvc.articleArr = RecomArticleData[0].body.articles
             newsDetailvc.articleId = RecomArticleData[0].body.articles[indexPath.row - 1].article_id!
