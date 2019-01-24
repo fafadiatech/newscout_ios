@@ -216,7 +216,6 @@ class APICall{
     func LoginAPI(param : Dictionary<String, String>,_ completion : @escaping (Int , String) ->()) {
         let url = APPURL.LoginURL
         var categories : [String] = []
-        var catArr = [String]()
         Alamofire.request(url,method: .post, parameters: param).responseString{
             response in
             if(response.result.isSuccess){
@@ -248,7 +247,6 @@ class APICall{
                             UserDefaults.standard.set(param["email"], forKey: "email")
                             completion((response.response?.statusCode)!, jsonData.header.status)
                         }
-                        
                     }
                     catch {
                         completion(0,error.localizedDescription)
