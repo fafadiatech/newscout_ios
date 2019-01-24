@@ -106,10 +106,10 @@ class HomeVC: UIViewController{
         NightNight.theme = .normal
     }
     
-    deinit {
-        NotificationCenter.default.removeObserver(self, name: .darkModeEnabled, object: nil)
-        NotificationCenter.default.removeObserver(self, name: .darkModeDisabled, object: nil)
-    }
+//    deinit {
+//        NotificationCenter.default.removeObserver(self, name: .darkModeEnabled, object: nil)
+//        NotificationCenter.default.removeObserver(self, name: .darkModeDisabled, object: nil)
+//    }
     
     @objc func refreshNews(refreshControl: UIRefreshControl) {
         ArticlesAPICall()

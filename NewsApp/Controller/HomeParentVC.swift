@@ -77,28 +77,32 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
             if  darkModeStatus == true{
                 oldCell?.label.textColor = colorConstants.whiteColor
                 oldCell?.label.backgroundColor = colorConstants.grayBackground1
+                newCell?.label.backgroundColor = colorConstants.grayBackground1
                 newCell?.label.textColor =  colorConstants.whiteColor
                 oldCell?.backgroundColor = colorConstants.grayBackground1
                 newCell?.backgroundColor = colorConstants.grayBackground1
+                self!.buttonBarView.backgroundColor = colorConstants.grayBackground1
                 self!.buttonBarView.selectedBar.backgroundColor = .red
                 
             }
             else{
                 oldCell?.label.textColor = colorConstants.blackColor
                 oldCell?.label.backgroundColor = colorConstants.whiteColor
+                newCell?.label.backgroundColor = colorConstants.whiteColor
                 newCell?.label.textColor =  colorConstants.redColor
                 oldCell?.backgroundColor = colorConstants.whiteColor
                 newCell?.backgroundColor = colorConstants.whiteColor
+                self!.buttonBarView.backgroundColor = .white
                 self!.buttonBarView.selectedBar.backgroundColor = .red
             }
             
         }
     }
     
-    deinit {
-        NotificationCenter.default.removeObserver(self, name: .darkModeEnabled, object: nil)
-        NotificationCenter.default.removeObserver(self, name: .darkModeDisabled, object: nil)
-    }
+//    deinit {
+//        NotificationCenter.default.removeObserver(self, name: .darkModeEnabled, object: nil)
+//        NotificationCenter.default.removeObserver(self, name: .darkModeDisabled, object: nil)
+//    }
     
     @objc private func darkModeEnabled(_ notification: Notification) {
         NightNight.theme = .night
