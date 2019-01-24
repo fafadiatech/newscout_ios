@@ -235,23 +235,15 @@ class APICall{
                         else{
                             UserDefaults.standard.removeObject(forKey: "categories")
                             UserDefaults.standard.synchronize()
-                            
-                           
-                            if UserDefaults.standard.value(forKey: "token") == nil || UserDefaults.standard.value(forKey: "FBToken") == nil || UserDefaults.standard.value(forKey: "googleToken") == nil{
-                                categories = ["Trending"]
-                                UserDefaults.standard.setValue(categories, forKey: "categories")
-                            }
-                            else{
-                                categories = ["For You"]
-                                UserDefaults.standard.setValue(categories, forKey: "categories")
-                            }
+                            categories = ["For You"]
+                            UserDefaults.standard.setValue(categories, forKey: "categories")
                             for cat in (jsonData.body?.user?.passion)!{
                                 categories.append(cat.name)
                             }
-                           UserDefaults.standard.setValue(categories, forKey: "categories")
+                            UserDefaults.standard.setValue(categories, forKey: "categories")
+                            UserDefaults.standard.set(jsonData.body!.user!.token, forKey: "token")
                             UserDefaults.standard.set(jsonData.body!.user!.first_name, forKey: "first_name")
                             UserDefaults.standard.set(jsonData.body!.user!.last_name, forKey: "last_name")
-                            UserDefaults.standard.set(jsonData.body!.user!.token, forKey: "token")
                             UserDefaults.standard.set(jsonData.body!.user!.user_id, forKey: "user_id")
                             UserDefaults.standard.set(param["email"], forKey: "email")
                             completion((response.response?.statusCode)!, jsonData.header.status)
@@ -619,7 +611,7 @@ class APICall{
                         let jsonData = try jsonDecoder.decode(MainModel.self, from: data)
                         
                         if jsonData.header.status == "1" {
-                        completion(SaveRemoveCategoryResult.Success((jsonData.body?.Msg)!))
+                            completion(SaveRemoveCategoryResult.Success((jsonData.body?.Msg)!))
                         }
                         else{
                             completion(SaveRemoveCategoryResult.Failure((jsonData.errors?.Msg)!))
