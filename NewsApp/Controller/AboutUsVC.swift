@@ -34,6 +34,8 @@ class AboutUsVC: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        txtViewAboutUs.text = "Fafadia Tech is an Information Technology (IT) organization focused on delivering smart, next-generation business solutions that help enterprises across the world overcome their business challenges. These solutions leverage innovations in technology, knowledge of business processes, and domain expertise to provide clients a competitive edge."
+        lblLastUpdatedVal.text = "2019-01-25"
         titleView.backgroundColor = colorConstants.redColor
         NotificationCenter.default.addObserver(self, selector: #selector(darkModeEnabled(_:)), name: .darkModeEnabled, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(darkModeDisabled(_:)), name: .darkModeDisabled, object: nil)
