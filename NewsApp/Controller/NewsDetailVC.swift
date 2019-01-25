@@ -735,9 +735,6 @@ class NewsDetailVC: UIViewController {
         }
         else if isSearch == "recommend" {
            self.view.window!.rootViewController?.dismiss(animated: false, completion: nil)
-//            let storyboard = UIStoryboard(name: "Main", bundle: nil)
-//            let vc:HomeParentVC = storyboard.instantiateViewController(withIdentifier: "HomeParentID") as! HomeParentVC
-//            present(vc, animated: true, completion: nil)
         }
         else if isSearch == ""{
               self.dismiss(animated: false)

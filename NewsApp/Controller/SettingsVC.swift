@@ -32,6 +32,5 @@ class SettingsVC: UIViewController {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let vc:HomeParentVC = storyboard.instantiateViewController(withIdentifier: "HomeParentID") as! HomeParentVC
         present(vc, animated: true, completion: nil)
-      //  self.dismiss(animated: false)
     }
 }
