@@ -211,7 +211,6 @@ open class ButtonBarPagerTabStripViewController: PagerTabStripViewController, Pa
         guard isViewLoaded else { return }
         buttonBarView.reloadData()
         cachedCellWidths = calculateWidths()
-        print(cachedCellWidths)
         buttonBarView.moveTo(index: currentIndex, animated: false, swipeDirection: .none, pagerScroll: .yes)
     }
     
@@ -335,17 +334,16 @@ open class ButtonBarPagerTabStripViewController: PagerTabStripViewController, Pa
         print(cell.label.text)
         cell.accessibilityLabel = indicatorInfo.accessibilityLabel
         if (UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.phone){
-            cell.label.font = UIFont(name:"HelveticaNeue-Light", size: 22.0) //settings.style.buttonBarItemFont}
+            cell.label.font = UIFont(name:"HelveticaNeue-Light", size: 22.0)
         }
         else{
             cell.label.font = UIFont(name:"HelveticaNeue-Light", size: 28.0)
         }
-        //cell.label.textColor = .black //settings.style.buttonBarItemTitleColor ?? cell.label.textColor
         cell.contentView.backgroundColor = settings.style.buttonBarItemBackgroundColor ?? cell.contentView.backgroundColor
        let darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
         if darkModeStatus == true{
         cell.backgroundColor = .black ?? .black
-            cell.label.textColor = .white
+        cell.label.textColor = .white
         }
         else{
             cell.backgroundColor = .gray ?? .gray

@@ -215,6 +215,7 @@ class APICall{
     //Login API
     func LoginAPI(param : Dictionary<String, String>,_ completion : @escaping (Int , String) ->()) {
         let url = APPURL.LoginURL
+        var categories : [String] = []
         Alamofire.request(url,method: .post, parameters: param).responseString{
             response in
             if(response.result.isSuccess){
@@ -231,14 +232,21 @@ class APICall{
                             }
                         }
                         else{
+                            UserDefaults.standard.removeObject(forKey: "categories")
+                            UserDefaults.standard.synchronize()
+                            categories = ["For You"]
+                            UserDefaults.standard.setValue(categories, forKey: "categories")
+                            for cat in (jsonData.body?.user?.passion)!{
+                                categories.append(cat.name)
+                            }
+                            UserDefaults.standard.setValue(categories, forKey: "categories")
+                            UserDefaults.standard.set(jsonData.body!.user!.token, forKey: "token")
                             UserDefaults.standard.set(jsonData.body!.user!.first_name, forKey: "first_name")
                             UserDefaults.standard.set(jsonData.body!.user!.last_name, forKey: "last_name")
-                            UserDefaults.standard.set(jsonData.body!.user!.token, forKey: "token")
                             UserDefaults.standard.set(jsonData.body!.user!.user_id, forKey: "user_id")
                             UserDefaults.standard.set(param["email"], forKey: "email")
                             completion((response.response?.statusCode)!, jsonData.header.status)
                         }
-                        
                     }
                     catch {
                         completion(0,error.localizedDescription)
@@ -273,7 +281,7 @@ class APICall{
             headers = ["Authorization": ""]
         }
         
-        Alamofire.request(url,method: .get, parameters: nil, headers: nil).responseString{
+        Alamofire.request(url,method: .get, parameters: nil, headers: headers).responseString{
             response in
             if(response.result.isSuccess){
                 if let data = response.data {
@@ -601,7 +609,7 @@ class APICall{
                         let jsonData = try jsonDecoder.decode(MainModel.self, from: data)
                         
                         if jsonData.header.status == "1" {
-                        completion(SaveRemoveCategoryResult.Success((jsonData.body?.Msg)!))
+                            completion(SaveRemoveCategoryResult.Success((jsonData.body?.Msg)!))
                         }
                         else{
                             completion(SaveRemoveCategoryResult.Failure((jsonData.errors?.Msg)!))
