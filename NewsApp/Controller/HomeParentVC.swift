@@ -41,7 +41,7 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
             buttonBarView.backgroundColor = .white
             buttonBarView.backgroundView?.backgroundColor = .white
             buttonBarView.selectedBar.backgroundColor = .red
-            
+
         }
        
         lblAppName.text = Constants.AppName
@@ -73,7 +73,6 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
         self.view.addSubview(floaty)
         // buttonBarView.backgroundColor = colorConstants.whiteColor
         changeCurrentIndexProgressive = {[weak self](oldCell:ButtonBarViewCell?, newCell: ButtonBarViewCell?, progressPercentage:CGFloat, changeCurrentIndex:Bool, animated:Bool)-> Void in
-            
             guard changeCurrentIndex == true else {return}
             let darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
             if  darkModeStatus == true{
@@ -83,8 +82,8 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
                 newCell?.label.textColor =  colorConstants.whiteColor
                 oldCell?.backgroundColor = colorConstants.grayBackground1
                 newCell?.backgroundColor = colorConstants.grayBackground1
-                self!.buttonBarView.backgroundColor = colorConstants.grayBackground1
-                self!.buttonBarView.selectedBar.backgroundColor = .red
+//                self!.buttonBarView.backgroundColor = colorConstants.grayBackground1
+//                self!.buttonBarView.selectedBar.backgroundColor = .red
                 
             }
             else{
@@ -94,8 +93,8 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
                 newCell?.label.textColor =  colorConstants.redColor
                 oldCell?.backgroundColor = colorConstants.whiteColor
                 newCell?.backgroundColor = colorConstants.whiteColor
-                self!.buttonBarView.backgroundColor = .white
-                self!.buttonBarView.selectedBar.backgroundColor = .red
+//                self!.buttonBarView.backgroundColor = .white
+//                self!.buttonBarView.selectedBar.backgroundColor = .red
             }
             
         }
@@ -110,14 +109,12 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
         NightNight.theme = .night
         buttonBarView.backgroundColor = colorConstants.grayBackground1
         buttonBarView.selectedBar.backgroundColor = .red
-        buttonBarView.layoutIfNeeded()
     }
     
     @objc private func darkModeDisabled(_ notification: Notification) {
         NightNight.theme = .normal
         buttonBarView.backgroundColor = colorConstants.whiteColor
         buttonBarView.selectedBar.backgroundColor = .red
-        buttonBarView.layoutIfNeeded()
     }
     
     override var prefersStatusBarHidden: Bool {
@@ -130,15 +127,14 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        
     }
-    
     
     override func viewControllers(for pagerTabStripController: PagerTabStripViewController) -> [UIViewController] {
         
         //Clear children viewcontrollers
         childrenVC.removeAll()
         //Create children viewcontrolles based on categories passed from CategoryListVC
-        print(categories)
         categories = UserDefaults.standard.array(forKey: "categories") as! [String]
         for cat in categories
         {
@@ -161,16 +157,12 @@ extension HomeParentVC:CategoryListProtocol{
     func updateCategoryList(catName: String) {
         categories.append(catName)
         UserDefaults.standard.set(categories, forKey: "categories")
-        print(UserDefaults.standard.set(categories, forKey: "categories"))
-        print("ParentCatArr: \(categories)")
         self.reloadPagerTabStripView()
     }
     
     func deleteCategory(currentCategory: String) {
         categories = categories.filter{$0 != currentCategory}
         UserDefaults.standard.set(categories, forKey: "categories")
-        print(categories)
-        print(UserDefaults.standard.set(categories, forKey: "categories"))
         self.reloadPagerTabStripView()
     }
 }
