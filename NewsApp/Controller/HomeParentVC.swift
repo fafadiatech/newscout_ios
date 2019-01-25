@@ -16,15 +16,13 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
     @IBOutlet weak var viewAppTitle: UIView!
     @IBOutlet weak var lblAppName: UILabel!
     var childrenVC = [UIViewController]()
-    var categories : [String] = [] //= ["For You"]
+    var categories : [String] = []
 
-    
     override func viewDidLoad() {
         settings.style.buttonBarItemsShouldFillAvailiableWidth = false
         super.viewDidLoad()
         NotificationCenter.default.addObserver(self, selector: #selector(darkModeEnabled(_:)), name: .darkModeEnabled, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(darkModeDisabled(_:)), name: .darkModeDisabled, object: nil)
-      //  self.reloadPagerTabStripView()
         lblAppName.font = FontConstants.appFont
         viewAppTitle.backgroundColor = colorConstants.redColor
         lblAppName.textColor = colorConstants.whiteColor
@@ -71,7 +69,6 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
             self.present(bookmarkvc, animated: true, completion: nil)
         }
         self.view.addSubview(floaty)
-        // buttonBarView.backgroundColor = colorConstants.whiteColor
         changeCurrentIndexProgressive = {[weak self](oldCell:ButtonBarViewCell?, newCell: ButtonBarViewCell?, progressPercentage:CGFloat, changeCurrentIndex:Bool, animated:Bool)-> Void in
             guard changeCurrentIndex == true else {return}
             let darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
@@ -82,9 +79,6 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
                 newCell?.label.textColor =  colorConstants.whiteColor
                 oldCell?.backgroundColor = colorConstants.grayBackground1
                 newCell?.backgroundColor = colorConstants.grayBackground1
-//                self!.buttonBarView.backgroundColor = colorConstants.grayBackground1
-//                self!.buttonBarView.selectedBar.backgroundColor = .red
-                
             }
             else{
                 oldCell?.label.textColor = colorConstants.blackColor
@@ -93,11 +87,8 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
                 newCell?.label.textColor =  colorConstants.redColor
                 oldCell?.backgroundColor = colorConstants.whiteColor
                 newCell?.backgroundColor = colorConstants.whiteColor
-//                self!.buttonBarView.backgroundColor = .white
-//                self!.buttonBarView.selectedBar.backgroundColor = .red
-            }
-            
         }
+    }
     }
     
     deinit {
@@ -148,8 +139,7 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
         childMore.protocolObj = self
         childrenVC.append(childMore)
         return childrenVC
-    }
-  
+    }  
 }
 
 extension HomeParentVC:CategoryListProtocol{
