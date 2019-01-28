@@ -32,7 +32,6 @@ class DBManager{
                 print(code)
             }
             if self.ArticleData.count != 0{
-                print(self.ArticleData[0].body.articles)
                 for news in self.ArticleData[0].body.articles{ 
                     if  self.someEntityExists(id: Int(news.article_id!), entity: "NewsArticle") == false
                     {
@@ -47,7 +46,6 @@ class DBManager{
                         newArticle.category = news.category!
                         do {
                             try managedContext?.save()
-                            print("successfully saved ..")
                         }
                         catch let error as NSError  {
                             print("Could not save \(error)")
@@ -67,7 +65,7 @@ class DBManager{
     //check for existing entry in DB
     func someEntityExists(id: Int, entity : String) -> Bool {
         let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: entity)
-        if entity == "NewsArticle"{
+        if entity == "NewsArticle" || entity == "BookmarkArticles"{
             fetchRequest.predicate = NSPredicate(format: "article_id == \(id)")
             
         }
@@ -118,15 +116,15 @@ class DBManager{
     }
     
     //fetch articles from DB
-    func FetchDataFromDB() -> ArticleDBfetchResult
+    func FetchDataFromDB(entity: String) -> ArticleDBfetchResult
     {
         let managedContext =
             appDelegate?.persistentContainer.viewContext
         let fetchRequest =
-            NSFetchRequest<NewsArticle>(entityName: "NewsArticle")
+            NSFetchRequest<NSManagedObject>(entityName: entity)
         do {
             let ShowArticle = try (managedContext?.fetch(fetchRequest))!
-            return ArticleDBfetchResult.Success(ShowArticle)
+            return ArticleDBfetchResult.Success(ShowArticle as! [NewsArticle])
             
         } catch let error as NSError {
             print("Could not fetch. \(error), \(error.userInfo)")
@@ -135,11 +133,11 @@ class DBManager{
     }
     
     // check if DB is empty
-    func IsCoreDataEmpty() -> Int
+    func IsCoreDataEmpty(entity: String) -> Int
     {
         let managedContext =
             appDelegate?.persistentContainer.viewContext
-        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "NewsArticle")
+        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: entity)
         var records = [NewsArticle]()
         do {
             records = (try managedContext?.fetch(fetchRequest)) as! [NewsArticle]
@@ -188,7 +186,6 @@ class DBManager{
                         newCategory.title = cat.title
                         do {
                             try managedContext?.save()
-                            print("successfully saved ..")
                         } catch let error as NSError  {
                             print("Could not save \(error)")
                         }
@@ -211,7 +208,6 @@ class DBManager{
             NSFetchRequest<Category>(entityName: "Category")
         do {
             let ShowCategory = try (managedContext?.fetch(fetchRequest))!
-            print(ShowCategory)
             return CategoryDBfetchResult.Success(ShowCategory)
             
         } catch let error as NSError {
@@ -219,4 +215,48 @@ class DBManager{
             return CategoryDBfetchResult.Failure(error as! String)
         }
     }
+    
+    func SaveBookmarkArticles(nextUrl:String,_ completion : @escaping (Bool) -> ())
+    {
+        let managedContext =
+            appDelegate?.persistentContainer.viewContext
+        APICall().BookmarkedArticlesAPI(url: APPURL.bookmarkedArticlesURL){
+             response  in
+            switch response {
+            case .Success(let data) :
+                self.ArticleData = data
+                
+            case .Failure(let errormessage) :
+                print(errormessage)
+            case .Change(let code):
+                print(code)
+            }
+            if self.ArticleData.count != 0{
+                for news in self.ArticleData[0].body.articles{
+                    if  self.someEntityExists(id: Int(news.article_id!), entity: "BookmarkArticles") == false
+                    {
+                        let newArticle = BookmarkArticles(context: managedContext!)
+                        newArticle.article_id = Int16(news.article_id!)
+                        newArticle.title = news.title
+                        newArticle.source = news.source!
+                        newArticle.imageURL = news.imageURL
+                        newArticle.source_url = news.url
+                        newArticle.published_on = news.published_on
+                        newArticle.blurb = news.blurb
+                        newArticle.category = news.category!
+                        do {
+                            try managedContext?.save()
+                        }
+                        catch let error as NSError  {
+                            print("Could not save \(error)")
+                        }
+                    }
+                }
+                completion(true)
+            }else{
+                completion(false)
+            }
+        }
+    }
+    
 }

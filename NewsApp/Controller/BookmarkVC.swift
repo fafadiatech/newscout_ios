@@ -20,7 +20,8 @@ class BookmarkVC: UIViewController {
     let textSizeSelected = UserDefaults.standard.value(forKey: "textSize") as! Int
     var bookmarkedArticlesArr = [Article]()
     var nextURL = ""
-   
+    var ShowArticle = [NewsArticle]()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         NotificationCenter.default.addObserver(self, selector: #selector(darkModeEnabled(_:)), name: .darkModeEnabled, object: nil)
@@ -33,7 +34,12 @@ class BookmarkVC: UIViewController {
         view.addSubview(activityIndicator)
         activityIndicator.startAnimating()
         if UserDefaults.standard.value(forKey: "token") != nil || UserDefaults.standard.value(forKey: "FBToken") != nil || UserDefaults.standard.value(forKey: "googleToken") != nil{
-            BookmarkAPICall()
+            let coredataRecordCount = DBManager().IsCoreDataEmpty(entity: "BookmarkArticles")
+            if coredataRecordCount != 0{
+                fetchDataFromDB()
+            }else{
+                saveDataInDB(url : APPURL.bookmarkedArticlesURL)
+            }
         }
         else{
             activityIndicator.stopAnimating()
@@ -80,6 +86,25 @@ class BookmarkVC: UIViewController {
         return true
     }
     
+    func fetchDataFromDB(){
+        let result = DBManager().FetchDataFromDB(entity: "BookmarkArticles")
+        switch result {
+        case .Success(let DBData) :
+            ShowArticle = DBData
+            self.bookmarkResultTV.reloadData()
+        case .Failure(let errorMsg) :
+            print(errorMsg)
+        }
+    }
+    
+    func saveDataInDB(url: String){
+        DBManager().SaveBookmarkArticles(nextUrl: url){response in
+            if response == true{
+                self.fetchDataFromDB()
+            }
+        }
+    }
+
     func showMsg(title: String, msg : String)
     {
         let alertController = UIAlertController(title: title, message: msg, preferredStyle: .alert)
@@ -160,7 +185,7 @@ class BookmarkVC: UIViewController {
 
 extension BookmarkVC: UITableViewDelegate, UITableViewDataSource{
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return (bookmarkedArticlesArr.count != 0) ? bookmarkedArticlesArr.count : 0
+        return (ShowArticle.count != 0) ? ShowArticle.count : 0
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -188,8 +213,8 @@ extension BookmarkVC: UITableViewDelegate, UITableViewDataSource{
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
         dateFormatter.timeZone = NSTimeZone(name: "UTC")! as TimeZone
-        if bookmarkedArticlesArr.count != 0{
-            let currentArticle = bookmarkedArticlesArr[indexPath.row]
+        if ShowArticle.count != 0{
+            let currentArticle = ShowArticle[indexPath.row]
             cell.lblSource.text = currentArticle.source
             let newDate = dateFormatter.date(from: currentArticle.published_on!)
             let agoDate = Helper().timeAgoSinceDate(newDate!)

@@ -58,7 +58,7 @@ class HomeVC: UIViewController{
         }
         //save and fetch data from DB
         selectedCategory = tabBarTitle
-        coredataRecordCount = DBManager().IsCoreDataEmpty()
+        coredataRecordCount = DBManager().IsCoreDataEmpty(entity: "NewsArticle")
         if coredataRecordCount != 0{
             fetchDataFromDB()
         }else{
@@ -68,7 +68,7 @@ class HomeVC: UIViewController{
     }
     
     func fetchDataFromDB(){
-        let result = DBManager().FetchDataFromDB()
+        let result = DBManager().FetchDataFromDB(entity: "NewsArticle")
         switch result {
         case .Success(let DBData) :
             let articles = DBData
