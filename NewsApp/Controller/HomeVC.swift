@@ -45,7 +45,7 @@ class HomeVC: UIViewController{
         activityIndicator.startAnimating()
         
         var paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
-        print("\(paths[0])")
+        print("path is :\(paths[0])")
         let refreshControl = UIRefreshControl()
         refreshControl.addTarget(self, action: #selector(refreshNews), for: .valueChanged)
         HomeNewsTV.refreshControl = refreshControl
@@ -56,45 +56,41 @@ class HomeVC: UIViewController{
         else {
             HomeNewsTV.rowHeight = 129;
         }
-        /* coredataRecordCount = DBManager().IsCoreDataEmpty()
-         if coredataRecordCount != 0{
-         let result = DBManager().FetchDataFromDB()
-         switch result {
-         case .Success(let DBData) :
-         let articles = DBData
-         if selectedCat == "" || selectedCat == "FOR YOU" || selectedCat == "All News"
-         {
-         self.filterNews(selectedCat: "All News" )
-         print("cat pressed is: for u")
-         }else{
-         self.filterNews(selectedCat: selectedCat )
-         }
-         self.HomeNewsTV.reloadData()
-         case .Failure(let errorMsg) :
-         print(errorMsg)
-         }
-         HomeNewsTV.reloadData()
-         }
-         else{
-         DBManager().SaveDataDB(pageNum:pageNum){response in
-         if response == true{
-         let result = DBManager().FetchDataFromDB()
-         switch result {
-         case .Success(let DBData) :
-         let articles = DBData
-         if  selectedCat == "" || selectedCat == "FOR YOU" || selectedCat == "All News"{
-         self.filterNews(selectedCat: "All News" )
-         }else{
-         self.filterNews(selectedCat: selectedCat )
-         }
-         self.HomeNewsTV.reloadData()
-         case .Failure(let errorMsg) :
-         print(errorMsg)
-         }
-         }
-         }
-         }*/
-        
+        //save and fetch data from DB
+        selectedCategory = tabBarTitle
+        coredataRecordCount = DBManager().IsCoreDataEmpty()
+        if coredataRecordCount != 0{
+            fetchDataFromDB()
+        }else{
+            let url = APPURL.ArticlesByCategoryURL + "\(selectedCategory)"
+            saveDataInDB(url : url)
+        }
+    }
+    
+    func fetchDataFromDB(){
+        let result = DBManager().FetchDataFromDB()
+        switch result {
+        case .Success(let DBData) :
+            let articles = DBData
+            if selectedCategory == "" || selectedCategory == "FOR YOU" || selectedCategory == "All News"
+            {
+                self.filterNews(selectedCat: "All News" )
+                print("cat pressed is: for u")
+            }else{
+                self.filterNews(selectedCat: selectedCategory )
+            }
+            self.HomeNewsTV.reloadData()
+        case .Failure(let errorMsg) :
+            print(errorMsg)
+        }
+    }
+    
+    func saveDataInDB(url: String){
+        DBManager().SaveDataDB(nextUrl: url){response in
+            if response == true{
+                self.fetchDataFromDB()
+            }
+        }
     }
     
     @objc private func darkModeEnabled(_ notification: Notification) {
@@ -112,7 +108,7 @@ class HomeVC: UIViewController{
     }
     
     @objc func refreshNews(refreshControl: UIRefreshControl) {
-        ArticlesAPICall()
+        FetchArticlesAPICall()
         refreshControl.endRefreshing()
     }
     
@@ -124,12 +120,13 @@ class HomeVC: UIViewController{
             self.appDelegate?.persistentContainer.viewContext
         do {
             self.ShowArticle = (try managedContext?.fetch(fetchRequest))! as! [NewsArticle]
+            print(self.ShowArticle)
         }
         catch {
             print("error executing fetch request: \(error)")
         }
-        
     }
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
@@ -140,7 +137,10 @@ class HomeVC: UIViewController{
             selectedCategory = tabBarTitle
         }
         selectedCategory = selectedCategory.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)!
-        ArticlesAPICall()
+    }
+    
+    func FetchArticlesAPICall(){
+        saveDataInDB(url:  APPURL.ArticlesByCategoryURL + "\(selectedCategory)" )
     }
     
     func ArticlesAPICall(){
@@ -209,7 +209,7 @@ class HomeVC: UIViewController{
 
 extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelegate{
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return (articlesArr.count != 0) ? self.articlesArr.count : 0
+        return (ShowArticle.count != 0) ? self.ShowArticle.count : 0
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -238,9 +238,9 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
         dateFormatter.timeZone = NSTimeZone(name: "UTC")! as TimeZone
         cell.lblSource.textColor = colorConstants.txtDarkGrayColor
         cell.lblTimesAgo.textColor = colorConstants.txtDarkGrayColor
-        //display data using API
-        if articlesArr.count > 0{
-            let currentArticle = articlesArr[indexPath.row]
+        //display data from DB
+        if ShowArticle.count != 0{
+            let currentArticle = ShowArticle[indexPath.row]
             cell.lblNewsHeading.text = currentArticle.title
             cell.lblSource.text = currentArticle.source
             let newDate = dateFormatter.date(from: currentArticle.published_on!)
@@ -248,6 +248,7 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
             cell.lblTimesAgo.text = agoDate
             cell.imgNews.sd_setImage(with: URL(string: currentArticle.imageURL!), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
         }
+        
         let textSizeSelected = UserDefaults.standard.value(forKey: "textSize") as! Int
         if textSizeSelected == 0{
             cell.lblSource.font = FontConstants.smallFontContent

@@ -16,11 +16,12 @@ class DBManager{
     var CategoryData = [CategoryList]()
     
     //save articles in DB
-    func SaveDataDB(pageNum:Int,_ completion : @escaping (Bool) -> ())
+    func SaveDataDB(nextUrl:String,_ completion : @escaping (Bool) -> ())
     {
         let managedContext =
             appDelegate?.persistentContainer.viewContext
-        APICall().loadNewsAPI(page:pageNum){ response in
+        APICall().loadNewsbyCategoryAPI(url : nextUrl){
+            (status, response)  in
             switch response {
             case .Success(let data) :
                 self.ArticleData = data
@@ -36,7 +37,7 @@ class DBManager{
                     if  self.someEntityExists(id: Int(news.article_id!), entity: "NewsArticle") == false
                     {
                         let newArticle = NewsArticle(context: managedContext!)
-                        newArticle.article_id = Int64(news.article_id!)
+                        newArticle.article_id = Int16(news.article_id!)
                         newArticle.title = news.title
                         newArticle.source = news.source!
                         newArticle.imageURL = news.imageURL
@@ -47,11 +48,14 @@ class DBManager{
                         do {
                             try managedContext?.save()
                             print("successfully saved ..")
-                            
-                        } catch let error as NSError  {
+                        }
+                        catch let error as NSError  {
                             print("Could not save \(error)")
                         }
                     }
+                }
+                if self.ArticleData[0].body.next != nil{
+                    // self.someEntityExists(id: 0 , entity: String)
                 }
                 completion(true)
             }else{
@@ -69,6 +73,30 @@ class DBManager{
         }
         else{
             fetchRequest.predicate = NSPredicate(format: "cat_id == \(id)")
+            
+        }
+        let managedContext =
+            appDelegate?.persistentContainer.viewContext
+        var results: [NSManagedObject] = []
+        
+        do {
+            results = (try managedContext?.fetch(fetchRequest))!
+        }
+        catch {
+            print("error executing fetch request: \(error)")
+        }
+        if results.count == 0{
+            return false
+        }
+        else{
+            return true
+        }
+    }
+    //check for nexturl entry in DB
+    func nextURLExists(catName: String, entity : String) -> Bool {
+        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: entity)
+        if entity == "NewsArticle"{
+            fetchRequest.predicate = NSPredicate(format: "article_id == \(catName)")
             
         }
         let managedContext =
@@ -106,7 +134,7 @@ class DBManager{
         }
     }
     
-    // chjeck if DB is empty
+    // check if DB is empty
     func IsCoreDataEmpty() -> Int
     {
         let managedContext =
@@ -156,7 +184,7 @@ class DBManager{
                     if  self.someEntityExists(id: Int(cat.cat_id!), entity: "Category") == false
                     {
                         let newCategory = Category(context: managedContext!)
-                        newCategory.cat_id = cat.cat_id!
+                        newCategory.cat_id = Int16(cat.cat_id!)
                         newCategory.title = cat.title
                         do {
                             try managedContext?.save()

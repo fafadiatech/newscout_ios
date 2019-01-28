@@ -44,44 +44,13 @@ class CategoryListVC: UIViewController {
         else {
             tableCategoryLIst.rowHeight = 50;
         }
-        APICall().loadCategoriesAPI{
-            (status,response) in
-            switch response {
-            case .Success(let data) :
-                self.CategoryData = data
-                self.tableCategoryLIst.reloadData()
-            case .Failure(let errormessage) :
-                self.tableCategoryLIst.makeToast(errormessage, duration: 2.0, position: .center)
-            }
-            self.activityIndicator.stopAnimating()
+        let coredataRecordCount = DBManager().IsCategoryDataEmpty()
+        if coredataRecordCount != 0{
+            fetchCategoryFromDB()
         }
-        /*  let coredataRecordCount = DBManager().IsCategoryDataEmpty()
-         if coredataRecordCount != 0{
-         let result = DBManager().FetchCategoryFromDB()
-         switch result {
-         case .Success(let DBData) :
-         self.showCategory = DBData
-         self.categoryCount = self.showCategory.count
-         self.tableCategoryLIst.reloadData()
-         case .Failure(let errorMsg) :
-         print(errorMsg)
-         }
-         }
-         else{
-         DBManager().SaveCategoryDB{response in
-         if response == true{
-         let result = DBManager().FetchCategoryFromDB()
-         switch result {
-         case .Success(let DBData) :
-         self.showCategory = DBData
-         self.categoryCount = self.showCategory.count
-         self.tableCategoryLIst.reloadData()
-         case .Failure(let errorMsg) :
-         print(errorMsg)
-         }
-         }
-         }
-         }*/
+        else{
+            saveCategoryInDB()
+        }
     }
     
     @objc private func darkModeEnabled(_ notification: Notification) {
@@ -97,19 +66,9 @@ class CategoryListVC: UIViewController {
         NotificationCenter.default.removeObserver(self, name: .darkModeEnabled, object: nil)
         NotificationCenter.default.removeObserver(self, name: .darkModeDisabled, object: nil)
     }
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        APICall().loadCategoriesAPI{
-            (status, response) in
-            switch response {
-            case .Success(let data) :
-                self.CategoryData = data
-                self.tableCategoryLIst.reloadData()
-            case .Failure(let errormessage) :
-                self.tableCategoryLIst.makeToast(errormessage, duration: 2.0, position: .center)
-            }
-            self.activityIndicator.stopAnimating()
-        }
     }
     
     override var prefersStatusBarHidden: Bool {
@@ -120,6 +79,24 @@ class CategoryListVC: UIViewController {
         self.dismiss(animated:false)
     }
     
+    func fetchCategoryFromDB(){
+        let result = DBManager().FetchCategoryFromDB()
+        switch result {
+        case .Success(let DBData) :
+            self.showCategory = DBData
+            self.tableCategoryLIst.reloadData()
+        case .Failure(let errorMsg) :
+            print(errorMsg)
+        }
+    }
+    
+    func saveCategoryInDB(){
+        DBManager().SaveCategoryDB{response in
+            if response == true{
+                self.fetchCategoryFromDB()
+            }
+        }
+    }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -140,12 +117,12 @@ extension CategoryListVC:UITableViewDelegate, UITableViewDataSource{
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return (CategoryData.count != 0) ? self.CategoryData[0].categories.count : 0
+        return (showCategory.count != 0) ? self.showCategory.count : 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableCategoryLIst.dequeueReusableCell(withIdentifier: "CategoryListID", for:indexPath) as! CategoryListTVCell
-        let catData = CategoryData[0].categories[indexPath.row]
+        let catData = showCategory[indexPath.row]
         var textSizeSelected = UserDefaults.standard.value(forKey: "textSize") as! Int
         if (UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.phone){
             if textSizeSelected == 0{
@@ -189,6 +166,7 @@ extension CategoryListVC:UITableViewDelegate, UITableViewDataSource{
         else{
             NightNight.theme =  .normal
         }
+        activityIndicator.stopAnimating()
         return cell
     }
     
