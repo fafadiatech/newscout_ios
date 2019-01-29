@@ -1846,13 +1846,13 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="RxT-xW-cwM">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="440.5"/>
                                 <subviews>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="NoImage" translatesAutoresizingMaskIntoConstraints="NO" id="pm3-HD-Vbj">
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="pm3-HD-Vbj">
                                         <rect key="frame" x="0.0" y="0.0" width="320" height="202.5"/>
-                                        <color key="backgroundColor" red="0.9616458873" green="0.9616458873" blue="0.9616458873" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                        <color key="backgroundColor" red="1" green="0.61645355290000003" blue="0.20262503949999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     </imageView>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NRh-4q-HXp" customClass="AVPlayerView" customModule="NewsApp" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="0.0" width="320" height="202.5"/>
-                                        <color key="backgroundColor" white="0.91300223209999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     </view>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="has-VQ-hNu">
                                         <rect key="frame" x="137" y="86.5" width="100" height="50"/>
