@@ -191,8 +191,8 @@ extension BookmarkVC: UITableViewDelegate, UITableViewDataSource{
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let newsDetailvc:NewsDetailVC = storyboard.instantiateViewController(withIdentifier: "NewsDetailID") as! NewsDetailVC
         newsDetailvc.newsCurrentIndex = indexPath.row
-        newsDetailvc.articleArr = bookmarkedArticlesArr
-        newsDetailvc.articleId = bookmarkedArticlesArr[indexPath.row].article_id!
+     //   newsDetailvc.ShowArticle = ShowArticle
+        newsDetailvc.articleId = Int(ShowArticle[indexPath.row].article_id)
         UserDefaults.standard.set("bookmark", forKey: "isSearch")
         present(newsDetailvc, animated: true, completion: nil)
     }

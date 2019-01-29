@@ -11,6 +11,7 @@ import Alamofire
 import CoreData
 import NightNight
 import MaterialComponents.MaterialActivityIndicator
+import SDWebImage
 
 class SearchVC: UIViewController {
     @IBOutlet weak var searchResultTV: UITableView!
@@ -28,7 +29,7 @@ class SearchVC: UIViewController {
     let appDelegate = UIApplication.shared.delegate as? AppDelegate
     let textSizeSelected = UserDefaults.standard.value(forKey: "textSize") as! Int
     var searchArticlesArr = [Article]()
-    
+    var recordCount = 0
     override func viewDidLoad() {
         super.viewDidLoad()
         if UserDefaults.standard.value(forKey: "searchTxt") != nil{
@@ -126,7 +127,7 @@ class SearchVC: UIViewController {
 
 extension SearchVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return (searchArticlesArr.count != 0) ? searchArticlesArr.count : 0
+        return recordCount
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -134,8 +135,14 @@ extension SearchVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDele
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let newsDetailvc:NewsDetailVC = storyboard.instantiateViewController(withIdentifier: "NewsDetailID") as! NewsDetailVC
         newsDetailvc.newsCurrentIndex = indexPath.row
+        if searchArticlesArr.count != 0 {
         newsDetailvc.articleArr = searchArticlesArr
         newsDetailvc.articleId = searchArticlesArr[indexPath.row].article_id!
+        }
+        else{
+            newsDetailvc.ShowArticle = results
+            newsDetailvc.articleId = Int(results[indexPath.row].article_id)
+        }
         UserDefaults.standard.set("search", forKey: "isSearch")
         present(newsDetailvc, animated: true, completion: nil)
     }
@@ -154,6 +161,7 @@ extension SearchVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDele
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
         dateFormatter.timeZone = NSTimeZone(name: "UTC")! as TimeZone
+        
         if searchArticlesArr.count != 0{
             let currentArticle = searchArticlesArr[indexPath.row]
             cell.lblSource.text = currentArticle.source
@@ -162,6 +170,16 @@ extension SearchVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDele
             cell.lbltimeAgo.text = agoDate
             cell.lblNewsDescription.text = currentArticle.title
             cell.imgNews.downloadedFrom(link: "\(currentArticle.imageURL)")
+        }
+        else if results.count != 0{
+            recordCount = results.count
+            let currentArticle = results[indexPath.row]
+            cell.lblSource.text = currentArticle.source
+            let newDate = dateFormatter.date(from: currentArticle.published_on!)
+            let agoDate = Helper().timeAgoSinceDate(newDate!)
+            cell.lbltimeAgo.text = agoDate
+            cell.lblNewsDescription.text = currentArticle.title
+            cell.imgNews.sd_setImage(with: URL(string: currentArticle.imageURL!), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
         }
         
         if textSizeSelected == 0{
@@ -262,12 +280,14 @@ extension SearchVC: UITextFieldDelegate
                     search = escapedString
                 }
                 UserDefaults.standard.set(search, forKey: "searchTxt")
+            
                 let url = APPURL.SearchURL + search
                 APICall().loadSearchAPI(url: url){ (Status, response) in
                     switch response {
                     case .Success(let data) :
                         if data.count > 0{
                             self.searchArticlesArr = data[0].body.articles
+                             self.recordCount = self.searchArticlesArr.count
                             if data[0].body.next != nil{
                                 self.nextURL = data[0].body.next!
                             }
@@ -281,9 +301,14 @@ extension SearchVC: UITextFieldDelegate
                             self.searchResultTV.reloadData()
                         }
                     case .Failure(let errormessage) :
+                        if Status == "no net"{
+                            self.fetchResult()
+                        }
+                        else{
                         print(errormessage)
                         self.activityIndicator.startAnimating()
                         self.searchResultTV.makeToast(errormessage, duration: 2.0, position: .center)
+                        }
                     case .Change(let code):
                         print(code)
                     }
@@ -299,25 +324,25 @@ extension SearchVC: UITextFieldDelegate
             self.searchResultTV.makeToast("Enter keyword to search", duration: 2.0, position: .center)
         }
         
-        // search text in DB
-        /*   let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "NewsArticle")
-         fetchRequest.predicate = NSPredicate(format: "title CONTAINS[c] %@ OR news_description CONTAINS[c] %@",txtSearch.text!, txtSearch.text!)
-         let managedContext =
-         appDelegate?.persistentContainer.viewContext
-         do {
-         results = (try managedContext?.fetch(fetchRequest))
-         as! [NewsArticle]
-         print("result.count: \(results.count)")
-         print ("results val: \(results)")
-         searchResultTV.reloadData()
-         }
-         catch {
-         print("error executing fetch request: \(error)")
-         }
-         
-         }*/
-        
         return true
+    }
+    
+    func fetchResult(){
+        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "NewsArticle")
+        fetchRequest.predicate = NSPredicate(format: "title CONTAINS[c] %@ OR blurb CONTAINS[c] %@",txtSearch.text!, txtSearch.text!)
+        let managedContext =
+            appDelegate?.persistentContainer.viewContext
+        do {
+            results = (try managedContext?.fetch(fetchRequest))
+                as! [NewsArticle]
+            recordCount = results.count
+    
+            searchResultTV.reloadData()
+        }
+        catch {
+            print("error executing fetch request: \(error)")
+        }
+        
     }
     
     func textFieldDidBeginEditing(_ textField: UITextField) {

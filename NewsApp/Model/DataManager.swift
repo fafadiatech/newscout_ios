@@ -141,7 +141,7 @@ class DBManager{
             NSFetchRequest<BookmarkArticles>(entityName: "BookmarkArticles")
         do {
             let ShowArticle = try (managedContext?.fetch(fetchRequest))!
-            return BookmarkArticleDBfetchResult.Success(ShowArticle as! [BookmarkArticles])
+            return BookmarkArticleDBfetchResult.Success(ShowArticle)
         } catch let error as NSError {
             print("Could not fetch. \(error), \(error.userInfo)")
             return BookmarkArticleDBfetchResult.Failure(error as! String)

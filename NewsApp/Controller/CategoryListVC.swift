@@ -171,7 +171,7 @@ extension CategoryListVC:UITableViewDelegate, UITableViewDataSource{
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        selectedCat = CategoryData[0].categories[indexPath.row].title!
+        selectedCat = showCategory[indexPath.row].title!
         
         if !categories.contains(selectedCat){
             protocolObj?.updateCategoryList(catName: selectedCat)

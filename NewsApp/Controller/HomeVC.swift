@@ -42,7 +42,6 @@ class HomeVC: UIViewController{
         activityIndicator.indicatorMode = .indeterminate
         activityIndicator.progress = 2.0
         view.addSubview(activityIndicator)
-        activityIndicator.startAnimating()
         
         var paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
         print("path is :\(paths[0])")
@@ -59,12 +58,19 @@ class HomeVC: UIViewController{
         //save and fetch data from DB
         selectedCategory = tabBarTitle
         coredataRecordCount = DBManager().IsCoreDataEmpty(entity: "NewsArticle")
-        if coredataRecordCount != 0{
-            fetchDataFromDB()
-        }else{
-            let url = APPURL.ArticlesByCategoryURL + "\(selectedCategory)"
-            saveDataInDB(url : url)
+        DispatchQueue.global(qos: .userInitiated).async {
+            if self.coredataRecordCount != 0{
+                self.fetchDataFromDB()
+            }else{
+                let url = APPURL.ArticlesByCategoryURL + "\(self.selectedCategory)"
+                self.saveDataInDB(url : url)
+            }
+            
+            DispatchQueue.main.async {
+                print("Time consuming task has completed. From here we are allowed to update user interface.")
+            }
         }
+      
     }
     
     func fetchDataFromDB(){
@@ -79,7 +85,7 @@ class HomeVC: UIViewController{
             }else{
                 self.filterNews(selectedCat: selectedCategory )
             }
-            self.HomeNewsTV.reloadData()
+            //self.HomeNewsTV.reloadData()
         case .Failure(let errorMsg) :
             print(errorMsg)
         }
@@ -205,6 +211,18 @@ class HomeVC: UIViewController{
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
+    
+    func background(work: @escaping () -> ()) {
+        DispatchQueue.global(qos: .userInitiated).async {
+            work()
+        }
+    }
+    
+    func main(work: @escaping () -> ()) {
+        DispatchQueue.main.async {
+            work()
+        }
+    }
 }
 
 extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelegate{
@@ -216,8 +234,8 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let newsDetailvc:NewsDetailVC = storyboard.instantiateViewController(withIdentifier: "NewsDetailID") as! NewsDetailVC
         newsDetailvc.newsCurrentIndex = indexPath.row
-        newsDetailvc.articleArr = articlesArr
-        newsDetailvc.articleId = articlesArr[indexPath.row].article_id!
+        newsDetailvc.ShowArticle = ShowArticle as! [NewsArticle]
+        newsDetailvc.articleId = Int(ShowArticle[indexPath.row].article_id)
         UserDefaults.standard.set("", forKey: "isSearch")
         present(newsDetailvc, animated: true, completion: nil)
     }
