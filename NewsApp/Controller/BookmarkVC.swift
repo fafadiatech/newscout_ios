@@ -20,7 +20,7 @@ class BookmarkVC: UIViewController {
     let textSizeSelected = UserDefaults.standard.value(forKey: "textSize") as! Int
     var bookmarkedArticlesArr = [Article]()
     var nextURL = ""
-    var ShowArticle = [NewsArticle]()
+    var ShowArticle = [BookmarkArticles]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -87,10 +87,11 @@ class BookmarkVC: UIViewController {
     }
     
     func fetchDataFromDB(){
-        let result = DBManager().FetchDataFromDB(entity: "BookmarkArticles")
+        let result = DBManager().FetchBookmarkFromDB()
         switch result {
         case .Success(let DBData) :
             ShowArticle = DBData
+            print(ShowArticle)
             self.bookmarkResultTV.reloadData()
         case .Failure(let errorMsg) :
             print(errorMsg)
@@ -104,9 +105,8 @@ class BookmarkVC: UIViewController {
             }
         }
     }
-
-    func showMsg(title: String, msg : String)
-    {
+    
+    func showMsg(title: String, msg : String){
         let alertController = UIAlertController(title: title, message: msg, preferredStyle: .alert)
         if UI_USER_INTERFACE_IDIOM() == .pad
         {
@@ -130,8 +130,7 @@ class BookmarkVC: UIViewController {
         self.present(alertController, animated: true, completion: nil)
     }
     
-    func changeFont()
-    {
+    func changeFont(){
         if textSizeSelected == 0{
             lblBookmark.font = FontConstants.NormalFontTitleMedium
         }
@@ -143,8 +142,7 @@ class BookmarkVC: UIViewController {
         }
     }
     
-    func BookmarkAPICall()
-    {
+    func BookmarkAPICall(){
         APICall().BookmarkedArticlesAPI(url: APPURL.bookmarkedArticlesURL){ response in
             switch response {
             case .Success(let data) :

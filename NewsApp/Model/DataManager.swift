@@ -90,6 +90,7 @@ class DBManager{
             return true
         }
     }
+    
     //check for nexturl entry in DB
     func nextURLExists(catName: String, entity : String) -> Bool {
         let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: entity)
@@ -125,10 +126,25 @@ class DBManager{
         do {
             let ShowArticle = try (managedContext?.fetch(fetchRequest))!
             return ArticleDBfetchResult.Success(ShowArticle as! [NewsArticle])
-            
         } catch let error as NSError {
             print("Could not fetch. \(error), \(error.userInfo)")
             return ArticleDBfetchResult.Failure(error as! String)
+        }
+    }
+    
+    //fetch bookmarked articles
+    func FetchBookmarkFromDB() -> BookmarkArticleDBfetchResult
+    {
+        let managedContext =
+            appDelegate?.persistentContainer.viewContext
+        let fetchRequest =
+            NSFetchRequest<BookmarkArticles>(entityName: "BookmarkArticles")
+        do {
+            let ShowArticle = try (managedContext?.fetch(fetchRequest))!
+            return BookmarkArticleDBfetchResult.Success(ShowArticle as! [BookmarkArticles])
+        } catch let error as NSError {
+            print("Could not fetch. \(error), \(error.userInfo)")
+            return BookmarkArticleDBfetchResult.Failure(error as! String)
         }
     }
     
@@ -147,8 +163,8 @@ class DBManager{
         }
         return records.count
     }
-    //check if category table is empty
     
+    //check if category table is empty
     func IsCategoryDataEmpty() -> Int
     {
         let managedContext =
@@ -163,6 +179,7 @@ class DBManager{
         }
         return records.count
     }
+    
     //save categories in DB
     func SaveCategoryDB(_ completion : @escaping (Bool) -> ())
     {
@@ -221,7 +238,7 @@ class DBManager{
         let managedContext =
             appDelegate?.persistentContainer.viewContext
         APICall().BookmarkedArticlesAPI(url: APPURL.bookmarkedArticlesURL){
-             response  in
+            response  in
             switch response {
             case .Success(let data) :
                 self.ArticleData = data

@@ -31,7 +31,7 @@ class HomeVC: UIViewController{
     var lastContentOffset: CGFloat = 0
     var articlesArr = [Article]()
     
-    override func viewDidLoad() {
+    override func viewDidLoad(){
         super.viewDidLoad()
         lblNonews.isHidden = true
         NotificationCenter.default.addObserver(self, selector: #selector(darkModeEnabled(_:)), name: .darkModeEnabled, object: nil)
