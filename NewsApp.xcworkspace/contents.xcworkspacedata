@@ -14,10 +14,22 @@
       location = "group:NewsArticle+CoreDataProperties.swift">
    </FileRef>
    <FileRef
+      location = "group:NewsURL+CoreDataClass.swift">
+   </FileRef>
+   <FileRef
+      location = "group:NewsURL+CoreDataProperties.swift">
+   </FileRef>
+   <FileRef
       location = "group:BookmarkArticles+CoreDataClass.swift">
    </FileRef>
    <FileRef
       location = "group:BookmarkArticles+CoreDataProperties.swift">
+   </FileRef>
+   <FileRef
+      location = "group:LikeDislike+CoreDataClass.swift">
+   </FileRef>
+   <FileRef
+      location = "group:LikeDislike+CoreDataProperties.swift">
    </FileRef>
    <FileRef
       location = "group:NewsApp.xcodeproj">

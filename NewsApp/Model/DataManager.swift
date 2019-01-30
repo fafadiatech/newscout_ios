@@ -133,19 +133,45 @@ class DBManager{
     }
     
     //fetch bookmarked articles
-    func FetchBookmarkFromDB() -> BookmarkArticleDBfetchResult
+    func FetchBookmarkFromDB() -> ArticleDBfetchResult
     {
+        var BookmarkArticle = [BookmarkArticles]()
+        
+        var ShowArticle = [NewsArticle]()
+        var Articles = [NewsArticle]()
         let managedContext =
             appDelegate?.persistentContainer.viewContext
         let fetchRequest =
+            NSFetchRequest<NewsArticle>(entityName: "NewsArticle")
+        let bookmarkfetchRequest =
             NSFetchRequest<BookmarkArticles>(entityName: "BookmarkArticles")
+        let result = DBManager().FetchDataFromDB(entity: "NewsArticle")
+        switch result {
+        case .Success(let DBData) :
+            let articles = DBData
+        case .Failure(let errorMsg) :
+            print(errorMsg)
+        }
         do {
-            let ShowArticle = try (managedContext?.fetch(fetchRequest))!
-            return BookmarkArticleDBfetchResult.Success(ShowArticle)
+             BookmarkArticle = try (managedContext?.fetch(bookmarkfetchRequest))!
         } catch let error as NSError {
             print("Could not fetch. \(error), \(error.userInfo)")
-            return BookmarkArticleDBfetchResult.Failure(error as! String)
         }
+        for bookmarkArticle in BookmarkArticle{
+            for article in Articles{
+         fetchRequest.predicate = NSPredicate(format: "article.article_id  = %@",bookmarkArticle.article_id)
+        do {
+             ShowArticle = try (managedContext?.fetch(fetchRequest))!
+            return ArticleDBfetchResult.Success(ShowArticle)
+        } catch let error as NSError {
+            print("Could not fetch. \(error), \(error.userInfo)")
+            return ArticleDBfetchResult.Failure(error as! String)
+        }
+            }
+        }
+     
+             return ArticleDBfetchResult.Success(ShowArticle)
+
     }
     
     // check if DB is empty
@@ -254,13 +280,7 @@ class DBManager{
                     {
                         let newArticle = BookmarkArticles(context: managedContext!)
                         newArticle.article_id = Int16(news.article_id!)
-                        newArticle.title = news.title
-                        newArticle.source = news.source!
-                        newArticle.imageURL = news.imageURL
-                        newArticle.source_url = news.url
-                        newArticle.published_on = news.published_on
-                        newArticle.blurb = news.blurb
-                        newArticle.category = news.category!
+                        newArticle.isBookmark = news.isBookmark!
                         do {
                             try managedContext?.save()
                         }

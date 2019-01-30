@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import CoreData
 
 struct ArticleStatus : Decodable{
     let header : Header

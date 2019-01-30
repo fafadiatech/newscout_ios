@@ -41,7 +41,7 @@ class BookmarkDetailVC: UIViewController {
     @IBOutlet weak var newsAreaHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var viewLikeDislikeHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var avPlayerView: AVPlayerView!
-    var BookmarkArticle = [BookmarkArticles]()
+    var BookmarkArticle = [NewsArticle]()
     let activityIndicator = MDCActivityIndicator()
     let imageCache = NSCache<NSString, UIImage>()
     var playbackSlider = UISlider()

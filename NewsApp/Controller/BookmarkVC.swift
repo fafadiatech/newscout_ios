@@ -20,7 +20,7 @@ class BookmarkVC: UIViewController {
     let textSizeSelected = UserDefaults.standard.value(forKey: "textSize") as! Int
     var bookmarkedArticlesArr = [Article]()
     var nextURL = ""
-    var ShowArticle = [BookmarkArticles]()
+    var ShowArticle = [NewsArticle]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
