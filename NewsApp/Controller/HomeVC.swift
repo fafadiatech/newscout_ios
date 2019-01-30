@@ -236,7 +236,7 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
         newsDetailvc.newsCurrentIndex = indexPath.row
         newsDetailvc.ShowArticle = ShowArticle as! [NewsArticle]
         newsDetailvc.articleId = Int(ShowArticle[indexPath.row].article_id)
-        UserDefaults.standard.set("", forKey: "isSearch")
+        UserDefaults.standard.set("home", forKey: "isSearch")
         present(newsDetailvc, animated: true, completion: nil)
     }
     

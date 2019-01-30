@@ -189,12 +189,11 @@ extension BookmarkVC: UITableViewDelegate, UITableViewDataSource{
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         print("This cell  was selected: \(indexPath.row)")
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        let newsDetailvc:NewsDetailVC = storyboard.instantiateViewController(withIdentifier: "NewsDetailID") as! NewsDetailVC
-        newsDetailvc.newsCurrentIndex = indexPath.row
-     //   newsDetailvc.ShowArticle = ShowArticle
-        newsDetailvc.articleId = Int(ShowArticle[indexPath.row].article_id)
-        UserDefaults.standard.set("bookmark", forKey: "isSearch")
-        present(newsDetailvc, animated: true, completion: nil)
+        let bookmarkDetailvc:BookmarkDetailVC = storyboard.instantiateViewController(withIdentifier: "BookmarkDetailID") as! BookmarkDetailVC
+        bookmarkDetailvc.newsCurrentIndex = indexPath.row
+       bookmarkDetailvc.BookmarkArticle = ShowArticle
+        bookmarkDetailvc.articleId = Int(ShowArticle[indexPath.row].article_id)
+        present(bookmarkDetailvc, animated: true, completion: nil)
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {

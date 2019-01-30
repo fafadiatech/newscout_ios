@@ -1,9 +1,9 @@
 //
-//  NewsDetailViewController.swift
+//  BookmarkDetailVC.swift
 //  NewsApp
 //
-//  Created by Jayashri on 22/09/18.
-//  Copyright © 2018 Fafadia Tech. All rights reserved.
+//  Created by Jayashree on 30/01/19.
+//  Copyright © 2019 Fafadia Tech. All rights reserved.
 //
 
 import UIKit
@@ -17,7 +17,7 @@ import SwiftDevice
 import CoreData
 import MaterialComponents.MaterialActivityIndicator
 
-class NewsDetailVC: UIViewController {
+class BookmarkDetailVC: UIViewController {
     @IBOutlet weak var viewContainer: UIView!
     @IBOutlet weak var imgNews: UIImageView!
     @IBOutlet var newsView: UIView!
@@ -41,11 +41,12 @@ class NewsDetailVC: UIViewController {
     @IBOutlet weak var newsAreaHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var viewLikeDislikeHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var avPlayerView: AVPlayerView!
+    var BookmarkArticle = [BookmarkArticles]()
+    let activityIndicator = MDCActivityIndicator()
     let imageCache = NSCache<NSString, UIImage>()
     var playbackSlider = UISlider()
     var RecomArticleData = [ArticleStatus]()
     var ArticleData = [ArticleStatus]()
-    var ShowArticle = [NewsArticle]()
     var ArticleDetail : ArticleDetails!
     var newsCurrentIndex = 0
     var articleId = 0
@@ -60,10 +61,7 @@ class NewsDetailVC: UIViewController {
     var statusBarOrientation: UIInterfaceOrientation = UIApplication.shared.statusBarOrientation
     var darkModeStatus = Bool()
     var articleArr = [Article]()
-    var playerViewWidth = CGFloat()
-    var playerViewHeight = CGFloat()
-    let activityIndicator = MDCActivityIndicator()
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         activityIndicator.cycleColors = [.blue]
@@ -90,6 +88,7 @@ class NewsDetailVC: UIViewController {
         else{
             viewLikeDislike.isHidden = true
         }
+        
         viewLikeDislike.backgroundColor = colorConstants.redColor
         ViewWebContainer.isHidden = true
         APICall().loadRecommendationNewsAPI(articleId: articleId){ (status,response) in
@@ -120,7 +119,6 @@ class NewsDetailVC: UIViewController {
         if  darkModeStatus == true{
             changeTheme()
         }
-        //newsDetailAPICall(currentIndex: articleId)
         ShowNews(currentIndex: newsCurrentIndex)
         let swipeUp = UISwipeGestureRecognizer(target: self, action: #selector(self.respondToSwipeGesture))
         swipeUp.direction = UISwipeGestureRecognizerDirection.up
@@ -146,22 +144,7 @@ class NewsDetailVC: UIViewController {
         avPlayerView.addGestureRecognizer(PlayerTapRecognizer)
         PlayerTapRecognizer.delegate = self as! UIGestureRecognizerDelegate
     }
-    
-    /*func newsDetailAPICall(currentIndex: Int){
-     
-     APICall().articleDetailAPI(articleId: currentIndex){ (status,response) in
-     switch response {
-     case .Success(let data) :
-     self.ArticleDetail = data
-     print(self.ArticleDetail)
-     self.ShowNews(currentArticle: self.ArticleDetail.body.article)
-     case .Failure(let errormessage) :
-     print(errormessage)
-     self.view.makeToast(errormessage, duration: 2.0, position: .center)
-     }
-     }
-     }*/
-    
+
     func addPotraitConstraint(){
         if lblSourceTopConstraint != nil && lblSourceTopConstraint != nil && viewLikeDislikeBottomConstraint != nil{
             NSLayoutConstraint.deactivate([lblTimesTopConstraint])
@@ -371,7 +354,7 @@ class NewsDetailVC: UIViewController {
         }
         else{
             lblNewsHeading.font = FontConstants.NormalFontHeadingBold
-            lblSource.font = FontConstants.NormalFontContentMedium 
+            lblSource.font = FontConstants.NormalFontContentMedium
             lblTimeAgo.font = FontConstants.NormalFontContentMedium
             txtViewNewsDesc.font = FontConstants.NormalFontTitle
         }
@@ -417,7 +400,7 @@ class NewsDetailVC: UIViewController {
                 WKWebView.load(myRequest)
                 
             case UISwipeGestureRecognizerDirection.up:
-                if newsCurrentIndex < ShowArticle.count - 1
+                if newsCurrentIndex < BookmarkArticle.count - 1
                 {
                     newsCurrentIndex = newsCurrentIndex + 1
                     ShowNews(currentIndex : newsCurrentIndex)
@@ -474,8 +457,8 @@ class NewsDetailVC: UIViewController {
         dateFormatter.timeZone = NSTimeZone(name: "UTC")! as TimeZone
         playbackSlider.removeFromSuperview()
         avPlayerView.isHidden = true
-        if ShowArticle.count != 0{
-            let currentArticle = ShowArticle[currentIndex]
+        if BookmarkArticle.count != 0{
+            let currentArticle = BookmarkArticle[currentIndex]
             let newDate = dateFormatter.date(from: currentArticle.published_on!)
             let agoDate = Helper().timeAgoSinceDate(newDate!)
             articleId = Int(currentArticle.article_id)
@@ -579,7 +562,7 @@ class NewsDetailVC: UIViewController {
                             self.btnDislike.setImage(UIImage(named: "thumb_down.png"), for: .normal)
                             
                         }
-                        self.ShowArticle[self.newsCurrentIndex].isLike = 0
+                        self.BookmarkArticle[self.newsCurrentIndex].isLike = 0
                     }
                 }
             }
@@ -593,7 +576,7 @@ class NewsDetailVC: UIViewController {
                     }
                     else{
                         self.btnLike.setImage(UIImage(named: "like.png"), for: .normal)
-                        self.ShowArticle[self.newsCurrentIndex].isLike = 2
+                        self.BookmarkArticle[self.newsCurrentIndex].isLike = 2
                     }
                 }
             }
@@ -618,7 +601,7 @@ class NewsDetailVC: UIViewController {
                         if (self.btnLike.currentImage?.isEqual(UIImage(named: "thumb_up_filled.png")))! {
                             self.btnLike.setImage(UIImage(named: "thumb_up.png"), for: .normal)
                         }
-                        self.ShowArticle[self.newsCurrentIndex].isLike = 1
+                        self.BookmarkArticle[self.newsCurrentIndex].isLike = 1
                     }
                 }
             }
@@ -632,7 +615,7 @@ class NewsDetailVC: UIViewController {
                     }
                     else{
                         self.btnDislike.setImage(UIImage(named: "dislike.png"), for: .normal)
-                        self.ShowArticle[self.newsCurrentIndex].isLike = 2
+                        self.BookmarkArticle[self.newsCurrentIndex].isLike = 2
                     }
                 }
             }
@@ -692,27 +675,28 @@ class NewsDetailVC: UIViewController {
             btnBookamark.setImage(UIImage(named: "bookmark.png"), for: .normal)
         }
     }
+    
     @IBAction func btnShareActn(_ sender: Any) {
-        let text = ShowArticle[newsCurrentIndex].title
+        let text = BookmarkArticle[newsCurrentIndex].title
         let webURL = "Sent via NewsCout : (www.newscout.in)"
         var shareAll : [Any]
         var sourceURL : URL!
-        if ShowArticle[newsCurrentIndex].imageURL != nil{
-            let url = URL(string:ShowArticle[newsCurrentIndex].imageURL!)
+        if BookmarkArticle[newsCurrentIndex].imageURL != nil{
+            let url = URL(string:BookmarkArticle[newsCurrentIndex].imageURL!)
             let image1 = UIImage(named: "\(url)")
             var image = UIImage()
             if let data = try? Data(contentsOf: url!)
             {
                 image = UIImage(data: data)!
             }
-            if ShowArticle[newsCurrentIndex].source_url != nil{
-                sourceURL = URL(string: "\(ShowArticle[newsCurrentIndex].source_url)")
+            if BookmarkArticle[newsCurrentIndex].source_url != nil{
+                sourceURL = URL(string: "\(BookmarkArticle[newsCurrentIndex].source_url)")
             }
             shareAll = [ text , image1, image,  sourceURL , webURL ] as [Any]
         }
         else{
-            if ShowArticle[newsCurrentIndex].source_url != nil{
-                sourceURL = URL(string: "\(ShowArticle[newsCurrentIndex].source_url)")
+            if BookmarkArticle[newsCurrentIndex].source_url != nil{
+                sourceURL = URL(string: "\(BookmarkArticle[newsCurrentIndex].source_url)")
             }
             shareAll = [ text , sourceURL , webURL ] as [Any]
         }
@@ -723,30 +707,14 @@ class NewsDetailVC: UIViewController {
     }
     
     @IBAction func btnBackAction(_ sender: Any) {
-        let isSearch = UserDefaults.standard.value(forKey: "isSearch") as! String
-        if isSearch == "search"{
             self.dismiss(animated: false)
-        }
-        else if isSearch == "recommend" {
-            self.view.window!.rootViewController?.dismiss(animated: false, completion: nil)
-        }
-        else if isSearch == "home"{
-            self.dismiss(animated: false)
-            
-            
-        }
     }
     
     @IBAction func btnWebBackAction(_ sender: Any) {
         ViewWebContainer.isHidden = true
         viewLikeDislike.isHidden = false
     }
-    
-    //btn Back Action
-    @IBAction func btnBAckAction(_ sender: Any) {
-        self.dismiss(animated: false)
-    }
-    
+
     func showMsg(title: String, msg : String)
     {
         let alertController = UIAlertController(title: title, message: msg, preferredStyle: .alert)
@@ -779,7 +747,7 @@ class NewsDetailVC: UIViewController {
     }
 }
 
-extension NewsDetailVC:UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout{
+extension BookmarkDetailVC:UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout{
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize
     {   var width = 1.0
         if indexPath.row == 0{
@@ -858,11 +826,12 @@ extension NewsDetailVC:UICollectionViewDelegate, UICollectionViewDataSource, UIC
     }
 }
 
-extension NewsDetailVC : UIGestureRecognizerDelegate {
+extension BookmarkDetailVC : UIGestureRecognizerDelegate {
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
         if touch.view!.superview!.superclass! .isSubclass(of: UIButton.self) {
             return false
         }
         return true
     }
+    
 }

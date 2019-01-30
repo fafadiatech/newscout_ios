@@ -37,6 +37,7 @@
 		268C112521E4C36E00C76B9C /* BookmarkTVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 268C112421E4C36E00C76B9C /* BookmarkTVCell.swift */; };
 		268C112721E5DF0700C76B9C /* SearchAutoCompleteTVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 268C112621E5DF0700C76B9C /* SearchAutoCompleteTVCell.swift */; };
 		2690F3CC21BF8C12003E65CA /* SettingsTVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2690F3CB21BF8C12003E65CA /* SettingsTVCell.swift */; };
+		269A53D622016D6B0031DD78 /* BookmarkDetailVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 269A53D522016D6B0031DD78 /* BookmarkDetailVC.swift */; };
 		26ACEA94216733BA000EF3C7 /* CategoryListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26ACEA93216733BA000EF3C7 /* CategoryListVC.swift */; };
 		26ACEA96216738BB000EF3C7 /* CategoryListTVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26ACEA95216738BB000EF3C7 /* CategoryListTVCell.swift */; };
 		26C24721219D95D000A87A3B /* GmailCredentials.plist in Resources */ = {isa = PBXBuildFile; fileRef = 26C24720219D95CF00A87A3B /* GmailCredentials.plist */; };
@@ -118,6 +119,7 @@
 		268C112421E4C36E00C76B9C /* BookmarkTVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkTVCell.swift; sourceTree = "<group>"; };
 		268C112621E5DF0700C76B9C /* SearchAutoCompleteTVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchAutoCompleteTVCell.swift; sourceTree = "<group>"; };
 		2690F3CB21BF8C12003E65CA /* SettingsTVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTVCell.swift; sourceTree = "<group>"; };
+		269A53D522016D6B0031DD78 /* BookmarkDetailVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkDetailVC.swift; sourceTree = "<group>"; };
 		26ACEA93216733BA000EF3C7 /* CategoryListVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryListVC.swift; sourceTree = "<group>"; };
 		26ACEA95216738BB000EF3C7 /* CategoryListTVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryListTVCell.swift; sourceTree = "<group>"; };
 		26C24720219D95CF00A87A3B /* GmailCredentials.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = GmailCredentials.plist; sourceTree = "<group>"; };
@@ -297,6 +299,7 @@
 		421ADFEA2156553500C00F6F /* Controller */ = {
 			isa = PBXGroup;
 			children = (
+				269A53D522016D6B0031DD78 /* BookmarkDetailVC.swift */,
 				4266D16221EEF4DA00CBD61A /* AboutUsVC.swift */,
 				268C112221E4C0F200C76B9C /* BookmarkVC.swift */,
 				26C24722219DA6C200A87A3B /* ForgotPasswordVC.swift */,
@@ -663,6 +666,7 @@
 				26D3C90A21CBAC9C003F7331 /* AVPlayerView.swift in Sources */,
 				42D12BF4215A0FA60085EF12 /* common.swift in Sources */,
 				263F2D8F216B2DEE00764C45 /* DataModel.swift in Sources */,
+				269A53D622016D6B0031DD78 /* BookmarkDetailVC.swift in Sources */,
 				263F2D9C216B7FC700764C45 /* ProfileVC.swift in Sources */,
 				421ADFF22156755100C00F6F /* SuggestedNewsCVCell.swift in Sources */,
 				423F0A502170CF19001D52B5 /* ChangePasswordVC.swift in Sources */,
