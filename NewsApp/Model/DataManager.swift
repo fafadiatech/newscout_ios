@@ -136,50 +136,46 @@ class DBManager{
     func FetchBookmarkFromDB() -> ArticleDBfetchResult
     {
         var BookmarkArticle = [BookmarkArticles]()
-        
         var ShowArticle = [NewsArticle]()
-        var Articles = [NewsArticle]()
         let managedContext =
             appDelegate?.persistentContainer.viewContext
         let fetchRequest =
             NSFetchRequest<NewsArticle>(entityName: "NewsArticle")
         let bookmarkfetchRequest =
             NSFetchRequest<BookmarkArticles>(entityName: "BookmarkArticles")
-        let result = DBManager().FetchDataFromDB(entity: "NewsArticle")
-        switch result {
-        case .Success(let DBData) :
-            let articles = DBData
-        case .Failure(let errorMsg) :
-            print(errorMsg)
-        }
         do {
              BookmarkArticle = try (managedContext?.fetch(bookmarkfetchRequest))!
         } catch let error as NSError {
             print("Could not fetch. \(error), \(error.userInfo)")
         }
-        for bookmarkArticle in BookmarkArticle{
-            for article in Articles{
-         fetchRequest.predicate = NSPredicate(format: "article.article_id  = %@",bookmarkArticle.article_id)
+       var i = 1
+        for book in BookmarkArticle{
+       
+        fetchRequest.predicate = NSPredicate(format: "article_id  = %d", book.article_id)
         do {
-             ShowArticle = try (managedContext?.fetch(fetchRequest))!
-            return ArticleDBfetchResult.Success(ShowArticle)
+             let ShowArticle1 = try (managedContext?.fetch(fetchRequest))!
+           
+           
+         
+            ShowArticle.append(contentsOf: ShowArticle1)
+            
         } catch let error as NSError {
             print("Could not fetch. \(error), \(error.userInfo)")
             return ArticleDBfetchResult.Failure(error as! String)
         }
-            }
+             book.addToArticle(ShowArticle[0])
         }
-     
-             return ArticleDBfetchResult.Success(ShowArticle)
-
+            return ArticleDBfetchResult.Success(ShowArticle)
     }
     
     // check if DB is empty
     func IsCoreDataEmpty(entity: String) -> Int
     {
+        var recordCount = 0
         let managedContext =
             appDelegate?.persistentContainer.viewContext
         let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: entity)
+        if entity == "NewsArticle"{
         var records = [NewsArticle]()
         do {
             records = (try managedContext?.fetch(fetchRequest)) as! [NewsArticle]
@@ -187,7 +183,19 @@ class DBManager{
         catch {
             print("error executing fetch request: \(error)")
         }
-        return records.count
+            recordCount = records.count
+        }
+        else{
+            var records = [BookmarkArticles]()
+            do {
+                records = (try managedContext?.fetch(fetchRequest)) as! [BookmarkArticles]
+            }
+            catch {
+                print("error executing fetch request: \(error)")
+            }
+            recordCount = records.count
+        }
+        return recordCount
     }
     
     //check if category table is empty
@@ -295,5 +303,47 @@ class DBManager{
             }
         }
     }
+    func addBookmarkedArticles(id : Int){
+        let managedContext =
+            appDelegate?.persistentContainer.viewContext
+        if  self.someEntityExists(id: id, entity: "BookmarkArticles") == false{
+            let newArticle = BookmarkArticles(context: managedContext!)
+            newArticle.article_id = Int16(id)
+            newArticle.isBookmark = true
+            do {
+                try managedContext?.save()
+            }
+            catch let error as NSError  {
+                print("Could not save \(error)")
+            }
+        }
+    }
     
+    func deleteBookmarkedArticle(id : Int){
+        let managedContext =
+            appDelegate?.persistentContainer.viewContext
+        let bookmarkfetchRequest =
+            NSFetchRequest<BookmarkArticles>(entityName: "BookmarkArticles")
+        var bookmark = [BookmarkArticles]()
+        bookmarkfetchRequest.predicate = NSPredicate(format: "article_id  = %d", id)
+        do {
+            bookmark = try ((managedContext?.fetch(bookmarkfetchRequest))!)
+        } catch let error as NSError {
+            print("Could not fetch. \(error), \(error.userInfo)")
+        }
+        do {
+            for book in bookmark{
+            managedContext!.delete(book)
+            }
+          
+        } catch {
+            print("Failed")
+        }
+        do {
+            try managedContext?.save()
+        }
+        catch let error as NSError  {
+            print("Could not save \(error)")
+        }
+    }
 }

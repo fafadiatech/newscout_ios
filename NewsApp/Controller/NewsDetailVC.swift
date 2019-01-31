@@ -45,6 +45,7 @@ class NewsDetailVC: UIViewController {
     var playbackSlider = UISlider()
     var RecomArticleData = [ArticleStatus]()
     var ArticleData = [ArticleStatus]()
+    var bookmarkedArticle = [BookmarkArticles]()
     var ShowArticle = [NewsArticle]()
     var ArticleDetail : ArticleDetails!
     var newsCurrentIndex = 0
@@ -552,7 +553,8 @@ class NewsDetailVC: UIViewController {
                 btnLike.setImage(UIImage(named: "thumb_up.png"), for: .normal)
                 btnDislike.setImage(UIImage(named: "thumb_down.png"), for: .normal)
             }
-            if currentArticle.isBookmark == true{
+            
+            if ShowArticle[currentIndex].bookmark?.isBookmark == true{
                 setBookmarkImg()
             }else{
                 ResetBookmarkImg()
@@ -561,6 +563,7 @@ class NewsDetailVC: UIViewController {
         if imgNews.image == nil{
             imgNews.image = UIImage(named: "NoImage.png")
         }
+
     }
     
     @IBAction func btnLikeActn(_ sender: Any) {
@@ -653,6 +656,7 @@ class NewsDetailVC: UIViewController {
                     }
                     else{
                         self.setBookmarkImg()
+                    DBManager().addBookmarkedArticles(id: self.articleId)
                         self.view.makeToast(response, duration: 1.0, position: .center)
                     }
                 }
@@ -665,6 +669,7 @@ class NewsDetailVC: UIViewController {
                     }
                     else{
                         self.ResetBookmarkImg()
+                        DBManager().deleteBookmarkedArticle(id: self.articleId)
                         self.view.makeToast(response, duration: 1.0, position: .center)
                     }
                 }
@@ -729,6 +734,11 @@ class NewsDetailVC: UIViewController {
         }
         else if isSearch == "recommend" {
             self.view.window!.rootViewController?.dismiss(animated: false, completion: nil)
+        }
+        else if isSearch == "bookmark"{
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let vc:BookmarkVC = storyboard.instantiateViewController(withIdentifier: "BookmarkID") as! BookmarkVC
+            self.present(vc, animated: true, completion: nil)
         }
         else if isSearch == "home"{
             self.dismiss(animated: false)

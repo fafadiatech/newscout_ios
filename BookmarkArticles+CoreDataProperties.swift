@@ -2,7 +2,7 @@
 //  BookmarkArticles+CoreDataProperties.swift
 //  
 //
-//  Created by Jayashree on 30/01/19.
+//  Created by Jayashree on 31/01/19.
 //
 //
 
@@ -18,6 +18,23 @@ extension BookmarkArticles {
 
     @NSManaged public var article_id: Int16
     @NSManaged public var isBookmark: Bool
-    @NSManaged public var articles: NewsArticle?
+    @NSManaged public var article: NSSet?
+
+}
+
+// MARK: Generated accessors for article
+extension BookmarkArticles {
+
+    @objc(addArticleObject:)
+    @NSManaged public func addToArticle(_ value: NewsArticle)
+
+    @objc(removeArticleObject:)
+    @NSManaged public func removeFromArticle(_ value: NewsArticle)
+
+    @objc(addArticle:)
+    @NSManaged public func addToArticle(_ values: NSSet)
+
+    @objc(removeArticle:)
+    @NSManaged public func removeFromArticle(_ values: NSSet)
 
 }

@@ -58,34 +58,35 @@ class HomeVC: UIViewController{
         //save and fetch data from DB
         selectedCategory = tabBarTitle
         coredataRecordCount = DBManager().IsCoreDataEmpty(entity: "NewsArticle")
-        DispatchQueue.global(qos: .userInitiated).async {
             if self.coredataRecordCount != 0{
                 self.fetchDataFromDB()
             }else{
+                activityIndicator.startAnimating()
                 let url = APPURL.ArticlesByCategoryURL + "\(self.selectedCategory)"
                 self.saveDataInDB(url : url)
             }
-            
-            DispatchQueue.main.async {
-                print("Time consuming task has completed. From here we are allowed to update user interface.")
-            }
+    
         }
-      
-    }
+    
     
     func fetchDataFromDB(){
         let result = DBManager().FetchDataFromDB(entity: "NewsArticle")
         switch result {
         case .Success(let DBData) :
             let articles = DBData
-            if selectedCategory == "" || selectedCategory == "FOR YOU" || selectedCategory == "All News"
+            if articles.count != 0{
+            if selectedCategory == "" || selectedCategory == "For You" || selectedCategory == "All News"
             {
                 self.filterNews(selectedCat: "All News" )
                 print("cat pressed is: for u")
             }else{
                 self.filterNews(selectedCat: selectedCategory )
             }
-            //self.HomeNewsTV.reloadData()
+            self.HomeNewsTV.reloadData()
+            }
+            else{
+                lblNonews.isHidden = false
+            }
         case .Failure(let errorMsg) :
             print(errorMsg)
         }
@@ -227,6 +228,9 @@ class HomeVC: UIViewController{
 
 extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelegate{
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if ShowArticle.count == 0{
+            lblNonews.isHidden = false
+        }
         return (ShowArticle.count != 0) ? self.ShowArticle.count : 0
     }
     
@@ -306,6 +310,7 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
         }
         
         activityIndicator.stopAnimating()
+        lblNonews.isHidden = true
         return cell
     }
     

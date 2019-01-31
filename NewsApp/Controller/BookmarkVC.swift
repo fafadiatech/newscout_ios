@@ -21,7 +21,7 @@ class BookmarkVC: UIViewController {
     var bookmarkedArticlesArr = [Article]()
     var nextURL = ""
     var ShowArticle = [NewsArticle]()
-    
+    var bookmarkArticles = [BookmarkArticles]()
     override func viewDidLoad() {
         super.viewDidLoad()
         NotificationCenter.default.addObserver(self, selector: #selector(darkModeEnabled(_:)), name: .darkModeEnabled, object: nil)
@@ -189,11 +189,17 @@ extension BookmarkVC: UITableViewDelegate, UITableViewDataSource{
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         print("This cell  was selected: \(indexPath.row)")
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        let bookmarkDetailvc:BookmarkDetailVC = storyboard.instantiateViewController(withIdentifier: "BookmarkDetailID") as! BookmarkDetailVC
-        bookmarkDetailvc.newsCurrentIndex = indexPath.row
-       bookmarkDetailvc.BookmarkArticle = ShowArticle
-        bookmarkDetailvc.articleId = Int(ShowArticle[indexPath.row].article_id)
-        present(bookmarkDetailvc, animated: true, completion: nil)
+         let newsDetailvc:NewsDetailVC = storyboard.instantiateViewController(withIdentifier: "NewsDetailID") as! NewsDetailVC
+       // let bookmarkDetailvc:BookmarkDetailVC = storyboard.instantiateViewController(withIdentifier: "") as! BookmarkDetailVC
+//        bookmarkDetailvc.newsCurrentIndex = indexPath.row
+//       bookmarkDetailvc.BookmarkArticle = ShowArticle
+//        bookmarkDetailvc.articleId = Int(ShowArticle[indexPath.row].article_id)
+
+        newsDetailvc.newsCurrentIndex = indexPath.row
+        newsDetailvc.ShowArticle = ShowArticle
+        UserDefaults.standard.set("bookmark", forKey: "isSearch")
+        newsDetailvc.articleId = Int(ShowArticle[indexPath.row].article_id)
+        present(newsDetailvc, animated: true, completion: nil)
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {

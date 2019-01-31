@@ -61,7 +61,8 @@ class BookmarkDetailVC: UIViewController {
     var statusBarOrientation: UIInterfaceOrientation = UIApplication.shared.statusBarOrientation
     var darkModeStatus = Bool()
     var articleArr = [Article]()
-
+    var bookmarkedArticle = [BookmarkArticles]()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         activityIndicator.cycleColors = [.blue]
@@ -535,7 +536,7 @@ class BookmarkDetailVC: UIViewController {
                 btnLike.setImage(UIImage(named: "thumb_up.png"), for: .normal)
                 btnDislike.setImage(UIImage(named: "thumb_down.png"), for: .normal)
             }
-            if currentArticle.isBookmark == true{
+            if bookmarkedArticle[currentIndex].isBookmark == true{
                 setBookmarkImg()
             }else{
                 ResetBookmarkImg()
@@ -636,6 +637,7 @@ class BookmarkDetailVC: UIViewController {
                     }
                     else{
                         self.setBookmarkImg()
+                         DBManager().addBookmarkedArticles(id: self.articleId)
                         self.view.makeToast(response, duration: 1.0, position: .center)
                     }
                 }
@@ -648,6 +650,7 @@ class BookmarkDetailVC: UIViewController {
                     }
                     else{
                         self.ResetBookmarkImg()
+                        DBManager().deleteBookmarkedArticle(id: self.articleId)
                         self.view.makeToast(response, duration: 1.0, position: .center)
                     }
                 }
