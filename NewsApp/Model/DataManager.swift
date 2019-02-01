@@ -154,16 +154,17 @@ class DBManager{
         fetchRequest.predicate = NSPredicate(format: "article_id  = %d", book.article_id)
         do {
              let ShowArticle1 = try (managedContext?.fetch(fetchRequest))!
-           
-           
-         
             ShowArticle.append(contentsOf: ShowArticle1)
+            
+            if ShowArticle1.count != 0 {
+            book.addToArticle(ShowArticle1[0])
+            }
             
         } catch let error as NSError {
             print("Could not fetch. \(error), \(error.userInfo)")
             return ArticleDBfetchResult.Failure(error as! String)
         }
-             book.addToArticle(ShowArticle[0])
+            // book.addToArticle(ShowArticle[0])
         }
             return ArticleDBfetchResult.Success(ShowArticle)
     }
