@@ -2,12 +2,6 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "group:Category+CoreDataClass.swift">
-   </FileRef>
-   <FileRef
-      location = "group:Category+CoreDataProperties.swift">
-   </FileRef>
-   <FileRef
       location = "group:NewsArticle+CoreDataClass.swift">
    </FileRef>
    <FileRef
@@ -18,6 +12,24 @@
    </FileRef>
    <FileRef
       location = "group:BookmarkArticles+CoreDataProperties.swift">
+   </FileRef>
+   <FileRef
+      location = "group:Category+CoreDataClass.swift">
+   </FileRef>
+   <FileRef
+      location = "group:Category+CoreDataProperties.swift">
+   </FileRef>
+   <FileRef
+      location = "group:NewsURL+CoreDataClass.swift">
+   </FileRef>
+   <FileRef
+      location = "group:NewsURL+CoreDataProperties.swift">
+   </FileRef>
+   <FileRef
+      location = "group:LikeDislike+CoreDataClass.swift">
+   </FileRef>
+   <FileRef
+      location = "group:LikeDislike+CoreDataProperties.swift">
    </FileRef>
    <FileRef
       location = "group:NewsApp.xcodeproj">

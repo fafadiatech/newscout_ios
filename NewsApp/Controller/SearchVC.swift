@@ -117,6 +117,7 @@ class SearchVC: UIViewController {
     
     @IBAction func btnSearchAction(_ sender: Any) {
         UserDefaults.standard.set("", forKey: "searchTxt")
+        UserDefaults.standard.set("", forKey: "isSearch")
         self.view.window!.rootViewController?.dismiss(animated: false, completion: nil)
     }
     
@@ -169,7 +170,7 @@ extension SearchVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDele
             let agoDate = Helper().timeAgoSinceDate(newDate!)
             cell.lbltimeAgo.text = agoDate
             cell.lblNewsDescription.text = currentArticle.title
-            cell.imgNews.downloadedFrom(link: "\(currentArticle.imageURL)")
+            cell.imgNews.sd_setImage(with: URL(string: currentArticle.imageURL!), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
         }
         else if results.count != 0{
             recordCount = results.count

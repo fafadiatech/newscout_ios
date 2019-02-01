@@ -468,8 +468,7 @@ class BookmarkDetailVC: UIViewController {
             lblSource.text = currentArticle.source
             lblTimeAgo.text = agoDate
             sourceURL = currentArticle.source_url!
-            
-            
+
             let checkImg = self.checkImageOrVideo(url: currentArticle.imageURL!)
             if checkImg == false{
                 DispatchQueue.global(qos: .userInitiated).async {
@@ -536,7 +535,7 @@ class BookmarkDetailVC: UIViewController {
                 btnLike.setImage(UIImage(named: "thumb_up.png"), for: .normal)
                 btnDislike.setImage(UIImage(named: "thumb_down.png"), for: .normal)
             }
-            if bookmarkedArticle[currentIndex].isBookmark == true{
+            if bookmarkedArticle[currentIndex].isBookmark == 1 {
                 setBookmarkImg()
             }else{
                 ResetBookmarkImg()

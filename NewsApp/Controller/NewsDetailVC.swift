@@ -93,6 +93,7 @@ class NewsDetailVC: UIViewController {
         }
         viewLikeDislike.backgroundColor = colorConstants.redColor
         ViewWebContainer.isHidden = true
+                  
         APICall().loadRecommendationNewsAPI(articleId: articleId){ (status,response) in
             switch response {
             case .Success(let data) :
@@ -554,7 +555,7 @@ class NewsDetailVC: UIViewController {
                 btnDislike.setImage(UIImage(named: "thumb_down.png"), for: .normal)
             }
             
-            if ShowArticle[currentIndex].bookmark?.isBookmark == true{
+            if ShowArticle[currentIndex].bookmark?.isBookmark == 1 {
                 setBookmarkImg()
             }else{
                 ResetBookmarkImg()
@@ -740,6 +741,11 @@ class NewsDetailVC: UIViewController {
             let vc:BookmarkVC = storyboard.instantiateViewController(withIdentifier: "BookmarkID") as! BookmarkVC
             self.present(vc, animated: true, completion: nil)
         }
+        else if isSearch == "searchrecommend"{
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let searchvc:SearchVC = storyboard.instantiateViewController(withIdentifier: "SearchID") as! SearchVC
+            self.present(searchvc, animated: true, completion: nil)
+        }
         else if isSearch == "home"{
             self.dismiss(animated: false)
             
@@ -859,7 +865,16 @@ extension NewsDetailVC:UICollectionViewDelegate, UICollectionViewDataSource, UIC
         if indexPath.row != 0{
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             let newsDetailvc:NewsDetailVC = storyboard.instantiateViewController(withIdentifier: "NewsDetailID") as! NewsDetailVC
+            let check = UserDefaults.standard.value(forKey: "isSearch") as! String
+            if check == "bookmark"{
+                UserDefaults.standard.set("bookrecommend", forKey: "isSearch")
+            }
+            else if check == "search" {
+               UserDefaults.standard.set("searchrecommend", forKey: "isSearch")
+            }
+            else{
             UserDefaults.standard.set("recommend", forKey: "isSearch")
+            }
             newsDetailvc.newsCurrentIndex = indexPath.row - 1
             //newsDetailvc.articleArr = RecomArticleData[0].body.articles
             //  newsDetailvc.articleId = RecomArticleData[0].body.articles[indexPath.row - 1].article_id!

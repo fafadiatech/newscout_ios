@@ -628,4 +628,45 @@ class APICall{
         }
     }
     
+    func getLikeBookmarkList(url: String, _ completion : @escaping (LikeBookmarkListAPIResult) -> ()){
+        
+        var headers : [String: String]
+        if UserDefaults.standard.value(forKey: "token") != nil{
+            let token = "Token " + "\(UserDefaults.standard.value(forKey: "token")!)"
+            headers = ["Authorization": token]
+        }
+        else if UserDefaults.standard.value(forKey: "googleToken") != nil{
+            let token = "Token " + "\(UserDefaults.standard.value(forKey: "googleToken")!)"
+            headers = ["Authorization": token]
+        }
+        else if UserDefaults.standard.value(forKey: "FBToken") != nil{
+            let token = "Token " + "\(UserDefaults.standard.value(forKey: "FBToken")!)"
+            headers = ["Authorization": token]
+        }
+        else{
+            headers = ["Authorization": ""]
+        }
+       
+        Alamofire.request(url,method: .get,headers: headers).responseJSON{
+            response in
+            if(response.result.isSuccess){
+                if let data = response.data {
+                    let jsonDecoder = JSONDecoder()
+                    do {
+                        let jsonData = try jsonDecoder.decode(GetLikeBookmarkList.self, from: data)
+                        completion(LikeBookmarkListAPIResult.Success(jsonData))
+                    }
+                    catch {
+                        completion(LikeBookmarkListAPIResult.Failure(error.localizedDescription
+                        ))
+                    }
+                }
+            }
+            else{
+                if let err = response.result.error as? URLError, err.code == .notConnectedToInternet {
+                    completion(LikeBookmarkListAPIResult.Failure(Constants.InternetErrorMsg))
+                }
+            }
+        }
+    }
 }

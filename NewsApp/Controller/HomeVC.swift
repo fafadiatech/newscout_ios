@@ -86,6 +86,7 @@ class HomeVC: UIViewController{
             }
             else{
                 lblNonews.isHidden = false
+                activityIndicator.stopAnimating()
             }
         case .Failure(let errorMsg) :
             print(errorMsg)
@@ -230,6 +231,7 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if ShowArticle.count == 0{
             lblNonews.isHidden = false
+            activityIndicator.stopAnimating()
         }
         return (ShowArticle.count != 0) ? self.ShowArticle.count : 0
     }

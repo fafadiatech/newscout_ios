@@ -86,7 +86,7 @@ class CategoryListVC: UIViewController {
             self.showCategory = DBData
             self.tableCategoryLIst.reloadData()
         case .Failure(let errorMsg) :
-            print(errorMsg)
+            self.tableCategoryLIst.makeToast(errorMsg, duration: 2.0, position: .center)
         }
     }
     
@@ -100,7 +100,6 @@ class CategoryListVC: UIViewController {
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
 }
 

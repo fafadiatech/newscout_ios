@@ -14,7 +14,7 @@ class DBManager{
     let appDelegate = UIApplication.shared.delegate as? AppDelegate
     var ArticleData = [ArticleStatus]()
     var CategoryData = [CategoryList]()
-    
+   
     //save articles in DB
     func SaveDataDB(nextUrl:String,_ completion : @escaping (Bool) -> ())
     {
@@ -268,28 +268,30 @@ class DBManager{
         }
     }
     
-    func SaveBookmarkArticles(nextUrl:String,_ completion : @escaping (Bool) -> ())
+    func SaveBookmarkArticles(_ completion : @escaping (Bool) -> ())
     {
+        var BookmarkData : GetLikeBookmarkList!
         let managedContext =
             appDelegate?.persistentContainer.viewContext
-        APICall().BookmarkedArticlesAPI(url: APPURL.bookmarkedArticlesURL){
+         APICall().getLikeBookmarkList(url : APPURL.getBookmarkListURL){
             response  in
             switch response {
             case .Success(let data) :
-                self.ArticleData = data
+                 BookmarkData = data
                 
             case .Failure(let errormessage) :
                 print(errormessage)
-            case .Change(let code):
-                print(code)
+    
             }
-            if self.ArticleData.count != 0{
-                for news in self.ArticleData[0].body.articles{
-                    if  self.someEntityExists(id: Int(news.article_id!), entity: "BookmarkArticles") == false
+           
+            if BookmarkData.body?.listResult!.count != 0{
+                for news in (BookmarkData.body?.listResult)!{
+                    if  self.someEntityExists(id: Int(news.article_id), entity: "BookmarkArticles") == false
                     {
                         let newArticle = BookmarkArticles(context: managedContext!)
-                        newArticle.article_id = Int16(news.article_id!)
-                        newArticle.isBookmark = news.isBookmark!
+                        newArticle.article_id = Int16(news.article_id)
+                        newArticle.isBookmark = Int16(news.status!)
+                        newArticle.row_id = Int16(news.row_id)
                         do {
                             try managedContext?.save()
                         }
@@ -304,13 +306,14 @@ class DBManager{
             }
         }
     }
+    
     func addBookmarkedArticles(id : Int){
         let managedContext =
             appDelegate?.persistentContainer.viewContext
         if  self.someEntityExists(id: id, entity: "BookmarkArticles") == false{
             let newArticle = BookmarkArticles(context: managedContext!)
             newArticle.article_id = Int16(id)
-            newArticle.isBookmark = true
+            newArticle.isBookmark = 1
             do {
                 try managedContext?.save()
             }

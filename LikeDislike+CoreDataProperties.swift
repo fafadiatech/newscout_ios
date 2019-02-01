@@ -2,7 +2,7 @@
 //  LikeDislike+CoreDataProperties.swift
 //  
 //
-//  Created by Jayashree on 30/01/19.
+//  Created by Jayashree on 01/02/19.
 //
 //
 
@@ -18,5 +18,6 @@ extension LikeDislike {
 
     @NSManaged public var article_id: Int16
     @NSManaged public var isLike: Int16
+    @NSManaged public var row_id: Int16
 
 }

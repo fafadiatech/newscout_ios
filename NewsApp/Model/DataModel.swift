@@ -37,7 +37,7 @@ struct Article: Decodable{
     let url : String?
     let published_on : String?
     let blurb : String?
-    var isBookmark : Bool?
+  //  var isBookmark : Bool?
     var isLike : Int?
     
     enum CodingKeys: String, CodingKey{
@@ -49,7 +49,7 @@ struct Article: Decodable{
         case title
         case published_on
         case blurb
-        case isBookmark = "isBookMark"
+      //  case isBookmark = "isBookMark"
         case isLike
     }
 }
@@ -149,6 +149,32 @@ struct  Passion: Decodable {
 struct Body : Decodable{
     let Msg : String?
     let user: User?
+    let listResult: [LikeBookmarkList]?
+    
+    enum CodingKeys: String, CodingKey{
+        case Msg = "Msg"
+        case user =  "user"
+        case listResult = "results"
+    }
+}
+
+struct GetLikeBookmarkList: Decodable{
+    let header : Header
+    let body : Body?
+    let errors : ErrorList?
+}
+struct LikeBookmarkList: Decodable{
+    let row_id: Int
+    let article_id: Int
+    let isLike : Int?
+    let status : Int?
+    
+    enum CodingKeys: String, CodingKey{
+        case row_id = "id"
+        case article_id = "article"
+        case isLike = "is_like"
+        case status = "status"
+    }
 }
 
 enum MainModelError {
@@ -188,5 +214,10 @@ enum CategoryDBfetchResult {
 
 enum SaveRemoveCategoryResult {
     case Success(String)
+    case Failure(String)
+}
+
+enum LikeBookmarkListAPIResult {
+    case Success(GetLikeBookmarkList)
     case Failure(String)
 }

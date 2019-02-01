@@ -63,7 +63,6 @@ class ChangePasswordVC: UIViewController {
     }
     
     @objc private func darkModeDisabled(_ notification: Notification) {
-        // Write your non-dark mode code here
         NightNight.theme = .normal
     }
     
@@ -97,7 +96,6 @@ class ChangePasswordVC: UIViewController {
                          "password" : txtNewPswd.text!,
                          "confirm_password" : txtConfirmPswd.text! ]
             APICall().ChangePasswordAPI(param: param){(status, response) in
-                print("change pswd response:\(response)")
                 if status == "1"{
                     self.view.makeToast(response, duration: 1.0, position: .center)
                     self.txtOldPswd.text = ""

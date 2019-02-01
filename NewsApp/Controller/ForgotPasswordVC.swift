@@ -41,7 +41,6 @@ class ForgotPasswordVC: UIViewController {
     }
     
     @objc private func darkModeEnabled(_ notification: Notification) {
-        // Write your dark mode code here
         NightNight.theme = .night
         view.backgroundColor = colorConstants.grayBackground3
         txtEmail.selectedTitleColor = colorConstants.grayBackground3
@@ -49,7 +48,6 @@ class ForgotPasswordVC: UIViewController {
     }
     
     @objc private func darkModeDisabled(_ notification: Notification) {
-        // Write your non-dark mode code here
         NightNight.theme = .normal
     }
     
@@ -75,7 +73,6 @@ class ForgotPasswordVC: UIViewController {
         if txtEmail.text != "" {
             
             APICall().ForgotPasswordAPI(email: txtEmail.text!){(status, response) in
-                print("ForgotPassword response:\(response)")
                 if status == "1"{
                     self.view.makeToast(response, duration: 2.0, position: .center)
                 }
@@ -95,7 +92,6 @@ class ForgotPasswordVC: UIViewController {
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
 }
 
