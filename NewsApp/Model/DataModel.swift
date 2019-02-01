@@ -37,8 +37,6 @@ struct Article: Decodable{
     let url : String?
     let published_on : String?
     let blurb : String?
-  //  var isBookmark : Bool?
-    var isLike : Int?
     
     enum CodingKeys: String, CodingKey{
         case article_id = "id"
@@ -49,8 +47,6 @@ struct Article: Decodable{
         case title
         case published_on
         case blurb
-      //  case isBookmark = "isBookMark"
-        case isLike
     }
 }
 

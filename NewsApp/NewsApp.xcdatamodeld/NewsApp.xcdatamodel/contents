@@ -14,18 +14,19 @@
         <attribute name="article_id" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="isLike" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="row_id" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <relationship name="likedArticle" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="NewsArticle" inverseName="likeDislike" inverseEntity="NewsArticle" syncable="YES"/>
     </entity>
     <entity name="NewsArticle" representedClassName="NewsArticle" syncable="YES" codeGenerationType="class">
         <attribute name="article_id" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="blurb" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="category" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="imageURL" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="isLike" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="published_on" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="source" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="source_url" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="bookmark" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="BookmarkArticles" inverseName="article" inverseEntity="BookmarkArticles" syncable="YES"/>
+        <relationship name="likeDislike" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="LikeDislike" inverseName="likedArticle" inverseEntity="LikeDislike" syncable="YES"/>
     </entity>
     <entity name="NewsURL" representedClassName="NewsURL" syncable="YES" codeGenerationType="class">
         <attribute name="cat_id" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
@@ -36,7 +37,7 @@
     <elements>
         <element name="BookmarkArticles" positionX="405" positionY="18" width="128" height="105"/>
         <element name="Category" positionX="405" positionY="18" width="128" height="75"/>
-        <element name="LikeDislike" positionX="405" positionY="36" width="128" height="90"/>
+        <element name="LikeDislike" positionX="405" positionY="36" width="128" height="105"/>
         <element name="NewsArticle" positionX="407.63671875" positionY="-45.1953125" width="128" height="195"/>
         <element name="NewsURL" positionX="405" positionY="63" width="128" height="105"/>
     </elements>

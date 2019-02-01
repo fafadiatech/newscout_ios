@@ -99,8 +99,34 @@ class HomeVC: UIViewController{
                 self.fetchDataFromDB()
             }
         }
+        if UserDefaults.standard.value(forKey: "token") != nil || UserDefaults.standard.value(forKey: "FBToken") != nil || UserDefaults.standard.value(forKey: "googleToken") != nil{
+            DBManager().SaveLikeDislikeArticles(){response in
+                if response == true{
+                  print("like dislike status has been saved in DB")
+                }
+            }
+            DBManager().SaveBookmarkArticles(){response in
+                if response == true{
+                    print("bookmark status has been saved in DB")
+                }
+            }
+        }
     }
     
+    func fetchLikeDataFromDB(){
+        let result = DBManager().FetchBookmarkFromDB()
+        switch result {
+        case .Success(let DBData) :
+            ShowArticle = DBData
+            if ShowArticle.count == 0{
+                activityIndicator.stopAnimating()
+            
+            }
+            self.HomeNewsTV.reloadData()
+        case .Failure(let errorMsg) :
+            self.HomeNewsTV.makeToast(errorMsg, duration: 1.0, position: .center)
+        }
+    }
     @objc private func darkModeEnabled(_ notification: Notification) {
         NightNight.theme = .night
         HomeNewsTV.backgroundColor = colorConstants.grayBackground3

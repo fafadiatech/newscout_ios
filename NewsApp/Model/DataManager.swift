@@ -65,7 +65,7 @@ class DBManager{
     //check for existing entry in DB
     func someEntityExists(id: Int, entity : String) -> Bool {
         let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: entity)
-        if entity == "NewsArticle" || entity == "BookmarkArticles"{
+        if entity == "NewsArticle" || entity == "BookmarkArticles" || entity == "LikeDislike"{
             fetchRequest.predicate = NSPredicate(format: "article_id == \(id)")
             
         }
@@ -136,6 +136,7 @@ class DBManager{
     func FetchBookmarkFromDB() -> ArticleDBfetchResult
     {
         var BookmarkArticle = [BookmarkArticles]()
+        var LikeArticle = [LikeDislike]()
         var ShowArticle = [NewsArticle]()
         let managedContext =
             appDelegate?.persistentContainer.viewContext
@@ -143,12 +144,19 @@ class DBManager{
             NSFetchRequest<NewsArticle>(entityName: "NewsArticle")
         let bookmarkfetchRequest =
             NSFetchRequest<BookmarkArticles>(entityName: "BookmarkArticles")
+        let likefetchRequest =
+            NSFetchRequest<LikeDislike>(entityName: "LikeDislike")
         do {
              BookmarkArticle = try (managedContext?.fetch(bookmarkfetchRequest))!
         } catch let error as NSError {
             print("Could not fetch. \(error), \(error.userInfo)")
         }
-       var i = 1
+        do {
+            LikeArticle =  try (managedContext?.fetch(likefetchRequest))!
+        }catch let error as NSError {
+            print("Could not fetch. \(error), \(error.userInfo)")
+        }
+     
         for book in BookmarkArticle{
        
         fetchRequest.predicate = NSPredicate(format: "article_id  = %d", book.article_id)
@@ -164,7 +172,22 @@ class DBManager{
             print("Could not fetch. \(error), \(error.userInfo)")
             return ArticleDBfetchResult.Failure(error as! String)
         }
-            // book.addToArticle(ShowArticle[0])
+        }
+        for like in LikeArticle{
+            
+            fetchRequest.predicate = NSPredicate(format: "article_id  = %d", like.article_id)
+            do {
+                let ShowArticle1 = try (managedContext?.fetch(fetchRequest))!
+               // ShowArticle.append(contentsOf: ShowArticle1)
+                
+                if ShowArticle1.count != 0 {
+                   like.addToLikedArticle(ShowArticle1[0])
+                }
+                
+            } catch let error as NSError {
+                print("Could not fetch. \(error), \(error.userInfo)")
+                return ArticleDBfetchResult.Failure(error as! String)
+            }
         }
             return ArticleDBfetchResult.Success(ShowArticle)
     }
@@ -307,6 +330,44 @@ class DBManager{
         }
     }
     
+    func SaveLikeDislikeArticles(_ completion : @escaping (Bool) -> ())
+    {
+        var LikeData : GetLikeBookmarkList!
+        let managedContext =
+            appDelegate?.persistentContainer.viewContext
+        APICall().getLikeBookmarkList(url : APPURL.getLikeListURL){
+            response  in
+            switch response {
+            case .Success(let data) :
+                LikeData = data
+                
+            case .Failure(let errormessage) :
+                print(errormessage)
+                
+            }
+            
+            if LikeData.body?.listResult!.count != 0{
+                for news in (LikeData.body?.listResult)!{
+                    if  self.someEntityExists(id: Int(news.article_id), entity: "LikeDislike") == false
+                    {
+                        let newArticle = LikeDislike(context: managedContext!)
+                        newArticle.article_id = Int16(news.article_id)
+                        newArticle.isLike = Int16(news.status!)
+                        newArticle.row_id = Int16(news.row_id)
+                        do {
+                            try managedContext?.save()
+                        }
+                        catch let error as NSError  {
+                            print("Could not save \(error)")
+                        }
+                    }
+                }
+                completion(true)
+            }else{
+                completion(false)
+            }
+        }
+    }
     func addBookmarkedArticles(id : Int){
         let managedContext =
             appDelegate?.persistentContainer.viewContext

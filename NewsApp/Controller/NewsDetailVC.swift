@@ -93,7 +93,7 @@ class NewsDetailVC: UIViewController {
         }
         viewLikeDislike.backgroundColor = colorConstants.redColor
         ViewWebContainer.isHidden = true
-                  
+        
         APICall().loadRecommendationNewsAPI(articleId: articleId){ (status,response) in
             switch response {
             case .Success(let data) :
@@ -538,7 +538,7 @@ class NewsDetailVC: UIViewController {
                 self.imgNews.sd_setImage(with: URL(string: currentArticle.imageURL!), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
             }
             
-            if currentArticle.isLike == 0 {
+           /* if currentArticle.isLike == 0 {
                 btnLike.setImage(UIImage(named: "thumb_up_filled.png"), for: .normal)
                 btnDislike.setImage(UIImage(named: "thumb_down.png"), for: .normal)
             }
@@ -553,7 +553,7 @@ class NewsDetailVC: UIViewController {
             else{
                 btnLike.setImage(UIImage(named: "thumb_up.png"), for: .normal)
                 btnDislike.setImage(UIImage(named: "thumb_down.png"), for: .normal)
-            }
+            }*/
             
             if ShowArticle[currentIndex].bookmark?.isBookmark == 1 {
                 setBookmarkImg()
@@ -583,7 +583,7 @@ class NewsDetailVC: UIViewController {
                             self.btnDislike.setImage(UIImage(named: "thumb_down.png"), for: .normal)
                             
                         }
-                        self.ShowArticle[self.newsCurrentIndex].isLike = 0
+                     //   self.ShowArticle[self.newsCurrentIndex].isLike = 0
                     }
                 }
             }
@@ -597,7 +597,7 @@ class NewsDetailVC: UIViewController {
                     }
                     else{
                         self.btnLike.setImage(UIImage(named: "like.png"), for: .normal)
-                        self.ShowArticle[self.newsCurrentIndex].isLike = 2
+                      //  self.ShowArticle[self.newsCurrentIndex].isLike = 2
                     }
                 }
             }
@@ -622,7 +622,7 @@ class NewsDetailVC: UIViewController {
                         if (self.btnLike.currentImage?.isEqual(UIImage(named: "thumb_up_filled.png")))! {
                             self.btnLike.setImage(UIImage(named: "thumb_up.png"), for: .normal)
                         }
-                        self.ShowArticle[self.newsCurrentIndex].isLike = 1
+                      //  self.ShowArticle[self.newsCurrentIndex].isLike = 1
                     }
                 }
             }
@@ -636,7 +636,7 @@ class NewsDetailVC: UIViewController {
                     }
                     else{
                         self.btnDislike.setImage(UIImage(named: "dislike.png"), for: .normal)
-                        self.ShowArticle[self.newsCurrentIndex].isLike = 2
+                     //   self.ShowArticle[self.newsCurrentIndex].isLike = 2
                     }
                 }
             }
