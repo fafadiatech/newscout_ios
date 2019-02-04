@@ -538,22 +538,18 @@ class NewsDetailVC: UIViewController {
                 self.imgNews.sd_setImage(with: URL(string: currentArticle.imageURL!), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
             }
             
-           /* if currentArticle.isLike == 0 {
+            if currentArticle.likeDislike?.isLike == 0 {
                 btnLike.setImage(UIImage(named: "thumb_up_filled.png"), for: .normal)
                 btnDislike.setImage(UIImage(named: "thumb_down.png"), for: .normal)
             }
-            else if currentArticle.isLike == 1{
+            else if currentArticle.likeDislike?.isLike == 1{
                 btnLike.setImage(UIImage(named: "thumb_up.png"), for: .normal)
                 btnDislike.setImage(UIImage(named: "thumb_down_filled.png"), for: .normal)
-            }
-            else if currentArticle.isLike == 2{
-                btnLike.setImage(UIImage(named: "thumb_up.png"), for: .normal)
-                btnDislike.setImage(UIImage(named: "thumb_down.png"), for: .normal)
             }
             else{
                 btnLike.setImage(UIImage(named: "thumb_up.png"), for: .normal)
                 btnDislike.setImage(UIImage(named: "thumb_down.png"), for: .normal)
-            }*/
+            }
             
             if ShowArticle[currentIndex].bookmark?.isBookmark == 1 {
                 setBookmarkImg()
@@ -583,7 +579,8 @@ class NewsDetailVC: UIViewController {
                             self.btnDislike.setImage(UIImage(named: "thumb_down.png"), for: .normal)
                             
                         }
-                     //   self.ShowArticle[self.newsCurrentIndex].isLike = 0
+                        self.ShowArticle[self.newsCurrentIndex].likeDislike?.isLike = 0
+                         DBManager().addLikedArticle(id: self.articleId, status: 0)
                     }
                 }
             }
@@ -596,8 +593,12 @@ class NewsDetailVC: UIViewController {
                         self.view.makeToast(response, duration: 1.0, position: .center)
                     }
                     else{
-                        self.btnLike.setImage(UIImage(named: "like.png"), for: .normal)
-                      //  self.ShowArticle[self.newsCurrentIndex].isLike = 2
+                        DBManager().deleteLikedDislikedArticle(id: self.articleId){
+                            response in
+                            if response == true{
+                                  self.btnLike.setImage(UIImage(named: "like.png"), for: .normal)
+                            }
+                        }
                     }
                 }
             }
@@ -622,7 +623,8 @@ class NewsDetailVC: UIViewController {
                         if (self.btnLike.currentImage?.isEqual(UIImage(named: "thumb_up_filled.png")))! {
                             self.btnLike.setImage(UIImage(named: "thumb_up.png"), for: .normal)
                         }
-                      //  self.ShowArticle[self.newsCurrentIndex].isLike = 1
+                        self.ShowArticle[self.newsCurrentIndex].likeDislike?.isLike = 1
+                        DBManager().addLikedArticle(id: self.articleId, status: 1)
                     }
                 }
             }
@@ -635,11 +637,14 @@ class NewsDetailVC: UIViewController {
                         self.view.makeToast(response, duration: 1.0, position: .center)
                     }
                     else{
-                        self.btnDislike.setImage(UIImage(named: "dislike.png"), for: .normal)
-                     //   self.ShowArticle[self.newsCurrentIndex].isLike = 2
+                        DBManager().deleteLikedDislikedArticle(id: self.articleId){ response in
+                            if response == true{
+                                  self.btnDislike.setImage(UIImage(named: "dislike.png"), for: .normal)
+                            }
                     }
                 }
             }
+        }
         }
         else{
             showMsg(title: "Please login to continue..", msg: "")

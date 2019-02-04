@@ -57,19 +57,34 @@ class HomeVC: UIViewController{
         }
         //save and fetch data from DB
         selectedCategory = tabBarTitle
+        if UserDefaults.standard.value(forKey: "token") != nil || UserDefaults.standard.value(forKey: "FBToken") != nil || UserDefaults.standard.value(forKey: "googleToken") != nil{
+            let BookmarkRecordCount = DBManager().IsCoreDataEmpty(entity: "BookmarkArticles")
+            if BookmarkRecordCount != 0{
+                fetchBookmarkDataFromDB()
+            }else{
+                saveBookmarkDataInDB(url : APPURL.bookmarkedArticlesURL)
+            }
+            let LikeRecordCount = DBManager().IsCoreDataEmpty(entity: "BookmarkArticles")
+            if LikeRecordCount != 0{
+                fetchBookmarkDataFromDB()
+            }else{
+                saveLikeDataInDB()
+            }
+            
+        }
         coredataRecordCount = DBManager().IsCoreDataEmpty(entity: "NewsArticle")
             if self.coredataRecordCount != 0{
-                self.fetchDataFromDB()
+                self.fetchArticlesFromDB()
             }else{
                 activityIndicator.startAnimating()
                 let url = APPURL.ArticlesByCategoryURL + "\(self.selectedCategory)"
-                self.saveDataInDB(url : url)
+                self.saveArticlesInDB(url : url)
             }
+       
+    }
     
-        }
     
-    
-    func fetchDataFromDB(){
+    func fetchArticlesFromDB(){
         let result = DBManager().FetchDataFromDB(entity: "NewsArticle")
         switch result {
         case .Success(let DBData) :
@@ -93,40 +108,55 @@ class HomeVC: UIViewController{
         }
     }
     
-    func saveDataInDB(url: String){
+    func saveArticlesInDB(url: String){
         DBManager().SaveDataDB(nextUrl: url){response in
             if response == true{
-                self.fetchDataFromDB()
-            }
-        }
-        if UserDefaults.standard.value(forKey: "token") != nil || UserDefaults.standard.value(forKey: "FBToken") != nil || UserDefaults.standard.value(forKey: "googleToken") != nil{
-            DBManager().SaveLikeDislikeArticles(){response in
-                if response == true{
-                  print("like dislike status has been saved in DB")
-                }
-            }
-            DBManager().SaveBookmarkArticles(){response in
-                if response == true{
-                    print("bookmark status has been saved in DB")
-                }
+                self.fetchArticlesFromDB()
             }
         }
     }
     
-    func fetchLikeDataFromDB(){
+    func fetchBookmarkDataFromDB(){
         let result = DBManager().FetchBookmarkFromDB()
         switch result {
         case .Success(let DBData) :
-            ShowArticle = DBData
-            if ShowArticle.count == 0{
+            //let tempArticle = DBData
+            if DBData.count == 0{
                 activityIndicator.stopAnimating()
-            
             }
-            self.HomeNewsTV.reloadData()
-        case .Failure(let errorMsg) :
-            self.HomeNewsTV.makeToast(errorMsg, duration: 1.0, position: .center)
+        case .Failure(let errorMsg) : break
         }
     }
+    
+    func saveBookmarkDataInDB(url: String){
+        DBManager().SaveBookmarkArticles(){response in
+            if response == true{
+                self.fetchBookmarkDataFromDB()
+            }
+        }
+    }
+    
+    func saveLikeDataInDB(){
+        DBManager().SaveLikeDislikeArticles(){response in
+            if response == true{
+                print("like dislike status has been saved in DB")
+            }
+        }
+    }
+//    func fetchLikeDataFromDB(){
+//        let result = DBManager().FetchBookmarkFromDB()
+//        switch result {
+//        case .Success(let DBData) :
+//            ShowArticle = DBData
+//            if ShowArticle.count == 0{
+//                activityIndicator.stopAnimating()
+//            
+//            }
+//            self.HomeNewsTV.reloadData()
+//        case .Failure(let errorMsg) :
+//            self.HomeNewsTV.makeToast(errorMsg, duration: 1.0, position: .center)
+//        }
+//    }
     @objc private func darkModeEnabled(_ notification: Notification) {
         NightNight.theme = .night
         HomeNewsTV.backgroundColor = colorConstants.grayBackground3
@@ -171,10 +201,26 @@ class HomeVC: UIViewController{
             selectedCategory = tabBarTitle
         }
         selectedCategory = selectedCategory.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)!
+        coredataRecordCount = DBManager().IsCoreDataEmpty(entity: "NewsArticle")
+        if self.coredataRecordCount != 0{
+            self.fetchArticlesFromDB()
+        }
+//        if UserDefaults.standard.value(forKey: "token") != nil || UserDefaults.standard.value(forKey: "FBToken") != nil || UserDefaults.standard.value(forKey: "googleToken") != nil{
+//            DBManager().SaveLikeDislikeArticles(){response in
+//                if response == true{
+//                    print("like dislike status has been saved in DB")
+//                }
+//            }
+//            DBManager().SaveBookmarkArticles(){response in
+//                if response == true{
+//                    print("bookmark status has been saved in DB")
+//                }
+//            }
+//        }
     }
     
     func FetchArticlesAPICall(){
-        saveDataInDB(url:  APPURL.ArticlesByCategoryURL + "\(selectedCategory)" )
+        saveArticlesInDB(url:  APPURL.ArticlesByCategoryURL + "\(selectedCategory)" )
     }
     
     func ArticlesAPICall(){
@@ -343,7 +389,7 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
     }
     
     //check whether tableview scrolled up or down
-    func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
+   /* func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
         if targetContentOffset.pointee.y < scrollView.contentOffset.y {
             if nextURL != "" {
                 APICall().loadNewsbyCategoryAPI(url: nextURL){
@@ -380,7 +426,7 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
                 }
             }
         }
-    }
+    }*/
 }
 
 extension HomeVC: IndicatorInfoProvider{

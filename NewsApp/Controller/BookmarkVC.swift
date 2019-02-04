@@ -23,6 +23,7 @@ class BookmarkVC: UIViewController {
     var nextURL = ""
     var ShowArticle = [NewsArticle]()
     var bookmarkArticles = [BookmarkArticles]()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         NotificationCenter.default.addObserver(self, selector: #selector(darkModeEnabled(_:)), name: .darkModeEnabled, object: nil)
@@ -37,9 +38,9 @@ class BookmarkVC: UIViewController {
         if UserDefaults.standard.value(forKey: "token") != nil || UserDefaults.standard.value(forKey: "FBToken") != nil || UserDefaults.standard.value(forKey: "googleToken") != nil{
             let coredataRecordCount = DBManager().IsCoreDataEmpty(entity: "BookmarkArticles")
             if coredataRecordCount != 0{
-                fetchDataFromDB()
+                fetchBookmarkDataFromDB()
             }else{
-                saveDataInDB(url : APPURL.bookmarkedArticlesURL)
+                saveBookmarkDataInDB(url : APPURL.bookmarkedArticlesURL)
             }
         }
         else{
@@ -87,7 +88,7 @@ class BookmarkVC: UIViewController {
         return true
     }
     
-    func fetchDataFromDB(){
+    func fetchBookmarkDataFromDB(){
         let result = DBManager().FetchBookmarkFromDB()
         switch result {
         case .Success(let DBData) :
@@ -102,10 +103,10 @@ class BookmarkVC: UIViewController {
         }
     }
     
-    func saveDataInDB(url: String){
+    func saveBookmarkDataInDB(url: String){
         DBManager().SaveBookmarkArticles(){response in
             if response == true{
-                self.fetchDataFromDB()
+                self.fetchBookmarkDataFromDB()
             }
         }
     }
