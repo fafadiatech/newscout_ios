@@ -89,7 +89,7 @@ class BookmarkVC: UIViewController {
     }
     
     func fetchBookmarkDataFromDB(){
-        let result = DBManager().FetchBookmarkFromDB()
+        let result = DBManager().FetchLikeBookmarkFromDB()
         switch result {
         case .Success(let DBData) :
             ShowArticle = DBData

@@ -19,12 +19,14 @@ struct articleBody : Decodable{
     let next : String?
     let previous : String?
     var articles : [Article]
+    var categoryDetail : CategoryDetails?
     
     enum CodingKeys: String, CodingKey{
         case articles = "results"
         case count
         case next
         case previous
+        case categoryDetail = "category"
     }
 }
 

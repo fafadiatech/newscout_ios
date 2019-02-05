@@ -30,6 +30,7 @@ class HomeVC: UIViewController{
     var nextURL = ""
     var lastContentOffset: CGFloat = 0
     var articlesArr = [Article]()
+     var categories = [String]()
     
     override func viewDidLoad(){
         super.viewDidLoad()
@@ -42,7 +43,7 @@ class HomeVC: UIViewController{
         activityIndicator.indicatorMode = .indeterminate
         activityIndicator.progress = 2.0
         view.addSubview(activityIndicator)
-        
+        categories = UserDefaults.standard.array(forKey: "categories") as! [String]
         var paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
         print("path is :\(paths[0])")
         let refreshControl = UIRefreshControl()
@@ -58,29 +59,32 @@ class HomeVC: UIViewController{
         //save and fetch data from DB
         selectedCategory = tabBarTitle
         if UserDefaults.standard.value(forKey: "token") != nil || UserDefaults.standard.value(forKey: "FBToken") != nil || UserDefaults.standard.value(forKey: "googleToken") != nil{
-            let BookmarkRecordCount = DBManager().IsCoreDataEmpty(entity: "BookmarkArticles")
-            if BookmarkRecordCount != 0{
-                fetchBookmarkDataFromDB()
-            }else{
-                saveBookmarkDataInDB(url : APPURL.bookmarkedArticlesURL)
-            }
-            let LikeRecordCount = DBManager().IsCoreDataEmpty(entity: "BookmarkArticles")
-            if LikeRecordCount != 0{
-                fetchBookmarkDataFromDB()
-            }else{
+             if Reachability.isConnectedToNetwork(){
+                 saveBookmarkDataInDB(url : APPURL.bookmarkedArticlesURL)
                 saveLikeDataInDB()
+            }
+             else{
+                let BookmarkRecordCount = DBManager().IsCoreDataEmpty(entity: "BookmarkArticles")
+                 let LikeRecordCount = DBManager().IsCoreDataEmpty(entity: "BookmarkArticles")
+                if BookmarkRecordCount != 0 || LikeRecordCount != 0{
+                    fetchBookmarkDataFromDB()
+                }
             }
             
         }
-        coredataRecordCount = DBManager().IsCoreDataEmpty(entity: "NewsArticle")
-            if self.coredataRecordCount != 0{
+        if Reachability.isConnectedToNetwork(){
+            print("Internet Connection Available!")
+            activityIndicator.startAnimating()
+            let url = APPURL.ArticlesByCategoryURL + "\(self.selectedCategory)"
+            self.saveArticlesInDB(url : url)
+        }else{
+            print("Internet Connection not Available!")
+            coredataRecordCount = DBManager().IsCoreDataEmpty(entity: "NewsArticle")
+            if self.coredataRecordCount != 0 {
                 self.fetchArticlesFromDB()
-            }else{
-                activityIndicator.startAnimating()
-                let url = APPURL.ArticlesByCategoryURL + "\(self.selectedCategory)"
-                self.saveArticlesInDB(url : url)
+                
             }
-       
+        }
     }
     
     
@@ -117,10 +121,9 @@ class HomeVC: UIViewController{
     }
     
     func fetchBookmarkDataFromDB(){
-        let result = DBManager().FetchBookmarkFromDB()
+        let result = DBManager().FetchLikeBookmarkFromDB()
         switch result {
         case .Success(let DBData) :
-            //let tempArticle = DBData
             if DBData.count == 0{
                 activityIndicator.stopAnimating()
             }
@@ -139,24 +142,12 @@ class HomeVC: UIViewController{
     func saveLikeDataInDB(){
         DBManager().SaveLikeDislikeArticles(){response in
             if response == true{
+                 self.fetchBookmarkDataFromDB()
                 print("like dislike status has been saved in DB")
             }
         }
     }
-//    func fetchLikeDataFromDB(){
-//        let result = DBManager().FetchBookmarkFromDB()
-//        switch result {
-//        case .Success(let DBData) :
-//            ShowArticle = DBData
-//            if ShowArticle.count == 0{
-//                activityIndicator.stopAnimating()
-//            
-//            }
-//            self.HomeNewsTV.reloadData()
-//        case .Failure(let errorMsg) :
-//            self.HomeNewsTV.makeToast(errorMsg, duration: 1.0, position: .center)
-//        }
-//    }
+
     @objc private func darkModeEnabled(_ notification: Notification) {
         NightNight.theme = .night
         HomeNewsTV.backgroundColor = colorConstants.grayBackground3
@@ -200,23 +191,11 @@ class HomeVC: UIViewController{
         else{
             selectedCategory = tabBarTitle
         }
-        selectedCategory = selectedCategory.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)!
+       
         coredataRecordCount = DBManager().IsCoreDataEmpty(entity: "NewsArticle")
         if self.coredataRecordCount != 0{
             self.fetchArticlesFromDB()
         }
-//        if UserDefaults.standard.value(forKey: "token") != nil || UserDefaults.standard.value(forKey: "FBToken") != nil || UserDefaults.standard.value(forKey: "googleToken") != nil{
-//            DBManager().SaveLikeDislikeArticles(){response in
-//                if response == true{
-//                    print("like dislike status has been saved in DB")
-//                }
-//            }
-//            DBManager().SaveBookmarkArticles(){response in
-//                if response == true{
-//                    print("bookmark status has been saved in DB")
-//                }
-//            }
-//        }
     }
     
     func FetchArticlesAPICall(){

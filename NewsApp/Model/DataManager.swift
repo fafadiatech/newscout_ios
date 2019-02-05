@@ -43,6 +43,7 @@ class DBManager{
                         newArticle.published_on = news.published_on
                         newArticle.blurb = news.blurb
                         newArticle.category = news.category!
+                
                         self.saveBlock()
                     }
                 }
@@ -115,6 +116,7 @@ class DBManager{
             appDelegate?.persistentContainer.viewContext
         let fetchRequest =
             NSFetchRequest<NSManagedObject>(entityName: entity)
+        
         do {
             let ShowArticle = try (managedContext?.fetch(fetchRequest))!
             return ArticleDBfetchResult.Success(ShowArticle as! [NewsArticle])
@@ -220,7 +222,7 @@ class DBManager{
     }
     
     //fetch bookmarked articles
-    func FetchBookmarkFromDB() -> ArticleDBfetchResult
+    func FetchLikeBookmarkFromDB() -> ArticleDBfetchResult
     {
         var BookmarkArticle = [BookmarkArticles]()
         var LikeArticle = [LikeDislike]()
@@ -302,7 +304,7 @@ class DBManager{
                         let newArticle = BookmarkArticles(context: managedContext!)
                         newArticle.article_id = Int16(news.article_id)
                         newArticle.isBookmark = Int16(news.status!)
-                        newArticle.row_id = Int16(news.row_id)
+                        //newArticle.row_id = Int16(news.row_id)
                         self.saveBlock()
                     }
                 }
@@ -336,7 +338,7 @@ class DBManager{
                         let newArticle = LikeDislike(context: managedContext!)
                         newArticle.article_id = Int16(news.article_id)
                         newArticle.isLike = Int16(news.isLike!)
-                        newArticle.row_id = Int16(news.row_id)
+                      //  newArticle.row_id = Int16(news.row_id)
                         self.saveBlock()
                     }
                 }
