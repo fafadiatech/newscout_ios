@@ -551,7 +551,7 @@ class NewsDetailVC: UIViewController {
                 btnDislike.setImage(UIImage(named: "thumb_down.png"), for: .normal)
             }
             
-            if ShowArticle[currentIndex].bookmark?.isBookmark == 1 {
+            if currentArticle.bookmark?.isBookmark == 1 {
                 setBookmarkImg()
             }else{
                 ResetBookmarkImg()
@@ -560,7 +560,7 @@ class NewsDetailVC: UIViewController {
         if imgNews.image == nil{
             imgNews.image = UIImage(named: "NoImage.png")
         }
-
+        
     }
     
     @IBAction func btnLikeActn(_ sender: Any) {
@@ -579,8 +579,7 @@ class NewsDetailVC: UIViewController {
                             self.btnDislike.setImage(UIImage(named: "thumb_down.png"), for: .normal)
                             
                         }
-                        self.ShowArticle[self.newsCurrentIndex].likeDislike?.isLike = 0
-                         DBManager().addLikedArticle(id: self.articleId, status: 0)
+                        DBManager().addLikedArticle(id: self.articleId, status: 0)
                     }
                 }
             }
@@ -596,7 +595,7 @@ class NewsDetailVC: UIViewController {
                         DBManager().deleteLikedDislikedArticle(id: self.articleId){
                             response in
                             if response == true{
-                                  self.btnLike.setImage(UIImage(named: "like.png"), for: .normal)
+                                self.btnLike.setImage(UIImage(named: "thumb_up.png"), for: .normal)
                             }
                         }
                     }
@@ -623,7 +622,6 @@ class NewsDetailVC: UIViewController {
                         if (self.btnLike.currentImage?.isEqual(UIImage(named: "thumb_up_filled.png")))! {
                             self.btnLike.setImage(UIImage(named: "thumb_up.png"), for: .normal)
                         }
-                        self.ShowArticle[self.newsCurrentIndex].likeDislike?.isLike = 1
                         DBManager().addLikedArticle(id: self.articleId, status: 1)
                     }
                 }
@@ -639,12 +637,12 @@ class NewsDetailVC: UIViewController {
                     else{
                         DBManager().deleteLikedDislikedArticle(id: self.articleId){ response in
                             if response == true{
-                                  self.btnDislike.setImage(UIImage(named: "dislike.png"), for: .normal)
+                                self.btnDislike.setImage(UIImage(named: "thumb_down.png"), for: .normal)
                             }
+                        }
                     }
                 }
             }
-        }
         }
         else{
             showMsg(title: "Please login to continue..", msg: "")
@@ -662,7 +660,8 @@ class NewsDetailVC: UIViewController {
                     }
                     else{
                         self.setBookmarkImg()
-                    DBManager().addBookmarkedArticles(id: self.articleId)
+                        
+                        DBManager().addBookmarkedArticles(id: self.articleId)
                         self.view.makeToast(response, duration: 1.0, position: .center)
                     }
                 }
@@ -875,10 +874,10 @@ extension NewsDetailVC:UICollectionViewDelegate, UICollectionViewDataSource, UIC
                 UserDefaults.standard.set("bookrecommend", forKey: "isSearch")
             }
             else if check == "search" {
-               UserDefaults.standard.set("searchrecommend", forKey: "isSearch")
+                UserDefaults.standard.set("searchrecommend", forKey: "isSearch")
             }
             else{
-            UserDefaults.standard.set("recommend", forKey: "isSearch")
+                UserDefaults.standard.set("recommend", forKey: "isSearch")
             }
             newsDetailvc.newsCurrentIndex = indexPath.row - 1
             //newsDetailvc.articleArr = RecomArticleData[0].body.articles

@@ -14,12 +14,11 @@ class DBManager{
     let appDelegate = UIApplication.shared.delegate as? AppDelegate
     var ArticleData = [ArticleStatus]()
     var CategoryData = [CategoryList]()
-   
+    
     //save articles in DB
     func SaveDataDB(nextUrl:String,_ completion : @escaping (Bool) -> ())
     {
-        let managedContext =
-            appDelegate?.persistentContainer.viewContext
+        let managedContext = appDelegate?.persistentContainer.viewContext
         APICall().loadNewsbyCategoryAPI(url : nextUrl){
             (status, response)  in
             switch response {
@@ -44,12 +43,7 @@ class DBManager{
                         newArticle.published_on = news.published_on
                         newArticle.blurb = news.blurb
                         newArticle.category = news.category!
-                        do {
-                            try managedContext?.save()
-                        }
-                        catch let error as NSError  {
-                            print("Could not save \(error)")
-                        }
+                        self.saveBlock()
                     }
                 }
                 if self.ArticleData[0].body.next != nil{
@@ -67,11 +61,9 @@ class DBManager{
         let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: entity)
         if entity == "NewsArticle" || entity == "BookmarkArticles" || entity == "LikeDislike"{
             fetchRequest.predicate = NSPredicate(format: "article_id == \(id)")
-            
         }
         else{
             fetchRequest.predicate = NSPredicate(format: "cat_id == \(id)")
-            
         }
         let managedContext =
             appDelegate?.persistentContainer.viewContext
@@ -132,8 +124,6 @@ class DBManager{
         }
     }
     
-   
-    
     // check if DB is empty
     func IsCoreDataEmpty(entity: String) -> Int
     {
@@ -142,13 +132,13 @@ class DBManager{
             appDelegate?.persistentContainer.viewContext
         let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: entity)
         if entity == "NewsArticle"{
-        var records = [NewsArticle]()
-        do {
-            records = (try managedContext?.fetch(fetchRequest)) as! [NewsArticle]
-        }
-        catch {
-            print("error executing fetch request: \(error)")
-        }
+            var records = [NewsArticle]()
+            do {
+                records = (try managedContext?.fetch(fetchRequest)) as! [NewsArticle]
+            }
+            catch {
+                print("error executing fetch request: \(error)")
+            }
             recordCount = records.count
         }
         else{
@@ -201,11 +191,7 @@ class DBManager{
                         let newCategory = Category(context: managedContext!)
                         newCategory.cat_id = Int16(cat.cat_id!)
                         newCategory.title = cat.title
-                        do {
-                            try managedContext?.save()
-                        } catch let error as NSError  {
-                            print("Could not save \(error)")
-                        }
+                        self.saveBlock()
                     }
                 }
                 completion(true)
@@ -298,32 +284,26 @@ class DBManager{
             appDelegate?.persistentContainer.viewContext
         let fetchRequest =
             NSFetchRequest<NewsArticle>(entityName: "NewsArticle")
-         APICall().getLikeBookmarkList(url : APPURL.getBookmarkListURL){
+        APICall().getLikeBookmarkList(url : APPURL.getBookmarkListURL){
             response  in
             switch response {
             case .Success(let data) :
-                 BookmarkData = data
+                BookmarkData = data
                 
             case .Failure(let errormessage) :
                 print(errormessage)
-    
+                
             }
-           
+            
             if BookmarkData.body?.listResult!.count != 0{
                 for news in (BookmarkData.body?.listResult)!{
                     if  self.someEntityExists(id: Int(news.article_id), entity: "BookmarkArticles") == false
                     {
-                       let newArticle = BookmarkArticles(context: managedContext!)
+                        let newArticle = BookmarkArticles(context: managedContext!)
                         newArticle.article_id = Int16(news.article_id)
                         newArticle.isBookmark = Int16(news.status!)
                         newArticle.row_id = Int16(news.row_id)
-                        do {
-                            try managedContext?.save()
-    
-                        }
-                        catch let error as NSError  {
-                            print("Could not save \(error)")
-                        }
+                        self.saveBlock()
                     }
                 }
                 completion(true)
@@ -368,16 +348,27 @@ class DBManager{
     }
     
     func addLikedArticle(id : Int, status : Int){
+        var Article = [NewsArticle]()
+        var likeDislike = [LikeDislike]()
         let managedContext =
             appDelegate?.persistentContainer.viewContext
+        let fetchRequest =
+            NSFetchRequest<NewsArticle>(entityName: "NewsArticle")
+        fetchRequest.predicate = NSPredicate(format: "article_id  = %d", id)
         let likefetchRequest =
             NSFetchRequest<LikeDislike>(entityName: "LikeDislike")
-         var likeDislike = [LikeDislike]()
-         likefetchRequest.predicate = NSPredicate(format: "article_id  = %d", id)
+        likefetchRequest.predicate = NSPredicate(format: "article_id  = %d", id)
+        fetchRequest.predicate = NSPredicate(format: "article_id  = %d", id)
+        do {
+            Article = try (managedContext?.fetch(fetchRequest))!
+        }catch {
+            print("Failed")
+        }
         if  self.someEntityExists(id: id, entity: "LikeDislike") == false{
             let newArticle = LikeDislike(context: managedContext!)
             newArticle.article_id = Int16(id)
             newArticle.isLike = Int16(status)
+            newArticle.addToLikedArticle(Article[0])
         }
         else{
             do {
@@ -388,7 +379,7 @@ class DBManager{
             do {
                 for article in likeDislike{
                     if article.article_id == Int16(id){
-                    article.isLike = Int16(status)
+                        article.isLike = Int16(status)
                     }
                 }
                 
@@ -402,8 +393,6 @@ class DBManager{
     func deleteLikedDislikedArticle(id : Int,_ completion : @escaping (Bool) -> ()){
         let managedContext =
             appDelegate?.persistentContainer.viewContext
-        let fetchRequest =
-            NSFetchRequest<NewsArticle>(entityName: "NewsArticle")
         let likefetchRequest =
             NSFetchRequest<LikeDislike>(entityName: "LikeDislike")
         var likeDislike = [LikeDislike]()
@@ -413,7 +402,6 @@ class DBManager{
         } catch let error as NSError {
             print("Could not fetch. \(error), \(error.userInfo)")
         }
-       
         do {
             for status in likeDislike{
                 managedContext!.delete(status)
@@ -422,7 +410,6 @@ class DBManager{
         } catch {
             print("Failed")
         }
-       
         do {
             try managedContext?.save()
             completion(true)
@@ -436,11 +423,21 @@ class DBManager{
     func addBookmarkedArticles(id : Int){
         let managedContext =
             appDelegate?.persistentContainer.viewContext
+        let fetchRequest =
+            NSFetchRequest<NewsArticle>(entityName: "NewsArticle")
+        var Article = [NewsArticle]()
+        fetchRequest.predicate = NSPredicate(format: "article_id  = %d", id)
+        do {
+            Article = try (managedContext?.fetch(fetchRequest))!
+        }catch {
+            print("Failed")
+        }
         if  self.someEntityExists(id: id, entity: "BookmarkArticles") == false{
             let newArticle = BookmarkArticles(context: managedContext!)
             newArticle.article_id = Int16(id)
             newArticle.isBookmark = 1
-          saveBlock()
+            newArticle.addToArticle(Article[0])
+            saveBlock()
         }
     }
     
@@ -458,13 +455,13 @@ class DBManager{
         }
         do {
             for book in bookmark{
-            managedContext!.delete(book)
+                managedContext!.delete(book)
             }
-          
+            
         } catch {
             print("Failed")
         }
-       saveBlock()
+        saveBlock()
     }
     
     func saveBlock()
