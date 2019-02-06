@@ -147,15 +147,19 @@ extension CategoryListVC:UITableViewDelegate, UITableViewDataSource{
         }
         
         cell.lblCategoryName.text = catData.title
+       
         if categories.contains(catData.title!){
-            if catData.title != "Trending"{
-                cell.imgDelete.isHidden = false
-            }
+             cell.imgDelete.isHidden = false
         }
         else{
             cell.imgDelete.isHidden = true
         }
-        
+        if cell.lblCategoryName.text == "Trending"{
+            if UserDefaults.standard.value(forKey: "token") == nil{
+                cell.isUserInteractionEnabled = false
+                cell.imgDelete.isHidden = true
+            }
+        }
         let darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
         if  darkModeStatus == true{
             cell.backgroundColor = colorConstants.grayBackground2

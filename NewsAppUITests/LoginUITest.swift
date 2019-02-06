@@ -24,8 +24,8 @@ class LoginUITest: XCTestCase {
     }
     
     func testValidLogin() {
-        let validEmail = "jayu@gmail.com"
-        let validPassword = "a123"
+        let validEmail = "yamini@gmail.com"
+        let validPassword = "ftech#123"
         let element = app.children(matching: .window).element(boundBy: 0).children(matching: .other).element
         element.children(matching: .other).element(boundBy: 1).children(matching: .button).element.tap()
         element.children(matching: .other).element(boundBy: 2).children(matching: .other).element(boundBy: 1).tap()

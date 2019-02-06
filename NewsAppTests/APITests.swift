@@ -163,9 +163,10 @@ class APITests: XCTestCase{
     func test_Search_API(){
         let promise = expectation(description: "1")
         var searchResultData = [ArticleStatus]()
-        var searchKeyword = "oil"
+        let searchKeyword = "oil"
+         let url = APPURL.SearchURL + searchKeyword
         if searchKeyword != nil{
-            APICall().loadSearchAPI(searchTxt: searchKeyword){(status, response) in
+            APICall().loadSearchAPI(url: url){(status, response) in
                 print(response)
                 XCTAssertNotNil(response)
                 switch response {

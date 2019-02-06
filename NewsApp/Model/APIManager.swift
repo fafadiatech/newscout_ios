@@ -300,6 +300,14 @@ class APICall{
                             defaults.removeObject(forKey: "user_id")
                             defaults.removeObject(forKey: "email")
                             defaults.synchronize()
+                            var categoryList : [String] = []
+                            
+                             categoryList = UserDefaults.standard.value(forKey: "categories") as! [String]
+                            categoryList.remove(at: 0)
+                            if !categoryList.contains("Trending"){
+                            categoryList.insert("Trending", at: 0)
+                            }
+                            UserDefaults.standard.setValue(categoryList, forKey: "categories")
                             completion(jsonData.header.status,jsonData.body!.Msg!)
                         }
                     }
