@@ -30,8 +30,9 @@ class HomeVC: UIViewController{
     var nextURL = ""
     var lastContentOffset: CGFloat = 0
     var articlesArr = [Article]()
+     var categories = [String]()
     
-    override func viewDidLoad() {
+    override func viewDidLoad(){
         super.viewDidLoad()
         lblNonews.isHidden = true
         NotificationCenter.default.addObserver(self, selector: #selector(darkModeEnabled(_:)), name: .darkModeEnabled, object: nil)
@@ -42,10 +43,9 @@ class HomeVC: UIViewController{
         activityIndicator.indicatorMode = .indeterminate
         activityIndicator.progress = 2.0
         view.addSubview(activityIndicator)
-        activityIndicator.startAnimating()
-        
+        categories = UserDefaults.standard.array(forKey: "categories") as! [String]
         var paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
-        print("\(paths[0])")
+        print("path is :\(paths[0])")
         let refreshControl = UIRefreshControl()
         refreshControl.addTarget(self, action: #selector(refreshNews), for: .valueChanged)
         HomeNewsTV.refreshControl = refreshControl
@@ -56,47 +56,98 @@ class HomeVC: UIViewController{
         else {
             HomeNewsTV.rowHeight = 129;
         }
-        /* coredataRecordCount = DBManager().IsCoreDataEmpty()
-         if coredataRecordCount != 0{
-         let result = DBManager().FetchDataFromDB()
-         switch result {
-         case .Success(let DBData) :
-         let articles = DBData
-         if selectedCat == "" || selectedCat == "FOR YOU" || selectedCat == "All News"
-         {
-         self.filterNews(selectedCat: "All News" )
-         print("cat pressed is: for u")
-         }else{
-         self.filterNews(selectedCat: selectedCat )
-         }
-         self.HomeNewsTV.reloadData()
-         case .Failure(let errorMsg) :
-         print(errorMsg)
-         }
-         HomeNewsTV.reloadData()
-         }
-         else{
-         DBManager().SaveDataDB(pageNum:pageNum){response in
-         if response == true{
-         let result = DBManager().FetchDataFromDB()
-         switch result {
-         case .Success(let DBData) :
-         let articles = DBData
-         if  selectedCat == "" || selectedCat == "FOR YOU" || selectedCat == "All News"{
-         self.filterNews(selectedCat: "All News" )
-         }else{
-         self.filterNews(selectedCat: selectedCat )
-         }
-         self.HomeNewsTV.reloadData()
-         case .Failure(let errorMsg) :
-         print(errorMsg)
-         }
-         }
-         }
-         }*/
-        
+        //save and fetch data from DB
+        selectedCategory = tabBarTitle
+        if UserDefaults.standard.value(forKey: "token") != nil{
+             if Reachability.isConnectedToNetwork(){
+                 saveBookmarkDataInDB(url : APPURL.bookmarkedArticlesURL)
+                saveLikeDataInDB()
+            }
+             else{
+                let BookmarkRecordCount = DBManager().IsCoreDataEmpty(entity: "BookmarkArticles")
+                 let LikeRecordCount = DBManager().IsCoreDataEmpty(entity: "BookmarkArticles")
+                if BookmarkRecordCount != 0 || LikeRecordCount != 0{
+                    fetchBookmarkDataFromDB()
+                }
+            }
+            
+        }
+        if Reachability.isConnectedToNetwork(){
+            print("Internet Connection Available!")
+            activityIndicator.startAnimating()
+            let url = APPURL.ArticlesByCategoryURL + "\(self.selectedCategory)"
+            self.saveArticlesInDB(url : url)
+        }else{
+            print("Internet Connection not Available!")
+            coredataRecordCount = DBManager().IsCoreDataEmpty(entity: "NewsArticle")
+            if self.coredataRecordCount != 0 {
+                self.fetchArticlesFromDB()
+                
+            }
+        }
     }
     
+    
+    func fetchArticlesFromDB(){
+        let result = DBManager().FetchDataFromDB(entity: "NewsArticle")
+        switch result {
+        case .Success(let DBData) :
+            let articles = DBData
+            if articles.count != 0{
+            if selectedCategory == "" || selectedCategory == "For You" || selectedCategory == "All News"
+            {
+                self.filterNews(selectedCat: "All News" )
+                print("cat pressed is: for u")
+            }else{
+                self.filterNews(selectedCat: selectedCategory )
+            }
+            self.HomeNewsTV.reloadData()
+            }
+            else{
+                lblNonews.isHidden = false
+                activityIndicator.stopAnimating()
+            }
+        case .Failure(let errorMsg) :
+            print(errorMsg)
+        }
+    }
+    
+    func saveArticlesInDB(url: String){
+        DBManager().SaveDataDB(nextUrl: url){response in
+            if response == true{
+                self.fetchArticlesFromDB()
+            }
+        }
+    }
+    
+    func fetchBookmarkDataFromDB(){
+        let result = DBManager().FetchLikeBookmarkFromDB()
+        switch result {
+        case .Success(let DBData) :
+            if DBData.count == 0{
+                activityIndicator.stopAnimating()
+            }
+        case .Failure(let errorMsg) : break
+        }
+    }
+    
+    func saveBookmarkDataInDB(url: String){
+        DBManager().SaveBookmarkArticles(){response in
+            if response == true{
+                self.fetchBookmarkDataFromDB()
+            }
+        }
+    }
+    
+    func saveLikeDataInDB(){
+        DBManager().SaveLikeDislikeArticles(){response in
+            if response == true{
+                 self.fetchBookmarkDataFromDB()
+                print("like dislike status has been saved in DB")
+            }
+        }
+    }
+
     @objc private func darkModeEnabled(_ notification: Notification) {
         NightNight.theme = .night
         HomeNewsTV.backgroundColor = colorConstants.grayBackground3
@@ -112,7 +163,7 @@ class HomeVC: UIViewController{
     }
     
     @objc func refreshNews(refreshControl: UIRefreshControl) {
-        ArticlesAPICall()
+        FetchArticlesAPICall()
         refreshControl.endRefreshing()
     }
     
@@ -124,12 +175,13 @@ class HomeVC: UIViewController{
             self.appDelegate?.persistentContainer.viewContext
         do {
             self.ShowArticle = (try managedContext?.fetch(fetchRequest))! as! [NewsArticle]
+            print(self.ShowArticle)
         }
         catch {
             print("error executing fetch request: \(error)")
         }
-        
     }
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
@@ -139,8 +191,15 @@ class HomeVC: UIViewController{
         else{
             selectedCategory = tabBarTitle
         }
-        selectedCategory = selectedCategory.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)!
-        ArticlesAPICall()
+       
+        coredataRecordCount = DBManager().IsCoreDataEmpty(entity: "NewsArticle")
+        if self.coredataRecordCount != 0{
+            self.fetchArticlesFromDB()
+        }
+    }
+    
+    func FetchArticlesAPICall(){
+        saveArticlesInDB(url:  APPURL.ArticlesByCategoryURL + "\(selectedCategory)" )
     }
     
     func ArticlesAPICall(){
@@ -205,20 +264,36 @@ class HomeVC: UIViewController{
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
+    
+    func background(work: @escaping () -> ()) {
+        DispatchQueue.global(qos: .userInitiated).async {
+            work()
+        }
+    }
+    
+    func main(work: @escaping () -> ()) {
+        DispatchQueue.main.async {
+            work()
+        }
+    }
 }
 
 extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelegate{
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return (articlesArr.count != 0) ? self.articlesArr.count : 0
+        if ShowArticle.count == 0{
+            lblNonews.isHidden = false
+            activityIndicator.stopAnimating()
+        }
+        return (ShowArticle.count != 0) ? self.ShowArticle.count : 0
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let newsDetailvc:NewsDetailVC = storyboard.instantiateViewController(withIdentifier: "NewsDetailID") as! NewsDetailVC
         newsDetailvc.newsCurrentIndex = indexPath.row
-        newsDetailvc.articleArr = articlesArr
-        newsDetailvc.articleId = articlesArr[indexPath.row].article_id!
-        UserDefaults.standard.set("", forKey: "isSearch")
+        newsDetailvc.ShowArticle = ShowArticle as! [NewsArticle]
+        newsDetailvc.articleId = Int(ShowArticle[indexPath.row].article_id)
+        UserDefaults.standard.set("home", forKey: "isSearch")
         present(newsDetailvc, animated: true, completion: nil)
     }
     
@@ -238,9 +313,9 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
         dateFormatter.timeZone = NSTimeZone(name: "UTC")! as TimeZone
         cell.lblSource.textColor = colorConstants.txtDarkGrayColor
         cell.lblTimesAgo.textColor = colorConstants.txtDarkGrayColor
-        //display data using API
-        if articlesArr.count > 0{
-            let currentArticle = articlesArr[indexPath.row]
+        //display data from DB
+        if ShowArticle.count != 0{
+            let currentArticle = ShowArticle[indexPath.row]
             cell.lblNewsHeading.text = currentArticle.title
             cell.lblSource.text = currentArticle.source
             let newDate = dateFormatter.date(from: currentArticle.published_on!)
@@ -248,6 +323,7 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
             cell.lblTimesAgo.text = agoDate
             cell.imgNews.sd_setImage(with: URL(string: currentArticle.imageURL!), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
         }
+        
         let textSizeSelected = UserDefaults.standard.value(forKey: "textSize") as! Int
         if textSizeSelected == 0{
             cell.lblSource.font = FontConstants.smallFontContent
@@ -287,11 +363,12 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
         }
         
         activityIndicator.stopAnimating()
+        lblNonews.isHidden = true
         return cell
     }
     
     //check whether tableview scrolled up or down
-    func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
+   /* func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
         if targetContentOffset.pointee.y < scrollView.contentOffset.y {
             if nextURL != "" {
                 APICall().loadNewsbyCategoryAPI(url: nextURL){
@@ -328,7 +405,7 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
                 }
             }
         }
-    }
+    }*/
 }
 
 extension HomeVC: IndicatorInfoProvider{

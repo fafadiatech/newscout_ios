@@ -37,11 +37,13 @@
 		268C112521E4C36E00C76B9C /* BookmarkTVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 268C112421E4C36E00C76B9C /* BookmarkTVCell.swift */; };
 		268C112721E5DF0700C76B9C /* SearchAutoCompleteTVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 268C112621E5DF0700C76B9C /* SearchAutoCompleteTVCell.swift */; };
 		2690F3CC21BF8C12003E65CA /* SettingsTVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2690F3CB21BF8C12003E65CA /* SettingsTVCell.swift */; };
+		269A53D622016D6B0031DD78 /* BookmarkDetailVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 269A53D522016D6B0031DD78 /* BookmarkDetailVC.swift */; };
 		26ACEA94216733BA000EF3C7 /* CategoryListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26ACEA93216733BA000EF3C7 /* CategoryListVC.swift */; };
 		26ACEA96216738BB000EF3C7 /* CategoryListTVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26ACEA95216738BB000EF3C7 /* CategoryListTVCell.swift */; };
 		26C24721219D95D000A87A3B /* GmailCredentials.plist in Resources */ = {isa = PBXBuildFile; fileRef = 26C24720219D95CF00A87A3B /* GmailCredentials.plist */; };
 		26C24723219DA6C200A87A3B /* ForgotPasswordVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26C24722219DA6C200A87A3B /* ForgotPasswordVC.swift */; };
 		26D3C90A21CBAC9C003F7331 /* AVPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26D3C90921CBAC9C003F7331 /* AVPlayerView.swift */; };
+		26F9A0FB2209B4EC008694BC /* Reachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26F9A0FA2209B4EC008694BC /* Reachability.swift */; };
 		40DAD2A94E0870B8278E705F /* Pods_NewsAppUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53DC2E5EA9235D86628350C7 /* Pods_NewsAppUITests.framework */; };
 		421ADFB92156407400C00F6F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 421ADFB82156407400C00F6F /* AppDelegate.swift */; };
 		421ADFBB2156407400C00F6F /* HomeVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 421ADFBA2156407400C00F6F /* HomeVC.swift */; };
@@ -118,11 +120,13 @@
 		268C112421E4C36E00C76B9C /* BookmarkTVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkTVCell.swift; sourceTree = "<group>"; };
 		268C112621E5DF0700C76B9C /* SearchAutoCompleteTVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchAutoCompleteTVCell.swift; sourceTree = "<group>"; };
 		2690F3CB21BF8C12003E65CA /* SettingsTVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTVCell.swift; sourceTree = "<group>"; };
+		269A53D522016D6B0031DD78 /* BookmarkDetailVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkDetailVC.swift; sourceTree = "<group>"; };
 		26ACEA93216733BA000EF3C7 /* CategoryListVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryListVC.swift; sourceTree = "<group>"; };
 		26ACEA95216738BB000EF3C7 /* CategoryListTVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryListTVCell.swift; sourceTree = "<group>"; };
 		26C24720219D95CF00A87A3B /* GmailCredentials.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = GmailCredentials.plist; sourceTree = "<group>"; };
 		26C24722219DA6C200A87A3B /* ForgotPasswordVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForgotPasswordVC.swift; sourceTree = "<group>"; };
 		26D3C90921CBAC9C003F7331 /* AVPlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AVPlayerView.swift; sourceTree = "<group>"; };
+		26F9A0FA2209B4EC008694BC /* Reachability.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Reachability.swift; sourceTree = "<group>"; };
 		2F9C18092C8836EA83BB9B53 /* Pods-NewsAppTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NewsAppTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-NewsAppTests/Pods-NewsAppTests.release.xcconfig"; sourceTree = "<group>"; };
 		421ADFB52156407400C00F6F /* NewsApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NewsApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		421ADFB82156407400C00F6F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -297,6 +301,7 @@
 		421ADFEA2156553500C00F6F /* Controller */ = {
 			isa = PBXGroup;
 			children = (
+				269A53D522016D6B0031DD78 /* BookmarkDetailVC.swift */,
 				4266D16221EEF4DA00CBD61A /* AboutUsVC.swift */,
 				268C112221E4C0F200C76B9C /* BookmarkVC.swift */,
 				26C24722219DA6C200A87A3B /* ForgotPasswordVC.swift */,
@@ -341,6 +346,7 @@
 				263F2D8E216B2DEE00764C45 /* DataModel.swift */,
 				7E1D139C216CCD9000FE342A /* news.json */,
 				42D12BF3215A0FA60085EF12 /* common.swift */,
+				26F9A0FA2209B4EC008694BC /* Reachability.swift */,
 				427B430A2180840E00F00269 /* Helper.swift */,
 			);
 			path = Model;
@@ -663,6 +669,7 @@
 				26D3C90A21CBAC9C003F7331 /* AVPlayerView.swift in Sources */,
 				42D12BF4215A0FA60085EF12 /* common.swift in Sources */,
 				263F2D8F216B2DEE00764C45 /* DataModel.swift in Sources */,
+				269A53D622016D6B0031DD78 /* BookmarkDetailVC.swift in Sources */,
 				263F2D9C216B7FC700764C45 /* ProfileVC.swift in Sources */,
 				421ADFF22156755100C00F6F /* SuggestedNewsCVCell.swift in Sources */,
 				423F0A502170CF19001D52B5 /* ChangePasswordVC.swift in Sources */,
@@ -674,6 +681,7 @@
 				261AA133217F40F20044585C /* DataManager.swift in Sources */,
 				4266D16321EEF4DA00CBD61A /* AboutUsVC.swift in Sources */,
 				268C112521E4C36E00C76B9C /* BookmarkTVCell.swift in Sources */,
+				26F9A0FB2209B4EC008694BC /* Reachability.swift in Sources */,
 				265E218621649ACE0053E5A0 /* SettingsVC.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

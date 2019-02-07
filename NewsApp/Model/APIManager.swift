@@ -61,7 +61,8 @@ class APICall{
         else{
             headers = ["Authorization": ""]
         }
-        Alamofire.request(url,method: .get, headers: headers).responseString{
+        var newurl = url.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)!
+        Alamofire.request(newurl,method: .get, headers: headers).responseString{
             response in
             if(response.result.isSuccess){
                 if let data = response.data {
@@ -299,6 +300,14 @@ class APICall{
                             defaults.removeObject(forKey: "user_id")
                             defaults.removeObject(forKey: "email")
                             defaults.synchronize()
+                            var categoryList : [String] = []
+                            
+                             categoryList = UserDefaults.standard.value(forKey: "categories") as! [String]
+                            categoryList.remove(at: 0)
+                            if !categoryList.contains("Trending"){
+                            categoryList.insert("Trending", at: 0)
+                            }
+                            UserDefaults.standard.setValue(categoryList, forKey: "categories")
                             completion(jsonData.header.status,jsonData.body!.Msg!)
                         }
                     }
@@ -599,7 +608,7 @@ class APICall{
         else{
             method = .delete
         }
-        Alamofire.request(url,method: method, parameters: param, headers: headers).responseString{
+        Alamofire.request(url,method: method, parameters: param,encoding: URLEncoding.httpBody, headers: headers).responseString{
             response in
             if(response.result.isSuccess){
                 
@@ -612,7 +621,14 @@ class APICall{
                             completion(SaveRemoveCategoryResult.Success((jsonData.body?.Msg)!))
                         }
                         else{
-                            completion(SaveRemoveCategoryResult.Failure((jsonData.errors?.Msg)!))
+                            var error_msg = ""
+                           if response.response?.statusCode == 400{
+                            error_msg = (jsonData.errors?.Msg)!
+                            }
+                           else if response.response?.statusCode == 404{
+                            error_msg = (jsonData.errors!.invalid_credentials!)
+                            }
+                        completion(SaveRemoveCategoryResult.Failure(error_msg))
                         }
                     }
                     catch {
@@ -628,4 +644,45 @@ class APICall{
         }
     }
     
+    func getLikeBookmarkList(url: String, _ completion : @escaping (LikeBookmarkListAPIResult) -> ()){
+        
+        var headers : [String: String]
+        if UserDefaults.standard.value(forKey: "token") != nil{
+            let token = "Token " + "\(UserDefaults.standard.value(forKey: "token")!)"
+            headers = ["Authorization": token]
+        }
+        else if UserDefaults.standard.value(forKey: "googleToken") != nil{
+            let token = "Token " + "\(UserDefaults.standard.value(forKey: "googleToken")!)"
+            headers = ["Authorization": token]
+        }
+        else if UserDefaults.standard.value(forKey: "FBToken") != nil{
+            let token = "Token " + "\(UserDefaults.standard.value(forKey: "FBToken")!)"
+            headers = ["Authorization": token]
+        }
+        else{
+            headers = ["Authorization": ""]
+        }
+       
+        Alamofire.request(url,method: .get,headers: headers).responseJSON{
+            response in
+            if(response.result.isSuccess){
+                if let data = response.data {
+                    let jsonDecoder = JSONDecoder()
+                    do {
+                        let jsonData = try jsonDecoder.decode(GetLikeBookmarkList.self, from: data)
+                        completion(LikeBookmarkListAPIResult.Success(jsonData))
+                    }
+                    catch {
+                        completion(LikeBookmarkListAPIResult.Failure(error.localizedDescription
+                        ))
+                    }
+                }
+            }
+            else{
+                if let err = response.result.error as? URLError, err.code == .notConnectedToInternet {
+                    completion(LikeBookmarkListAPIResult.Failure(Constants.InternetErrorMsg))
+                }
+            }
+        }
+    }
 }

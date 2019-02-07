@@ -9,6 +9,7 @@
 import UIKit
 import MaterialComponents.MaterialActivityIndicator
 import NightNight
+import SDWebImage
 
 class BookmarkVC: UIViewController {
     @IBOutlet weak var lblBookmark: UILabel!
@@ -20,7 +21,9 @@ class BookmarkVC: UIViewController {
     let textSizeSelected = UserDefaults.standard.value(forKey: "textSize") as! Int
     var bookmarkedArticlesArr = [Article]()
     var nextURL = ""
-   
+    var ShowArticle = [NewsArticle]()
+    var bookmarkArticles = [BookmarkArticles]()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         NotificationCenter.default.addObserver(self, selector: #selector(darkModeEnabled(_:)), name: .darkModeEnabled, object: nil)
@@ -33,7 +36,12 @@ class BookmarkVC: UIViewController {
         view.addSubview(activityIndicator)
         activityIndicator.startAnimating()
         if UserDefaults.standard.value(forKey: "token") != nil || UserDefaults.standard.value(forKey: "FBToken") != nil || UserDefaults.standard.value(forKey: "googleToken") != nil{
-            BookmarkAPICall()
+            let coredataRecordCount = DBManager().IsCoreDataEmpty(entity: "BookmarkArticles")
+            if coredataRecordCount != 0{
+                fetchBookmarkDataFromDB()
+            }else{
+                saveBookmarkDataInDB(url : APPURL.bookmarkedArticlesURL)
+            }
         }
         else{
             activityIndicator.stopAnimating()
@@ -80,8 +88,30 @@ class BookmarkVC: UIViewController {
         return true
     }
     
-    func showMsg(title: String, msg : String)
-    {
+    func fetchBookmarkDataFromDB(){
+        let result = DBManager().FetchLikeBookmarkFromDB()
+        switch result {
+        case .Success(let DBData) :
+            ShowArticle = DBData
+            if ShowArticle.count == 0{
+                activityIndicator.stopAnimating()
+                self.bookmarkResultTV.makeToast("No news found", duration: 3.0, position: .center)
+            }
+            self.bookmarkResultTV.reloadData()
+        case .Failure(let errorMsg) :
+             self.bookmarkResultTV.makeToast(errorMsg, duration: 1.0, position: .center)
+        }
+    }
+    
+    func saveBookmarkDataInDB(url: String){
+        DBManager().SaveBookmarkArticles(){response in
+            if response == true{
+                self.fetchBookmarkDataFromDB()
+            }
+        }
+    }
+    
+    func showMsg(title: String, msg : String){
         let alertController = UIAlertController(title: title, message: msg, preferredStyle: .alert)
         if UI_USER_INTERFACE_IDIOM() == .pad
         {
@@ -98,15 +128,13 @@ class BookmarkVC: UIViewController {
         alertController.addAction(action1)
         
         let action2 = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.default) { (action:UIAlertAction) in
-            print("You've pressed cancel");
         }
         alertController.addAction(action2)
         
         self.present(alertController, animated: true, completion: nil)
     }
     
-    func changeFont()
-    {
+    func changeFont(){
         if textSizeSelected == 0{
             lblBookmark.font = FontConstants.NormalFontTitleMedium
         }
@@ -118,8 +146,7 @@ class BookmarkVC: UIViewController {
         }
     }
     
-    func BookmarkAPICall()
-    {
+    func BookmarkAPICall(){
         APICall().BookmarkedArticlesAPI(url: APPURL.bookmarkedArticlesURL){ response in
             switch response {
             case .Success(let data) :
@@ -136,7 +163,6 @@ class BookmarkVC: UIViewController {
                     }
                 }
             case .Failure(let errormessage) :
-                print(errormessage)
                 self.activityIndicator.startAnimating()
                 self.bookmarkResultTV.makeToast(errormessage, duration: 2.0, position: .center)
             case .Change(let code) :
@@ -144,6 +170,7 @@ class BookmarkVC: UIViewController {
             }
         }
     }
+ 
     
     @objc func refreshBookmarkedNews(refreshControl: UIRefreshControl) {
         if UserDefaults.standard.value(forKey: "token") != nil || UserDefaults.standard.value(forKey: "FBToken") != nil || UserDefaults.standard.value(forKey: "googleToken") != nil{
@@ -153,6 +180,7 @@ class BookmarkVC: UIViewController {
     }
     
     @IBAction func btnBackActn(_ sender: Any) {
+        UserDefaults.standard.set("", forKey: "isSearch")
         self.view.window!.rootViewController?.dismiss(animated: false, completion: nil)
     }
     
@@ -160,17 +188,16 @@ class BookmarkVC: UIViewController {
 
 extension BookmarkVC: UITableViewDelegate, UITableViewDataSource{
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return (bookmarkedArticlesArr.count != 0) ? bookmarkedArticlesArr.count : 0
+        return (ShowArticle.count != 0) ? ShowArticle.count : 0
     }
     
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        print("This cell  was selected: \(indexPath.row)")
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath){
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        let newsDetailvc:NewsDetailVC = storyboard.instantiateViewController(withIdentifier: "NewsDetailID") as! NewsDetailVC
+         let newsDetailvc:NewsDetailVC = storyboard.instantiateViewController(withIdentifier: "NewsDetailID") as! NewsDetailVC
         newsDetailvc.newsCurrentIndex = indexPath.row
-        newsDetailvc.articleArr = bookmarkedArticlesArr
-        newsDetailvc.articleId = bookmarkedArticlesArr[indexPath.row].article_id!
+        newsDetailvc.ShowArticle = ShowArticle
         UserDefaults.standard.set("bookmark", forKey: "isSearch")
+        newsDetailvc.articleId = Int(ShowArticle[indexPath.row].article_id)
         present(newsDetailvc, animated: true, completion: nil)
     }
     
@@ -188,14 +215,14 @@ extension BookmarkVC: UITableViewDelegate, UITableViewDataSource{
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
         dateFormatter.timeZone = NSTimeZone(name: "UTC")! as TimeZone
-        if bookmarkedArticlesArr.count != 0{
-            let currentArticle = bookmarkedArticlesArr[indexPath.row]
+        if ShowArticle.count != 0{
+            let currentArticle = ShowArticle[indexPath.row]
             cell.lblSource.text = currentArticle.source
             let newDate = dateFormatter.date(from: currentArticle.published_on!)
             let agoDate = Helper().timeAgoSinceDate(newDate!)
             cell.lbltimeAgo.text = agoDate
             cell.lblNewsDescription.text = currentArticle.title
-            cell.imgNews.downloadedFrom(link: "\(currentArticle.imageURL!)")
+            cell.imgNews.sd_setImage(with: URL(string: currentArticle.imageURL!), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
         }
         
         if textSizeSelected == 0{
@@ -214,7 +241,6 @@ extension BookmarkVC: UITableViewDelegate, UITableViewDataSource{
             cell.lbltimeAgo.font = FontConstants.NormalFontContent
             cell.lblNewsDescription.font = FontConstants.NormalFontHeadingBold
         }
-        activityIndicator.stopAnimating()
         let darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
         if  darkModeStatus == true{
             cell.ViewCellBackground.backgroundColor = colorConstants.grayBackground2
@@ -229,12 +255,12 @@ extension BookmarkVC: UITableViewDelegate, UITableViewDataSource{
         if cell.imgNews.image == nil{
             cell.imgNews.image = UIImage(named: "NoImage.png")
         }
+        activityIndicator.stopAnimating()
         return cell
     }
     //check whether tableview scrolled up or down
     func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
         if targetContentOffset.pointee.y < scrollView.contentOffset.y {
-            print("it's going up")
             if nextURL != "" {
                 self.activityIndicator.startAnimating()
                 APICall().BookmarkedArticlesAPI(url: nextURL){ response in
@@ -252,7 +278,6 @@ extension BookmarkVC: UITableViewDelegate, UITableViewDataSource{
                             self.bookmarkResultTV.reloadData()
                         }
                     case .Failure(let errormessage) :
-                        print(errormessage)
                         self.activityIndicator.startAnimating()
                         self.bookmarkResultTV.makeToast(errormessage, duration: 2.0, position: .center)
                     case .Change(let code):

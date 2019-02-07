@@ -115,6 +115,8 @@ struct APPURL {
         static let changePassword = Domains.version + "change-password/"
         static let bookmarkedArticles = Domains.version + "bookmark-articles/"
         static let saveRemoveCategory = Domains.version + "categories/save-remove/"
+        static let getLikeList = Domains.version + "articles/like-news-list/"
+        static let getBookmarkList = Domains.version + "bookmark-articles/bookmark-news-list/"
     }
     
     static let ArticlesURL = Domains.Local + Routes.Articles
@@ -132,6 +134,8 @@ struct APPURL {
     static let changePasswordURL = Domains.Local + Routes.changePassword
     static let bookmarkedArticlesURL = Domains.Local + Routes.bookmarkedArticles
     static let saveRemoveCategoryURL = Domains.Local + Routes.saveRemoveCategory
+    static let getLikeListURL = Domains.Local + Routes.getLikeList
+    static let getBookmarkListURL = Domains.Local + Routes.getBookmarkList
 }
 
 

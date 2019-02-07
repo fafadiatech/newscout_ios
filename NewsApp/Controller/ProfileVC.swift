@@ -22,13 +22,6 @@ class ProfileVC: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        //round border corner of forgot pswd and delete acnt btn
-        // making profile image button circular
-//        btnChangePswd.layer.cornerRadius = 15
-//        btnChangePswd.layer.borderWidth = 0
-//        btnImgProfile.layer.cornerRadius = 0.5 * btnImgProfile.bounds.size.width
-//        btnImgProfile.clipsToBounds = true
-       // btnImgProfile.isHidden = true
         btnImgProfile.setImage(UIImage(named:"logo"), for: .normal)
         btnChangePswd.backgroundColor = colorConstants.redColor
         btnChangePswd.setTitleColor(colorConstants.whiteColor, for: .normal)
@@ -51,7 +44,6 @@ class ProfileVC: UIViewController {
     }
     
     @objc private func darkModeEnabled(_ notification: Notification) {
-        // Write your dark mode code here
         NightNight.theme = .night
         viewProfileDetails.backgroundColor = colorConstants.grayBackground3
         lblName.textColor = .white
@@ -61,7 +53,6 @@ class ProfileVC: UIViewController {
     }
     
     @objc private func darkModeDisabled(_ notification: Notification) {
-        // Write your non-dark mode code here
         NightNight.theme = .normal
     }
     
@@ -76,7 +67,6 @@ class ProfileVC: UIViewController {
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
     
     @IBAction func btnChangePswdActn(_ sender: Any) {
@@ -109,7 +99,6 @@ class ProfileVC: UIViewController {
         alertController.addAction(action1)
         
         let action2 = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.default) { (action:UIAlertAction) in
-            print("You've pressed cancel");
         }
         alertController.addAction(action2)
         
