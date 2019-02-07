@@ -143,6 +143,7 @@ extension SearchVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDele
         else{
             newsDetailvc.ShowArticle = results
             newsDetailvc.articleId = Int(results[indexPath.row].article_id)
+    
         }
         UserDefaults.standard.set("search", forKey: "isSearch")
         present(newsDetailvc, animated: true, completion: nil)
@@ -225,9 +226,9 @@ extension SearchVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDele
                     switch response {
                     case .Success(let data) :
                         if data.count > 0 {
-                            self.searchArticlesArr.append(contentsOf: data[0].body.articles)
-                            if data[0].body.next != nil{
-                                self.nextURL = data[0].body.next!
+                            self.searchArticlesArr.append(contentsOf: data[0].body!.articles)
+                            if data[0].body!.next != nil{
+                                self.nextURL = data[0].body!.next!
                             }
                             else{
                                 self.nextURL = ""
@@ -283,16 +284,21 @@ extension SearchVC: UITextFieldDelegate
                 UserDefaults.standard.set(search, forKey: "searchTxt")
             
                 let url = APPURL.SearchURL + search
-                APICall().loadSearchAPI(url: url){ (Status, response) in
+                DBManager().SaveSearchDataDB(nextUrl: url){response in
+                    if response == true{
+                        self.fetchArticlesFromDB()
+                    }
+                }
+               /* APICall().loadSearchAPI(url: url){ (Status, response) in
                     switch response {
                     case .Success(let data) :
                         if data.count > 0{
-                            self.searchArticlesArr = data[0].body.articles
+                            self.searchArticlesArr = data[0].body!.articles
                              self.recordCount = self.searchArticlesArr.count
-                            if data[0].body.next != nil{
-                                self.nextURL = data[0].body.next!
+                            if data[0].body!.next != nil{
+                                self.nextURL = data[0].body!.next!
                             }
-                            if data[0].body.articles.count == 0{
+                            if data[0].body!.articles.count == 0{
                                 self.lblNoNews.isHidden = false
                                 self.lblNoNews.text = "No news found"
                             }
@@ -314,7 +320,7 @@ extension SearchVC: UITextFieldDelegate
                         print(code)
                     }
                     self.activityIndicator.stopAnimating()
-                }
+                }*/
             }
             else{
                 self.searchResultTV.makeToast("Enter keyword to search", duration: 2.0, position: .center)
@@ -328,6 +334,19 @@ extension SearchVC: UITextFieldDelegate
         return true
     }
     
+    func fetchArticlesFromDB(){
+        
+        let result = DBManager().FetchDataFromDB(entity: "SearchArticles")
+        switch result {
+        case .Success(let DBData) :
+            results = DBData
+            recordCount = results.count
+            searchResultTV.reloadData()
+        
+        case .Failure(let errorMsg) :
+            print(errorMsg)
+        }
+    }
     func fetchResult(){
         let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "NewsArticle")
         fetchRequest.predicate = NSPredicate(format: "title CONTAINS[c] %@ OR blurb CONTAINS[c] %@",txtSearch.text!, txtSearch.text!)
@@ -337,8 +356,11 @@ extension SearchVC: UITextFieldDelegate
             results = (try managedContext?.fetch(fetchRequest))
                 as! [NewsArticle]
             recordCount = results.count
-    
             searchResultTV.reloadData()
+            
+            if recordCount == 0 {
+                self.searchResultTV.makeToast("News does not exist", duration: 2.0, position: .center)
+            }
         }
         catch {
             print("error executing fetch request: \(error)")

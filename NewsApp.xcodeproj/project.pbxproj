@@ -346,8 +346,8 @@
 				263F2D8E216B2DEE00764C45 /* DataModel.swift */,
 				7E1D139C216CCD9000FE342A /* news.json */,
 				42D12BF3215A0FA60085EF12 /* common.swift */,
-				26F9A0FA2209B4EC008694BC /* Reachability.swift */,
 				427B430A2180840E00F00269 /* Helper.swift */,
+				26F9A0FA2209B4EC008694BC /* Reachability.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";

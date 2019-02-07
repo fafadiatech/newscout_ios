@@ -207,11 +207,11 @@ class HomeVC: UIViewController{
             switch response {
             case .Success(let data) :
                 if data.count > 0{
-                    self.articlesArr = data[0].body.articles
-                    if data[0].body.next != nil{
-                        self.nextURL = data[0].body.next!
+                    self.articlesArr = data[0].body!.articles
+                    if data[0].body!.next != nil{
+                        self.nextURL = data[0].body!.next!
                     }
-                    if data[0].body.articles.count == 0{
+                    if data[0].body!.articles.count == 0{
                         self.activityIndicator.stopAnimating()
                         self.lblNonews.isHidden = false
                     }

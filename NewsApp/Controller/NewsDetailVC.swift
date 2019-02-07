@@ -122,6 +122,8 @@ class NewsDetailVC: UIViewController {
         if  darkModeStatus == true{
             changeTheme()
         }
+       
+        
         //newsDetailAPICall(currentIndex: articleId)
         ShowNews(currentIndex: newsCurrentIndex)
         let swipeUp = UISwipeGestureRecognizer(target: self, action: #selector(self.respondToSwipeGesture))
@@ -563,6 +565,92 @@ class NewsDetailVC: UIViewController {
             
            
         }
+        else if articleArr.count != 0 {
+            let currentArticle = articleArr[currentIndex]
+            let newDate = dateFormatter.date(from: currentArticle.published_on!)
+            let agoDate = Helper().timeAgoSinceDate(newDate!)
+            articleId = Int(currentArticle.article_id)
+            lblNewsHeading.text = currentArticle.title
+            txtViewNewsDesc.text = currentArticle.blurb
+            lblSource.text = currentArticle.source
+            lblTimeAgo.text = agoDate
+            sourceURL = currentArticle.url!
+            
+            let checkImg = self.checkImageOrVideo(url: currentArticle.imageURL!)
+            if checkImg == false{
+                DispatchQueue.global(qos: .userInitiated).async {
+                    self.activityIndicator.startAnimating()
+                    let newURL = NSURL(string: currentArticle.imageURL!)
+                    if let thumbnail = self.createThumbnailOfVideoFromRemoteUrl(url: "https://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4"){
+                        self.imgNews.image = thumbnail
+                        let url = URL(string: "https://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4")
+                        let playerItem:AVPlayerItem = AVPlayerItem(url: url!)
+                        self.player = AVPlayer(playerItem: playerItem)
+                        
+                        self.avPlayerView.isHidden = false
+                        let avPlayer = AVPlayerLayer(player: self.player!)
+                        let castedLayer = self.avPlayerView.layer as! AVPlayerLayer
+                        castedLayer.player = self.player
+                        castedLayer.videoGravity = AVLayerVideoGravity.resizeAspect
+                        self.avPlayerView.layoutIfNeeded()
+                        if UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad{
+                            self.playbackSlider = UISlider(frame:CGRect(x:0, y: self.avPlayerView.bounds.size.height - 40, width:self.avPlayerView.bounds.size.width, height: 20))
+                        }
+                        else{
+                            self.playbackSlider = UISlider(frame:CGRect(x:0, y: self.avPlayerView.bounds.size.height - 100, width:self.avPlayerView.bounds.size.width, height: 20))
+                        }
+                        self.playbackSlider.minimumValue = 0
+                        
+                        
+                        let duration : CMTime = playerItem.asset.duration
+                        let seconds : Float64 = CMTimeGetSeconds(duration)
+                        
+                        self.playbackSlider.maximumValue = Float(seconds)
+                        self.playbackSlider.isContinuous = true
+                        self.playbackSlider.tintColor = UIColor.green
+                        
+                        self.playbackSlider.addTarget(self, action: #selector(NewsDetailVC.playbackSliderValueChanged(_:)), for: .valueChanged)
+                        self.avPlayerView.addSubview(self.playbackSlider)
+                        self.btnPlayVideo.isHidden = false
+                        self.activityIndicator.stopAnimating()
+                    }
+                    DispatchQueue.main.async {
+                        print("Time consuming task has completed. From here we are allowed to update user interface.")
+                    }
+                }
+            }
+                
+            else{
+                self.btnPlayVideo.isHidden = true
+                self.avPlayerView.isHidden = true
+                self.imgNews.sd_setImage(with: URL(string: currentArticle.imageURL!), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
+            }
+           /* if UserDefaults.standard.value(forKey: "token") != nil{
+                if currentArticle == 0 {
+                    btnLike.setImage(UIImage(named: "thumb_up_filled.png"), for: .normal)
+                    btnDislike.setImage(UIImage(named: "thumb_down.png"), for: .normal)
+                }
+                else if currentArticle.likeDislike?.isLike == 1{
+                    btnLike.setImage(UIImage(named: "thumb_up.png"), for: .normal)
+                    btnDislike.setImage(UIImage(named: "thumb_down_filled.png"), for: .normal)
+                }
+                else{
+                    btnLike.setImage(UIImage(named: "thumb_up.png"), for: .normal)
+                    btnDislike.setImage(UIImage(named: "thumb_down.png"), for: .normal)
+                }
+                if currentArticle.bookmark?.isBookmark == 1 {
+                    setBookmarkImg()
+                }else{
+                    ResetBookmarkImg()
+                }
+            }else{
+                btnLike.setImage(UIImage(named: "thumb_up.png"), for: .normal)
+                btnDislike.setImage(UIImage(named: "thumb_down.png"), for: .normal)
+                ResetBookmarkImg()
+            }
+            
+            */
+        }
         if imgNews.image == nil{
             imgNews.image = UIImage(named: "NoImage.png")
         }
@@ -822,7 +910,7 @@ extension NewsDetailVC:UICollectionViewDelegate, UICollectionViewDataSource, UIC
         return CGSize(width: width, height: 145.0)
     }
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return (self.RecomArticleData.count != 0) ? self.RecomArticleData[0].body.articles.count + 1 : 0
+        return (self.RecomArticleData.count != 0) ? self.RecomArticleData[0].body!.articles.count + 1 : 0
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -840,7 +928,7 @@ extension NewsDetailVC:UICollectionViewDelegate, UICollectionViewDataSource, UIC
             cell.imgNews.isHidden = false
             cell.lblTitle.isHidden = false
             cell.lblMoreStories.isHidden = true
-            let currentArticle =  RecomArticleData[0].body.articles[indexPath.row - 1]
+            let currentArticle =  RecomArticleData[0].body!.articles[indexPath.row - 1]
             cell.lblTitle.text = currentArticle.title
             if currentArticle.imageURL != nil{
                 

@@ -31,7 +31,7 @@ class DBManager{
                 print(code)
             }
             if self.ArticleData.count != 0{
-                for news in self.ArticleData[0].body.articles{ 
+                for news in self.ArticleData[0].body!.articles{ 
                     if  self.someEntityExists(id: Int(news.article_id!), entity: "NewsArticle") == false
                     {
                         let newArticle = NewsArticle(context: managedContext!)
@@ -47,7 +47,7 @@ class DBManager{
                         self.saveBlock()
                     }
                 }
-                if self.ArticleData[0].body.next != nil{
+                if self.ArticleData[0].body!.next != nil{
                     // self.someEntityExists(id: 0 , entity: String)
                 }
                 completion(true)
@@ -60,7 +60,7 @@ class DBManager{
     //check for existing entry in DB
     func someEntityExists(id: Int, entity : String) -> Bool {
         let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: entity)
-        if entity == "NewsArticle" || entity == "BookmarkArticles" || entity == "LikeDislike"{
+        if entity == "NewsArticle" || entity == "BookmarkArticles" || entity == "LikeDislike" || entity == "SearchArticles"{
             fetchRequest.predicate = NSPredicate(format: "article_id == \(id)")
         }
         else{
@@ -477,4 +477,45 @@ class DBManager{
             print("Could not save \(error)")
         }
     }
+   
+    func SaveSearchDataDB(nextUrl:String,_ completion : @escaping (Bool) -> ())
+    {
+        let managedContext = appDelegate?.persistentContainer.viewContext
+            APICall().loadSearchAPI(url: nextUrl){ (Status, response) in
+                switch response {
+                case .Success(let data) :
+                    self.ArticleData = data
+                    
+                case .Failure(let errormessage) :
+                    print(errormessage)
+                case .Change(let code):
+                    print(code)
+                }
+            }
+            if self.ArticleData.count != 0{
+                for news in self.ArticleData[0].body!.articles{
+                    if  self.someEntityExists(id: Int(news.article_id!), entity: "SearchArticles") == false
+                    {
+                        let newArticle = SearchArticles(context: managedContext!)
+                        newArticle.article_id = Int16(news.article_id!)
+                        newArticle.title = news.title
+                        newArticle.source = news.source!
+                        newArticle.imageURL = news.imageURL
+                        newArticle.source_url = news.url
+                        newArticle.published_on = news.published_on
+                        newArticle.blurb = news.blurb
+                        newArticle.category = news.category!
+                        
+                        self.saveBlock()
+                    }
+                }
+                if self.ArticleData[0].body!.next != nil{
+                    // self.someEntityExists(id: 0 , entity: String)
+                }
+                completion(true)
+            }else{
+                completion(false)
+            }
+        }
+    
 }

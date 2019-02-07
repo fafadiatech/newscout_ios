@@ -157,19 +157,22 @@ class APICall{
         Alamofire.request(url,method: .get).responseJSON{
             response in
             if(response.result.isSuccess){
-                if response.response?.statusCode == 200{
+                //if response.response?.statusCode == 200{
                     if let data = response.data {
                         let  jsonDecoder = JSONDecoder()
                         do {
                             let jsonData = try jsonDecoder.decode(ArticleStatus.self, from: data)
+                            if jsonData.header.status == "0" {
+                                completion(String((response.response?.statusCode)!), ArticleAPIResult.Failure((jsonData.errors?.Msg)!))
+                            }else{
                             completion(String((response.response?.statusCode)!), ArticleAPIResult.Success([jsonData]))
-                            
+                            }
                         }
                         catch {
                             completion(String((response.response?.statusCode)!), ArticleAPIResult.Failure(error as! String))
                         }
                     }
-                }
+               // }
                 else{
                     completion(String((response.response?.statusCode)!), ArticleAPIResult.Failure("\(response.response?.statusCode)"))
                 }

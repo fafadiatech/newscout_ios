@@ -11,7 +11,8 @@ import CoreData
 
 struct ArticleStatus : Decodable{
     let header : Header
-    var body: articleBody
+    var body: articleBody?
+    var errors : ErrorList?
 }
 
 struct articleBody : Decodable{
@@ -31,14 +32,14 @@ struct articleBody : Decodable{
 }
 
 struct Article: Decodable{
-    let article_id : Int!
-    let category : String?
-    let source: String?
-    let title : String?
-    let imageURL : String?
-    let url : String?
-    let published_on : String?
-    let blurb : String?
+    var article_id : Int!
+    var category : String?
+    var source: String?
+    var title : String?
+    var imageURL : String?
+    var url : String?
+    var published_on : String?
+    var blurb : String?
     
     enum CodingKeys: String, CodingKey{
         case article_id = "id"

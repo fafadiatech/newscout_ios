@@ -151,11 +151,11 @@ class BookmarkVC: UIViewController {
             switch response {
             case .Success(let data) :
                 if data.count > 0{
-                    self.bookmarkedArticlesArr = data[0].body.articles
-                    if data[0].body.next != nil{
-                        self.nextURL = data[0].body.next!
+                    self.bookmarkedArticlesArr = data[0].body!.articles
+                    if data[0].body!.next != nil{
+                        self.nextURL = data[0].body!.next!
                     }
-                    if data[0].body.articles.count == 0{
+                    if data[0].body!.articles.count == 0{
                         self.activityIndicator.stopAnimating()
                         self.bookmarkResultTV.makeToast("There is not any article bookmarked yet...", duration: 1.0, position: .center)
                     }else{
@@ -267,9 +267,9 @@ extension BookmarkVC: UITableViewDelegate, UITableViewDataSource{
                     switch response {
                     case .Success(let data) :
                         if data.count > 0{
-                            self.bookmarkedArticlesArr.append(contentsOf: data[0].body.articles)
-                            if data[0].body.next != nil{
-                                self.nextURL = data[0].body.next!
+                            self.bookmarkedArticlesArr.append(contentsOf: data[0].body!.articles)
+                            if data[0].body!.next != nil{
+                                self.nextURL = data[0].body!.next!
                             }
                             else{
                                 self.nextURL = ""
