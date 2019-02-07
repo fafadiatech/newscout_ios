@@ -58,7 +58,7 @@ class HomeVC: UIViewController{
         }
         //save and fetch data from DB
         selectedCategory = tabBarTitle
-        if UserDefaults.standard.value(forKey: "token") != nil || UserDefaults.standard.value(forKey: "FBToken") != nil || UserDefaults.standard.value(forKey: "googleToken") != nil{
+        if UserDefaults.standard.value(forKey: "token") != nil{
              if Reachability.isConnectedToNetwork(){
                  saveBookmarkDataInDB(url : APPURL.bookmarkedArticlesURL)
                 saveLikeDataInDB()

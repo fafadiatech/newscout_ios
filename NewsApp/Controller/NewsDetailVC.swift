@@ -537,7 +537,7 @@ class NewsDetailVC: UIViewController {
                 self.avPlayerView.isHidden = true
                 self.imgNews.sd_setImage(with: URL(string: currentArticle.imageURL!), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
             }
-            
+             if UserDefaults.standard.value(forKey: "token") != nil{
             if currentArticle.likeDislike?.isLike == 0 {
                 btnLike.setImage(UIImage(named: "thumb_up_filled.png"), for: .normal)
                 btnDislike.setImage(UIImage(named: "thumb_down.png"), for: .normal)
@@ -550,12 +550,18 @@ class NewsDetailVC: UIViewController {
                 btnLike.setImage(UIImage(named: "thumb_up.png"), for: .normal)
                 btnDislike.setImage(UIImage(named: "thumb_down.png"), for: .normal)
             }
-            
-            if currentArticle.bookmark?.isBookmark == 1 {
-                setBookmarkImg()
-            }else{
-                ResetBookmarkImg()
+                if currentArticle.bookmark?.isBookmark == 1 {
+                    setBookmarkImg()
+                }else{
+                    ResetBookmarkImg()
+                }
+             }else{
+                btnLike.setImage(UIImage(named: "thumb_up.png"), for: .normal)
+                btnDislike.setImage(UIImage(named: "thumb_down.png"), for: .normal)
+                 ResetBookmarkImg()
             }
+            
+           
         }
         if imgNews.image == nil{
             imgNews.image = UIImage(named: "NoImage.png")
