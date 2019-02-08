@@ -30,6 +30,8 @@ class SearchVC: UIViewController {
     let textSizeSelected = UserDefaults.standard.value(forKey: "textSize") as! Int
     var searchArticlesArr = [Article]()
     var recordCount = 0
+    var coredataRecordCount = 0
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         if UserDefaults.standard.value(forKey: "searchTxt") != nil{
@@ -49,6 +51,14 @@ class SearchVC: UIViewController {
         txtSearch.font = FontConstants.NormalFontContent
         lblTitle.textColor = colorConstants.whiteColor
         lblTitle.font = FontConstants.viewTitleFont
+        if UserDefaults.standard.value(forKey: "token") != nil{
+            
+            let BookmarkRecordCount = DBManager().IsCoreDataEmpty(entity: "BookmarkArticles")
+            let LikeRecordCount = DBManager().IsCoreDataEmpty(entity: "LikeDislike")
+            if BookmarkRecordCount != 0 || LikeRecordCount != 0{
+                fetchBookmarkDataFromDB()
+            }
+        }
     }
     
     @objc private func darkModeEnabled(_ notification: Notification) {
@@ -120,7 +130,31 @@ class SearchVC: UIViewController {
         UserDefaults.standard.set("", forKey: "isSearch")
         self.view.window!.rootViewController?.dismiss(animated: false, completion: nil)
     }
-    
+    func fetchBookmarkDataFromDB(){
+        let result = DBManager().FetchSearchLikeBookmarkFromDB()
+        switch result {
+        case .Success(let DBData) :
+            if DBData.count == 0{
+                activityIndicator.stopAnimating()
+            }
+        case .Failure(let errorMsg) : break
+        }
+    }
+//    func saveBookmarkDataInDB(url: String){
+//        DBManager().SaveBookmarkArticles(){response in
+//            if response == true{
+//                self.fetchBookmarkDataFromDB()
+//            }
+//        }
+//    }
+//    func saveLikeDataInDB(){
+//        DBManager().SaveLikeDislikeArticles(){response in
+//            if response == true{
+//                self.fetchBookmarkDataFromDB()
+//                print("like dislike status has been saved in DB")
+//            }
+//        }
+//    }
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
@@ -136,22 +170,15 @@ extension SearchVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDele
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let newsDetailvc:NewsDetailVC = storyboard.instantiateViewController(withIdentifier: "NewsDetailID") as! NewsDetailVC
         newsDetailvc.newsCurrentIndex = indexPath.row
-        if searchArticlesArr.count != 0 {
-        newsDetailvc.articleArr = searchArticlesArr
-        newsDetailvc.articleId = searchArticlesArr[indexPath.row].article_id!
-        }
-        else{
-            //newsDetailvc.ShowArticle = results
-           // newsDetailvc.articleId = Int(results[indexPath.row].article_id)
-    
-        }
+            newsDetailvc.SearchArticle = Searchresults
+            newsDetailvc.articleId = Int(Searchresults[indexPath.row].article_id)
         UserDefaults.standard.set("search", forKey: "isSearch")
         present(newsDetailvc, animated: true, completion: nil)
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let cell = tableView.dequeueReusableCell(withIdentifier: "searchResultID", for:indexPath) as! SearchResultTVCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: "search", for:indexPath) as! SearchResultTVCell
         let borderColor: UIColor = UIColor.lightGray
         cell.ViewCellBackground.layer.borderColor = borderColor.cgColor
         cell.ViewCellBackground.layer.borderWidth = 1
@@ -163,16 +190,7 @@ extension SearchVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDele
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
         dateFormatter.timeZone = NSTimeZone(name: "UTC")! as TimeZone
-        
-//        if searchArticlesArr.count != 0{
-//            let currentArticle = searchArticlesArr[indexPath.row]
-//            cell.lblSource.text = currentArticle.source
-//            let newDate = dateFormatter.date(from: currentArticle.published_on!)
-//            let agoDate = Helper().timeAgoSinceDate(newDate!)
-//            cell.lbltimeAgo.text = agoDate
-//            cell.lblNewsDescription.text = currentArticle.title
-//            cell.imgNews.sd_setImage(with: URL(string: currentArticle.imageURL!), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
-//        }
+    
        if Searchresults.count > 0{
             let currentArticle = Searchresults[indexPath.row]
             cell.lblSource.text =  currentArticle.source
@@ -283,9 +301,18 @@ extension SearchVC: UITextFieldDelegate
                 UserDefaults.standard.set(search, forKey: "searchTxt")
             
                 let url = APPURL.SearchURL + search
+                deleteAllData(entity: "SearchArticles")
                 DBManager().SaveSearchDataDB(nextUrl: url){response in
                     if response == true{
                         self.fetchArticlesFromDB()
+                    }
+                }
+                if UserDefaults.standard.value(forKey: "token") != nil{
+                    let BookmarkRecordCount = DBManager().IsCoreDataEmpty(entity: "BookmarkArticles")
+                    let LikeRecordCount = DBManager().IsCoreDataEmpty(entity: "LikeDislike")
+                    if BookmarkRecordCount != 0 || LikeRecordCount != 0{
+                        fetchBookmarkDataFromDB()
+            
                     }
                 }
             }
@@ -302,17 +329,18 @@ extension SearchVC: UITextFieldDelegate
     }
     
     func fetchArticlesFromDB(){
-        
         let result = DBManager().FetchSearchDataFromDB(entity: "SearchArticles")
         switch result {
         case .Success(let DBData) :
             Searchresults = DBData
             recordCount = Searchresults.count
+        
             searchResultTV.reloadData()
         case .Failure(let errorMsg) :
             print(errorMsg)
         }
     }
+    
     func fetchResult(){
         let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "NewsArticle")
         fetchRequest.predicate = NSPredicate(format: "title CONTAINS[c] %@ OR blurb CONTAINS[c] %@",txtSearch.text!, txtSearch.text!)

@@ -65,7 +65,7 @@ class HomeVC: UIViewController{
             }
              else{
                 let BookmarkRecordCount = DBManager().IsCoreDataEmpty(entity: "BookmarkArticles")
-                 let LikeRecordCount = DBManager().IsCoreDataEmpty(entity: "BookmarkArticles")
+                 let LikeRecordCount = DBManager().IsCoreDataEmpty(entity: "LikeDislike")
                 if BookmarkRecordCount != 0 || LikeRecordCount != 0{
                     fetchBookmarkDataFromDB()
                 }

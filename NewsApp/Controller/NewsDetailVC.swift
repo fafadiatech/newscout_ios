@@ -47,6 +47,7 @@ class NewsDetailVC: UIViewController {
     var ArticleData = [ArticleStatus]()
     var bookmarkedArticle = [BookmarkArticles]()
     var ShowArticle = [NewsArticle]()
+    var SearchArticle = [SearchArticles]()
     var ArticleDetail : ArticleDetails!
     var newsCurrentIndex = 0
     var articleId = 0
@@ -64,7 +65,8 @@ class NewsDetailVC: UIViewController {
     var playerViewWidth = CGFloat()
     var playerViewHeight = CGFloat()
     let activityIndicator = MDCActivityIndicator()
-    
+    var indexCount = 0
+    var currentEntity = ""
     override func viewDidLoad() {
         super.viewDidLoad()
         activityIndicator.cycleColors = [.blue]
@@ -93,7 +95,11 @@ class NewsDetailVC: UIViewController {
         }
         viewLikeDislike.backgroundColor = colorConstants.redColor
         ViewWebContainer.isHidden = true
-        
+        if ShowArticle.count != 0 {
+            indexCount = ShowArticle.count
+        }else{
+            indexCount = SearchArticle.count
+        }
         APICall().loadRecommendationNewsAPI(articleId: articleId){ (status,response) in
             switch response {
             case .Success(let data) :
@@ -421,7 +427,7 @@ class NewsDetailVC: UIViewController {
                 WKWebView.load(myRequest)
                 
             case UISwipeGestureRecognizerDirection.up:
-                if newsCurrentIndex < ShowArticle.count - 1
+                if newsCurrentIndex < indexCount - 1
                 {
                     newsCurrentIndex = newsCurrentIndex + 1
                     ShowNews(currentIndex : newsCurrentIndex)
@@ -479,6 +485,7 @@ class NewsDetailVC: UIViewController {
         playbackSlider.removeFromSuperview()
         avPlayerView.isHidden = true
         if ShowArticle.count != 0{
+            currentEntity = "ShowArticle"
             let currentArticle = ShowArticle[currentIndex]
             let newDate = dateFormatter.date(from: currentArticle.published_on!)
             let agoDate = Helper().timeAgoSinceDate(newDate!)
@@ -565,8 +572,9 @@ class NewsDetailVC: UIViewController {
             
            
         }
-        else if articleArr.count != 0 {
-            let currentArticle = articleArr[currentIndex]
+        else if SearchArticle.count != 0 {
+            currentEntity = "SearchArticles"
+            let currentArticle = SearchArticle[currentIndex]
             let newDate = dateFormatter.date(from: currentArticle.published_on!)
             let agoDate = Helper().timeAgoSinceDate(newDate!)
             articleId = Int(currentArticle.article_id)
@@ -574,7 +582,7 @@ class NewsDetailVC: UIViewController {
             txtViewNewsDesc.text = currentArticle.blurb
             lblSource.text = currentArticle.source
             lblTimeAgo.text = agoDate
-            sourceURL = currentArticle.url!
+            sourceURL = currentArticle.source_url!
             
             let checkImg = self.checkImageOrVideo(url: currentArticle.imageURL!)
             if checkImg == false{
@@ -625,8 +633,8 @@ class NewsDetailVC: UIViewController {
                 self.avPlayerView.isHidden = true
                 self.imgNews.sd_setImage(with: URL(string: currentArticle.imageURL!), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
             }
-           /* if UserDefaults.standard.value(forKey: "token") != nil{
-                if currentArticle == 0 {
+            if UserDefaults.standard.value(forKey: "token") != nil{
+                if currentArticle.likeDislike?.isLike == 0 {
                     btnLike.setImage(UIImage(named: "thumb_up_filled.png"), for: .normal)
                     btnDislike.setImage(UIImage(named: "thumb_down.png"), for: .normal)
                 }
@@ -649,7 +657,7 @@ class NewsDetailVC: UIViewController {
                 ResetBookmarkImg()
             }
             
-            */
+            
         }
         if imgNews.image == nil{
             imgNews.image = UIImage(named: "NoImage.png")
@@ -673,7 +681,7 @@ class NewsDetailVC: UIViewController {
                             self.btnDislike.setImage(UIImage(named: "thumb_down.png"), for: .normal)
                             
                         }
-                        DBManager().addLikedArticle(id: self.articleId, status: 0)
+                        DBManager().addLikedArticle(tempentity: self.currentEntity, id: self.articleId, status: 0)
                     }
                 }
             }
@@ -716,7 +724,7 @@ class NewsDetailVC: UIViewController {
                         if (self.btnLike.currentImage?.isEqual(UIImage(named: "thumb_up_filled.png")))! {
                             self.btnLike.setImage(UIImage(named: "thumb_up.png"), for: .normal)
                         }
-                        DBManager().addLikedArticle(id: self.articleId, status: 1)
+                        DBManager().addLikedArticle(tempentity:self.currentEntity, id: self.articleId, status: 1)
                     }
                 }
             }
@@ -755,7 +763,7 @@ class NewsDetailVC: UIViewController {
                     else{
                         self.setBookmarkImg()
                         
-                        DBManager().addBookmarkedArticles(id: self.articleId)
+                        DBManager().addBookmarkedArticles(currentEntity: self.currentEntity, id: self.articleId)
                         self.view.makeToast(response, duration: 1.0, position: .center)
                     }
                 }

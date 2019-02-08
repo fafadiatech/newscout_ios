@@ -148,10 +148,30 @@ class DBManager{
             }
             recordCount = records.count
         }
-        else{
+        else if entity == "BookmarkArticles" {
             var records = [BookmarkArticles]()
             do {
                 records = (try managedContext?.fetch(fetchRequest)) as! [BookmarkArticles]
+            }
+            catch {
+                print("error executing fetch request: \(error)")
+            }
+            recordCount = records.count
+        }
+        else if entity == "LikeDislike"{
+            var records = [LikeDislike]()
+            do {
+                records = (try managedContext?.fetch(fetchRequest)) as! [LikeDislike]
+            }
+            catch {
+                print("error executing fetch request: \(error)")
+            }
+            recordCount = records.count
+        }
+        else if entity == "SearchArticles"{
+            var records = [SearchArticles]()
+            do {
+                records = (try managedContext?.fetch(fetchRequest)) as! [SearchArticles]
             }
             catch {
                 print("error executing fetch request: \(error)")
@@ -289,8 +309,7 @@ class DBManager{
         var BookmarkData : GetLikeBookmarkList!
         let managedContext =
             appDelegate?.persistentContainer.viewContext
-        let fetchRequest =
-            NSFetchRequest<NewsArticle>(entityName: "NewsArticle")
+      
         APICall().getLikeBookmarkList(url : APPURL.getBookmarkListURL){
             response  in
             switch response {
@@ -354,20 +373,29 @@ class DBManager{
         }
     }
     
-    func addLikedArticle(id : Int, status : Int){
+    func addLikedArticle(tempentity: String,id : Int, status : Int){
         var Article = [NewsArticle]()
+        var SearchArticle = [SearchArticles]()
         var likeDislike = [LikeDislike]()
         let managedContext =
             appDelegate?.persistentContainer.viewContext
         let fetchRequest =
-            NSFetchRequest<NewsArticle>(entityName: "NewsArticle")
+            NSFetchRequest<NewsArticle>(entityName: tempentity)
+        let searchFetchRequest = NSFetchRequest<SearchArticles>(entityName: tempentity)
+
         fetchRequest.predicate = NSPredicate(format: "article_id  = %d", id)
+        searchFetchRequest.predicate = NSPredicate(format: "article_id  = %d", id)
         let likefetchRequest =
             NSFetchRequest<LikeDislike>(entityName: "LikeDislike")
         likefetchRequest.predicate = NSPredicate(format: "article_id  = %d", id)
         fetchRequest.predicate = NSPredicate(format: "article_id  = %d", id)
         do {
+            if tempentity == "NewsArticle"{
             Article = try (managedContext?.fetch(fetchRequest))!
+            }
+            else if tempentity == "SearchArticles"{
+             SearchArticle = try (managedContext?.fetch(searchFetchRequest))!
+            }
         }catch {
             print("Failed")
         }
@@ -375,7 +403,11 @@ class DBManager{
             let newArticle = LikeDislike(context: managedContext!)
             newArticle.article_id = Int16(id)
             newArticle.isLike = Int16(status)
+             if tempentity == "NewsArticle"{
             newArticle.addToLikedArticle(Article[0])
+             }else if tempentity == "SearchArticles"{
+                newArticle.addToSearchlikeArticles(SearchArticle[0])
+            }
         }
         else{
             do {
@@ -427,15 +459,22 @@ class DBManager{
         }
     }
     
-    func addBookmarkedArticles(id : Int){
+    func addBookmarkedArticles(currentEntity : String, id : Int){
         let managedContext =
             appDelegate?.persistentContainer.viewContext
         let fetchRequest =
             NSFetchRequest<NewsArticle>(entityName: "NewsArticle")
         var Article = [NewsArticle]()
+        var SearchArticle = [SearchArticles]()
+        let searchRequest = NSFetchRequest<SearchArticles>(entityName: "SearchArticles")
         fetchRequest.predicate = NSPredicate(format: "article_id  = %d", id)
         do {
+            if currentEntity == "NewsArticle"{
             Article = try (managedContext?.fetch(fetchRequest))!
+            }
+            else if currentEntity == "SearchArticles"{
+                SearchArticle = try (managedContext?.fetch(searchRequest))!
+            }
         }catch {
             print("Failed")
         }
@@ -443,7 +482,11 @@ class DBManager{
             let newArticle = BookmarkArticles(context: managedContext!)
             newArticle.article_id = Int16(id)
             newArticle.isBookmark = 1
+            if currentEntity == "NewsArticle"{
             newArticle.addToArticle(Article[0])
+            }else{
+                newArticle.addToSearchArticle(SearchArticle[0])
+            }
             saveBlock()
         }
     }
@@ -537,6 +580,79 @@ class DBManager{
         } catch let error as NSError {
             print("Could not fetch. \(error), \(error.userInfo)")
             return SearchDBfetchResult.Failure(error as! String)
+        }
+    }
+    //fetch bookmarked articles
+    func FetchSearchLikeBookmarkFromDB() -> SearchDBfetchResult
+    {
+        var BookmarkArticle = [BookmarkArticles]()
+        var LikeArticle = [LikeDislike]()
+        var ShowArticle = [SearchArticles]()
+        let managedContext =
+            appDelegate?.persistentContainer.viewContext
+        let fetchRequest =
+            NSFetchRequest<SearchArticles>(entityName: "SearchArticles")
+        let bookmarkfetchRequest =
+            NSFetchRequest<BookmarkArticles>(entityName: "BookmarkArticles")
+        let likefetchRequest =
+            NSFetchRequest<LikeDislike>(entityName: "LikeDislike")
+        do {
+            BookmarkArticle = try (managedContext?.fetch(bookmarkfetchRequest))!
+        } catch let error as NSError {
+            print("Could not fetch. \(error), \(error.userInfo)")
+        }
+        do {
+            LikeArticle =  try (managedContext?.fetch(likefetchRequest))!
+        }catch let error as NSError {
+            print("Could not fetch. \(error), \(error.userInfo)")
+        }
+        
+        for book in BookmarkArticle{
+            
+            fetchRequest.predicate = NSPredicate(format: "article_id  = %d", book.article_id)
+            do {
+                let ShowArticle1 = try (managedContext?.fetch(fetchRequest))!
+                ShowArticle.append(contentsOf: ShowArticle1)
+                
+                if ShowArticle1.count != 0 {
+                    book.addToSearchArticle(ShowArticle1[0])
+                }
+                
+            } catch let error as NSError {
+                print("Could not fetch. \(error), \(error.userInfo)")
+                return SearchDBfetchResult.Failure(error as! String)
+            }
+        }
+        for like in LikeArticle{
+            
+            fetchRequest.predicate = NSPredicate(format: "article_id  = %d", like.article_id)
+            do {
+                let ShowArticle1 = try (managedContext?.fetch(fetchRequest))!
+                if ShowArticle1.count != 0 {
+                    like.addToSearchlikeArticles(ShowArticle1[0])
+                }
+                
+            } catch let error as NSError {
+                print("Could not fetch. \(error), \(error.userInfo)")
+                return SearchDBfetchResult.Failure(error as! String)
+            }
+        }
+        return SearchDBfetchResult.Success(ShowArticle)
+    }
+    
+    func deleteAllData(entity:String) {
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: entity)
+        fetchRequest.returnsObjectsAsFaults = false
+        let managedContext =
+            appDelegate?.persistentContainer.viewContext
+        do {
+            let results = try managedContext!.fetch(fetchRequest)
+            for object in results {
+                guard let objectData = object as? NSManagedObject else {continue}
+                managedContext?.delete(objectData)
+            }
+        } catch let error {
+            print("Detele all data in \(entity) error :", error)
         }
     }
     

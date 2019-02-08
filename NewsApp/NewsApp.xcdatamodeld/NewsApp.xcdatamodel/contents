@@ -5,6 +5,7 @@
         <attribute name="isBookmark" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="row_id" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <relationship name="article" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="NewsArticle" inverseName="bookmark" inverseEntity="NewsArticle" syncable="YES"/>
+        <relationship name="searchArticle" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="SearchArticles" inverseName="bookmark" inverseEntity="SearchArticles" syncable="YES"/>
     </entity>
     <entity name="Category" representedClassName="Category" syncable="YES" codeGenerationType="class">
         <attribute name="cat_id" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
@@ -15,6 +16,7 @@
         <attribute name="isLike" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="row_id" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <relationship name="likedArticle" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="NewsArticle" inverseName="likeDislike" inverseEntity="NewsArticle" syncable="YES"/>
+        <relationship name="searchlikeArticles" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="SearchArticles" inverseName="likeDislike" inverseEntity="SearchArticles" syncable="YES"/>
     </entity>
     <entity name="NewsArticle" representedClassName="NewsArticle" syncable="YES" codeGenerationType="class">
         <attribute name="article_id" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
@@ -44,13 +46,15 @@
         <attribute name="source" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="source_url" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="bookmark" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="BookmarkArticles" inverseName="searchArticle" inverseEntity="BookmarkArticles" syncable="YES"/>
+        <relationship name="likeDislike" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="LikeDislike" inverseName="searchlikeArticles" inverseEntity="LikeDislike" syncable="YES"/>
     </entity>
     <elements>
-        <element name="BookmarkArticles" positionX="405" positionY="18" width="128" height="105"/>
+        <element name="BookmarkArticles" positionX="405" positionY="18" width="128" height="120"/>
         <element name="Category" positionX="405" positionY="18" width="128" height="75"/>
-        <element name="LikeDislike" positionX="405" positionY="36" width="128" height="105"/>
+        <element name="LikeDislike" positionX="405" positionY="36" width="128" height="120"/>
         <element name="NewsArticle" positionX="407.63671875" positionY="-45.1953125" width="128" height="210"/>
         <element name="NewsURL" positionX="405" positionY="63" width="128" height="105"/>
-        <element name="SearchArticles" positionX="405" positionY="54" width="128" height="165"/>
+        <element name="SearchArticles" positionX="405" positionY="54" width="128" height="195"/>
     </elements>
 </model>

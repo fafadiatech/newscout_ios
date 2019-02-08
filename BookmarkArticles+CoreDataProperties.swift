@@ -2,7 +2,7 @@
 //  BookmarkArticles+CoreDataProperties.swift
 //  
 //
-//  Created by Jayashree on 01/02/19.
+//  Created by Jayashree on 08/02/19.
 //
 //
 
@@ -20,6 +20,7 @@ extension BookmarkArticles {
     @NSManaged public var isBookmark: Int16
     @NSManaged public var row_id: Int16
     @NSManaged public var article: NSSet?
+    @NSManaged public var searchArticle: NSSet?
 
 }
 
@@ -37,5 +38,22 @@ extension BookmarkArticles {
 
     @objc(removeArticle:)
     @NSManaged public func removeFromArticle(_ values: NSSet)
+
+}
+
+// MARK: Generated accessors for searchArticle
+extension BookmarkArticles {
+
+    @objc(addSearchArticleObject:)
+    @NSManaged public func addToSearchArticle(_ value: SearchArticles)
+
+    @objc(removeSearchArticleObject:)
+    @NSManaged public func removeFromSearchArticle(_ value: SearchArticles)
+
+    @objc(addSearchArticle:)
+    @NSManaged public func addToSearchArticle(_ values: NSSet)
+
+    @objc(removeSearchArticle:)
+    @NSManaged public func removeFromSearchArticle(_ values: NSSet)
 
 }

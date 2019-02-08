@@ -2,7 +2,7 @@
 //  LikeDislike+CoreDataProperties.swift
 //  
 //
-//  Created by Jayashree on 01/02/19.
+//  Created by Jayashree on 08/02/19.
 //
 //
 
@@ -20,6 +20,7 @@ extension LikeDislike {
     @NSManaged public var isLike: Int16
     @NSManaged public var row_id: Int16
     @NSManaged public var likedArticle: NSSet?
+    @NSManaged public var searchlikeArticles: NSSet?
 
 }
 
@@ -37,5 +38,22 @@ extension LikeDislike {
 
     @objc(removeLikedArticle:)
     @NSManaged public func removeFromLikedArticle(_ values: NSSet)
+
+}
+
+// MARK: Generated accessors for searchlikeArticles
+extension LikeDislike {
+
+    @objc(addSearchlikeArticlesObject:)
+    @NSManaged public func addToSearchlikeArticles(_ value: SearchArticles)
+
+    @objc(removeSearchlikeArticlesObject:)
+    @NSManaged public func removeFromSearchlikeArticles(_ value: SearchArticles)
+
+    @objc(addSearchlikeArticles:)
+    @NSManaged public func addToSearchlikeArticles(_ values: NSSet)
+
+    @objc(removeSearchlikeArticles:)
+    @NSManaged public func removeFromSearchlikeArticles(_ values: NSSet)
 
 }

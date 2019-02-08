@@ -636,7 +636,7 @@ class BookmarkDetailVC: UIViewController {
                     }
                     else{
                         self.setBookmarkImg()
-                         DBManager().addBookmarkedArticles(id: self.articleId)
+                         DBManager().addBookmarkedArticles(currentEntity: "", id: self.articleId)
                         self.view.makeToast(response, duration: 1.0, position: .center)
                     }
                 }
