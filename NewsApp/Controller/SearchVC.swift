@@ -24,7 +24,7 @@ class SearchVC: UIViewController {
     @IBOutlet weak var lblNoNews: UILabel!
     let activityIndicator = MDCActivityIndicator()
     //variables
-    var results: [NewsArticle] = []
+    var Searchresults = [SearchArticles]()
     var nextURL = ""
     let appDelegate = UIApplication.shared.delegate as? AppDelegate
     let textSizeSelected = UserDefaults.standard.value(forKey: "textSize") as! Int
@@ -128,7 +128,7 @@ class SearchVC: UIViewController {
 
 extension SearchVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return recordCount
+        return recordCount != 0 ? recordCount : 0
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -141,8 +141,8 @@ extension SearchVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDele
         newsDetailvc.articleId = searchArticlesArr[indexPath.row].article_id!
         }
         else{
-            newsDetailvc.ShowArticle = results
-            newsDetailvc.articleId = Int(results[indexPath.row].article_id)
+            //newsDetailvc.ShowArticle = results
+           // newsDetailvc.articleId = Int(results[indexPath.row].article_id)
     
         }
         UserDefaults.standard.set("search", forKey: "isSearch")
@@ -164,19 +164,18 @@ extension SearchVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDele
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
         dateFormatter.timeZone = NSTimeZone(name: "UTC")! as TimeZone
         
-        if searchArticlesArr.count != 0{
-            let currentArticle = searchArticlesArr[indexPath.row]
-            cell.lblSource.text = currentArticle.source
-            let newDate = dateFormatter.date(from: currentArticle.published_on!)
-            let agoDate = Helper().timeAgoSinceDate(newDate!)
-            cell.lbltimeAgo.text = agoDate
-            cell.lblNewsDescription.text = currentArticle.title
-            cell.imgNews.sd_setImage(with: URL(string: currentArticle.imageURL!), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
-        }
-        else if results.count != 0{
-            recordCount = results.count
-            let currentArticle = results[indexPath.row]
-            cell.lblSource.text = currentArticle.source
+//        if searchArticlesArr.count != 0{
+//            let currentArticle = searchArticlesArr[indexPath.row]
+//            cell.lblSource.text = currentArticle.source
+//            let newDate = dateFormatter.date(from: currentArticle.published_on!)
+//            let agoDate = Helper().timeAgoSinceDate(newDate!)
+//            cell.lbltimeAgo.text = agoDate
+//            cell.lblNewsDescription.text = currentArticle.title
+//            cell.imgNews.sd_setImage(with: URL(string: currentArticle.imageURL!), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
+//        }
+       if Searchresults.count > 0{
+            let currentArticle = Searchresults[indexPath.row]
+            cell.lblSource.text =  currentArticle.source
             let newDate = dateFormatter.date(from: currentArticle.published_on!)
             let agoDate = Helper().timeAgoSinceDate(newDate!)
             cell.lbltimeAgo.text = agoDate
@@ -218,7 +217,7 @@ extension SearchVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDele
         return cell
     }
     
-    func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
+ /*  func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
         if targetContentOffset.pointee.y < scrollView.contentOffset.y {
             print("it's going up")
             if nextURL != "" {
@@ -256,7 +255,7 @@ extension SearchVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDele
                 }
             }
         }
-    }
+    }*/
 }
 
 extension SearchVC: UITextFieldDelegate
@@ -289,38 +288,6 @@ extension SearchVC: UITextFieldDelegate
                         self.fetchArticlesFromDB()
                     }
                 }
-               /* APICall().loadSearchAPI(url: url){ (Status, response) in
-                    switch response {
-                    case .Success(let data) :
-                        if data.count > 0{
-                            self.searchArticlesArr = data[0].body!.articles
-                             self.recordCount = self.searchArticlesArr.count
-                            if data[0].body!.next != nil{
-                                self.nextURL = data[0].body!.next!
-                            }
-                            if data[0].body!.articles.count == 0{
-                                self.lblNoNews.isHidden = false
-                                self.lblNoNews.text = "No news found"
-                            }
-                            else{
-                                self.lblNoNews.isHidden = true
-                            }
-                            self.searchResultTV.reloadData()
-                        }
-                    case .Failure(let errormessage) :
-                        if Status == "no net"{
-                            self.fetchResult()
-                        }
-                        else{
-                        print(errormessage)
-                        self.activityIndicator.startAnimating()
-                        self.searchResultTV.makeToast(errormessage, duration: 2.0, position: .center)
-                        }
-                    case .Change(let code):
-                        print(code)
-                    }
-                    self.activityIndicator.stopAnimating()
-                }*/
             }
             else{
                 self.searchResultTV.makeToast("Enter keyword to search", duration: 2.0, position: .center)
@@ -336,13 +303,12 @@ extension SearchVC: UITextFieldDelegate
     
     func fetchArticlesFromDB(){
         
-        let result = DBManager().FetchDataFromDB(entity: "SearchArticles")
+        let result = DBManager().FetchSearchDataFromDB(entity: "SearchArticles")
         switch result {
         case .Success(let DBData) :
-            results = DBData
-            recordCount = results.count
+            Searchresults = DBData
+            recordCount = Searchresults.count
             searchResultTV.reloadData()
-        
         case .Failure(let errorMsg) :
             print(errorMsg)
         }
@@ -353,9 +319,9 @@ extension SearchVC: UITextFieldDelegate
         let managedContext =
             appDelegate?.persistentContainer.viewContext
         do {
-            results = (try managedContext?.fetch(fetchRequest))
-                as! [NewsArticle]
-            recordCount = results.count
+            Searchresults = (try managedContext?.fetch(fetchRequest))
+                as! [SearchArticles]
+            recordCount = Searchresults.count
             searchResultTV.reloadData()
             
             if recordCount == 0 {

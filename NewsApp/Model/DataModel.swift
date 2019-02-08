@@ -220,3 +220,7 @@ enum LikeBookmarkListAPIResult {
     case Success(GetLikeBookmarkList)
     case Failure(String)
 }
+enum SearchDBfetchResult {
+    case Success([SearchArticles])
+    case Failure(String)
+}

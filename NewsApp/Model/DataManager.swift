@@ -31,6 +31,7 @@ class DBManager{
                 print(code)
             }
             if self.ArticleData.count != 0{
+                if self.ArticleData[0].header.status == "1" {
                 for news in self.ArticleData[0].body!.articles{ 
                     if  self.someEntityExists(id: Int(news.article_id!), entity: "NewsArticle") == false
                     {
@@ -51,6 +52,10 @@ class DBManager{
                     // self.someEntityExists(id: 0 , entity: String)
                 }
                 completion(true)
+                }
+                else{
+                    completion(false)
+                }
             }else{
                 completion(false)
             }
@@ -481,16 +486,16 @@ class DBManager{
     func SaveSearchDataDB(nextUrl:String,_ completion : @escaping (Bool) -> ())
     {
         let managedContext = appDelegate?.persistentContainer.viewContext
-            APICall().loadSearchAPI(url: nextUrl){ (Status, response) in
-                switch response {
-                case .Success(let data) :
-                    self.ArticleData = data
-                    
-                case .Failure(let errormessage) :
-                    print(errormessage)
-                case .Change(let code):
-                    print(code)
-                }
+        APICall().loadSearchAPI(url : nextUrl){
+            (status, response)  in
+            switch response {
+            case .Success(let data) :
+                self.ArticleData = data
+                
+            case .Failure(let errormessage) :
+                print(errormessage)
+            case .Change(let code):
+                print(code)
             }
             if self.ArticleData.count != 0{
                 for news in self.ArticleData[0].body!.articles{
@@ -517,5 +522,22 @@ class DBManager{
                 completion(false)
             }
         }
+        
+    }
+    func FetchSearchDataFromDB(entity: String) -> SearchDBfetchResult
+    {
+        let managedContext =
+            appDelegate?.persistentContainer.viewContext
+        let fetchRequest =
+            NSFetchRequest<NSManagedObject>(entityName: entity)
+        
+        do {
+            let ShowArticle = try (managedContext?.fetch(fetchRequest))!
+            return SearchDBfetchResult.Success(ShowArticle as! [SearchArticles])
+        } catch let error as NSError {
+            print("Could not fetch. \(error), \(error.userInfo)")
+            return SearchDBfetchResult.Failure(error as! String)
+        }
+    }
     
 }
