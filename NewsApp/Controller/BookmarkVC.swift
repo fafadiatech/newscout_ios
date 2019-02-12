@@ -214,7 +214,7 @@ extension BookmarkVC: UITableViewDelegate, UITableViewDataSource{
         cell.lbltimeAgo.textColor = colorConstants.txtDarkGrayColor
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
-        dateFormatter.timeZone = NSTimeZone(name: "UTC")! as TimeZone
+        dateFormatter.timeZone = NSTimeZone.local
         if ShowArticle.count != 0{
             let currentArticle = ShowArticle[indexPath.row]
             cell.lblSource.text = currentArticle.source

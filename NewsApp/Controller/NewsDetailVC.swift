@@ -481,7 +481,7 @@ class NewsDetailVC: UIViewController {
     func ShowNews(currentIndex: Int){
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
-        dateFormatter.timeZone = NSTimeZone(name: "UTC")! as TimeZone
+        dateFormatter.timeZone = NSTimeZone.local
         playbackSlider.removeFromSuperview()
         avPlayerView.isHidden = true
         if ShowArticle.count != 0{

@@ -310,7 +310,7 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
         //timestamp conversion
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
-        dateFormatter.timeZone = NSTimeZone(name: "UTC")! as TimeZone
+        dateFormatter.timeZone = NSTimeZone.local
         cell.lblSource.textColor = colorConstants.txtDarkGrayColor
         cell.lblTimesAgo.textColor = colorConstants.txtDarkGrayColor
         //display data from DB

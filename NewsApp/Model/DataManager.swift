@@ -534,7 +534,6 @@ class DBManager{
             switch response {
             case .Success(let data) :
                 self.ArticleData = data
-                
             case .Failure(let errormessage) :
                 print(errormessage)
             case .Change(let code):
@@ -641,19 +640,19 @@ class DBManager{
     }
     
     func deleteAllData(entity:String) {
-        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: entity)
-        fetchRequest.returnsObjectsAsFaults = false
-        let managedContext =
-            appDelegate?.persistentContainer.viewContext
-        do {
-            let results = try managedContext!.fetch(fetchRequest)
-            for object in results {
-                guard let objectData = object as? NSManagedObject else {continue}
-                managedContext?.delete(objectData)
+       
+            let delegate = UIApplication.shared.delegate as! AppDelegate
+            let context = delegate.persistentContainer.viewContext
+            
+            let deleteFetch = NSFetchRequest<NSFetchRequestResult>(entityName: entity)
+            let deleteRequest = NSBatchDeleteRequest(fetchRequest: deleteFetch)
+            
+            do {
+                try context.execute(deleteRequest)
+                try context.save()
+            } catch {
+                print ("There was an error")
             }
-        } catch let error {
-            print("Detele all data in \(entity) error :", error)
         }
-    }
     
 }

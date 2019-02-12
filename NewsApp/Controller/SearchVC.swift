@@ -189,7 +189,7 @@ extension SearchVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDele
         cell.lbltimeAgo.textColor = colorConstants.txtDarkGrayColor
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
-        dateFormatter.timeZone = NSTimeZone(name: "UTC")! as TimeZone
+        dateFormatter.timeZone = NSTimeZone.local
     
        if Searchresults.count > 0{
             let currentArticle = Searchresults[indexPath.row]
@@ -275,7 +275,17 @@ extension SearchVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDele
         }
     }*/
 }
-
+extension String {
+    func makeHTMLfriendly() -> String {
+        var finalString = ""
+        for char in self {
+            for scalar in String(char).unicodeScalars {
+                finalString.append("&#\(scalar.value)")
+            }
+        }
+        return finalString
+    }
+}
 extension SearchVC: UITextFieldDelegate
 {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool
@@ -285,19 +295,18 @@ extension SearchVC: UITextFieldDelegate
             if txtSearch.text != ""{
                 var search = txtSearch.text!
                  search = search.trimmingCharacters(in: .whitespaces)
-                 search = search.replacingOccurrences(of: "@",with: "%27")
-                let allowedCharacterSet = (CharacterSet(charactersIn: "!*();:@&=+$,'/?%#[]").inverted)
-                
+             
+                let allowedCharacterSet = (CharacterSet(charactersIn: "!*();:@&=+$,/?%#[]").inverted)
+
                 if let escapedString = search.addingPercentEncoding(withAllowedCharacters: allowedCharacterSet) {
                     search = escapedString
                 }
-            
                 UserDefaults.standard.set(search, forKey: "searchTxt")
                 if search == ""{
                     self.searchResultTV.makeToast("Enter keyword to search", duration: 2.0, position: .center)
                 }else{
                 let url = APPURL.SearchURL + search
-                //DBManager().deleteAllData(entity: "SearchArticles")
+                DBManager().deleteAllData(entity: "SearchArticles")
                 DBManager().SaveSearchDataDB(nextUrl: url){response in
                     if response == true{
                         self.fetchArticlesFromDB()
