@@ -261,20 +261,6 @@ class NewsDetailVC: UIViewController {
         NotificationCenter.default.removeObserver(self, name: .darkModeEnabled, object: nil)
         NotificationCenter.default.removeObserver(self, name: .darkModeDisabled, object: nil)
     }
-    //detect whether img or video from url
-    func checkImageOrVideo(url : String) -> Bool{
-        
-        let imageExtensions = ["png", "jpg", "gif"]
-        let url: URL? = NSURL(fileURLWithPath: url) as URL
-        let pathExtention = url?.pathExtension
-        if imageExtensions.contains(pathExtention!)
-        {
-            return true
-        }else
-        {
-            return false
-        }
-    }
     
     //create thumbnail of video
     func getThumbnailImage(forUrl url: URL) -> UIImage? {
@@ -495,9 +481,16 @@ class NewsDetailVC: UIViewController {
             lblSource.text = currentArticle.source
             lblTimeAgo.text = agoDate
             sourceURL = currentArticle.source_url!
-            
-            
-            let checkImg = self.checkImageOrVideo(url: currentArticle.imageURL!)
+
+            var checkImg = false
+             let imageFormats = ["jpg", "jpeg", "png", "gif"]
+            for ext in imageFormats{
+            if currentArticle.imageURL!.contains(ext){
+               checkImg = true
+                break
+            }
+            }
+
             if checkImg == false{
                 DispatchQueue.global(qos: .userInitiated).async {
                     self.activityIndicator.startAnimating()
@@ -584,7 +577,14 @@ class NewsDetailVC: UIViewController {
             lblTimeAgo.text = agoDate
             sourceURL = currentArticle.source_url!
             
-            let checkImg = self.checkImageOrVideo(url: currentArticle.imageURL!)
+            var checkImg = false
+            let imageFormats = ["jpg", "jpeg", "png", "gif"]
+            for ext in imageFormats{
+                if currentArticle.imageURL!.contains(ext){
+                    checkImg = true
+                    break
+                }
+            }
             if checkImg == false{
                 DispatchQueue.global(qos: .userInitiated).async {
                     self.activityIndicator.startAnimating()
@@ -940,7 +940,14 @@ extension NewsDetailVC:UICollectionViewDelegate, UICollectionViewDataSource, UIC
             cell.lblTitle.text = currentArticle.title
             if currentArticle.imageURL != nil{
                 
-                let checkImg = checkImageOrVideo(url: currentArticle.imageURL!)
+                var checkImg = false
+                let imageFormats = ["jpg", "jpeg", "png", "gif"]
+                for ext in imageFormats{
+                    if currentArticle.imageURL!.contains(ext){
+                        checkImg = true
+                        break
+                    }
+                }
                 if checkImg == false{
                     cell.btnCellPlayVIdeo.isHidden = false
                     if let thumbnail = createThumbnailOfVideoFromRemoteUrl(url: "https://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4"){
