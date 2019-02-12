@@ -16,7 +16,7 @@ extension SearchArticles {
         return NSFetchRequest<SearchArticles>(entityName: "SearchArticles")
     }
 
-    @NSManaged public var article_id: Int16
+    @NSManaged public var article_id: Int64
     @NSManaged public var blurb: String?
     @NSManaged public var category: String?
     @NSManaged public var imageURL: String?

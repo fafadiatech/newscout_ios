@@ -36,7 +36,7 @@ class DBManager{
                     if  self.someEntityExists(id: Int(news.article_id!), entity: "NewsArticle") == false
                     {
                         let newArticle = NewsArticle(context: managedContext!)
-                        newArticle.article_id = Int16(news.article_id!)
+                        newArticle.article_id = Int64(news.article_id!)
                         newArticle.title = news.title
                         newArticle.source = news.source!
                         newArticle.imageURL = news.imageURL
@@ -326,7 +326,7 @@ class DBManager{
                     if  self.someEntityExists(id: Int(news.article_id), entity: "BookmarkArticles") == false
                     {
                         let newArticle = BookmarkArticles(context: managedContext!)
-                        newArticle.article_id = Int16(news.article_id)
+                        newArticle.article_id = Int64(news.article_id)
                         newArticle.isBookmark = Int16(news.status!)
                         //newArticle.row_id = Int16(news.row_id)
                         self.saveBlock()
@@ -360,7 +360,7 @@ class DBManager{
                     if  self.someEntityExists(id: Int(news.article_id), entity: "LikeDislike") == false
                     {
                         let newArticle = LikeDislike(context: managedContext!)
-                        newArticle.article_id = Int16(news.article_id)
+                        newArticle.article_id = Int64(news.article_id)
                         newArticle.isLike = Int16(news.isLike!)
                       //  newArticle.row_id = Int16(news.row_id)
                         self.saveBlock()
@@ -401,7 +401,7 @@ class DBManager{
         }
         if  self.someEntityExists(id: id, entity: "LikeDislike") == false{
             let newArticle = LikeDislike(context: managedContext!)
-            newArticle.article_id = Int16(id)
+            newArticle.article_id = Int64(id)
             newArticle.isLike = Int16(status)
              if tempentity == "NewsArticle"{
             newArticle.addToLikedArticle(Article[0])
@@ -417,7 +417,7 @@ class DBManager{
             }
             do {
                 for article in likeDislike{
-                    if article.article_id == Int16(id){
+                    if article.article_id == Int64(id){
                         article.isLike = Int16(status)
                     }
                 }
@@ -480,7 +480,7 @@ class DBManager{
         }
         if  self.someEntityExists(id: id, entity: "BookmarkArticles") == false{
             let newArticle = BookmarkArticles(context: managedContext!)
-            newArticle.article_id = Int16(id)
+            newArticle.article_id = Int64(id)
             newArticle.isBookmark = 1
             if currentEntity == "NewsArticle"{
             newArticle.addToArticle(Article[0])
@@ -545,7 +545,7 @@ class DBManager{
                     if  self.someEntityExists(id: Int(news.article_id!), entity: "SearchArticles") == false
                     {
                         let newArticle = SearchArticles(context: managedContext!)
-                        newArticle.article_id = Int16(news.article_id!)
+                        newArticle.article_id = Int64(news.article_id!)
                         newArticle.title = news.title
                         newArticle.source = news.source!
                         newArticle.imageURL = news.imageURL

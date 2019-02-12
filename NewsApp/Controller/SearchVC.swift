@@ -282,26 +282,22 @@ extension SearchVC: UITextFieldDelegate
     {
         txtSearch.resignFirstResponder()
         if !(txtSearch.text?.isEmpty)!{
-            if txtSearch.text != " "{
+            if txtSearch.text != ""{
                 var search = txtSearch.text!
-                // search = searchTxt.replacingOccurrences(of: "'", with: "%27")
-                let whitespace = NSCharacterSet.whitespaces
-                var range = search.rangeOfCharacter(from: whitespace)
-                
-                if let test = range {
-                    print("whitespace found")
-                    search = search.trimmingCharacters(in: .whitespacesAndNewlines)
-                    search = search.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)!
-                }
-                let allowedCharacterSet = (CharacterSet(charactersIn: "!*();:@&=+$,/?%#[]").inverted)
+                 search = search.trimmingCharacters(in: .whitespaces)
+                 search = search.replacingOccurrences(of: "@",with: "%27")
+                let allowedCharacterSet = (CharacterSet(charactersIn: "!*();:@&=+$,'/?%#[]").inverted)
                 
                 if let escapedString = search.addingPercentEncoding(withAllowedCharacters: allowedCharacterSet) {
                     search = escapedString
                 }
-                UserDefaults.standard.set(search, forKey: "searchTxt")
             
+                UserDefaults.standard.set(search, forKey: "searchTxt")
+                if search == ""{
+                    self.searchResultTV.makeToast("Enter keyword to search", duration: 2.0, position: .center)
+                }else{
                 let url = APPURL.SearchURL + search
-                deleteAllData(entity: "SearchArticles")
+                //DBManager().deleteAllData(entity: "SearchArticles")
                 DBManager().SaveSearchDataDB(nextUrl: url){response in
                     if response == true{
                         self.fetchArticlesFromDB()
@@ -315,6 +311,7 @@ extension SearchVC: UITextFieldDelegate
             
                     }
                 }
+            }
             }
             else{
                 self.searchResultTV.makeToast("Enter keyword to search", duration: 2.0, position: .center)

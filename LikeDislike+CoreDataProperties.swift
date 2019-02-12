@@ -16,7 +16,7 @@ extension LikeDislike {
         return NSFetchRequest<LikeDislike>(entityName: "LikeDislike")
     }
 
-    @NSManaged public var article_id: Int16
+    @NSManaged public var article_id: Int64
     @NSManaged public var isLike: Int16
     @NSManaged public var row_id: Int16
     @NSManaged public var likedArticle: NSSet?

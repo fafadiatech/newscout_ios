@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="14460.32" systemVersion="18A391" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="BookmarkArticles" representedClassName="BookmarkArticles" syncable="YES" codeGenerationType="class">
-        <attribute name="article_id" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="article_id" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="isBookmark" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="row_id" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <relationship name="article" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="NewsArticle" inverseName="bookmark" inverseEntity="NewsArticle" syncable="YES"/>
@@ -12,14 +12,14 @@
         <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <entity name="LikeDislike" representedClassName="LikeDislike" syncable="YES" codeGenerationType="class">
-        <attribute name="article_id" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="article_id" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="isLike" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="row_id" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <relationship name="likedArticle" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="NewsArticle" inverseName="likeDislike" inverseEntity="NewsArticle" syncable="YES"/>
         <relationship name="searchlikeArticles" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="SearchArticles" inverseName="likeDislike" inverseEntity="SearchArticles" syncable="YES"/>
     </entity>
     <entity name="NewsArticle" representedClassName="NewsArticle" syncable="YES" codeGenerationType="class">
-        <attribute name="article_id" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="article_id" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="blurb" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="category" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="category_id" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
@@ -38,7 +38,7 @@
         <attribute name="prevURL" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <entity name="SearchArticles" representedClassName="SearchArticles" syncable="YES" codeGenerationType="class">
-        <attribute name="article_id" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="article_id" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="blurb" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="category" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="imageURL" optional="YES" attributeType="String" syncable="YES"/>

@@ -16,7 +16,7 @@ extension BookmarkArticles {
         return NSFetchRequest<BookmarkArticles>(entityName: "BookmarkArticles")
     }
 
-    @NSManaged public var article_id: Int16
+    @NSManaged public var article_id: Int64
     @NSManaged public var isBookmark: Int16
     @NSManaged public var row_id: Int16
     @NSManaged public var article: NSSet?

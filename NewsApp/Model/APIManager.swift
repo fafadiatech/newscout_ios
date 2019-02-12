@@ -154,7 +154,7 @@ class APICall{
     }
     
     func loadSearchAPI(url: String,_ completion : @escaping (String, ArticleAPIResult) -> ()){
-        Alamofire.request(url,method: .get).responseJSON{
+        Alamofire.request(url,method: .get, encoding: URLEncoding.default).responseJSON{
             response in
             if(response.result.isSuccess){
                 //if response.response?.statusCode == 200{
