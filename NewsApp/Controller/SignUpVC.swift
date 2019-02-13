@@ -39,8 +39,6 @@ class SignUpVC: UIViewController {
         btnSignUp.setTitleColor(colorConstants.whiteColor, for: .normal)
         btnSignUp.titleLabel?.font = FontConstants.FontBtnTitle
         hideKeyboardWhenTappedAround()
-       // NotificationCenter.default.addObserver(self, selector: #selector(SignUpVC.keyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
-       // NotificationCenter.default.addObserver(self, selector: #selector(SignUpVC.keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
         let darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
         if  darkModeStatus == true{
            changeColor()
@@ -77,31 +75,6 @@ class SignUpVC: UIViewController {
         NotificationCenter.default.removeObserver(self, name: .darkModeDisabled, object: nil)
     }
     
-    @objc func keyboardWillShow(notification: NSNotification) {
-        if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
-            if self.view.frame.origin.y == 0{
-                if UIDevice.current.userInterfaceIdiom == .pad{
-                    self.view.frame.origin.y -= keyboardSize.height - 200
-                }
-                else{
-                    // self.view.frame.origin.y -= keyboardSize.height - 100
-                }
-            }
-        }
-    }
-    
-    @objc func keyboardWillHide(notification: NSNotification) {
-        if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
-            if self.view.frame.origin.y != 0{
-                if UIDevice.current.userInterfaceIdiom == .pad{
-                    self.view.frame.origin.y += keyboardSize.height - 200
-                }
-                else{
-                    //self.view.frame.origin.y += keyboardSize.height - 100
-                }
-            }
-        }
-    }
     @IBAction func btnBackActn(_ sender: Any) {
         self.dismiss(animated: true)
     }

@@ -100,7 +100,6 @@ class APICall{
         Alamofire.request(url,method: .post).responseJSON{
             response in
             if(response.result.isSuccess){
-                if response.response?.statusCode == 200{
                     if let data = response.data {
                         let jsonDecoder = JSONDecoder()
                         do {
@@ -111,17 +110,18 @@ class APICall{
                             completion(String((response.response?.statusCode)!), ArticleAPIResult.Failure(error.localizedDescription))
                         }
                     }
-                } else{
-                    completion(String((response.response?.statusCode)!), ArticleAPIResult.Failure("\(String(describing: response.response?.statusCode))"))
-                }
+               
             }
             else{
                 if let err = response.result.error as? URLError, err.code == .notConnectedToInternet {
                     completion("no net", ArticleAPIResult.Failure(err.localizedDescription))
                 }
+                else{
+                    completion(String((response.response?.statusCode)!), ArticleAPIResult.Failure("\(String(describing: response.response?.statusCode))"))
+                }
+                }
             }
         }
-    }
     
     func loadCategoriesAPI(_ completion : @escaping (Int, CategoryAPIResult) -> ()){
         let url = APPURL.CategoriesURL
@@ -154,22 +154,25 @@ class APICall{
     }
     
     func loadSearchAPI(url: String,_ completion : @escaping (String, ArticleAPIResult) -> ()){
-        Alamofire.request(url,method: .get).responseJSON{
+        Alamofire.request(url,method: .get, encoding: URLEncoding.default).responseJSON{
             response in
             if(response.result.isSuccess){
-                if response.response?.statusCode == 200{
+                //if response.response?.statusCode == 200{
                     if let data = response.data {
                         let  jsonDecoder = JSONDecoder()
                         do {
                             let jsonData = try jsonDecoder.decode(ArticleStatus.self, from: data)
+                            if jsonData.header.status == "0" {
+                                completion(String((response.response?.statusCode)!), ArticleAPIResult.Failure((jsonData.errors?.Msg)!))
+                            }else{
                             completion(String((response.response?.statusCode)!), ArticleAPIResult.Success([jsonData]))
-                            
+                            }
                         }
                         catch {
                             completion(String((response.response?.statusCode)!), ArticleAPIResult.Failure(error as! String))
                         }
                     }
-                }
+               // }
                 else{
                     completion(String((response.response?.statusCode)!), ArticleAPIResult.Failure("\(response.response?.statusCode)"))
                 }

@@ -65,7 +65,7 @@ class HomeVC: UIViewController{
             }
              else{
                 let BookmarkRecordCount = DBManager().IsCoreDataEmpty(entity: "BookmarkArticles")
-                 let LikeRecordCount = DBManager().IsCoreDataEmpty(entity: "BookmarkArticles")
+                 let LikeRecordCount = DBManager().IsCoreDataEmpty(entity: "LikeDislike")
                 if BookmarkRecordCount != 0 || LikeRecordCount != 0{
                     fetchBookmarkDataFromDB()
                 }
@@ -73,12 +73,10 @@ class HomeVC: UIViewController{
             
         }
         if Reachability.isConnectedToNetwork(){
-            print("Internet Connection Available!")
             activityIndicator.startAnimating()
             let url = APPURL.ArticlesByCategoryURL + "\(self.selectedCategory)"
             self.saveArticlesInDB(url : url)
         }else{
-            print("Internet Connection not Available!")
             coredataRecordCount = DBManager().IsCoreDataEmpty(entity: "NewsArticle")
             if self.coredataRecordCount != 0 {
                 self.fetchArticlesFromDB()
@@ -97,7 +95,6 @@ class HomeVC: UIViewController{
             if selectedCategory == "" || selectedCategory == "For You" || selectedCategory == "All News"
             {
                 self.filterNews(selectedCat: "All News" )
-                print("cat pressed is: for u")
             }else{
                 self.filterNews(selectedCat: selectedCategory )
             }
@@ -143,7 +140,6 @@ class HomeVC: UIViewController{
         DBManager().SaveLikeDislikeArticles(){response in
             if response == true{
                  self.fetchBookmarkDataFromDB()
-                print("like dislike status has been saved in DB")
             }
         }
     }
@@ -175,7 +171,6 @@ class HomeVC: UIViewController{
             self.appDelegate?.persistentContainer.viewContext
         do {
             self.ShowArticle = (try managedContext?.fetch(fetchRequest))! as! [NewsArticle]
-            print(self.ShowArticle)
         }
         catch {
             print("error executing fetch request: \(error)")
@@ -207,11 +202,11 @@ class HomeVC: UIViewController{
             switch response {
             case .Success(let data) :
                 if data.count > 0{
-                    self.articlesArr = data[0].body.articles
-                    if data[0].body.next != nil{
-                        self.nextURL = data[0].body.next!
+                    self.articlesArr = data[0].body!.articles
+                    if data[0].body!.next != nil{
+                        self.nextURL = data[0].body!.next!
                     }
-                    if data[0].body.articles.count == 0{
+                    if data[0].body!.articles.count == 0{
                         self.activityIndicator.stopAnimating()
                         self.lblNonews.isHidden = false
                     }
@@ -310,7 +305,7 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
         //timestamp conversion
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
-        dateFormatter.timeZone = NSTimeZone(name: "UTC")! as TimeZone
+        dateFormatter.timeZone = NSTimeZone.local
         cell.lblSource.textColor = colorConstants.txtDarkGrayColor
         cell.lblTimesAgo.textColor = colorConstants.txtDarkGrayColor
         //display data from DB

@@ -151,11 +151,11 @@ class BookmarkVC: UIViewController {
             switch response {
             case .Success(let data) :
                 if data.count > 0{
-                    self.bookmarkedArticlesArr = data[0].body.articles
-                    if data[0].body.next != nil{
-                        self.nextURL = data[0].body.next!
+                    self.bookmarkedArticlesArr = data[0].body!.articles
+                    if data[0].body!.next != nil{
+                        self.nextURL = data[0].body!.next!
                     }
-                    if data[0].body.articles.count == 0{
+                    if data[0].body!.articles.count == 0{
                         self.activityIndicator.stopAnimating()
                         self.bookmarkResultTV.makeToast("There is not any article bookmarked yet...", duration: 1.0, position: .center)
                     }else{
@@ -214,7 +214,7 @@ extension BookmarkVC: UITableViewDelegate, UITableViewDataSource{
         cell.lbltimeAgo.textColor = colorConstants.txtDarkGrayColor
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
-        dateFormatter.timeZone = NSTimeZone(name: "UTC")! as TimeZone
+        dateFormatter.timeZone = NSTimeZone.local
         if ShowArticle.count != 0{
             let currentArticle = ShowArticle[indexPath.row]
             cell.lblSource.text = currentArticle.source
@@ -267,9 +267,9 @@ extension BookmarkVC: UITableViewDelegate, UITableViewDataSource{
                     switch response {
                     case .Success(let data) :
                         if data.count > 0{
-                            self.bookmarkedArticlesArr.append(contentsOf: data[0].body.articles)
-                            if data[0].body.next != nil{
-                                self.nextURL = data[0].body.next!
+                            self.bookmarkedArticlesArr.append(contentsOf: data[0].body!.articles)
+                            if data[0].body!.next != nil{
+                                self.nextURL = data[0].body!.next!
                             }
                             else{
                                 self.nextURL = ""

@@ -24,12 +24,14 @@ class SearchVC: UIViewController {
     @IBOutlet weak var lblNoNews: UILabel!
     let activityIndicator = MDCActivityIndicator()
     //variables
-    var results: [NewsArticle] = []
+    var Searchresults = [SearchArticles]()
     var nextURL = ""
     let appDelegate = UIApplication.shared.delegate as? AppDelegate
     let textSizeSelected = UserDefaults.standard.value(forKey: "textSize") as! Int
     var searchArticlesArr = [Article]()
     var recordCount = 0
+    var coredataRecordCount = 0
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         if UserDefaults.standard.value(forKey: "searchTxt") != nil{
@@ -49,6 +51,7 @@ class SearchVC: UIViewController {
         txtSearch.font = FontConstants.NormalFontContent
         lblTitle.textColor = colorConstants.whiteColor
         lblTitle.font = FontConstants.viewTitleFont
+
     }
     
     @objc private func darkModeEnabled(_ notification: Notification) {
@@ -83,7 +86,6 @@ class SearchVC: UIViewController {
         alertController.addAction(action1)
         
         let action2 = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.default) { (action:UIAlertAction) in
-            print("You've pressed cancel");
         }
         alertController.addAction(action2)
         
@@ -120,7 +122,17 @@ class SearchVC: UIViewController {
         UserDefaults.standard.set("", forKey: "isSearch")
         self.view.window!.rootViewController?.dismiss(animated: false, completion: nil)
     }
-    
+    func fetchBookmarkDataFromDB(){
+        let result = DBManager().FetchSearchLikeBookmarkFromDB()
+        switch result {
+        case .Success(let DBData) :
+            if DBData.count == 0{
+                searchResultTV.reloadData()
+            }
+        case .Failure(let errorMsg) : break
+        }
+    }
+
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
@@ -128,29 +140,22 @@ class SearchVC: UIViewController {
 
 extension SearchVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return recordCount
+        return recordCount != 0 ? recordCount : 0
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        print("This cell  was selected: \(indexPath.row)")
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let newsDetailvc:NewsDetailVC = storyboard.instantiateViewController(withIdentifier: "NewsDetailID") as! NewsDetailVC
         newsDetailvc.newsCurrentIndex = indexPath.row
-        if searchArticlesArr.count != 0 {
-        newsDetailvc.articleArr = searchArticlesArr
-        newsDetailvc.articleId = searchArticlesArr[indexPath.row].article_id!
-        }
-        else{
-            newsDetailvc.ShowArticle = results
-            newsDetailvc.articleId = Int(results[indexPath.row].article_id)
-        }
+            newsDetailvc.SearchArticle = Searchresults
+            newsDetailvc.articleId = Int(Searchresults[indexPath.row].article_id)
         UserDefaults.standard.set("search", forKey: "isSearch")
         present(newsDetailvc, animated: true, completion: nil)
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let cell = tableView.dequeueReusableCell(withIdentifier: "searchResultID", for:indexPath) as! SearchResultTVCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: "search", for:indexPath) as! SearchResultTVCell
         let borderColor: UIColor = UIColor.lightGray
         cell.ViewCellBackground.layer.borderColor = borderColor.cgColor
         cell.ViewCellBackground.layer.borderWidth = 1
@@ -161,21 +166,11 @@ extension SearchVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDele
         cell.lbltimeAgo.textColor = colorConstants.txtDarkGrayColor
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
-        dateFormatter.timeZone = NSTimeZone(name: "UTC")! as TimeZone
-        
-        if searchArticlesArr.count != 0{
-            let currentArticle = searchArticlesArr[indexPath.row]
-            cell.lblSource.text = currentArticle.source
-            let newDate = dateFormatter.date(from: currentArticle.published_on!)
-            let agoDate = Helper().timeAgoSinceDate(newDate!)
-            cell.lbltimeAgo.text = agoDate
-            cell.lblNewsDescription.text = currentArticle.title
-            cell.imgNews.sd_setImage(with: URL(string: currentArticle.imageURL!), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
-        }
-        else if results.count != 0{
-            recordCount = results.count
-            let currentArticle = results[indexPath.row]
-            cell.lblSource.text = currentArticle.source
+        dateFormatter.timeZone = NSTimeZone.local
+    
+       if Searchresults.count > 0{
+            let currentArticle = Searchresults[indexPath.row]
+            cell.lblSource.text =  currentArticle.source
             let newDate = dateFormatter.date(from: currentArticle.published_on!)
             let agoDate = Helper().timeAgoSinceDate(newDate!)
             cell.lbltimeAgo.text = agoDate
@@ -217,7 +212,7 @@ extension SearchVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDele
         return cell
     }
     
-    func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
+ /*  func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
         if targetContentOffset.pointee.y < scrollView.contentOffset.y {
             print("it's going up")
             if nextURL != "" {
@@ -225,9 +220,9 @@ extension SearchVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDele
                     switch response {
                     case .Success(let data) :
                         if data.count > 0 {
-                            self.searchArticlesArr.append(contentsOf: data[0].body.articles)
-                            if data[0].body.next != nil{
-                                self.nextURL = data[0].body.next!
+                            self.searchArticlesArr.append(contentsOf: data[0].body!.articles)
+                            if data[0].body!.next != nil{
+                                self.nextURL = data[0].body!.next!
                             }
                             else{
                                 self.nextURL = ""
@@ -255,66 +250,64 @@ extension SearchVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDele
                 }
             }
         }
+    }*/
+}
+extension String {
+    func makeHTMLfriendly() -> String {
+        var finalString = ""
+        for char in self {
+            for scalar in String(char).unicodeScalars {
+                finalString.append("&#\(scalar.value)")
+            }
+        }
+        return finalString
     }
 }
-
 extension SearchVC: UITextFieldDelegate
 {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool
     {
         txtSearch.resignFirstResponder()
         if !(txtSearch.text?.isEmpty)!{
-            if txtSearch.text != " "{
+            if txtSearch.text != ""{
                 var search = txtSearch.text!
-                // search = searchTxt.replacingOccurrences(of: "'", with: "%27")
-                let whitespace = NSCharacterSet.whitespaces
-                var range = search.rangeOfCharacter(from: whitespace)
-                
-                if let test = range {
-                    print("whitespace found")
-                    search = search.trimmingCharacters(in: .whitespacesAndNewlines)
-                    search = search.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)!
-                }
+                activityIndicator.startAnimating()
+                 search = search.trimmingCharacters(in: .whitespaces)
+             
                 let allowedCharacterSet = (CharacterSet(charactersIn: "!*();:@&=+$,/?%#[]").inverted)
-                
+
                 if let escapedString = search.addingPercentEncoding(withAllowedCharacters: allowedCharacterSet) {
                     search = escapedString
                 }
                 UserDefaults.standard.set(search, forKey: "searchTxt")
-            
+                if search == ""{
+                    self.searchResultTV.makeToast("Enter keyword to search", duration: 2.0, position: .center)
+                }else{
                 let url = APPURL.SearchURL + search
-                APICall().loadSearchAPI(url: url){ (Status, response) in
-                    switch response {
-                    case .Success(let data) :
-                        if data.count > 0{
-                            self.searchArticlesArr = data[0].body.articles
-                             self.recordCount = self.searchArticlesArr.count
-                            if data[0].body.next != nil{
-                                self.nextURL = data[0].body.next!
+                DBManager().deleteAllData(entity: "SearchArticles")
+                DBManager().SaveSearchDataDB(nextUrl: url){response in
+                    if response == true{
+                        
+                        self.fetchArticlesFromDB()
+                        if UserDefaults.standard.value(forKey: "token") != nil{
+                            
+                            let BookmarkRecordCount = DBManager().IsCoreDataEmpty(entity: "BookmarkArticles")
+                            let LikeRecordCount = DBManager().IsCoreDataEmpty(entity: "LikeDislike")
+                            if BookmarkRecordCount != 0 || LikeRecordCount != 0{
+                                self.fetchBookmarkDataFromDB()
                             }
-                            if data[0].body.articles.count == 0{
-                                self.lblNoNews.isHidden = false
-                                self.lblNoNews.text = "No news found"
-                            }
-                            else{
-                                self.lblNoNews.isHidden = true
-                            }
-                            self.searchResultTV.reloadData()
                         }
-                    case .Failure(let errormessage) :
-                        if Status == "no net"{
-                            self.fetchResult()
-                        }
-                        else{
-                        print(errormessage)
-                        self.activityIndicator.startAnimating()
-                        self.searchResultTV.makeToast(errormessage, duration: 2.0, position: .center)
-                        }
-                    case .Change(let code):
-                        print(code)
                     }
-                    self.activityIndicator.stopAnimating()
                 }
+                if UserDefaults.standard.value(forKey: "token") != nil{
+                    let BookmarkRecordCount = DBManager().IsCoreDataEmpty(entity: "BookmarkArticles")
+                    let LikeRecordCount = DBManager().IsCoreDataEmpty(entity: "LikeDislike")
+                    if BookmarkRecordCount != 0 || LikeRecordCount != 0{
+                        fetchBookmarkDataFromDB()
+            
+                    }
+                }
+            }
             }
             else{
                 self.searchResultTV.makeToast("Enter keyword to search", duration: 2.0, position: .center)
@@ -328,27 +321,42 @@ extension SearchVC: UITextFieldDelegate
         return true
     }
     
+    func fetchArticlesFromDB(){
+        let result = DBManager().FetchSearchDataFromDB(entity: "SearchArticles")
+        switch result {
+        case .Success(let DBData) :
+            Searchresults = DBData
+            recordCount = Searchresults.count
+            activityIndicator.startAnimating()
+            searchResultTV.reloadData()
+        case .Failure(let errorMsg) :
+            self.searchResultTV.makeToast("Please try again later", duration: 2.0, position: .center)
+        }
+    }
+    
     func fetchResult(){
         let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "NewsArticle")
         fetchRequest.predicate = NSPredicate(format: "title CONTAINS[c] %@ OR blurb CONTAINS[c] %@",txtSearch.text!, txtSearch.text!)
         let managedContext =
             appDelegate?.persistentContainer.viewContext
         do {
-            results = (try managedContext?.fetch(fetchRequest))
-                as! [NewsArticle]
-            recordCount = results.count
-    
+            Searchresults = (try managedContext?.fetch(fetchRequest))
+                as! [SearchArticles]
+            recordCount = Searchresults.count
             searchResultTV.reloadData()
+            
+            if recordCount == 0 {
+                self.searchResultTV.makeToast("News does not exist", duration: 2.0, position: .center)
+            }
         }
         catch {
-            print("error executing fetch request: \(error)")
+           self.searchResultTV.makeToast("Please try again later", duration: 2.0, position: .center)
         }
         
     }
     
     func textFieldDidBeginEditing(_ textField: UITextField) {
         if textField == txtSearch {
-            print("started editing text")
             lblNoNews.isHidden = true
         }
     }

@@ -636,7 +636,7 @@ class BookmarkDetailVC: UIViewController {
                     }
                     else{
                         self.setBookmarkImg()
-                         DBManager().addBookmarkedArticles(id: self.articleId)
+                         DBManager().addBookmarkedArticles(currentEntity: "", id: self.articleId)
                         self.view.makeToast(response, duration: 1.0, position: .center)
                     }
                 }
@@ -766,7 +766,7 @@ extension BookmarkDetailVC:UICollectionViewDelegate, UICollectionViewDataSource,
         return CGSize(width: width, height: 145.0)
     }
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return (self.RecomArticleData.count != 0) ? self.RecomArticleData[0].body.articles.count + 1 : 0
+        return (self.RecomArticleData.count != 0) ? self.RecomArticleData[0].body!.articles.count + 1 : 0
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -784,7 +784,7 @@ extension BookmarkDetailVC:UICollectionViewDelegate, UICollectionViewDataSource,
             cell.imgNews.isHidden = false
             cell.lblTitle.isHidden = false
             cell.lblMoreStories.isHidden = true
-            let currentArticle =  RecomArticleData[0].body.articles[indexPath.row - 1]
+            let currentArticle =  RecomArticleData[0].body!.articles[indexPath.row - 1]
             cell.lblTitle.text = currentArticle.title
             if currentArticle.imageURL != nil{
 
