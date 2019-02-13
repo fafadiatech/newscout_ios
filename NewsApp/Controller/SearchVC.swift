@@ -330,8 +330,7 @@ extension SearchVC: UITextFieldDelegate
             activityIndicator.startAnimating()
             searchResultTV.reloadData()
         case .Failure(let errorMsg) :
-            self.searchResultTV.makeToast(errorMsg, duration: 2.0, position: .center)
-        }else{
+            self.searchResultTV.makeToast("Please try again later", duration: 2.0, position: .center)
         }
     }
     
