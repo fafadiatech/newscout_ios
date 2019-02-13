@@ -73,12 +73,10 @@ class HomeVC: UIViewController{
             
         }
         if Reachability.isConnectedToNetwork(){
-            print("Internet Connection Available!")
             activityIndicator.startAnimating()
             let url = APPURL.ArticlesByCategoryURL + "\(self.selectedCategory)"
             self.saveArticlesInDB(url : url)
         }else{
-            print("Internet Connection not Available!")
             coredataRecordCount = DBManager().IsCoreDataEmpty(entity: "NewsArticle")
             if self.coredataRecordCount != 0 {
                 self.fetchArticlesFromDB()
@@ -97,7 +95,6 @@ class HomeVC: UIViewController{
             if selectedCategory == "" || selectedCategory == "For You" || selectedCategory == "All News"
             {
                 self.filterNews(selectedCat: "All News" )
-                print("cat pressed is: for u")
             }else{
                 self.filterNews(selectedCat: selectedCategory )
             }
@@ -143,7 +140,6 @@ class HomeVC: UIViewController{
         DBManager().SaveLikeDislikeArticles(){response in
             if response == true{
                  self.fetchBookmarkDataFromDB()
-                print("like dislike status has been saved in DB")
             }
         }
     }
@@ -175,7 +171,6 @@ class HomeVC: UIViewController{
             self.appDelegate?.persistentContainer.viewContext
         do {
             self.ShowArticle = (try managedContext?.fetch(fetchRequest))! as! [NewsArticle]
-            print(self.ShowArticle)
         }
         catch {
             print("error executing fetch request: \(error)")

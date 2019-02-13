@@ -989,8 +989,8 @@ extension NewsDetailVC:UICollectionViewDelegate, UICollectionViewDataSource, UIC
                 UserDefaults.standard.set("recommend", forKey: "isSearch")
             }
             newsDetailvc.newsCurrentIndex = indexPath.row - 1
-            //newsDetailvc.articleArr = RecomArticleData[0].body.articles
-            //  newsDetailvc.articleId = RecomArticleData[0].body.articles[indexPath.row - 1].article_id!
+            newsDetailvc.articleArr = RecomArticleData[0].body.articles
+              newsDetailvc.articleId = RecomArticleData[0].body.articles[indexPath.row - 1].article_id!
             present(newsDetailvc, animated: true, completion: nil)
         }
     }

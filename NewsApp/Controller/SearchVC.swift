@@ -51,14 +51,7 @@ class SearchVC: UIViewController {
         txtSearch.font = FontConstants.NormalFontContent
         lblTitle.textColor = colorConstants.whiteColor
         lblTitle.font = FontConstants.viewTitleFont
-        if UserDefaults.standard.value(forKey: "token") != nil{
-            
-            let BookmarkRecordCount = DBManager().IsCoreDataEmpty(entity: "BookmarkArticles")
-            let LikeRecordCount = DBManager().IsCoreDataEmpty(entity: "LikeDislike")
-            if BookmarkRecordCount != 0 || LikeRecordCount != 0{
-                fetchBookmarkDataFromDB()
-            }
-        }
+
     }
     
     @objc private func darkModeEnabled(_ notification: Notification) {
@@ -93,7 +86,6 @@ class SearchVC: UIViewController {
         alertController.addAction(action1)
         
         let action2 = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.default) { (action:UIAlertAction) in
-            print("You've pressed cancel");
         }
         alertController.addAction(action2)
         
@@ -135,26 +127,12 @@ class SearchVC: UIViewController {
         switch result {
         case .Success(let DBData) :
             if DBData.count == 0{
-                activityIndicator.stopAnimating()
+                searchResultTV.reloadData()
             }
         case .Failure(let errorMsg) : break
         }
     }
-//    func saveBookmarkDataInDB(url: String){
-//        DBManager().SaveBookmarkArticles(){response in
-//            if response == true{
-//                self.fetchBookmarkDataFromDB()
-//            }
-//        }
-//    }
-//    func saveLikeDataInDB(){
-//        DBManager().SaveLikeDislikeArticles(){response in
-//            if response == true{
-//                self.fetchBookmarkDataFromDB()
-//                print("like dislike status has been saved in DB")
-//            }
-//        }
-//    }
+
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
@@ -166,7 +144,6 @@ extension SearchVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDele
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        print("This cell  was selected: \(indexPath.row)")
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let newsDetailvc:NewsDetailVC = storyboard.instantiateViewController(withIdentifier: "NewsDetailID") as! NewsDetailVC
         newsDetailvc.newsCurrentIndex = indexPath.row
@@ -294,6 +271,7 @@ extension SearchVC: UITextFieldDelegate
         if !(txtSearch.text?.isEmpty)!{
             if txtSearch.text != ""{
                 var search = txtSearch.text!
+                activityIndicator.startAnimating()
                  search = search.trimmingCharacters(in: .whitespaces)
              
                 let allowedCharacterSet = (CharacterSet(charactersIn: "!*();:@&=+$,/?%#[]").inverted)
@@ -309,7 +287,16 @@ extension SearchVC: UITextFieldDelegate
                 DBManager().deleteAllData(entity: "SearchArticles")
                 DBManager().SaveSearchDataDB(nextUrl: url){response in
                     if response == true{
+                        
                         self.fetchArticlesFromDB()
+                        if UserDefaults.standard.value(forKey: "token") != nil{
+                            
+                            let BookmarkRecordCount = DBManager().IsCoreDataEmpty(entity: "BookmarkArticles")
+                            let LikeRecordCount = DBManager().IsCoreDataEmpty(entity: "LikeDislike")
+                            if BookmarkRecordCount != 0 || LikeRecordCount != 0{
+                                self.fetchBookmarkDataFromDB()
+                            }
+                        }
                     }
                 }
                 if UserDefaults.standard.value(forKey: "token") != nil{
@@ -340,10 +327,11 @@ extension SearchVC: UITextFieldDelegate
         case .Success(let DBData) :
             Searchresults = DBData
             recordCount = Searchresults.count
-        
+            activityIndicator.startAnimating()
             searchResultTV.reloadData()
         case .Failure(let errorMsg) :
-            print(errorMsg)
+            self.searchResultTV.makeToast(errorMsg, duration: 2.0, position: .center)
+        }else{
         }
     }
     
@@ -363,14 +351,13 @@ extension SearchVC: UITextFieldDelegate
             }
         }
         catch {
-            print("error executing fetch request: \(error)")
+           self.searchResultTV.makeToast("Please try again later", duration: 2.0, position: .center)
         }
         
     }
     
     func textFieldDidBeginEditing(_ textField: UITextField) {
         if textField == txtSearch {
-            print("started editing text")
             lblNoNews.isHidden = true
         }
     }

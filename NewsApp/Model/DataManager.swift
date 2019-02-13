@@ -484,7 +484,7 @@ class DBManager{
             newArticle.isBookmark = 1
             if currentEntity == "NewsArticle"{
             newArticle.addToArticle(Article[0])
-            }else{
+            }else if currentEntity == "SearchArticles"{
                 newArticle.addToSearchArticle(SearchArticle[0])
             }
             saveBlock()
