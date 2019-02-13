@@ -62,7 +62,7 @@ class BookmarkDetailVC: UIViewController {
     var darkModeStatus = Bool()
     var articleArr = [Article]()
     var bookmarkedArticle = [BookmarkArticles]()
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         activityIndicator.cycleColors = [.blue]
@@ -76,7 +76,7 @@ class BookmarkDetailVC: UIViewController {
             addPotraitConstraint()
         }
         else if UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad {
-
+            
             if statusBarOrientation.isLandscape{
                 viewLikeDislike.isHidden = true
                 if viewLikeDislikeHeightConstraint != nil{
@@ -89,7 +89,7 @@ class BookmarkDetailVC: UIViewController {
         else{
             viewLikeDislike.isHidden = true
         }
-
+        
         viewLikeDislike.backgroundColor = colorConstants.redColor
         ViewWebContainer.isHidden = true
         APICall().loadRecommendationNewsAPI(articleId: articleId){ (status,response) in
@@ -113,7 +113,7 @@ class BookmarkDetailVC: UIViewController {
                 }
             }
         }
-
+        
         NotificationCenter.default.addObserver(self, selector: #selector(darkModeEnabled(_:)), name: .darkModeEnabled, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(darkModeDisabled(_:)), name: .darkModeDisabled, object: nil)
         darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
@@ -124,28 +124,28 @@ class BookmarkDetailVC: UIViewController {
         let swipeUp = UISwipeGestureRecognizer(target: self, action: #selector(self.respondToSwipeGesture))
         swipeUp.direction = UISwipeGestureRecognizerDirection.up
         self.newsView.addGestureRecognizer(swipeUp)
-
+        
         let swipeLeft = UISwipeGestureRecognizer(target: self, action: #selector(self.respondToSwipeGesture))
         swipeLeft.direction = UISwipeGestureRecognizerDirection.left
         self.newsView.addGestureRecognizer(swipeLeft)
-
+        
         let swipeRight = UISwipeGestureRecognizer(target: self, action: #selector(self.respondToSwipeGesture))
         swipeRight.direction = UISwipeGestureRecognizerDirection.right
         self.newsView.addGestureRecognizer(swipeRight)
-
+        
         let swipeDown = UISwipeGestureRecognizer(target: self, action: #selector(self.respondToSwipeGesture))
         swipeDown.direction = UISwipeGestureRecognizerDirection.down
         self.newsView.addGestureRecognizer(swipeDown)
-
+        
         let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapped(gestureRecognizer:)))
         viewNewsArea.addGestureRecognizer(tapRecognizer)
         tapRecognizer.delegate = self as! UIGestureRecognizerDelegate
-
+        
         let PlayerTapRecognizer = UITapGestureRecognizer(target: self, action: #selector(PlayerViewtapped(gestureRecognizer:)))
         avPlayerView.addGestureRecognizer(PlayerTapRecognizer)
         PlayerTapRecognizer.delegate = self as! UIGestureRecognizerDelegate
     }
-
+    
     func addPotraitConstraint(){
         if lblSourceTopConstraint != nil && lblSourceTopConstraint != nil && viewLikeDislikeBottomConstraint != nil{
             NSLayoutConstraint.deactivate([lblTimesTopConstraint])
@@ -179,7 +179,7 @@ class BookmarkDetailVC: UIViewController {
         NSLayoutConstraint.activate([lblSourceTopConstraint])
         NSLayoutConstraint.activate([viewLikeDislikeBottomConstraint])
     }
-
+    
     func addLandscapeConstraints(){
         if lblSourceTopConstraint != nil && lblSourceTopConstraint != nil{
             NSLayoutConstraint.deactivate([lblTimesTopConstraint])
@@ -203,11 +203,11 @@ class BookmarkDetailVC: UIViewController {
         NSLayoutConstraint.activate([lblTimesTopConstraint])
         NSLayoutConstraint.activate([lblSourceTopConstraint])
     }
-
+    
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
-
+        
         super.viewWillTransition(to: size, with: coordinator)
-
+        
         if UIDevice.current.orientation.isLandscape {
             print(UIDevice.current.orientation)
             viewLikeDislike.isHidden = true
@@ -220,24 +220,25 @@ class BookmarkDetailVC: UIViewController {
             addPotraitConstraint()
         }
     }
-
+    
     @objc private func darkModeEnabled(_ notification: Notification) {
         NightNight.theme = .night
         changeTheme()
         darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
     }
-
+    
     @objc private func darkModeDisabled(_ notification: Notification) {
         NightNight.theme = .normal
     }
-
+    
     deinit {
         NotificationCenter.default.removeObserver(self, name: .darkModeEnabled, object: nil)
         NotificationCenter.default.removeObserver(self, name: .darkModeDisabled, object: nil)
     }
+    
     //detect whether img or video from url
     func checkImageOrVideo(url : String) -> Bool{
-
+        
         let imageExtensions = ["png", "jpg", "gif"]
         let url: URL? = NSURL(fileURLWithPath: url) as URL
         let pathExtention = url?.pathExtension
@@ -249,22 +250,22 @@ class BookmarkDetailVC: UIViewController {
             return false
         }
     }
-
+    
     //create thumbnail of video
     func getThumbnailImage(forUrl url: URL) -> UIImage? {
         let asset: AVAsset = AVAsset(url: url)
         let imageGenerator = AVAssetImageGenerator(asset: asset)
-
+        
         do {
             let thumbnailImage = try imageGenerator.copyCGImage(at: CMTimeMake(1, 60) , actualTime: nil)
             return UIImage(cgImage: thumbnailImage)
         } catch let error {
             print(error)
         }
-
+        
         return nil
     }
-
+    
     func createThumbnailOfVideoFromRemoteUrl(url: String) -> UIImage? {
         let asset = AVAsset(url: URL(string: url)!)
         let assetImgGenerate = AVAssetImageGenerator(asset: asset)
@@ -278,7 +279,7 @@ class BookmarkDetailVC: UIViewController {
             return nil
         }
     }
-
+    
     func changeTheme(){
         suggestedCV.backgroundColor = colorConstants.txtlightGrayColor
         newsView.backgroundColor = colorConstants.grayBackground1
@@ -292,7 +293,7 @@ class BookmarkDetailVC: UIViewController {
         viewWebTitle.backgroundColor = colorConstants.grayBackground3
         lblWebSource.textColor = .white
     }
-
+    
     @objc func PlayerViewtapped(gestureRecognizer: UITapGestureRecognizer) {
         if btnPlayVideo.isHidden == true{
             btnPlayVideo.isHidden = false
@@ -301,7 +302,7 @@ class BookmarkDetailVC: UIViewController {
             btnPlayVideo.isHidden = true
         }
     }
-
+    
     @objc func tapped(gestureRecognizer: UITapGestureRecognizer) {
         if UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.phone{
             if viewLikeDislike.isHidden == true{
@@ -326,21 +327,21 @@ class BookmarkDetailVC: UIViewController {
                 }
             }
         }
-
+        
     }
-
+    
     override var prefersStatusBarHidden: Bool {
         return true
     }
-
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         changeFont()
     }
-
+    
     func changeFont(){
         let textSizeSelected = UserDefaults.standard.value(forKey: "textSize") as! Int
-
+        
         if textSizeSelected == 0{
             lblNewsHeading.font = FontConstants.smallFontHeadingBold
             lblSource.font = FontConstants.smallFontContentMedium
@@ -360,20 +361,20 @@ class BookmarkDetailVC: UIViewController {
             txtViewNewsDesc.font = FontConstants.NormalFontTitle
         }
     }
-
+    
     //response to swipe gestures
     @objc func respondToSwipeGesture(gesture: UIGestureRecognizer) {
-
+        
         let transition = CATransition()
         transition.duration = 0.5
-
+        
         if let swipeGesture = gesture as? UISwipeGestureRecognizer {
-
+            
             switch swipeGesture.direction {
             case UISwipeGestureRecognizerDirection.right:
                 ViewWebContainer.isHidden = true
                 viewLikeDislike.isHidden = false
-
+                
             case UISwipeGestureRecognizerDirection.down:
                 if newsCurrentIndex > 0
                 {
@@ -397,9 +398,9 @@ class BookmarkDetailVC: UIViewController {
                 view.window!.layer.add(transition, forKey: kCATransition)
                 let myURL = URL(string: sourceURL)!
                 let myRequest = URLRequest(url: myURL)
-
+                
                 WKWebView.load(myRequest)
-
+                
             case UISwipeGestureRecognizerDirection.up:
                 if newsCurrentIndex < BookmarkArticle.count - 1
                 {
@@ -417,7 +418,7 @@ class BookmarkDetailVC: UIViewController {
             }
         }
     }
-
+    
     @IBAction func btnPlayVideo(_ sender: Any) {
         if player?.rate == 0
         {
@@ -430,19 +431,19 @@ class BookmarkDetailVC: UIViewController {
             btnPlayVideo.setImage(UIImage(named:"play"), for: .normal)
         }
     }
-
+    
     @objc func ShowPausebtn() {
         if (btnPlayVideo.currentImage?.isEqual(UIImage(named: "pause")))! {
             btnPlayVideo.isHidden = true
         }
     }
-
+    
     @objc func playbackSliderValueChanged(_ playbackSlider:UISlider){
         let seconds : Int64 = Int64(playbackSlider.value)
         let targetTime:CMTime = CMTimeMake(seconds, 1)
         btnPlayVideo.isHidden = false
         player!.seek(to: targetTime)
-
+        
         if player!.rate == 0{
             player?.pause()
         }
@@ -450,7 +451,7 @@ class BookmarkDetailVC: UIViewController {
             player?.play()
         }
     }
-
+    
     //func ShowNews(currentArticle: ArticleDict){ *for detail API pass articleDict
     func ShowNews(currentIndex: Int){
         let dateFormatter = DateFormatter()
@@ -468,7 +469,7 @@ class BookmarkDetailVC: UIViewController {
             lblSource.text = currentArticle.source
             lblTimeAgo.text = agoDate
             sourceURL = currentArticle.source_url!
-
+            
             let checkImg = self.checkImageOrVideo(url: currentArticle.imageURL!)
             if checkImg == false{
                 DispatchQueue.global(qos: .userInitiated).async {
@@ -479,7 +480,7 @@ class BookmarkDetailVC: UIViewController {
                         let url = URL(string: "https://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4")
                         let playerItem:AVPlayerItem = AVPlayerItem(url: url!)
                         self.player = AVPlayer(playerItem: playerItem)
-
+                        
                         self.avPlayerView.isHidden = false
                         let avPlayer = AVPlayerLayer(player: self.player!)
                         let castedLayer = self.avPlayerView.layer as! AVPlayerLayer
@@ -493,15 +494,15 @@ class BookmarkDetailVC: UIViewController {
                             self.playbackSlider = UISlider(frame:CGRect(x:0, y: self.avPlayerView.bounds.size.height - 100, width:self.avPlayerView.bounds.size.width, height: 20))
                         }
                         self.playbackSlider.minimumValue = 0
-
-
+                        
+                        
                         let duration : CMTime = playerItem.asset.duration
                         let seconds : Float64 = CMTimeGetSeconds(duration)
-
+                        
                         self.playbackSlider.maximumValue = Float(seconds)
                         self.playbackSlider.isContinuous = true
                         self.playbackSlider.tintColor = UIColor.green
-
+                        
                         self.playbackSlider.addTarget(self, action: #selector(NewsDetailVC.playbackSliderValueChanged(_:)), for: .valueChanged)
                         self.avPlayerView.addSubview(self.playbackSlider)
                         self.btnPlayVideo.isHidden = false
@@ -512,43 +513,43 @@ class BookmarkDetailVC: UIViewController {
                     }
                 }
             }
-
+                
             else{
                 self.btnPlayVideo.isHidden = true
                 self.avPlayerView.isHidden = true
                 self.imgNews.sd_setImage(with: URL(string: currentArticle.imageURL!), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
             }
-
-           /* if currentArticle.isLike == 0 {
-                btnLike.setImage(UIImage(named: "thumb_up_filled.png"), for: .normal)
-                btnDislike.setImage(UIImage(named: "thumb_down.png"), for: .normal)
-            }
-            else if currentArticle.isLike == 1{
-                btnLike.setImage(UIImage(named: "thumb_up.png"), for: .normal)
-                btnDislike.setImage(UIImage(named: "thumb_down_filled.png"), for: .normal)
-            }
-            else if currentArticle.isLike == 2{
-                btnLike.setImage(UIImage(named: "thumb_up.png"), for: .normal)
-                btnDislike.setImage(UIImage(named: "thumb_down.png"), for: .normal)
-            }
-            else{
-                btnLike.setImage(UIImage(named: "thumb_up.png"), for: .normal)
-                btnDislike.setImage(UIImage(named: "thumb_down.png"), for: .normal)
-            }
-            if bookmarkedArticle[currentIndex].isBookmark == 1 {
-                setBookmarkImg()
-            }else{
-                ResetBookmarkImg()
-            }*/
+            
+            /* if currentArticle.isLike == 0 {
+             btnLike.setImage(UIImage(named: AssetConstants.thumb_up_filled), for: .normal)
+             btnDislike.setImage(UIImage(named: AssetConstants.thumb_down), for: .normal)
+             }
+             else if currentArticle.isLike == 1{
+             btnLike.setImage(UIImage(named: AssetConstants.thumb_up), for: .normal)
+             btnDislike.setImage(UIImage(named: "thumb_down_filled.png"), for: .normal)
+             }
+             else if currentArticle.isLike == 2{
+             btnLike.setImage(UIImage(named: AssetConstants.thumb_up), for: .normal)
+             btnDislike.setImage(UIImage(named: AssetConstants.thumb_down), for: .normal)
+             }
+             else{
+             btnLike.setImage(UIImage(named: AssetConstants.thumb_up), for: .normal)
+             btnDislike.setImage(UIImage(named: AssetConstants.thumb_down), for: .normal)
+             }
+             if bookmarkedArticle[currentIndex].isBookmark == 1 {
+             setBookmarkImg()
+             }else{
+             ResetBookmarkImg()
+             }*/
         }
         if imgNews.image == nil{
-            imgNews.image = UIImage(named: "NoImage.png")
+            imgNews.image = UIImage(named: AssetConstants.NoImage)
         }
     }
-
+    
     @IBAction func btnLikeActn(_ sender: Any) {
         if UserDefaults.standard.value(forKey: "token") != nil || UserDefaults.standard.value(forKey: "FBToken") != nil || UserDefaults.standard.value(forKey: "googleToken") != nil{
-            if (btnLike.currentImage?.isEqual(UIImage(named: "thumb_up.png")))! {
+            if (btnLike.currentImage?.isEqual(UIImage(named: AssetConstants.thumb_up)))! {
                 let param = ["article_id" : articleId,
                              "isLike" : 0]
                 APICall().LikeDislikeAPI(param : param){
@@ -557,12 +558,12 @@ class BookmarkDetailVC: UIViewController {
                         self.view.makeToast(response, duration: 1.0, position: .center)
                     }
                     else{
-                        self.btnLike.setImage(UIImage(named: "thumb_up_filled.png"), for: .normal)
-                        if (self.btnDislike.currentImage?.isEqual(UIImage(named: "thumb_down_filled.png")))! {
-                            self.btnDislike.setImage(UIImage(named: "thumb_down.png"), for: .normal)
-
+                        self.btnLike.setImage(UIImage(named: AssetConstants.thumb_up_filled), for: .normal)
+                        if (self.btnDislike.currentImage?.isEqual(UIImage(named: AssetConstants.thumb_down_filled)))! {
+                            self.btnDislike.setImage(UIImage(named: AssetConstants.thumb_down), for: .normal)
+                            
                         }
-                       // self.BookmarkArticle[self.newsCurrentIndex].isLike = 0
+                        // self.BookmarkArticle[self.newsCurrentIndex].isLike = 0
                     }
                 }
             }
@@ -575,8 +576,8 @@ class BookmarkDetailVC: UIViewController {
                         self.view.makeToast(response, duration: 1.0, position: .center)
                     }
                     else{
-                        self.btnLike.setImage(UIImage(named: "like.png"), for: .normal)
-                      //  self.BookmarkArticle[self.newsCurrentIndex].isLike = 2
+                        self.btnLike.setImage(UIImage(named: AssetConstants.thumb_up), for: .normal)
+                        //  self.BookmarkArticle[self.newsCurrentIndex].isLike = 2
                     }
                 }
             }
@@ -585,10 +586,10 @@ class BookmarkDetailVC: UIViewController {
             showMsg(title: "Please login to continue..", msg: "")
         }
     }
-
+    
     @IBAction func btnDislikeActn(_ sender: Any) {
         if UserDefaults.standard.value(forKey: "token") != nil || UserDefaults.standard.value(forKey: "FBToken") != nil || UserDefaults.standard.value(forKey: "googleToken") != nil{
-            if (btnDislike.currentImage?.isEqual(UIImage(named: "thumb_down.png")))! {
+            if (btnDislike.currentImage?.isEqual(UIImage(named: AssetConstants.thumb_down)))! {
                 let param = ["article_id" : articleId,
                              "isLike" : 1]
                 APICall().LikeDislikeAPI(param : param ){
@@ -597,11 +598,11 @@ class BookmarkDetailVC: UIViewController {
                         self.view.makeToast(response, duration: 1.0, position: .center)
                     }
                     else{
-                        self.btnDislike.setImage(UIImage(named: "thumb_down_filled.png"), for: .normal)
-                        if (self.btnLike.currentImage?.isEqual(UIImage(named: "thumb_up_filled.png")))! {
-                            self.btnLike.setImage(UIImage(named: "thumb_up.png"), for: .normal)
+                        self.btnDislike.setImage(UIImage(named: AssetConstants.thumb_down_filled), for: .normal)
+                        if (self.btnLike.currentImage?.isEqual(UIImage(named: AssetConstants.thumb_up_filled)))! {
+                            self.btnLike.setImage(UIImage(named: AssetConstants.thumb_up), for: .normal)
                         }
-                       // self.BookmarkArticle[self.newsCurrentIndex].isLike = 1
+                        // self.BookmarkArticle[self.newsCurrentIndex].isLike = 1
                     }
                 }
             }
@@ -614,7 +615,7 @@ class BookmarkDetailVC: UIViewController {
                         self.view.makeToast(response, duration: 1.0, position: .center)
                     }
                     else{
-                        self.btnDislike.setImage(UIImage(named: "dislike.png"), for: .normal)
+                        self.btnDislike.setImage(UIImage(named: AssetConstants.thumb_down), for: .normal)
                         //self.BookmarkArticle[self.newsCurrentIndex].isLike = 2
                     }
                 }
@@ -624,11 +625,11 @@ class BookmarkDetailVC: UIViewController {
             showMsg(title: "Please login to continue..", msg: "")
         }
     }
-
+    
     @IBAction func btnBookmarkActn(_ sender: Any) {
         if UserDefaults.standard.value(forKey: "token") != nil || UserDefaults.standard.value(forKey: "FBToken") != nil || UserDefaults.standard.value(forKey: "googleToken") != nil{
-            if (((btnBookamark.currentImage?.isEqual(UIImage(named: "bookmark.png")))!) || ((btnBookamark.currentImage?.isEqual(UIImage(named: "Bookmark_white.png")))!)) {
-
+            if (((btnBookamark.currentImage?.isEqual(UIImage(named: AssetConstants.bookmark)))!) || ((btnBookamark.currentImage?.isEqual(UIImage(named: AssetConstants.Bookmark_white)))!)) {
+                
                 APICall().bookmarkAPI(id: articleId){
                     (status, response) in
                     if status == "0"{
@@ -636,12 +637,12 @@ class BookmarkDetailVC: UIViewController {
                     }
                     else{
                         self.setBookmarkImg()
-                         DBManager().addBookmarkedArticles(currentEntity: "", id: self.articleId)
+                        DBManager().addBookmarkedArticles(currentEntity: "", id: self.articleId)
                         self.view.makeToast(response, duration: 1.0, position: .center)
                     }
                 }
             }
-            else if (((btnBookamark.currentImage?.isEqual(UIImage(named: "filledBookmark.png")))!) || ((btnBookamark.currentImage?.isEqual(UIImage(named: "Bookmark_white_fill.png")))!)){
+            else if (((btnBookamark.currentImage?.isEqual(UIImage(named: AssetConstants.filledBookmark)))!) || ((btnBookamark.currentImage?.isEqual(UIImage(named: AssetConstants.Bookmark_white_fill)))!)){
                 APICall().bookmarkAPI(id: articleId){
                     (status, response) in
                     if status == "0"{
@@ -659,25 +660,25 @@ class BookmarkDetailVC: UIViewController {
             showMsg(title: "Please login to continue..", msg: "")
         }
     }
-
+    
     func setBookmarkImg(){
         if darkModeStatus == true{
-            btnBookamark.setImage(UIImage(named: "Bookmark_white_fill.png"), for: .normal)
+            btnBookamark.setImage(UIImage(named: AssetConstants.Bookmark_white_fill), for: .normal)
         }
         else{
-            btnBookamark.setImage(UIImage(named: "filledBookmark.png"), for: .normal)
+            btnBookamark.setImage(UIImage(named: AssetConstants.filledBookmark), for: .normal)
         }
     }
-
+    
     func ResetBookmarkImg(){
         if darkModeStatus == true{
-            btnBookamark.setImage(UIImage(named: "Bookmark_white.png"), for: .normal)
+            btnBookamark.setImage(UIImage(named: AssetConstants.Bookmark_white), for: .normal)
         }
         else{
-            btnBookamark.setImage(UIImage(named: "bookmark.png"), for: .normal)
+            btnBookamark.setImage(UIImage(named: AssetConstants.bookmark), for: .normal)
         }
     }
-
+    
     @IBAction func btnShareActn(_ sender: Any) {
         let text = BookmarkArticle[newsCurrentIndex].title
         let webURL = "Sent via NewsCout : (www.newscout.in)"
@@ -702,21 +703,21 @@ class BookmarkDetailVC: UIViewController {
             }
             shareAll = [ text , sourceURL , webURL ] as [Any]
         }
-
+        
         let activityViewController = UIActivityViewController(activityItems: shareAll, applicationActivities: nil)
         activityViewController.popoverPresentationController?.sourceView = sender as! UIView
         self.present(activityViewController, animated: true, completion: nil)
     }
-
+    
     @IBAction func btnBackAction(_ sender: Any) {
-            self.dismiss(animated: false)
+        self.dismiss(animated: false)
     }
-
+    
     @IBAction func btnWebBackAction(_ sender: Any) {
         ViewWebContainer.isHidden = true
         viewLikeDislike.isHidden = false
     }
-
+    
     func showMsg(title: String, msg : String)
     {
         let alertController = UIAlertController(title: title, message: msg, preferredStyle: .alert)
@@ -724,26 +725,26 @@ class BookmarkDetailVC: UIViewController {
         {
             alertController.popoverPresentationController?.sourceView = self.view
             alertController.popoverPresentationController?.sourceRect = CGRect(x: self.view.bounds.midX, y: self.view.bounds.midY, width: 0, height: 0)
-
+            
         }
         let action1 = UIAlertAction(title: "OK", style: .default) { (action:UIAlertAction) in
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             let vc:LoginVC = storyboard.instantiateViewController(withIdentifier: "LoginID") as! LoginVC
             self.present(vc, animated: true, completion: nil)
         }
-
+        
         alertController.addAction(action1)
-
+        
         let action2 = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.default) { (action:UIAlertAction) in
         }
         alertController.addAction(action2)
-
+        
         self.present(alertController, animated: true, completion: nil)
     }
-
+    
     @IBAction func PlayButtonTapped() -> Void {
     }
-
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
@@ -768,7 +769,7 @@ extension BookmarkDetailVC:UICollectionViewDelegate, UICollectionViewDataSource,
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return (self.RecomArticleData.count != 0) ? self.RecomArticleData[0].body!.articles.count + 1 : 0
     }
-
+    
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "SuggestedNewsID", for: indexPath) as! SuggestedNewsCVCell
         cell.lblTitle.font = FontConstants.NormalFontContent
@@ -787,7 +788,7 @@ extension BookmarkDetailVC:UICollectionViewDelegate, UICollectionViewDataSource,
             let currentArticle =  RecomArticleData[0].body!.articles[indexPath.row - 1]
             cell.lblTitle.text = currentArticle.title
             if currentArticle.imageURL != nil{
-
+                
                 let checkImg = checkImageOrVideo(url: currentArticle.imageURL!)
                 if checkImg == false{
                     cell.btnCellPlayVIdeo.isHidden = false
@@ -801,20 +802,20 @@ extension BookmarkDetailVC:UICollectionViewDelegate, UICollectionViewDataSource,
                 }
             }
             if cell.imgNews.image == nil{
-                cell.imgNews.image = UIImage(named: "NoImage.png")
+                cell.imgNews.image = UIImage(named: AssetConstants.NoImage)
             }
-
+            
         }
-
+        
         if  darkModeStatus == true{
             cell.lblMoreStories.textColor = colorConstants.whiteColor
             cell.lblTitle.textColor = colorConstants.whiteColor
             cell.backgroundColor = colorConstants.txtlightGrayColor
         }
-
+        
         return cell
     }
-
+    
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if indexPath.row != 0{
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
@@ -835,5 +836,5 @@ extension BookmarkDetailVC : UIGestureRecognizerDelegate {
         }
         return true
     }
-
+    
 }

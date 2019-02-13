@@ -14,7 +14,6 @@ import NightNight
 
 class SettingsTVC: UITableViewController, GIDSignInUIDelegate {
     @IBOutlet weak var lblDailyEdition: UILabel!
-    
     @IBOutlet weak var lblNIghtMode: UILabel!
     @IBOutlet weak var lblProfile: UILabel!
     @IBOutlet weak var lblPersonlized: UILabel!
@@ -71,7 +70,7 @@ class SettingsTVC: UITableViewController, GIDSignInUIDelegate {
         settingsTV.backgroundColor = colorConstants.grayBackground2
     }
     
-    @objc private func darkModeDisabled(_ notification: Notification) {
+    @objc private func darkModeDisabled(_ notification: Notification){
         NightNight.theme = .normal
         settingsTV.backgroundColor = colorConstants.grayBackground3
     }
@@ -104,7 +103,7 @@ class SettingsTVC: UITableViewController, GIDSignInUIDelegate {
         }
         else {
             if UserDefaults.standard.value(forKey: "email") != nil{
-            lblLogin.text = "\(UserDefaults.standard.value(forKey: "email")!)"
+                lblLogin.text = "\(UserDefaults.standard.value(forKey: "email")!)"
                 btnLogout.isHidden = false
             }
         }
@@ -200,10 +199,10 @@ class SettingsTVC: UITableViewController, GIDSignInUIDelegate {
         let headerView = view as! UITableViewHeaderFooterView
         headerView.textLabel?.textColor = .black
         headerView.textLabel?.font = FontConstants.settingsTVHeader
-       // let cell = SettingsTVCell()
+        // let cell = SettingsTVCell()
         let darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
         if  darkModeStatus == true{
-        //    cell.backgroundColor = .black
+            //    cell.backgroundColor = .black
         }
         else{
             //cell.backgroundColor = colorConstants.grayBackground3
@@ -254,12 +253,12 @@ class SettingsTVC: UITableViewController, GIDSignInUIDelegate {
             
             activityViewController.popoverPresentationController?.sourceRect = CGRect(x: settingsTV.center.x , y: settingsTV.center.y + 200, width: 0, height: 0)
             activityViewController.popoverPresentationController?.sourceView = settingsTV as! UITableView
-           popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection(rawValue: 0)
+            popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection(rawValue: 0)
             self.present(activityViewController, animated: true, completion: nil)
         }
             //Replace url with itunes app url
         else if indexPath.section == 3 && indexPath.row == 2{
-          //  UIApplication.sharedApplication().openURL(NSURL(string : "itms-apps://itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?id=\(0)&onlyLatestVersion=true&pageNumber=0&sortOrdering=1)")!);
+            //  UIApplication.sharedApplication().openURL(NSURL(string : "itms-apps://itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?id=\(0)&onlyLatestVersion=true&pageNumber=0&sortOrdering=1)")!);
             let url = URL(string: "https://mail.google.com")!
             UIApplication.shared.openURL(url)
         }

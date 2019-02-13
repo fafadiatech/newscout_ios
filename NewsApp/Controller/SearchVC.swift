@@ -51,10 +51,10 @@ class SearchVC: UIViewController {
         txtSearch.font = FontConstants.NormalFontContent
         lblTitle.textColor = colorConstants.whiteColor
         lblTitle.font = FontConstants.viewTitleFont
-
+        
     }
     
-    @objc private func darkModeEnabled(_ notification: Notification) {
+    @objc private func darkModeEnabled(_ notification: Notification){
         NightNight.theme = .night
         searchResultTV.backgroundColor = colorConstants.grayBackground3
     }
@@ -132,7 +132,7 @@ class SearchVC: UIViewController {
         case .Failure(let errorMsg) : break
         }
     }
-
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
@@ -147,8 +147,8 @@ extension SearchVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDele
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let newsDetailvc:NewsDetailVC = storyboard.instantiateViewController(withIdentifier: "NewsDetailID") as! NewsDetailVC
         newsDetailvc.newsCurrentIndex = indexPath.row
-            newsDetailvc.SearchArticle = Searchresults
-            newsDetailvc.articleId = Int(Searchresults[indexPath.row].article_id)
+        newsDetailvc.SearchArticle = Searchresults
+        newsDetailvc.articleId = Int(Searchresults[indexPath.row].article_id)
         UserDefaults.standard.set("search", forKey: "isSearch")
         present(newsDetailvc, animated: true, completion: nil)
     }
@@ -167,8 +167,8 @@ extension SearchVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDele
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
         dateFormatter.timeZone = NSTimeZone.local
-    
-       if Searchresults.count > 0{
+        
+        if Searchresults.count > 0{
             let currentArticle = Searchresults[indexPath.row]
             cell.lblSource.text =  currentArticle.source
             let newDate = dateFormatter.date(from: currentArticle.published_on!)
@@ -207,50 +207,50 @@ extension SearchVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDele
             NightNight.theme =  .normal
         }
         if cell.imgNews.image == nil{
-            cell.imgNews.image = UIImage(named: "NoImage.png")
+            cell.imgNews.image = UIImage(named: AssetConstants.NoImage)
         }
         return cell
     }
     
- /*  func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
-        if targetContentOffset.pointee.y < scrollView.contentOffset.y {
-            print("it's going up")
-            if nextURL != "" {
-                APICall().loadSearchAPI(url: nextURL){ (Status, response) in
-                    switch response {
-                    case .Success(let data) :
-                        if data.count > 0 {
-                            self.searchArticlesArr.append(contentsOf: data[0].body!.articles)
-                            if data[0].body!.next != nil{
-                                self.nextURL = data[0].body!.next!
-                            }
-                            else{
-                                self.nextURL = ""
-                                self.view.makeToast("No more news to show", duration: 1.0, position: .center)
-                            }
-                            self.searchResultTV.reloadData()
-                        }
-                    case .Failure(let errormessage) :
-                        print(errormessage)
-                        self.activityIndicator.startAnimating()
-                        self.view.makeToast(errormessage, duration: 2.0, position: .center)
-                    case .Change(let code):
-                        if code == 404{
-                            let defaults = UserDefaults.standard
-                            defaults.removeObject(forKey: "googleToken")
-                            defaults.removeObject(forKey: "FBToken")
-                            defaults.removeObject(forKey: "token")
-                            defaults.removeObject(forKey: "email")
-                            defaults.removeObject(forKey: "first_name")
-                            defaults.removeObject(forKey: "last_name")
-                            defaults.synchronize()
-                            self.showMsg(title: "Please login to continue..", msg: "")
-                        }
-                    }
-                }
-            }
-        }
-    }*/
+    /*  func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
+     if targetContentOffset.pointee.y < scrollView.contentOffset.y {
+     print("it's going up")
+     if nextURL != "" {
+     APICall().loadSearchAPI(url: nextURL){ (Status, response) in
+     switch response {
+     case .Success(let data) :
+     if data.count > 0 {
+     self.searchArticlesArr.append(contentsOf: data[0].body!.articles)
+     if data[0].body!.next != nil{
+     self.nextURL = data[0].body!.next!
+     }
+     else{
+     self.nextURL = ""
+     self.view.makeToast("No more news to show", duration: 1.0, position: .center)
+     }
+     self.searchResultTV.reloadData()
+     }
+     case .Failure(let errormessage) :
+     print(errormessage)
+     self.activityIndicator.startAnimating()
+     self.view.makeToast(errormessage, duration: 2.0, position: .center)
+     case .Change(let code):
+     if code == 404{
+     let defaults = UserDefaults.standard
+     defaults.removeObject(forKey: "googleToken")
+     defaults.removeObject(forKey: "FBToken")
+     defaults.removeObject(forKey: "token")
+     defaults.removeObject(forKey: "email")
+     defaults.removeObject(forKey: "first_name")
+     defaults.removeObject(forKey: "last_name")
+     defaults.synchronize()
+     self.showMsg(title: "Please login to continue..", msg: "")
+     }
+     }
+     }
+     }
+     }
+     }*/
 }
 extension String {
     func makeHTMLfriendly() -> String {
@@ -272,10 +272,10 @@ extension SearchVC: UITextFieldDelegate
             if txtSearch.text != ""{
                 var search = txtSearch.text!
                 activityIndicator.startAnimating()
-                 search = search.trimmingCharacters(in: .whitespaces)
-             
+                search = search.trimmingCharacters(in: .whitespaces)
+                
                 let allowedCharacterSet = (CharacterSet(charactersIn: "!*();:@&=+$,/?%#[]").inverted)
-
+                
                 if let escapedString = search.addingPercentEncoding(withAllowedCharacters: allowedCharacterSet) {
                     search = escapedString
                 }
@@ -283,31 +283,31 @@ extension SearchVC: UITextFieldDelegate
                 if search == ""{
                     self.searchResultTV.makeToast("Enter keyword to search", duration: 2.0, position: .center)
                 }else{
-                let url = APPURL.SearchURL + search
-                DBManager().deleteAllData(entity: "SearchArticles")
-                DBManager().SaveSearchDataDB(nextUrl: url){response in
-                    if response == true{
-                        
-                        self.fetchArticlesFromDB()
-                        if UserDefaults.standard.value(forKey: "token") != nil{
+                    let url = APPURL.SearchURL + search
+                    DBManager().deleteAllData(entity: "SearchArticles")
+                    DBManager().SaveSearchDataDB(nextUrl: url){response in
+                        if response == true{
                             
-                            let BookmarkRecordCount = DBManager().IsCoreDataEmpty(entity: "BookmarkArticles")
-                            let LikeRecordCount = DBManager().IsCoreDataEmpty(entity: "LikeDislike")
-                            if BookmarkRecordCount != 0 || LikeRecordCount != 0{
-                                self.fetchBookmarkDataFromDB()
+                            self.fetchArticlesFromDB()
+                            if UserDefaults.standard.value(forKey: "token") != nil{
+                                
+                                let BookmarkRecordCount = DBManager().IsCoreDataEmpty(entity: "BookmarkArticles")
+                                let LikeRecordCount = DBManager().IsCoreDataEmpty(entity: "LikeDislike")
+                                if BookmarkRecordCount != 0 || LikeRecordCount != 0{
+                                    self.fetchBookmarkDataFromDB()
+                                }
                             }
                         }
                     }
-                }
-                if UserDefaults.standard.value(forKey: "token") != nil{
-                    let BookmarkRecordCount = DBManager().IsCoreDataEmpty(entity: "BookmarkArticles")
-                    let LikeRecordCount = DBManager().IsCoreDataEmpty(entity: "LikeDislike")
-                    if BookmarkRecordCount != 0 || LikeRecordCount != 0{
-                        fetchBookmarkDataFromDB()
-            
+                    if UserDefaults.standard.value(forKey: "token") != nil{
+                        let BookmarkRecordCount = DBManager().IsCoreDataEmpty(entity: "BookmarkArticles")
+                        let LikeRecordCount = DBManager().IsCoreDataEmpty(entity: "LikeDislike")
+                        if BookmarkRecordCount != 0 || LikeRecordCount != 0{
+                            fetchBookmarkDataFromDB()
+                            
+                        }
                     }
                 }
-            }
             }
             else{
                 self.searchResultTV.makeToast("Enter keyword to search", duration: 2.0, position: .center)
@@ -350,7 +350,7 @@ extension SearchVC: UITextFieldDelegate
             }
         }
         catch {
-           self.searchResultTV.makeToast("Please try again later", duration: 2.0, position: .center)
+            self.searchResultTV.makeToast("Please try again later", duration: 2.0, position: .center)
         }
         
     }

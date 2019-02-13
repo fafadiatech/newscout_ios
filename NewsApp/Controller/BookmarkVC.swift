@@ -69,7 +69,7 @@ class BookmarkVC: UIViewController {
         bookmarkResultTV.backgroundColor = colorConstants.grayBackground3
     }
     
-    @objc private func darkModeDisabled(_ notification: Notification) {
+    @objc private func darkModeDisabled(_ notification: Notification){
         NightNight.theme = .normal
     }
     
@@ -99,7 +99,7 @@ class BookmarkVC: UIViewController {
             }
             self.bookmarkResultTV.reloadData()
         case .Failure(let errorMsg) :
-             self.bookmarkResultTV.makeToast(errorMsg, duration: 1.0, position: .center)
+            self.bookmarkResultTV.makeToast(errorMsg, duration: 1.0, position: .center)
         }
     }
     
@@ -170,7 +170,6 @@ class BookmarkVC: UIViewController {
             }
         }
     }
- 
     
     @objc func refreshBookmarkedNews(refreshControl: UIRefreshControl) {
         if UserDefaults.standard.value(forKey: "token") != nil || UserDefaults.standard.value(forKey: "FBToken") != nil || UserDefaults.standard.value(forKey: "googleToken") != nil{
@@ -193,7 +192,7 @@ extension BookmarkVC: UITableViewDelegate, UITableViewDataSource{
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath){
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
-         let newsDetailvc:NewsDetailVC = storyboard.instantiateViewController(withIdentifier: "NewsDetailID") as! NewsDetailVC
+        let newsDetailvc:NewsDetailVC = storyboard.instantiateViewController(withIdentifier: "NewsDetailID") as! NewsDetailVC
         newsDetailvc.newsCurrentIndex = indexPath.row
         newsDetailvc.ShowArticle = ShowArticle
         UserDefaults.standard.set("bookmark", forKey: "isSearch")
@@ -253,11 +252,12 @@ extension BookmarkVC: UITableViewDelegate, UITableViewDataSource{
             NightNight.theme =  .normal
         }
         if cell.imgNews.image == nil{
-            cell.imgNews.image = UIImage(named: "NoImage.png")
+            cell.imgNews.image = UIImage(named: AssetConstants.NoImage)
         }
         activityIndicator.stopAnimating()
         return cell
     }
+    
     //check whether tableview scrolled up or down
     func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
         if targetContentOffset.pointee.y < scrollView.contentOffset.y {

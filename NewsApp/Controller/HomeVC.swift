@@ -30,7 +30,7 @@ class HomeVC: UIViewController{
     var nextURL = ""
     var lastContentOffset: CGFloat = 0
     var articlesArr = [Article]()
-     var categories = [String]()
+    var categories = [String]()
     
     override func viewDidLoad(){
         super.viewDidLoad()
@@ -59,13 +59,13 @@ class HomeVC: UIViewController{
         //save and fetch data from DB
         selectedCategory = tabBarTitle
         if UserDefaults.standard.value(forKey: "token") != nil{
-             if Reachability.isConnectedToNetwork(){
-                 saveBookmarkDataInDB(url : APPURL.bookmarkedArticlesURL)
+            if Reachability.isConnectedToNetwork(){
+                saveBookmarkDataInDB(url : APPURL.bookmarkedArticlesURL)
                 saveLikeDataInDB()
             }
-             else{
+            else{
                 let BookmarkRecordCount = DBManager().IsCoreDataEmpty(entity: "BookmarkArticles")
-                 let LikeRecordCount = DBManager().IsCoreDataEmpty(entity: "LikeDislike")
+                let LikeRecordCount = DBManager().IsCoreDataEmpty(entity: "LikeDislike")
                 if BookmarkRecordCount != 0 || LikeRecordCount != 0{
                     fetchBookmarkDataFromDB()
                 }
@@ -85,20 +85,19 @@ class HomeVC: UIViewController{
         }
     }
     
-    
     func fetchArticlesFromDB(){
         let result = DBManager().FetchDataFromDB(entity: "NewsArticle")
         switch result {
         case .Success(let DBData) :
             let articles = DBData
             if articles.count != 0{
-            if selectedCategory == "" || selectedCategory == "For You" || selectedCategory == "All News"
-            {
-                self.filterNews(selectedCat: "All News" )
-            }else{
-                self.filterNews(selectedCat: selectedCategory )
-            }
-            self.HomeNewsTV.reloadData()
+                if selectedCategory == "" || selectedCategory == "For You" || selectedCategory == "All News"
+                {
+                    self.filterNews(selectedCat: "All News" )
+                }else{
+                    self.filterNews(selectedCat: selectedCategory )
+                }
+                self.HomeNewsTV.reloadData()
             }
             else{
                 lblNonews.isHidden = false
@@ -139,17 +138,17 @@ class HomeVC: UIViewController{
     func saveLikeDataInDB(){
         DBManager().SaveLikeDislikeArticles(){response in
             if response == true{
-                 self.fetchBookmarkDataFromDB()
+                self.fetchBookmarkDataFromDB()
             }
         }
     }
-
+    
     @objc private func darkModeEnabled(_ notification: Notification) {
         NightNight.theme = .night
         HomeNewsTV.backgroundColor = colorConstants.grayBackground3
     }
     
-    @objc private func darkModeDisabled(_ notification: Notification) {
+    @objc private func darkModeDisabled(_ notification: Notification){
         NightNight.theme = .normal
     }
     
@@ -186,7 +185,7 @@ class HomeVC: UIViewController{
         else{
             selectedCategory = tabBarTitle
         }
-       
+        
         coredataRecordCount = DBManager().IsCoreDataEmpty(entity: "NewsArticle")
         if self.coredataRecordCount != 0{
             self.fetchArticlesFromDB()
@@ -354,7 +353,7 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
         }
         if cell.imgNews.image == nil
         {
-            cell.imgNews.image = UIImage(named: "NoImage.png")
+            cell.imgNews.image = UIImage(named: AssetConstants.NoImage)
         }
         
         activityIndicator.stopAnimating()
@@ -363,44 +362,44 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
     }
     
     //check whether tableview scrolled up or down
-   /* func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
-        if targetContentOffset.pointee.y < scrollView.contentOffset.y {
-            if nextURL != "" {
-                APICall().loadNewsbyCategoryAPI(url: nextURL){
-                    (status, response) in
-                    switch response {
-                    case .Success(let data) :
-                        if data.count > 0 {
-                            self.articlesArr.append(contentsOf: data[0].body.articles)
-                            if data[0].body.next != nil{
-                                self.nextURL = data[0].body.next!
-                            }
-                            else{
-                                self.nextURL = ""
-                                self.view.makeToast("No more news to show", duration: 1.0, position: .center)
-                            }
-                            self.HomeNewsTV.reloadData()
-                        }
-                    case .Failure(let errormessage) :
-                        self.activityIndicator.startAnimating()
-                        self.view.makeToast(errormessage, duration: 2.0, position: .center)
-                    case .Change(let code):
-                        if code == 404{
-                            let defaults = UserDefaults.standard
-                            defaults.removeObject(forKey: "googleToken")
-                            defaults.removeObject(forKey: "FBToken")
-                            defaults.removeObject(forKey: "token")
-                            defaults.removeObject(forKey: "email")
-                            defaults.removeObject(forKey: "first_name")
-                            defaults.removeObject(forKey: "last_name")
-                            defaults.synchronize()
-                            self.showMsg(title: "Please login to continue..", msg: "")
-                        }
-                    }
-                }
-            }
-        }
-    }*/
+    /* func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
+     if targetContentOffset.pointee.y < scrollView.contentOffset.y {
+     if nextURL != "" {
+     APICall().loadNewsbyCategoryAPI(url: nextURL){
+     (status, response) in
+     switch response {
+     case .Success(let data) :
+     if data.count > 0 {
+     self.articlesArr.append(contentsOf: data[0].body.articles)
+     if data[0].body.next != nil{
+     self.nextURL = data[0].body.next!
+     }
+     else{
+     self.nextURL = ""
+     self.view.makeToast("No more news to show", duration: 1.0, position: .center)
+     }
+     self.HomeNewsTV.reloadData()
+     }
+     case .Failure(let errormessage) :
+     self.activityIndicator.startAnimating()
+     self.view.makeToast(errormessage, duration: 2.0, position: .center)
+     case .Change(let code):
+     if code == 404{
+     let defaults = UserDefaults.standard
+     defaults.removeObject(forKey: "googleToken")
+     defaults.removeObject(forKey: "FBToken")
+     defaults.removeObject(forKey: "token")
+     defaults.removeObject(forKey: "email")
+     defaults.removeObject(forKey: "first_name")
+     defaults.removeObject(forKey: "last_name")
+     defaults.synchronize()
+     self.showMsg(title: "Please login to continue..", msg: "")
+     }
+     }
+     }
+     }
+     }
+     }*/
 }
 
 extension HomeVC: IndicatorInfoProvider{

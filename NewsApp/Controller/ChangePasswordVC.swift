@@ -62,7 +62,7 @@ class ChangePasswordVC: UIViewController {
         changeFontColor()
     }
     
-    @objc private func darkModeDisabled(_ notification: Notification) {
+    @objc private func darkModeDisabled(_ notification: Notification){
         NightNight.theme = .normal
     }
     
@@ -119,8 +119,7 @@ extension ChangePasswordVC : UITextFieldDelegate{
         // Try to find next responder
         if let nextField = textField.superview?.viewWithTag(textField.tag + 1) as? UITextField {
             nextField.becomeFirstResponder()
-        }
-        else {
+        }else {
             // Not found, so remove keyboard.
             textField.resignFirstResponder()
         }

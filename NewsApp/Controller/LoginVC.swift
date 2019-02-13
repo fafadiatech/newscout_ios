@@ -28,7 +28,7 @@ class LoginVC: UIViewController, GIDSignInUIDelegate, FBSDKLoginButtonDelegate {
     @IBOutlet weak var imgGmailSignIn: UIImageView!
     @IBOutlet weak var signInButton: UIButton!
     @IBOutlet weak var viewFBLogin: UIView!
-      @IBOutlet weak var btnFBLogin: FBSDKLoginButton!
+    @IBOutlet weak var btnFBLogin: FBSDKLoginButton!
     @IBOutlet weak var tryFBlogin: UIButton!
     
     override func viewDidLoad() {
@@ -37,7 +37,7 @@ class LoginVC: UIViewController, GIDSignInUIDelegate, FBSDKLoginButtonDelegate {
         txtUsername.autocorrectionType = .no
         txtPassword.autocorrectionType = .no
         viewGmailSignIn.layer.borderWidth = 1
-       
+        
         viewGmailSignIn.layer.borderColor = UIColor(red:222/255, green:225/255, blue:227/255, alpha: 1).cgColor
         btnLogin.layer.cornerRadius = 15
         btnLogin.layer.borderWidth = 0
@@ -58,9 +58,9 @@ class LoginVC: UIViewController, GIDSignInUIDelegate, FBSDKLoginButtonDelegate {
             UserDefaults.standard.set(FBSDKAccessToken.current()?.tokenString, forKey: "FBToken")
             fetchProfile()
         }
-         btnFBLogin.titleLabel?.font = FontConstants.FontBtnTitle
+        btnFBLogin.titleLabel?.font = FontConstants.FontBtnTitle
         signInButton.titleLabel?.font = FontConstants.FontBtnTitle
-    
+        
         GIDSignIn.sharedInstance().uiDelegate = self
         viewTitle.backgroundColor = colorConstants.redColor
         lblTitle.textColor = colorConstants.whiteColor
@@ -83,16 +83,16 @@ class LoginVC: UIViewController, GIDSignInUIDelegate, FBSDKLoginButtonDelegate {
         txtPassword.selectedTitleColor = colorConstants.grayBackground3
         txtPassword.titleColor = colorConstants.grayBackground3
         view.backgroundColor = colorConstants.grayBackground3
-         btnSignUp.backgroundColor = colorConstants.grayBackground3
+        btnSignUp.backgroundColor = colorConstants.grayBackground3
         viewGmailSignIn.backgroundColor =  colorConstants.whiteColor
     }
     
     @objc private func darkModeEnabled(_ notification: Notification) {
         NightNight.theme = .night
-       changeColor()
+        changeColor()
     }
     
-    @objc private func darkModeDisabled(_ notification: Notification) {
+    @objc private func darkModeDisabled(_ notification: Notification){
         NightNight.theme = .normal
     }
     
@@ -142,14 +142,17 @@ class LoginVC: UIViewController, GIDSignInUIDelegate, FBSDKLoginButtonDelegate {
     //default gmail button
     @IBAction func btnGSignInActn(_ sender: Any) {
     }
+    
     @IBAction func btnBackActn(_ sender: Any) {
         self.dismiss(animated: true)
     }
     
     @IBAction func tryFBLoginActn(_ sender: Any) {
     }
+    
     @IBAction func btnNewFBLOgin(_ sender: Any) {
     }
+    
     @IBAction func btnSignUpActn(_ sender: Any) {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let vc:SignUpVC = storyboard.instantiateViewController(withIdentifier: "SignUpID") as! SignUpVC
@@ -231,6 +234,7 @@ class LoginVC: UIViewController, GIDSignInUIDelegate, FBSDKLoginButtonDelegate {
         self.present(forgotVc, animated: true, completion: nil)
         
     }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }

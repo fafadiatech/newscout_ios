@@ -17,7 +17,7 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
     @IBOutlet weak var lblAppName: UILabel!
     var childrenVC = [UIViewController]()
     var categories : [String] = []
-
+    
     override func viewDidLoad() {
         settings.style.buttonBarItemsShouldFillAvailiableWidth = false
         super.viewDidLoad()
@@ -39,30 +39,30 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
             buttonBarView.backgroundColor = .white
             buttonBarView.backgroundView?.backgroundColor = .white
             buttonBarView.selectedBar.backgroundColor = .red
-
+            
         }
-       
+        
         lblAppName.text = Constants.AppName
         let floaty = Floaty()
         floaty.itemButtonColor = colorConstants.redColor
         floaty.buttonColor = colorConstants.redColor
         floaty.plusColor = .black
         
-        floaty.addItem("Search", icon: UIImage(named: "newsearch")!) { item in
+        floaty.addItem("Search", icon: UIImage(named: AssetConstants.search)!) { item in
             floaty.autoCloseOnTap = true
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             let searchvc:SearchVC = storyboard.instantiateViewController(withIdentifier: "SearchID") as! SearchVC
             self.present(searchvc, animated: true, completion: nil)
         }
         
-        floaty.addItem("Settings", icon: UIImage(named: "settings")!) { item in
+        floaty.addItem("Settings", icon: UIImage(named: AssetConstants.settings)!) { item in
             floaty.autoCloseOnTap = true
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             let settingvc:SettingsVC = storyboard.instantiateViewController(withIdentifier: "SettingsID") as! SettingsVC
             self.present(settingvc, animated: true, completion: nil)
         }
         
-        floaty.addItem("Bookmark", icon: UIImage(named: "bookmark")!) { item in
+        floaty.addItem("Bookmark", icon: UIImage(named: AssetConstants.bookmark)!) { item in
             floaty.autoCloseOnTap = true
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             let bookmarkvc:BookmarkVC = storyboard.instantiateViewController(withIdentifier: "BookmarkID") as! BookmarkVC
@@ -87,8 +87,8 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
                 newCell?.label.textColor =  colorConstants.redColor
                 oldCell?.backgroundColor = colorConstants.whiteColor
                 newCell?.backgroundColor = colorConstants.whiteColor
+            }
         }
-    }
     }
     
     deinit {

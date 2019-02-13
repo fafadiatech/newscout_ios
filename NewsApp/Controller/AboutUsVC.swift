@@ -17,7 +17,7 @@ extension Data {
 }
 
 class AboutUsVC: UIViewController {
-
+    
     @IBOutlet weak var titleView: UIView!
     @IBOutlet weak var lblTitle: UILabel!
     @IBOutlet weak var txtViewAboutUs: UITextView!
@@ -28,7 +28,6 @@ class AboutUsVC: UIViewController {
     @IBOutlet weak var lblAppVersionVal: UILabel!
     @IBOutlet weak var lblLastUpdatedVal: UILabel!
     @IBOutlet weak var lblDDbyVal: UILabel!
-    
     @IBOutlet weak var viewLblContainer: UIView!
     @IBOutlet weak var txtViewLink: UITextView!
     
@@ -58,7 +57,7 @@ class AboutUsVC: UIViewController {
         viewLblContainer.backgroundColor = colorConstants.grayBackground3
     }
     
-    @objc private func darkModeDisabled(_ notification: Notification) {
+    @objc private func darkModeDisabled(_ notification: Notification){
         NightNight.theme = .normal
     }
     

@@ -52,7 +52,7 @@ class ProfileVC: UIViewController {
         lblemailVal.textColor = .white
     }
     
-    @objc private func darkModeDisabled(_ notification: Notification) {
+    @objc private func darkModeDisabled(_ notification: Notification){
         NightNight.theme = .normal
     }
     
@@ -79,7 +79,6 @@ class ProfileVC: UIViewController {
             showMsg(title: "Please login to continue..", msg: "")
         }
     }
-    
     
     func showMsg(title: String, msg : String)
     {

@@ -47,7 +47,7 @@ class ForgotPasswordVC: UIViewController {
         txtEmail.titleColor = colorConstants.grayBackground3
     }
     
-    @objc private func darkModeDisabled(_ notification: Notification) {
+    @objc private func darkModeDisabled(_ notification: Notification){
         NightNight.theme = .normal
     }
     
@@ -65,6 +65,7 @@ class ForgotPasswordVC: UIViewController {
     @objc func dismissKeyboard() {
         view.endEditing(true)
     }
+    
     override var prefersStatusBarHidden: Bool {
         return true
     }
@@ -101,8 +102,7 @@ extension ForgotPasswordVC : UITextFieldDelegate{
         // Try to find next responder
         if let nextField = textField.superview?.viewWithTag(textField.tag + 1) as? UITextField {
             nextField.becomeFirstResponder()
-        }
-        else {
+        }else {
             // Not found, so remove keyboard.
             textField.resignFirstResponder()
         }

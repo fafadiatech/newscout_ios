@@ -41,7 +41,7 @@ class SignUpVC: UIViewController {
         hideKeyboardWhenTappedAround()
         let darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
         if  darkModeStatus == true{
-           changeColor()
+            changeColor()
         }
     }
     
@@ -63,7 +63,7 @@ class SignUpVC: UIViewController {
     
     @objc private func darkModeEnabled(_ notification: Notification) {
         NightNight.theme = .night
-       
+        
     }
     
     @objc private func darkModeDisabled(_ notification: Notification) {
@@ -110,7 +110,7 @@ class SignUpVC: UIViewController {
                             self.present(vc, animated: true, completion: nil)
                         }
                         else{
-                        self.view.makeToast(response, duration: 1.0, position: .center)
+                            self.view.makeToast(response, duration: 1.0, position: .center)
                         }
                     }
                 }
@@ -130,7 +130,7 @@ class SignUpVC: UIViewController {
     @IBAction func btnLoginActn(_ sender: Any) {
         self.dismiss(animated: true)
     }
-   
+    
     override var prefersStatusBarHidden: Bool {
         return true
     }

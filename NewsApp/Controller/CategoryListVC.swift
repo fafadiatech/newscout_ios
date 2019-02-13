@@ -58,7 +58,7 @@ class CategoryListVC: UIViewController {
         tableCategoryLIst.backgroundColor = colorConstants.grayBackground3
     }
     
-    @objc private func darkModeDisabled(_ notification: Notification) {
+    @objc private func darkModeDisabled(_ notification: Notification){
         NightNight.theme = .normal
     }
     
@@ -147,9 +147,9 @@ extension CategoryListVC:UITableViewDelegate, UITableViewDataSource{
         }
         
         cell.lblCategoryName.text = catData.title
-       
+        
         if categories.contains(catData.title!){
-             cell.imgDelete.isHidden = false
+            cell.imgDelete.isHidden = false
         }
         else{
             cell.imgDelete.isHidden = true

@@ -80,6 +80,30 @@ struct Constants{
     static let InternetErrorMsg = "The Internet connection appears to be offline"
 }
 
+struct AssetConstants{
+    static let backArrow = "back1"
+    static let cross = "cross"
+    static let bookmark = "bookmark"
+    static let Bookmark_white = "Bookmark_white"
+    static let Bookmark_white_fill = "Bookmark_white_fill"
+    static let filledBookmark = "filledBookmark"
+    static let pause = "pause"
+    static let play = "play"
+    static let share = "share"
+    static let thumb_up = "thumb_up"
+    static let thumb_up_filled = "thumb_up_filled"
+    static let thumb_down = "thumb_down"
+    static let thumb_down_filled = "thumb_down_filled"
+    static let NoImage = "NoImage"
+    static let search = "newsearch"
+    static let settings = "settings"
+    static let appLogo = "Logo"
+    static let glogo = "glogo"
+    static let flogo = "flogo"
+    
+    
+}
+
 struct AppFontName {
     static let regular = "HelveticaNeue-Light"
     static let bold = "HelveticaNeue-Bold"
@@ -92,7 +116,6 @@ struct themeColor{
 }
 
 struct APPURL {
-    
     private struct Domains {
         static let Local = "http://192.168.2.204" //"http://192.168.2.151:8000"//
         static let Server = ""

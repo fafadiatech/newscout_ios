@@ -128,7 +128,7 @@ class NewsDetailVC: UIViewController {
         if  darkModeStatus == true{
             changeTheme()
         }
-       
+        
         
         //newsDetailAPICall(currentIndex: articleId)
         ShowNews(currentIndex: newsCurrentIndex)
@@ -247,7 +247,7 @@ class NewsDetailVC: UIViewController {
         }
     }
     
-    @objc private func darkModeEnabled(_ notification: Notification) {
+    @objc private func darkModeEnabled(_ notification: Notification){
         NightNight.theme = .night
         changeTheme()
         darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
@@ -434,17 +434,17 @@ class NewsDetailVC: UIViewController {
         if player?.rate == 0
         {
             player!.play()
-            btnPlayVideo.setImage(UIImage(named:"pause"), for: .normal)
+            btnPlayVideo.setImage(UIImage(named: AssetConstants.pause), for: .normal)
             btnPlayVideo.isHidden = true
             Timer.scheduledTimer(timeInterval: 5, target: self, selector: #selector(ShowPausebtn), userInfo: nil, repeats: false)
         } else {
             player!.pause()
-            btnPlayVideo.setImage(UIImage(named:"play"), for: .normal)
+            btnPlayVideo.setImage(UIImage(named: AssetConstants.play), for: .normal)
         }
     }
     
     @objc func ShowPausebtn() {
-        if (btnPlayVideo.currentImage?.isEqual(UIImage(named: "pause")))! {
+        if (btnPlayVideo.currentImage?.isEqual(UIImage(named: AssetConstants.pause)))! {
             btnPlayVideo.isHidden = true
         }
     }
@@ -481,16 +481,16 @@ class NewsDetailVC: UIViewController {
             lblSource.text = currentArticle.source
             lblTimeAgo.text = agoDate
             sourceURL = currentArticle.source_url!
-
+            
             var checkImg = false
-             let imageFormats = ["jpg", "jpeg", "png", "gif"]
+            let imageFormats = ["jpg", "jpeg", "png", "gif"]
             for ext in imageFormats{
-            if currentArticle.imageURL!.contains(ext){
-               checkImg = true
-                break
+                if currentArticle.imageURL!.contains(ext){
+                    checkImg = true
+                    break
+                }
             }
-            }
-
+            
             if checkImg == false{
                 DispatchQueue.global(qos: .userInitiated).async {
                     self.activityIndicator.startAnimating()
@@ -539,31 +539,31 @@ class NewsDetailVC: UIViewController {
                 self.avPlayerView.isHidden = true
                 self.imgNews.sd_setImage(with: URL(string: currentArticle.imageURL!), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
             }
-             if UserDefaults.standard.value(forKey: "token") != nil{
-            if currentArticle.likeDislike?.isLike == 0 {
-                btnLike.setImage(UIImage(named: "thumb_up_filled.png"), for: .normal)
-                btnDislike.setImage(UIImage(named: "thumb_down.png"), for: .normal)
-            }
-            else if currentArticle.likeDislike?.isLike == 1{
-                btnLike.setImage(UIImage(named: "thumb_up.png"), for: .normal)
-                btnDislike.setImage(UIImage(named: "thumb_down_filled.png"), for: .normal)
-            }
-            else{
-                btnLike.setImage(UIImage(named: "thumb_up.png"), for: .normal)
-                btnDislike.setImage(UIImage(named: "thumb_down.png"), for: .normal)
-            }
+            if UserDefaults.standard.value(forKey: "token") != nil{
+                if currentArticle.likeDislike?.isLike == 0 {
+                    btnLike.setImage(UIImage(named: AssetConstants.thumb_up_filled), for: .normal)
+                    btnDislike.setImage(UIImage(named: AssetConstants.thumb_down), for: .normal)
+                }
+                else if currentArticle.likeDislike?.isLike == 1{
+                    btnLike.setImage(UIImage(named: AssetConstants.thumb_up), for: .normal)
+                    btnDislike.setImage(UIImage(named: AssetConstants.thumb_down_filled), for: .normal)
+                }
+                else{
+                    btnLike.setImage(UIImage(named: AssetConstants.thumb_up), for: .normal)
+                    btnDislike.setImage(UIImage(named: AssetConstants.thumb_down), for: .normal)
+                }
                 if currentArticle.bookmark?.isBookmark == 1 {
                     setBookmarkImg()
                 }else{
                     ResetBookmarkImg()
                 }
-             }else{
-                btnLike.setImage(UIImage(named: "thumb_up.png"), for: .normal)
-                btnDislike.setImage(UIImage(named: "thumb_down.png"), for: .normal)
-                 ResetBookmarkImg()
+            }else{
+                btnLike.setImage(UIImage(named: AssetConstants.thumb_up), for: .normal)
+                btnDislike.setImage(UIImage(named: AssetConstants.thumb_down), for: .normal)
+                ResetBookmarkImg()
             }
             
-           
+            
         }
         else if SearchArticle.count != 0 {
             currentEntity = "SearchArticles"
@@ -635,16 +635,16 @@ class NewsDetailVC: UIViewController {
             }
             if UserDefaults.standard.value(forKey: "token") != nil{
                 if currentArticle.likeDislike?.isLike == 0 {
-                    btnLike.setImage(UIImage(named: "thumb_up_filled.png"), for: .normal)
-                    btnDislike.setImage(UIImage(named: "thumb_down.png"), for: .normal)
+                    btnLike.setImage(UIImage(named: AssetConstants.thumb_up_filled), for: .normal)
+                    btnDislike.setImage(UIImage(named: AssetConstants.thumb_down), for: .normal)
                 }
                 else if currentArticle.likeDislike?.isLike == 1{
-                    btnLike.setImage(UIImage(named: "thumb_up.png"), for: .normal)
-                    btnDislike.setImage(UIImage(named: "thumb_down_filled.png"), for: .normal)
+                    btnLike.setImage(UIImage(named: AssetConstants.thumb_up), for: .normal)
+                    btnDislike.setImage(UIImage(named: AssetConstants.thumb_down_filled), for: .normal)
                 }
                 else{
-                    btnLike.setImage(UIImage(named: "thumb_up.png"), for: .normal)
-                    btnDislike.setImage(UIImage(named: "thumb_down.png"), for: .normal)
+                    btnLike.setImage(UIImage(named: AssetConstants.thumb_up), for: .normal)
+                    btnDislike.setImage(UIImage(named: AssetConstants.thumb_down), for: .normal)
                 }
                 if currentArticle.bookmark?.isBookmark == 1 {
                     setBookmarkImg()
@@ -652,22 +652,22 @@ class NewsDetailVC: UIViewController {
                     ResetBookmarkImg()
                 }
             }else{
-                btnLike.setImage(UIImage(named: "thumb_up.png"), for: .normal)
-                btnDislike.setImage(UIImage(named: "thumb_down.png"), for: .normal)
+                btnLike.setImage(UIImage(named: AssetConstants.thumb_up), for: .normal)
+                btnDislike.setImage(UIImage(named: AssetConstants.thumb_down), for: .normal)
                 ResetBookmarkImg()
             }
             
             
         }
         if imgNews.image == nil{
-            imgNews.image = UIImage(named: "NoImage.png")
+            imgNews.image = UIImage(named: AssetConstants.NoImage)
         }
         
     }
     
     @IBAction func btnLikeActn(_ sender: Any) {
         if UserDefaults.standard.value(forKey: "token") != nil || UserDefaults.standard.value(forKey: "FBToken") != nil || UserDefaults.standard.value(forKey: "googleToken") != nil{
-            if (btnLike.currentImage?.isEqual(UIImage(named: "thumb_up.png")))! {
+            if (btnLike.currentImage?.isEqual(UIImage(named: AssetConstants.thumb_up)))! {
                 let param = ["article_id" : articleId,
                              "isLike" : 0]
                 APICall().LikeDislikeAPI(param : param){
@@ -676,9 +676,9 @@ class NewsDetailVC: UIViewController {
                         self.view.makeToast(response, duration: 1.0, position: .center)
                     }
                     else{
-                        self.btnLike.setImage(UIImage(named: "thumb_up_filled.png"), for: .normal)
-                        if (self.btnDislike.currentImage?.isEqual(UIImage(named: "thumb_down_filled.png")))! {
-                            self.btnDislike.setImage(UIImage(named: "thumb_down.png"), for: .normal)
+                        self.btnLike.setImage(UIImage(named: AssetConstants.thumb_up_filled), for: .normal)
+                        if (self.btnDislike.currentImage?.isEqual(UIImage(named: AssetConstants.thumb_down_filled)))! {
+                            self.btnDislike.setImage(UIImage(named: AssetConstants.thumb_down), for: .normal)
                             
                         }
                         DBManager().addLikedArticle(tempentity: self.currentEntity, id: self.articleId, status: 0)
@@ -697,7 +697,7 @@ class NewsDetailVC: UIViewController {
                         DBManager().deleteLikedDislikedArticle(id: self.articleId){
                             response in
                             if response == true{
-                                self.btnLike.setImage(UIImage(named: "thumb_up.png"), for: .normal)
+                                self.btnLike.setImage(UIImage(named: AssetConstants.thumb_up), for: .normal)
                             }
                         }
                     }
@@ -711,7 +711,7 @@ class NewsDetailVC: UIViewController {
     
     @IBAction func btnDislikeActn(_ sender: Any) {
         if UserDefaults.standard.value(forKey: "token") != nil || UserDefaults.standard.value(forKey: "FBToken") != nil || UserDefaults.standard.value(forKey: "googleToken") != nil{
-            if (btnDislike.currentImage?.isEqual(UIImage(named: "thumb_down.png")))! {
+            if (btnDislike.currentImage?.isEqual(UIImage(named: AssetConstants.thumb_down)))! {
                 let param = ["article_id" : articleId,
                              "isLike" : 1]
                 APICall().LikeDislikeAPI(param : param ){
@@ -720,9 +720,9 @@ class NewsDetailVC: UIViewController {
                         self.view.makeToast(response, duration: 1.0, position: .center)
                     }
                     else{
-                        self.btnDislike.setImage(UIImage(named: "thumb_down_filled.png"), for: .normal)
-                        if (self.btnLike.currentImage?.isEqual(UIImage(named: "thumb_up_filled.png")))! {
-                            self.btnLike.setImage(UIImage(named: "thumb_up.png"), for: .normal)
+                        self.btnDislike.setImage(UIImage(named: AssetConstants.thumb_down_filled), for: .normal)
+                        if (self.btnLike.currentImage?.isEqual(UIImage(named: AssetConstants.thumb_up_filled)))! {
+                            self.btnLike.setImage(UIImage(named: AssetConstants.thumb_up), for: .normal)
                         }
                         DBManager().addLikedArticle(tempentity:self.currentEntity, id: self.articleId, status: 1)
                     }
@@ -739,7 +739,7 @@ class NewsDetailVC: UIViewController {
                     else{
                         DBManager().deleteLikedDislikedArticle(id: self.articleId){ response in
                             if response == true{
-                                self.btnDislike.setImage(UIImage(named: "thumb_down.png"), for: .normal)
+                                self.btnDislike.setImage(UIImage(named: AssetConstants.thumb_down), for: .normal)
                             }
                         }
                     }
@@ -753,7 +753,7 @@ class NewsDetailVC: UIViewController {
     
     @IBAction func btnBookmarkActn(_ sender: Any) {
         if UserDefaults.standard.value(forKey: "token") != nil || UserDefaults.standard.value(forKey: "FBToken") != nil || UserDefaults.standard.value(forKey: "googleToken") != nil{
-            if (((btnBookamark.currentImage?.isEqual(UIImage(named: "bookmark.png")))!) || ((btnBookamark.currentImage?.isEqual(UIImage(named: "Bookmark_white.png")))!)) {
+            if (((btnBookamark.currentImage?.isEqual(UIImage(named: AssetConstants.bookmark)))!) || ((btnBookamark.currentImage?.isEqual(UIImage(named: AssetConstants.Bookmark_white)))!)) {
                 
                 APICall().bookmarkAPI(id: articleId){
                     (status, response) in
@@ -768,7 +768,7 @@ class NewsDetailVC: UIViewController {
                     }
                 }
             }
-            else if (((btnBookamark.currentImage?.isEqual(UIImage(named: "filledBookmark.png")))!) || ((btnBookamark.currentImage?.isEqual(UIImage(named: "Bookmark_white_fill.png")))!)){
+            else if (((btnBookamark.currentImage?.isEqual(UIImage(named: AssetConstants.filledBookmark)))!) || ((btnBookamark.currentImage?.isEqual(UIImage(named: AssetConstants.Bookmark_white_fill)))!)){
                 APICall().bookmarkAPI(id: articleId){
                     (status, response) in
                     if status == "0"{
@@ -789,19 +789,19 @@ class NewsDetailVC: UIViewController {
     
     func setBookmarkImg(){
         if darkModeStatus == true{
-            btnBookamark.setImage(UIImage(named: "Bookmark_white_fill.png"), for: .normal)
+            btnBookamark.setImage(UIImage(named: AssetConstants.Bookmark_white_fill), for: .normal)
         }
         else{
-            btnBookamark.setImage(UIImage(named: "filledBookmark.png"), for: .normal)
+            btnBookamark.setImage(UIImage(named: AssetConstants.filledBookmark), for: .normal)
         }
     }
     
     func ResetBookmarkImg(){
         if darkModeStatus == true{
-            btnBookamark.setImage(UIImage(named: "Bookmark_white.png"), for: .normal)
+            btnBookamark.setImage(UIImage(named: AssetConstants.Bookmark_white), for: .normal)
         }
         else{
-            btnBookamark.setImage(UIImage(named: "bookmark.png"), for: .normal)
+            btnBookamark.setImage(UIImage(named: AssetConstants.bookmark), for: .normal)
         }
     }
     @IBAction func btnShareActn(_ sender: Any) {
@@ -869,14 +869,11 @@ class NewsDetailVC: UIViewController {
         self.dismiss(animated: false)
     }
     
-    func showMsg(title: String, msg : String)
-    {
+    func showMsg(title: String, msg : String){
         let alertController = UIAlertController(title: title, message: msg, preferredStyle: .alert)
-        if UI_USER_INTERFACE_IDIOM() == .pad
-        {
+        if UI_USER_INTERFACE_IDIOM() == .pad{
             alertController.popoverPresentationController?.sourceView = self.view
             alertController.popoverPresentationController?.sourceRect = CGRect(x: self.view.bounds.midX, y: self.view.bounds.midY, width: 0, height: 0)
-            
         }
         let action1 = UIAlertAction(title: "OK", style: .default) { (action:UIAlertAction) in
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
@@ -960,7 +957,7 @@ extension NewsDetailVC:UICollectionViewDelegate, UICollectionViewDataSource, UIC
                 }
             }
             if cell.imgNews.image == nil{
-                cell.imgNews.image = UIImage(named: "NoImage.png")
+                cell.imgNews.image = UIImage(named: AssetConstants.NoImage)
             }
             
         }
