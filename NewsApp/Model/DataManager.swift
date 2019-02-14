@@ -43,11 +43,12 @@ class DBManager{
                         newArticle.source_url = news.url
                         newArticle.published_on = news.published_on
                         newArticle.blurb = news.blurb
-                        newArticle.category = news.category!
-                
+                        newArticle.category = (self.ArticleData[0].body?.categoryDetail?.title)!
+                        newArticle.category_id = (self.ArticleData[0].body?.categoryDetail?.cat_id)!
                         self.saveBlock()
                     }
                 }
+                    
                 if self.ArticleData[0].body!.next != nil{
                     // self.someEntityExists(id: 0 , entity: String)
                 }

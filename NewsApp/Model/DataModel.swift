@@ -40,7 +40,7 @@ struct Article: Decodable{
     var url : String?
     var published_on : String?
     var blurb : String?
-    
+   
     enum CodingKeys: String, CodingKey{
         case article_id = "id"
         case imageURL = "cover_image"
@@ -94,7 +94,7 @@ struct CategoryList: Decodable{
 }
 
 struct CategoryDetails : Decodable{
-    let cat_id: Int64?
+    let cat_id: Int16?
     let title: String?
     
     enum CodingKeys: String, CodingKey{
