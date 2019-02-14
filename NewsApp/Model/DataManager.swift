@@ -32,27 +32,56 @@ class DBManager{
             }
             if self.ArticleData.count != 0{
                 if self.ArticleData[0].header.status == "1" {
-                for news in self.ArticleData[0].body!.articles{ 
-                    if  self.someEntityExists(id: Int(news.article_id!), entity: "NewsArticle") == false
-                    {
-                        let newArticle = NewsArticle(context: managedContext!)
-                        newArticle.article_id = Int64(news.article_id!)
-                        newArticle.title = news.title
-                        newArticle.source = news.source!
-                        newArticle.imageURL = news.imageURL
-                        newArticle.source_url = news.url
-                        newArticle.published_on = news.published_on
-                        newArticle.blurb = news.blurb
-                        newArticle.category = (self.ArticleData[0].body?.categoryDetail?.title)!
-                        newArticle.category_id = (self.ArticleData[0].body?.categoryDetail?.cat_id)!
+                    if self.ArticleData[0].body?.next != nil{
+                        let newUrl = NewsURL(context: managedContext!)
+                        if  self.someEntityExists(id: (self.ArticleData[0].body!.categoryDetail?.cat_id)!, entity: "NewsURL") == false{
+                            
+                            newUrl.cat_id = Int16((self.ArticleData[0].body?.categoryDetail?.cat_id)!)
+                            newUrl.category = self.ArticleData[0].body?.categoryDetail?.title
+                            newUrl.nextURL = self.ArticleData[0].body?.next
+                        }
+                        else{
+                            var URLData = [NewsURL]()
+                            let fetchRequest =
+                                NSFetchRequest<NSManagedObject>(entityName: "NewsURL")
+                            
+                            do {
+                                URLData = try (managedContext?.fetch(fetchRequest))! as! [NewsURL]
+                                
+                            } catch let error as NSError {
+                                print("Could not fetch. \(error), \(error.userInfo)")
+                                
+                            }
+                            for url in URLData{
+                                if url.cat_id == Int16((self.ArticleData[0].body?.categoryDetail?.cat_id)!){
+                                    url.nextURL =  "saved" //self.ArticleData[0].body?.next
+                                }
+                            }
+                            
+                        }
                         self.saveBlock()
                     }
-                }
+                    for news in self.ArticleData[0].body!.articles{
+                        if  self.someEntityExists(id: Int(news.article_id!), entity: "NewsArticle") == false
+                        {
+                            let newArticle = NewsArticle(context: managedContext!)
+                            newArticle.article_id = Int64(news.article_id!)
+                            newArticle.title = news.title
+                            newArticle.source = news.source!
+                            newArticle.imageURL = news.imageURL
+                            newArticle.source_url = news.url
+                            newArticle.published_on = news.published_on
+                            newArticle.blurb = news.blurb
+                            newArticle.category = (self.ArticleData[0].body?.categoryDetail?.title)!
+                            newArticle.category_id = Int16((self.ArticleData[0].body?.categoryDetail?.cat_id)!)
+                            self.saveBlock()
+                        }
+                    }
                     
-                if self.ArticleData[0].body!.next != nil{
-                    // self.someEntityExists(id: 0 , entity: String)
-                }
-                completion(true)
+                    if self.ArticleData[0].body!.next != nil{
+                        // self.someEntityExists(id: 0 , entity: String)
+                    }
+                    completion(true)
                 }
                 else{
                     completion(false)
@@ -66,10 +95,10 @@ class DBManager{
     //check for existing entry in DB
     func someEntityExists(id: Int, entity : String) -> Bool {
         let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: entity)
-        if entity == "NewsArticle" || entity == "BookmarkArticles" || entity == "LikeDislike" || entity == "SearchArticles"{
+        if entity == "NewsArticle" || entity == "BookmarkArticles" || entity == "LikeDislike" || entity == "SearchArticles" {
             fetchRequest.predicate = NSPredicate(format: "article_id == \(id)")
         }
-        else{
+        else if entity == "NewsURL" || entity == "Category"{
             fetchRequest.predicate = NSPredicate(format: "cat_id == \(id)")
         }
         let managedContext =
@@ -214,10 +243,10 @@ class DBManager{
             
             if self.CategoryData.count != 0{
                 for cat in self.CategoryData[0].categories{
-                    if  self.someEntityExists(id: Int(cat.cat_id!), entity: "Category") == false
+                    if  self.someEntityExists(id: Int(cat.cat_id), entity: "Category") == false
                     {
                         let newCategory = Category(context: managedContext!)
-                        newCategory.cat_id = Int16(cat.cat_id!)
+                        newCategory.cat_id = Int16(cat.cat_id)
                         newCategory.title = cat.title
                         self.saveBlock()
                     }
@@ -310,7 +339,7 @@ class DBManager{
         var BookmarkData : GetLikeBookmarkList!
         let managedContext =
             appDelegate?.persistentContainer.viewContext
-      
+        
         APICall().getLikeBookmarkList(url : APPURL.getBookmarkListURL){
             response  in
             switch response {
@@ -363,7 +392,7 @@ class DBManager{
                         let newArticle = LikeDislike(context: managedContext!)
                         newArticle.article_id = Int64(news.article_id)
                         newArticle.isLike = Int16(news.isLike!)
-                      //  newArticle.row_id = Int16(news.row_id)
+                        //  newArticle.row_id = Int16(news.row_id)
                         self.saveBlock()
                     }
                 }
@@ -383,7 +412,7 @@ class DBManager{
         let fetchRequest =
             NSFetchRequest<NewsArticle>(entityName: tempentity)
         let searchFetchRequest = NSFetchRequest<SearchArticles>(entityName: tempentity)
-
+        
         fetchRequest.predicate = NSPredicate(format: "article_id  = %d", id)
         searchFetchRequest.predicate = NSPredicate(format: "article_id  = %d", id)
         let likefetchRequest =
@@ -392,10 +421,10 @@ class DBManager{
         fetchRequest.predicate = NSPredicate(format: "article_id  = %d", id)
         do {
             if tempentity == "NewsArticle"{
-            Article = try (managedContext?.fetch(fetchRequest))!
+                Article = try (managedContext?.fetch(fetchRequest))!
             }
             else if tempentity == "SearchArticles"{
-             SearchArticle = try (managedContext?.fetch(searchFetchRequest))!
+                SearchArticle = try (managedContext?.fetch(searchFetchRequest))!
             }
         }catch {
             print("Failed")
@@ -404,9 +433,9 @@ class DBManager{
             let newArticle = LikeDislike(context: managedContext!)
             newArticle.article_id = Int64(id)
             newArticle.isLike = Int16(status)
-             if tempentity == "NewsArticle"{
-            newArticle.addToLikedArticle(Article[0])
-             }else if tempentity == "SearchArticles"{
+            if tempentity == "NewsArticle"{
+                newArticle.addToLikedArticle(Article[0])
+            }else if tempentity == "SearchArticles"{
                 newArticle.addToSearchlikeArticles(SearchArticle[0])
             }
         }
@@ -471,7 +500,7 @@ class DBManager{
         fetchRequest.predicate = NSPredicate(format: "article_id  = %d", id)
         do {
             if currentEntity == "NewsArticle"{
-            Article = try (managedContext?.fetch(fetchRequest))!
+                Article = try (managedContext?.fetch(fetchRequest))!
             }
             else if currentEntity == "SearchArticles"{
                 SearchArticle = try (managedContext?.fetch(searchRequest))!
@@ -484,7 +513,7 @@ class DBManager{
             newArticle.article_id = Int64(id)
             newArticle.isBookmark = 1
             if currentEntity == "NewsArticle"{
-            newArticle.addToArticle(Article[0])
+                newArticle.addToArticle(Article[0])
             }else if currentEntity == "SearchArticles"{
                 newArticle.addToSearchArticle(SearchArticle[0])
             }
@@ -526,7 +555,7 @@ class DBManager{
             print("Could not save \(error)")
         }
     }
-   
+    
     func SaveSearchDataDB(nextUrl:String,_ completion : @escaping (Bool) -> ())
     {
         let managedContext = appDelegate?.persistentContainer.viewContext
@@ -641,19 +670,32 @@ class DBManager{
     }
     
     func deleteAllData(entity:String) {
-       
-            let delegate = UIApplication.shared.delegate as! AppDelegate
-            let context = delegate.persistentContainer.viewContext
-            
-            let deleteFetch = NSFetchRequest<NSFetchRequestResult>(entityName: entity)
-            let deleteRequest = NSBatchDeleteRequest(fetchRequest: deleteFetch)
-            
-            do {
-                try context.execute(deleteRequest)
-                try context.save()
-            } catch {
-                print ("There was an error")
-            }
+        
+        let delegate = UIApplication.shared.delegate as! AppDelegate
+        let context = delegate.persistentContainer.viewContext
+        
+        let deleteFetch = NSFetchRequest<NSFetchRequestResult>(entityName: entity)
+        let deleteRequest = NSBatchDeleteRequest(fetchRequest: deleteFetch)
+        
+        do {
+            try context.execute(deleteRequest)
+            try context.save()
+        } catch {
+            print ("There was an error")
         }
-    
+    }
+    func FetchNextURL(category:String)-> NextURLDBfetchResult {
+        let managedContext =
+            appDelegate?.persistentContainer.viewContext
+        let fetchRequest =
+            NSFetchRequest<NewsURL>(entityName: "NewsURL")
+        //  fetchRequest.predicate = NSPredicate(format: "category == \(category)")
+        do {
+            let NewsURL = try (managedContext?.fetch(fetchRequest))!
+            return NextURLDBfetchResult.Success(NewsURL as! [NewsURL])
+        } catch let error as NSError {
+            print("Could not fetch. \(error), \(error.userInfo)")
+            return NextURLDBfetchResult.Failure(error as! String)
+        }
+    }
 }

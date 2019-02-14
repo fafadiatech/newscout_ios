@@ -361,6 +361,41 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
         return cell
     }
     
+    
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        if indexPath.row == tableView.numberOfRows(inSection: indexPath.section) - 1 {
+            // print("last row")
+            let result =  DBManager().FetchNextURL(category: selectedCategory)
+            switch result {
+            case .Success(let DBData) :
+                let nextURL = DBData
+                if nextURL.count != 0{
+                    if nextURL[0].category == selectedCategory{
+                        let nexturl = nextURL[0].nextURL
+                        self.saveArticlesInDB(url : nexturl!)
+                    }
+                }
+                else{
+                    lblNonews.isHidden = false
+                    activityIndicator.stopAnimating()
+                }
+            case .Failure(let errorMsg) :
+                print(errorMsg)
+            }
+            
+            
+            
+        }
+    }
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let height = scrollView.frame.size.height
+        let contentYoffset = scrollView.contentOffset.y
+        let distanceFromBottom = scrollView.contentSize.height - contentYoffset
+        if distanceFromBottom < height {
+            // print(" you reached end of the table")
+        }
+    }
+    
     //check whether tableview scrolled up or down
     /* func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
      if targetContentOffset.pointee.y < scrollView.contentOffset.y {
