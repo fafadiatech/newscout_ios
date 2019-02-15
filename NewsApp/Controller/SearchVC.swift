@@ -335,6 +335,7 @@ extension SearchVC: UITextFieldDelegate
                 }
                 UserDefaults.standard.set(search, forKey: "searchTxt")
                 if search == ""{
+                    self.activityIndicator.stopAnimating()
                     self.searchResultTV.makeToast("Enter keyword to search", duration: 2.0, position: .center)
                 }else{
                     Searchresults.removeAll()
@@ -357,11 +358,13 @@ extension SearchVC: UITextFieldDelegate
                 }
             }
             else{
+                self.activityIndicator.stopAnimating()
                 self.searchResultTV.makeToast("Enter keyword to search", duration: 2.0, position: .center)
             }
         }
             
         else{
+            self.activityIndicator.stopAnimating()
             self.searchResultTV.makeToast("Enter keyword to search", duration: 2.0, position: .center)
         }
         

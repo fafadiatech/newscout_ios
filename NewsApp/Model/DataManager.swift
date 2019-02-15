@@ -702,7 +702,7 @@ class DBManager{
         fetchRequest.predicate = NSPredicate(format: "category contains[c] %@",category)
         do {
             let NewsURL = try (managedContext?.fetch(fetchRequest))!
-            return NextURLDBfetchResult.Success(NewsURL as! [NewsURL])
+            return NextURLDBfetchResult.Success(NewsURL)
         } catch let error as NSError {
             print("Could not fetch. \(error), \(error.userInfo)")
             return NextURLDBfetchResult.Failure(error as! String)
