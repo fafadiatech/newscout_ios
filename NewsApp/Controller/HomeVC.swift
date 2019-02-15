@@ -196,41 +196,42 @@ class HomeVC: UIViewController{
         saveArticlesInDB(url:  APPURL.ArticlesByCategoryURL + "\(selectedCategory)" )
     }
     
-    func ArticlesAPICall(){
-        APICall().loadNewsbyCategoryAPI(url: APPURL.ArticlesByCategoryURL + "\(selectedCategory)" ){ (status, response) in
-            switch response {
-            case .Success(let data) :
-                if data.count > 0{
-                    self.articlesArr = data[0].body!.articles
-                    if data[0].body!.next != nil{
-                        self.nextURL = data[0].body!.next!
-                    }
-                    if data[0].body!.articles.count == 0{
-                        self.activityIndicator.stopAnimating()
-                        self.lblNonews.isHidden = false
-                    }
-                    else{
-                        self.HomeNewsTV.reloadData()
-                    }
-                }
-            case .Failure(let errormessage) :
-                self.activityIndicator.startAnimating()
-                self.HomeNewsTV.makeToast(errormessage, duration: 2.0, position: .center)
-            case .Change(let code):
-                if code == 404{
-                    let defaults = UserDefaults.standard
-                    defaults.removeObject(forKey: "googleToken")
-                    defaults.removeObject(forKey: "FBToken")
-                    defaults.removeObject(forKey: "token")
-                    defaults.removeObject(forKey: "email")
-                    defaults.removeObject(forKey: "first_name")
-                    defaults.removeObject(forKey: "last_name")
-                    defaults.synchronize()
-                    self.showMsg(title: "Please login to continue..", msg: "")
-                }
-            }
-        }
-    }
+    /* func ArticlesAPICall(){
+     APICall().loadNewsbyCategoryAPI(url: APPURL.ArticlesByCategoryURL + "\(selectedCategory)" ){ (status, response) in
+     switch response {
+     case .Success(let data) :
+     if data.count > 0{
+     self.articlesArr = data[0].body!.articles
+     if data[0].body!.next != nil{
+     self.nextURL = data[0].body!.next!
+     }
+     if data[0].body!.articles.count == 0{
+     self.activityIndicator.stopAnimating()
+     self.lblNonews.isHidden = false
+     }
+     else{
+     self.HomeNewsTV.reloadData()
+     }
+     }
+     case .Failure(let errormessage) :
+     self.activityIndicator.startAnimating()
+     self.HomeNewsTV.makeToast(errormessage, duration: 2.0, position: .center)
+     case .Change(let code):
+     if code == 404{
+     let defaults = UserDefaults.standard
+     defaults.removeObject(forKey: "googleToken")
+     defaults.removeObject(forKey: "FBToken")
+     defaults.removeObject(forKey: "token")
+     defaults.removeObject(forKey: "email")
+     defaults.removeObject(forKey: "first_name")
+     defaults.removeObject(forKey: "last_name")
+     defaults.synchronize()
+     self.showMsg(title: "Please login to continue..", msg: "")
+     }
+     }
+     }
+     }
+     */
     
     func showMsg(title: String, msg : String)
     {
@@ -334,7 +335,6 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
             cell.lblTimesAgo.font = FontConstants.NormalFontContent
             cell.lblNewsHeading.font = FontConstants.NormalFontHeadingBold
         }
-        activityIndicator.stopAnimating()
         
         let darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
         if  darkModeStatus == true{
@@ -361,10 +361,8 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
         return cell
     }
     
-    
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         if indexPath.row == tableView.numberOfRows(inSection: indexPath.section) - 1 {
-            // print("last row")
             let result =  DBManager().FetchNextURL(category: selectedCategory)
             switch result {
             case .Success(let DBData) :
@@ -382,19 +380,9 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
             case .Failure(let errorMsg) :
                 print(errorMsg)
             }
-            
-            
-            
         }
     }
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        let height = scrollView.frame.size.height
-        let contentYoffset = scrollView.contentOffset.y
-        let distanceFromBottom = scrollView.contentSize.height - contentYoffset
-        if distanceFromBottom < height {
-            // print(" you reached end of the table")
-        }
-    }
+    
     
     //check whether tableview scrolled up or down
     /* func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
