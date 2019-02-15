@@ -34,7 +34,7 @@ class DBManager{
                 if self.ArticleData[0].header.status == "1" {
                     if self.ArticleData[0].body?.next != nil{
                         let newUrl = NewsURL(context: managedContext!)
-                        if  self.someEntityExists(id: (self.ArticleData[0].body!.categoryDetail?.cat_id)!, entity: "NewsURL") == false{
+                        if self.someEntityExists(id: (self.ArticleData[0].body!.categoryDetail?.cat_id)!, entity: "NewsURL") == false{
                             
                             newUrl.cat_id = Int16((self.ArticleData[0].body?.categoryDetail?.cat_id)!)
                             newUrl.category = self.ArticleData[0].body?.categoryDetail?.title
@@ -44,6 +44,7 @@ class DBManager{
                             var URLData = [NewsURL]()
                             let fetchRequest =
                                 NSFetchRequest<NSManagedObject>(entityName: "NewsURL")
+                            fetchRequest.predicate = NSPredicate(format: "cat_id  = %d", (self.ArticleData[0].body!.categoryDetail?.cat_id)!)
                             
                             do {
                                 URLData = try (managedContext?.fetch(fetchRequest))! as! [NewsURL]
@@ -54,7 +55,8 @@ class DBManager{
                             }
                             for url in URLData{
                                 if url.cat_id == Int16((self.ArticleData[0].body?.categoryDetail?.cat_id)!){
-                                    url.nextURL =  "saved" //self.ArticleData[0].body?.next
+                                    url.nextURL =  self.ArticleData[0].body?.next
+                    
                                 }
                             }
                             
