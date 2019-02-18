@@ -136,6 +136,27 @@ class SearchVC: UIViewController {
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
+    
+    func saveArticlesInDB(url: String){
+        DBManager().SaveSearchDataDB(nextUrl: url){response in
+            if response == true{
+                self.fetchArticlesFromDB()
+                if UserDefaults.standard.value(forKey: "token") != nil{
+                    
+                    let BookmarkRecordCount = DBManager().IsCoreDataEmpty(entity: "BookmarkArticles")
+                    let LikeRecordCount = DBManager().IsCoreDataEmpty(entity: "LikeDislike")
+                    if BookmarkRecordCount != 0 || LikeRecordCount != 0{
+                        self.fetchBookmarkDataFromDB()
+                    }
+                }
+            }
+            else{
+                self.activityIndicator.stopAnimating()
+                self.searchResultTV.makeToast("News does not exist", duration: 3.0, position: .center)
+            }
+        }
+    }
+    
 }
 
 extension SearchVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelegate {
@@ -194,7 +215,6 @@ extension SearchVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDele
             cell.lbltimeAgo.font = FontConstants.NormalFontContent
             cell.lblNewsDescription.font = FontConstants.NormalFontHeadingBold
         }
-        activityIndicator.stopAnimating()
         let darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
         if  darkModeStatus == true{
             cell.ViewCellBackground.backgroundColor = colorConstants.grayBackground2
@@ -209,9 +229,41 @@ extension SearchVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDele
         if cell.imgNews.image == nil{
             cell.imgNews.image = UIImage(named: AssetConstants.NoImage)
         }
+        activityIndicator.stopAnimating()
         return cell
     }
     
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        if indexPath.row == tableView.numberOfRows(inSection: indexPath.section) - 1 {
+            let keyword =  UserDefaults.standard.value(forKey: "searchTxt") as! String
+            let result =  DBManager().FetchNextURL(category: keyword)
+            switch result {
+            case .Success(let DBData) :
+                let nextURL = DBData
+                if nextURL.count != 0{
+                    if nextURL[0].category == keyword{
+                        let nexturl = nextURL[0].nextURL
+                        self.saveArticlesInDB(url : nexturl!)
+                    }
+                }
+                else{
+                    //lblNonews.isHidden = false
+                    activityIndicator.stopAnimating()
+                }
+            case .Failure(let errorMsg) :
+                print(errorMsg)
+            }
+        }
+    }
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let height = scrollView.frame.size.height
+        let contentYoffset = scrollView.contentOffset.y
+        let distanceFromBottom = scrollView.contentSize.height - contentYoffset
+        if distanceFromBottom < height {
+            activityIndicator.startAnimating()
+        }
+    }
     /*  func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
      if targetContentOffset.pointee.y < scrollView.contentOffset.y {
      print("it's going up")
@@ -252,6 +304,8 @@ extension SearchVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDele
      }
      }*/
 }
+
+
 extension String {
     func makeHTMLfriendly() -> String {
         var finalString = ""
@@ -281,24 +335,18 @@ extension SearchVC: UITextFieldDelegate
                 }
                 UserDefaults.standard.set(search, forKey: "searchTxt")
                 if search == ""{
+                    self.activityIndicator.stopAnimating()
                     self.searchResultTV.makeToast("Enter keyword to search", duration: 2.0, position: .center)
                 }else{
+                    Searchresults.removeAll()
+                    recordCount = 0
+                    searchResultTV.reloadData()
+                    DBManager().deleteSearchNextURl()
+                    search = search.replacingOccurrences(of: " ", with: "%20")
                     let url = APPURL.SearchURL + search
+                    
                     DBManager().deleteAllData(entity: "SearchArticles")
-                    DBManager().SaveSearchDataDB(nextUrl: url){response in
-                        if response == true{
-                            
-                            self.fetchArticlesFromDB()
-                            if UserDefaults.standard.value(forKey: "token") != nil{
-                                
-                                let BookmarkRecordCount = DBManager().IsCoreDataEmpty(entity: "BookmarkArticles")
-                                let LikeRecordCount = DBManager().IsCoreDataEmpty(entity: "LikeDislike")
-                                if BookmarkRecordCount != 0 || LikeRecordCount != 0{
-                                    self.fetchBookmarkDataFromDB()
-                                }
-                            }
-                        }
-                    }
+                    saveArticlesInDB(url: url)
                     if UserDefaults.standard.value(forKey: "token") != nil{
                         let BookmarkRecordCount = DBManager().IsCoreDataEmpty(entity: "BookmarkArticles")
                         let LikeRecordCount = DBManager().IsCoreDataEmpty(entity: "LikeDislike")
@@ -310,11 +358,13 @@ extension SearchVC: UITextFieldDelegate
                 }
             }
             else{
+                self.activityIndicator.stopAnimating()
                 self.searchResultTV.makeToast("Enter keyword to search", duration: 2.0, position: .center)
             }
         }
             
         else{
+            self.activityIndicator.stopAnimating()
             self.searchResultTV.makeToast("Enter keyword to search", duration: 2.0, position: .center)
         }
         
@@ -328,6 +378,10 @@ extension SearchVC: UITextFieldDelegate
             Searchresults = DBData
             recordCount = Searchresults.count
             activityIndicator.startAnimating()
+            if recordCount == 0 {
+                activityIndicator.stopAnimating()
+                self.searchResultTV.makeToast("News does not exist", duration: 2.0, position: .center)
+            }
             searchResultTV.reloadData()
         case .Failure(let errorMsg) :
             self.searchResultTV.makeToast("Please try again later", duration: 2.0, position: .center)

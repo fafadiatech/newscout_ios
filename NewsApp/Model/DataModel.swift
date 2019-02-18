@@ -94,8 +94,8 @@ struct CategoryList: Decodable{
 }
 
 struct CategoryDetails : Decodable{
-    let cat_id: Int64?
-    let title: String?
+    let cat_id: Int
+    let title: String
     
     enum CodingKeys: String, CodingKey{
         case cat_id = "id"
@@ -224,3 +224,8 @@ enum SearchDBfetchResult {
     case Success([SearchArticles])
     case Failure(String)
 }
+enum NextURLDBfetchResult {
+    case Success([NewsURL])
+    case Failure(String)
+}
+
