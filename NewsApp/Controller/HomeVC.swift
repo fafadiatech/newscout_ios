@@ -80,7 +80,15 @@ class HomeVC: UIViewController{
             coredataRecordCount = DBManager().IsCoreDataEmpty(entity: "NewsArticle")
             if self.coredataRecordCount != 0 {
                 self.fetchArticlesFromDB()
-                
+            }
+        }
+        saveCategoryInDB()
+    }
+    
+    func saveCategoryInDB(){
+        DBManager().SaveCategoryDB{response in
+            if response == true{
+                print(response)
             }
         }
     }
