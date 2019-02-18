@@ -11,6 +11,8 @@ import CoreData
 import GoogleSignIn
 import FBSDKCoreKit
 import FBSDKLoginKit
+import Fabric
+import Crashlytics
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
@@ -46,7 +48,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
         let pushNotificationSettings = UIUserNotificationSettings(types: notificationTypes, categories: nil)
         application.registerUserNotificationSettings(pushNotificationSettings)
         application.registerForRemoteNotifications()
-        
+        Fabric.with([Crashlytics.self])
         return true
     }
     

@@ -19,6 +19,8 @@ target 'NewsApp' do
     pod 'SkyFloatingLabelTextField'
     pod 'NightNight'
     pod 'SwiftDevice'
+    pod 'Fabric'
+    pod 'Crashlytics'
     target 'NewsAppTests' do
         inherit! :search_paths
         # Pods for testing

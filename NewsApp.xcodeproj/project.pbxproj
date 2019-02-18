@@ -378,6 +378,7 @@
 				421ADFB32156407400C00F6F /* Resources */,
 				E625024055F7036CE7E77A23 /* [CP] Embed Pods Frameworks */,
 				13535408023F39BB35B8B79C /* [CP] Copy Pods Resources */,
+				26080AD9221ACB06004B58E6 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -534,6 +535,24 @@
 			shellPath = /bin/sh;
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-NewsApp/Pods-NewsApp-resources.sh\"\n";
 			showEnvVarsInLog = 0;
+		};
+		26080AD9221ACB06004B58E6 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/newInputFile",
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Fabric/run\" 195cccfe5890fe695edaa04247191f89302a448f 7f01ca72db222c17e5cf2aa5f19cf00269f2c224a039932a54b9f401d767c378\n";
 		};
 		2A61B467375C987B24EE6A90 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -778,7 +797,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
-				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;

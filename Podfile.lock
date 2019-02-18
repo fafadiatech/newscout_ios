@@ -6,6 +6,9 @@ PODS:
   - Bolts/AppLinks (1.9.0):
     - Bolts/Tasks
   - Bolts/Tasks (1.9.0)
+  - Crashlytics (3.12.0):
+    - Fabric (~> 1.9.0)
+  - Fabric (1.9.0)
   - FBSDKCoreKit (4.35.0):
     - Bolts (~> 1.7)
   - FBSDKLoginKit (4.35.0):
@@ -54,6 +57,8 @@ PODS:
 
 DEPENDENCIES:
   - Alamofire
+  - Crashlytics
+  - Fabric
   - FBSDKLoginKit
   - Floaty
   - GoogleSignIn
@@ -70,6 +75,8 @@ SPEC REPOS:
   https://github.com/CocoaPods/Specs.git:
     - Alamofire
     - Bolts
+    - Crashlytics
+    - Fabric
     - FBSDKCoreKit
     - FBSDKLoginKit
     - Floaty
@@ -92,6 +99,8 @@ SPEC REPOS:
 SPEC CHECKSUMS:
   Alamofire: e4fa87002c137ba2d8d634d2c51fabcda0d5c223
   Bolts: ac6567323eac61e203f6a9763667d0f711be34c8
+  Crashlytics: 07fb167b1694128c1c9a5a5cc319b0e9c3ca0933
+  Fabric: f988e33c97f08930a413e08123064d2e5f68d655
   FBSDKCoreKit: 1a5b2e3ceb5ca827a53c54aa5f4a3480efff80d2
   FBSDKLoginKit: 00a3d65d1226852f9d76dcddff01981e5e6d9c38
   Floaty: 82854e1a5ef4fa208281ebd4da2f3d1e51ba67a6
@@ -111,6 +120,6 @@ SPEC CHECKSUMS:
   Toast-Swift: ba0b01b095aada709d915f9beb1d38184a2721c3
   XLPagerTabStrip: c908b17cbf42fcd2598ee1adfc49bae25444d88a
 
-PODFILE CHECKSUM: 7d83faae62bdbb77ff95837c4d91e19a711d9436
+PODFILE CHECKSUM: 46ac654aa9265c69ddad2b5f58cc81f443e0f3e5
 
 COCOAPODS: 1.5.0

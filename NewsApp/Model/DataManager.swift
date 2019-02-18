@@ -321,7 +321,7 @@ class DBManager{
                 
             }
             
-            if BookmarkData.body?.listResult!.count != 0{
+            if (BookmarkData.body?.listResult!.count)! > 0{
                 for news in (BookmarkData.body?.listResult)!{
                     if  self.someEntityExists(id: Int(news.article_id), entity: "BookmarkArticles", keyword: "") == false
                     {
