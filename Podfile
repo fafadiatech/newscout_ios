@@ -21,6 +21,7 @@ target 'NewsApp' do
     pod 'SwiftDevice'
     pod 'Fabric'
     pod 'Crashlytics'
+    pod 'SentrySwift', :git => 'https://github.com/getsentry/sentry-swift.git', :tag => '1.3.4'
     target 'NewsAppTests' do
         inherit! :search_paths
         # Pods for testing
