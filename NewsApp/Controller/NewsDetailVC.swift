@@ -40,6 +40,9 @@ class NewsDetailVC: UIViewController {
     @IBOutlet weak var btnPlayVideo: UIButton!
     @IBOutlet weak var newsAreaHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var viewLikeDislikeHeightConstraint: NSLayoutConstraint!
+    @IBOutlet weak var lblSourceBottomConstraint: NSLayoutConstraint!
+    @IBOutlet weak var lblTimeAgoBottomConstraint: NSLayoutConstraint!
+    @IBOutlet weak var viewLikeDislikeBottom: NSLayoutConstraint!
     @IBOutlet weak var avPlayerView: AVPlayerView!
     let imageCache = NSCache<NSString, UIImage>()
     var playbackSlider = UISlider()
@@ -77,21 +80,25 @@ class NewsDetailVC: UIViewController {
         imgNews.addSubview(activityIndicator)
         if UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad && statusBarOrientation.isPortrait{
             viewLikeDislike.isHidden = false
-            addPotraitConstraint()
+            addsourceConstraint()
+            // addPotraitConstraint()
         }
-        else if UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad {
+        else if UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad && statusBarOrientation.isLandscape {
+            viewLikeDislike.isHidden = true
+            addLandscapeConstraints()
             
-            if statusBarOrientation.isLandscape{
-                viewLikeDislike.isHidden = true
-                if viewLikeDislikeHeightConstraint != nil{
-                    NSLayoutConstraint.deactivate([viewLikeDislikeHeightConstraint])
-                    viewLikeDislikeHeightConstraint.constant = -9.5
-                    NSLayoutConstraint.activate([viewLikeDislikeHeightConstraint])
-                }
-            }
+            //            if statusBarOrientation.isLandscape{
+            //                viewLikeDislike.isHidden = true
+            //                if viewLikeDislikeHeightConstraint != nil{
+            //                    NSLayoutConstraint.deactivate([viewLikeDislikeHeightConstraint])
+            //                    viewLikeDislikeHeightConstraint.constant = -9.5
+            //                    NSLayoutConstraint.activate([viewLikeDislikeHeightConstraint])
+            //                }
+            //            }
         }
         else{
             viewLikeDislike.isHidden = true
+            addPotraitConstraint()
         }
         viewLikeDislike.backgroundColor = colorConstants.redColor
         ViewWebContainer.isHidden = true
@@ -171,12 +178,47 @@ class NewsDetailVC: UIViewController {
      }
      }
      }*/
-    
+    func addipadPotraitConstraint(){
+        if viewLikeDislikeBottom != nil {
+            NSLayoutConstraint.deactivate([viewLikeDislikeBottom])
+            viewLikeDislikeBottom = NSLayoutConstraint (item: viewLikeDislike,
+                                                        attribute: NSLayoutAttribute.bottom,
+                                                        relatedBy: NSLayoutRelation.equal,
+                                                        toItem: suggestedView,
+                                                        attribute: NSLayoutAttribute.top,
+                                                        multiplier: 1,
+                                                        constant: 0)
+            NSLayoutConstraint.activate([viewLikeDislikeBottom])
+            addsourceConstraint()
+        }
+    }
+    func addsourceConstraint(){
+        if lblSourceBottomConstraint != nil && lblTimeAgoBottomConstraint != nil {
+            NSLayoutConstraint.deactivate([lblSourceBottomConstraint])
+            NSLayoutConstraint.deactivate([lblTimeAgoBottomConstraint])
+            lblSourceBottomConstraint = NSLayoutConstraint (item: lblSource,
+                                                            attribute: NSLayoutAttribute.bottom,
+                                                            relatedBy: NSLayoutRelation.equal,
+                                                            toItem: viewLikeDislike,
+                                                            attribute: NSLayoutAttribute.top,
+                                                            multiplier: 1,
+                                                            constant: -10)
+            lblTimeAgoBottomConstraint = NSLayoutConstraint (item: lblTimeAgo,
+                                                             attribute: NSLayoutAttribute.bottom,
+                                                             relatedBy: NSLayoutRelation.equal,
+                                                             toItem: viewLikeDislike,
+                                                             attribute: NSLayoutAttribute.top,
+                                                             multiplier: 1,
+                                                             constant: -10)
+            NSLayoutConstraint.activate([lblTimeAgoBottomConstraint])
+            NSLayoutConstraint.activate([lblSourceBottomConstraint])
+        }
+    }
     func addPotraitConstraint(){
-        if lblSourceTopConstraint != nil && lblSourceTopConstraint != nil && viewLikeDislikeBottomConstraint != nil{
-            NSLayoutConstraint.deactivate([lblTimesTopConstraint])
-            NSLayoutConstraint.deactivate([lblSourceTopConstraint])
-            NSLayoutConstraint.deactivate([viewLikeDislikeBottomConstraint])
+        if viewLikeDislikeBottom != nil{ //lblSourceTopConstraint != nil && lblSourceTopConstraint != nil && {
+            //            NSLayoutConstraint.deactivate([lblTimesTopConstraint])
+            //            NSLayoutConstraint.deactivate([lblSourceTopConstraint])
+            NSLayoutConstraint.deactivate([viewLikeDislikeBottom])
         }
         lblSourceTopConstraint = NSLayoutConstraint (item: lblSource,
                                                      attribute: NSLayoutAttribute.bottom,
@@ -194,40 +236,85 @@ class NewsDetailVC: UIViewController {
                                                     constant: -10)
         newsAreaHeightConstraint.constant = 100
         viewLikeDislikeHeightConstraint.constant = -26.5
-        viewLikeDislikeBottomConstraint = NSLayoutConstraint (item: viewLikeDislike,
-                                                              attribute: NSLayoutAttribute.bottom,
-                                                              relatedBy: NSLayoutRelation.equal,
-                                                              toItem: viewNewsArea,
-                                                              attribute: NSLayoutAttribute.bottom,
-                                                              multiplier: 1,
-                                                              constant: -30)
-        NSLayoutConstraint.activate([lblTimesTopConstraint])
-        NSLayoutConstraint.activate([lblSourceTopConstraint])
-        NSLayoutConstraint.activate([viewLikeDislikeBottomConstraint])
+        viewLikeDislikeBottom = NSLayoutConstraint (item: viewLikeDislike,
+                                                    attribute: NSLayoutAttribute.bottom,
+                                                    relatedBy: NSLayoutRelation.equal,
+                                                    toItem: suggestedView,
+                                                    attribute: NSLayoutAttribute.bottom,
+                                                    multiplier: 1,
+                                                    constant: 0)
+        //  NSLayoutConstraint.activate([lblTimesTopConstraint])
+        //NSLayoutConstraint.activate([lblSourceTopConstraint])
+        NSLayoutConstraint.activate([viewLikeDislikeBottom])
     }
     
     func addLandscapeConstraints(){
-        if lblSourceTopConstraint != nil && lblSourceTopConstraint != nil{
-            NSLayoutConstraint.deactivate([lblTimesTopConstraint])
-            NSLayoutConstraint.deactivate([lblSourceTopConstraint])
+        /*  if lblSourceTopConstraint != nil && lblSourceTopConstraint != nil && viewLikeDislikeBottom != nil{
+         NSLayoutConstraint.deactivate([lblTimesTopConstraint])
+         NSLayoutConstraint.deactivate([lblSourceTopConstraint])
+         NSLayoutConstraint.deactivate([viewLikeDislikeBottom])
+         }
+         viewLikeDislikeHeightConstraint.constant = -9.5
+         lblSourceTopConstraint = NSLayoutConstraint (item: lblSource,
+         attribute: NSLayoutAttribute.bottom,
+         relatedBy: NSLayoutRelation.equal,
+         toItem: viewNewsArea,
+         attribute: NSLayoutAttribute.bottom,
+         multiplier: 1,
+         constant: -45)
+         lblTimesTopConstraint = NSLayoutConstraint (item: lblTimeAgo,
+         attribute: NSLayoutAttribute.bottom,
+         relatedBy: NSLayoutRelation.equal,
+         toItem: viewNewsArea,
+         attribute: NSLayoutAttribute.bottom,
+         multiplier: 1,
+         constant: -45)
+         viewLikeDislikeBottom = NSLayoutConstraint (item: viewLikeDislike,
+         attribute: NSLayoutAttribute.bottom,
+         relatedBy: NSLayoutRelation.equal,
+         toItem: suggestedView,
+         attribute: NSLayoutAttribute.bottom,
+         multiplier: 1,
+         constant: 0)
+         NSLayoutConstraint.activate([viewLikeDislikeBottom])
+         NSLayoutConstraint.activate([lblTimesTopConstraint])
+         NSLayoutConstraint.activate([lblSourceTopConstraint])*/
+        if lblSourceBottomConstraint != nil && lblTimeAgoBottomConstraint != nil {
+            NSLayoutConstraint.deactivate([lblSourceBottomConstraint])
+            NSLayoutConstraint.deactivate([lblTimeAgoBottomConstraint])
+            lblSourceBottomConstraint = NSLayoutConstraint (item: lblSource,
+                                                            attribute: NSLayoutAttribute.bottom,
+                                                            relatedBy: NSLayoutRelation.equal,
+                                                            toItem: suggestedView,
+                                                            attribute: NSLayoutAttribute.top,
+                                                            multiplier: 1,
+                                                            constant: -10)
+            lblTimeAgoBottomConstraint = NSLayoutConstraint (item: lblTimeAgo,
+                                                             attribute: NSLayoutAttribute.bottom,
+                                                             relatedBy: NSLayoutRelation.equal,
+                                                             toItem: suggestedView,
+                                                             attribute: NSLayoutAttribute.top,
+                                                             multiplier: 1,
+                                                             constant: -10)
+            NSLayoutConstraint.activate([lblTimeAgoBottomConstraint])
+            NSLayoutConstraint.activate([lblSourceBottomConstraint])
         }
-        viewLikeDislikeHeightConstraint.constant = -9.5
-        lblSourceTopConstraint = NSLayoutConstraint (item: lblSource,
-                                                     attribute: NSLayoutAttribute.bottom,
-                                                     relatedBy: NSLayoutRelation.equal,
-                                                     toItem: viewNewsArea,
-                                                     attribute: NSLayoutAttribute.bottom,
-                                                     multiplier: 1,
-                                                     constant: -45)
-        lblTimesTopConstraint = NSLayoutConstraint (item: lblTimeAgo,
-                                                    attribute: NSLayoutAttribute.bottom,
-                                                    relatedBy: NSLayoutRelation.equal,
-                                                    toItem: viewNewsArea,
-                                                    attribute: NSLayoutAttribute.bottom,
-                                                    multiplier: 1,
-                                                    constant: -45)
-        NSLayoutConstraint.activate([lblTimesTopConstraint])
-        NSLayoutConstraint.activate([lblSourceTopConstraint])
+        if viewLikeDislikeBottom != nil{
+            NSLayoutConstraint.deactivate([viewLikeDislikeBottom])
+            viewLikeDislikeBottom = NSLayoutConstraint (item: viewLikeDislike,
+                                                        attribute: NSLayoutAttribute.bottom,
+                                                        relatedBy: NSLayoutRelation.equal,
+                                                        toItem: suggestedView,
+                                                        attribute: NSLayoutAttribute.bottom,
+                                                        multiplier: 1,
+                                                        constant: 0)
+            if viewLikeDislikeHeightConstraint != nil{
+                NSLayoutConstraint.deactivate([viewLikeDislikeHeightConstraint])
+                viewLikeDislikeHeightConstraint.constant = -9.5
+                NSLayoutConstraint.activate([viewLikeDislikeHeightConstraint])
+            }
+            NSLayoutConstraint.activate([viewLikeDislikeBottom])
+        }
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -243,7 +330,12 @@ class NewsDetailVC: UIViewController {
             print(UIDevice.current.orientation)
             print("potrait")
             viewLikeDislike.isHidden = false
-            addPotraitConstraint()
+            if UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad{
+                addipadPotraitConstraint()
+            }
+            else{
+                addPotraitConstraint()
+            }
         }
     }
     
@@ -705,7 +797,10 @@ class NewsDetailVC: UIViewController {
             }
         }
         else{
-            showMsg(title: "Please login to continue..", msg: "")
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let vc:LoginVC = storyboard.instantiateViewController(withIdentifier: "LoginID") as! LoginVC
+            self.present(vc, animated: true, completion: nil)
+            UserDefaults.standard.set(false, forKey: "isSettingsLogin")
         }
     }
     
@@ -747,7 +842,10 @@ class NewsDetailVC: UIViewController {
             }
         }
         else{
-            showMsg(title: "Please login to continue..", msg: "")
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let vc:LoginVC = storyboard.instantiateViewController(withIdentifier: "LoginID") as! LoginVC
+            self.present(vc, animated: true, completion: nil)
+            UserDefaults.standard.set(false, forKey: "isSettingsLogin")
         }
     }
     
@@ -783,7 +881,10 @@ class NewsDetailVC: UIViewController {
             }
         }
         else{
-            showMsg(title: "Please login to continue..", msg: "")
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let vc:LoginVC = storyboard.instantiateViewController(withIdentifier: "LoginID") as! LoginVC
+            self.present(vc, animated: true, completion: nil)
+            UserDefaults.standard.set(false, forKey: "isSettingsLogin")
         }
     }
     

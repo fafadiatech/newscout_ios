@@ -1925,7 +1925,9 @@
                                             <constraint firstAttribute="trailing" secondItem="q3E-WQ-OR7" secondAttribute="trailing" constant="15" id="H2N-F4-DVf">
                                                 <variation key="heightClass=regular-widthClass=regular" constant="20"/>
                                             </constraint>
-                                            <constraint firstAttribute="bottom" secondItem="6js-a1-NyN" secondAttribute="bottom" constant="10" id="HQc-OZ-ipk"/>
+                                            <constraint firstAttribute="bottom" secondItem="6js-a1-NyN" secondAttribute="bottom" constant="10" id="HQc-OZ-ipk">
+                                                <variation key="heightClass=regular-widthClass=regular" constant="10"/>
+                                            </constraint>
                                             <constraint firstItem="22D-cz-AGN" firstAttribute="leading" secondItem="nZz-U0-3iL" secondAttribute="trailing" constant="15" id="J7L-XY-wwI"/>
                                             <constraint firstAttribute="trailing" secondItem="fW6-pK-tzj" secondAttribute="trailing" constant="10" id="LCK-RW-UkT">
                                                 <variation key="heightClass=regular-widthClass=regular" constant="20"/>
@@ -2266,7 +2268,9 @@
                         <outlet property="imgNews" destination="pm3-HD-Vbj" id="pa4-Ce-kcT"/>
                         <outlet property="lblNewsHeading" destination="nZz-U0-3iL" id="5PO-Xe-GeW"/>
                         <outlet property="lblSource" destination="6js-a1-NyN" id="5lE-4t-HfD"/>
+                        <outlet property="lblSourceBottomConstraint" destination="HQc-OZ-ipk" id="GlB-Qs-3II"/>
                         <outlet property="lblTimeAgo" destination="q3E-WQ-OR7" id="4Ld-ck-6zg"/>
+                        <outlet property="lblTimeAgoBottomConstraint" destination="LFi-02-RXE" id="25e-XO-k6f"/>
                         <outlet property="lblWebSource" destination="jVf-bP-RXB" id="O9I-Ej-59E"/>
                         <outlet property="newsAreaHeightConstraint" destination="Bkb-Su-I7N" id="GHk-hO-eSy"/>
                         <outlet property="newsView" destination="ZoE-gQ-3zk" id="HVE-Ad-QzZ"/>
@@ -2275,6 +2279,7 @@
                         <outlet property="txtViewNewsDesc" destination="fW6-pK-tzj" id="1cM-E5-5v8"/>
                         <outlet property="viewContainer" destination="RxT-xW-cwM" id="3M1-34-6ek"/>
                         <outlet property="viewLikeDislike" destination="ZdY-Zp-FHd" id="7oP-Ti-XlK"/>
+                        <outlet property="viewLikeDislikeBottom" destination="deT-px-iXe" id="7w0-u8-k2K"/>
                         <outlet property="viewLikeDislikeHeightConstraint" destination="7fS-A9-XSx" id="rxF-wJ-W6S"/>
                         <outlet property="viewNewsArea" destination="RN0-l8-Mx1" id="S6x-rF-GhL"/>
                         <outlet property="viewWebTitle" destination="HS9-vL-0jm" id="4Mc-j5-614"/>

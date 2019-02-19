@@ -14,7 +14,7 @@ import CoreData
 import MaterialComponents.MaterialActivityIndicator
 import SDWebImage
 import NightNight
-
+import Sentry
 class HomeVC: UIViewController{
     
     @IBOutlet weak var HomeNewsTV: UITableView!

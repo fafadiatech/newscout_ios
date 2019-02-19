@@ -13,7 +13,7 @@ import FBSDKCoreKit
 import FBSDKLoginKit
 import Fabric
 import Crashlytics
-import SentrySwift
+import Sentry
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
@@ -51,8 +51,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
         application.registerForRemoteNotifications()
         Fabric.with([Crashlytics.self])
         // Create a Sentry client and start crash handler
-        SentryClient.shared = SentryClient(dsnString: "http://94bfb73d568a4d9bb7b55449411c4b4f:08413943c5d247b7b335a3641f1d083e@sentry.fafadiatech.com/33")
-        SentryClient.shared?.startCrashHandler()
+        do{
+        Client.shared = try Client(dsn: "http://94bfb73d568a4d9bb7b55449411c4b4f:08413943c5d247b7b335a3641f1d083e@sentry.fafadiatech.com/33")
+        try Client.shared?.startCrashHandler()
+    } catch let error {
+        print("\(error)")
+    }
         return true
     }
     

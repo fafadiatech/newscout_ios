@@ -29,6 +29,7 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
         if UserDefaults.standard.value(forKey: "textSize") == nil{
             UserDefaults.standard.set(1, forKey: "textSize")
         }
+        
         let darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
         if  darkModeStatus == true{
             buttonBarView.backgroundColor = colorConstants.grayBackground1
