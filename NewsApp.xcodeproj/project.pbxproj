@@ -543,7 +543,7 @@
 			);
 			inputPaths = (
 				"",
-				"$(BUILT_PRODUCTS_DIR)/$(INFOPLIST_PATH)",
+				"",
 			);
 			outputPaths = (
 			);

@@ -49,9 +49,9 @@ PODS:
   - SDWebImage (4.4.2):
     - SDWebImage/Core (= 4.4.2)
   - SDWebImage/Core (4.4.2)
-  - Sentry (4.2.1):
-    - Sentry/Core (= 4.2.1)
-  - Sentry/Core (4.2.1)
+  - Sentry (4.1.1):
+    - Sentry/Core (= 4.1.1)
+  - Sentry/Core (4.1.1)
   - SkyFloatingLabelTextField (3.5.1)
   - SwiftDevice (0.3.0)
   - SwiftyJSON (4.1.0)
@@ -76,7 +76,7 @@ DEPENDENCIES:
   - XLPagerTabStrip
 
 SPEC REPOS:
-  https://github.com/cocoapods/specs.git:
+  https://github.com/CocoaPods/Specs.git:
     - Alamofire
     - Bolts
     - Crashlytics
@@ -119,7 +119,7 @@ SPEC CHECKSUMS:
   MotionInterchange: ead0e3ae1f3a5fb539e289debbc7ae036160a10d
   NightNight: 2a5550fdd9cf424b75ebaab022c26aaba35304c8
   SDWebImage: 624d6e296c69b244bcede364c72ae0430ac14681
-  Sentry: b4efbf4f0d1d18681954fa861d154f79196c4b58
+  Sentry: c9d0543c7223ddec036027f4c7391ea057ba9856
   SkyFloatingLabelTextField: 4cbeece9c3aae97c6019d8fae511cb5b755874f7
   SwiftDevice: ee6e7682db9a6d79aa9e922886b1a5a1ebeb7b3c
   SwiftyJSON: c29297daf073d2aa016295d5809cdd68045c39b3
@@ -128,4 +128,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: af3d440b1fd5b88c12e078774890eb0cef2eba58
 
-COCOAPODS: 1.5.3
+COCOAPODS: 1.5.0

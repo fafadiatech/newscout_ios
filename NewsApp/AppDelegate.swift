@@ -52,11 +52,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
         Fabric.with([Crashlytics.self])
         // Create a Sentry client and start crash handler
         do{
-        Client.shared = try Client(dsn: "http://94bfb73d568a4d9bb7b55449411c4b4f:08413943c5d247b7b335a3641f1d083e@sentry.fafadiatech.com/33")
-        try Client.shared?.startCrashHandler()
-    } catch let error {
-        print("\(error)")
-    }
+            Client.shared = try Client(dsn: "http://94bfb73d568a4d9bb7b55449411c4b4f:08413943c5d247b7b335a3641f1d083e@sentry.fafadiatech.com/33")
+            try Client.shared?.startCrashHandler()
+        } catch let error {
+            print("\(error)")
+        }
         return true
     }
     
@@ -110,14 +110,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
             // ...
             print("\(userId!) \n \(idToken) \n \(fullName!) \n \(email!) \n \(pic)")
             print("google sign in successful..")
-
-        /*  let mainStoryboard:UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
-            let HomeVc = mainStoryboard.instantiateViewController(withIdentifier: "HomeParentID") as! HomeParentVC
-            self.window?.rootViewController = HomeVc*/
+            
+            /*  let mainStoryboard:UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
+             let HomeVc = mainStoryboard.instantiateViewController(withIdentifier: "HomeParentID") as! HomeParentVC
+             self.window?.rootViewController = HomeVc*/
         }
     }
     
-   
+    
     func application(_ application: UIApplication, open url: URL, sourceApplication: String?, annotation: Any) -> Bool {
         
         let handled: Bool = FBSDKApplicationDelegate.sharedInstance().application(application, open: url, sourceApplication: sourceApplication, annotation: annotation)

@@ -81,20 +81,10 @@ class NewsDetailVC: UIViewController {
         if UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad && statusBarOrientation.isPortrait{
             viewLikeDislike.isHidden = false
             addsourceConstraint()
-            // addPotraitConstraint()
         }
         else if UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad && statusBarOrientation.isLandscape {
             viewLikeDislike.isHidden = true
             addLandscapeConstraints()
-            
-            //            if statusBarOrientation.isLandscape{
-            //                viewLikeDislike.isHidden = true
-            //                if viewLikeDislikeHeightConstraint != nil{
-            //                    NSLayoutConstraint.deactivate([viewLikeDislikeHeightConstraint])
-            //                    viewLikeDislikeHeightConstraint.constant = -9.5
-            //                    NSLayoutConstraint.activate([viewLikeDislikeHeightConstraint])
-            //                }
-            //            }
         }
         else{
             viewLikeDislike.isHidden = true
@@ -113,7 +103,9 @@ class NewsDetailVC: UIViewController {
                 self.RecomArticleData = data
                 self.suggestedCV.reloadData()
             case .Failure(let errormessage) :
-                self.view.makeToast(errormessage, duration: 2.0, position: .center)
+                if errormessage == "no net"{
+                    self.view.makeToast(errormessage, duration: 2.0, position: .center)
+                }
             case .Change(let code):
                 if code == 404{
                     let defaults = UserDefaults.standard
@@ -164,20 +156,6 @@ class NewsDetailVC: UIViewController {
         PlayerTapRecognizer.delegate = self as! UIGestureRecognizerDelegate
     }
     
-    /*func newsDetailAPICall(currentIndex: Int){
-     
-     APICall().articleDetailAPI(articleId: currentIndex){ (status,response) in
-     switch response {
-     case .Success(let data) :
-     self.ArticleDetail = data
-     print(self.ArticleDetail)
-     self.ShowNews(currentArticle: self.ArticleDetail.body.article)
-     case .Failure(let errormessage) :
-     print(errormessage)
-     self.view.makeToast(errormessage, duration: 2.0, position: .center)
-     }
-     }
-     }*/
     func addipadPotraitConstraint(){
         if viewLikeDislikeBottom != nil {
             NSLayoutConstraint.deactivate([viewLikeDislikeBottom])
@@ -192,6 +170,7 @@ class NewsDetailVC: UIViewController {
             addsourceConstraint()
         }
     }
+    
     func addsourceConstraint(){
         if lblSourceBottomConstraint != nil && lblTimeAgoBottomConstraint != nil {
             NSLayoutConstraint.deactivate([lblSourceBottomConstraint])
@@ -214,26 +193,12 @@ class NewsDetailVC: UIViewController {
             NSLayoutConstraint.activate([lblSourceBottomConstraint])
         }
     }
+    
     func addPotraitConstraint(){
-        if viewLikeDislikeBottom != nil{ //lblSourceTopConstraint != nil && lblSourceTopConstraint != nil && {
-            //            NSLayoutConstraint.deactivate([lblTimesTopConstraint])
-            //            NSLayoutConstraint.deactivate([lblSourceTopConstraint])
+        if viewLikeDislikeBottom != nil{
             NSLayoutConstraint.deactivate([viewLikeDislikeBottom])
         }
-        lblSourceTopConstraint = NSLayoutConstraint (item: lblSource,
-                                                     attribute: NSLayoutAttribute.bottom,
-                                                     relatedBy: NSLayoutRelation.equal,
-                                                     toItem: viewLikeDislike,
-                                                     attribute: NSLayoutAttribute.top,
-                                                     multiplier: 1,
-                                                     constant: -10)
-        lblTimesTopConstraint = NSLayoutConstraint (item: lblTimeAgo,
-                                                    attribute: NSLayoutAttribute.bottom,
-                                                    relatedBy: NSLayoutRelation.equal,
-                                                    toItem: viewLikeDislike,
-                                                    attribute: NSLayoutAttribute.top,
-                                                    multiplier: 1,
-                                                    constant: -10)
+        
         newsAreaHeightConstraint.constant = 100
         viewLikeDislikeHeightConstraint.constant = -26.5
         viewLikeDislikeBottom = NSLayoutConstraint (item: viewLikeDislike,
@@ -243,42 +208,10 @@ class NewsDetailVC: UIViewController {
                                                     attribute: NSLayoutAttribute.bottom,
                                                     multiplier: 1,
                                                     constant: 0)
-        //  NSLayoutConstraint.activate([lblTimesTopConstraint])
-        //NSLayoutConstraint.activate([lblSourceTopConstraint])
         NSLayoutConstraint.activate([viewLikeDislikeBottom])
     }
     
     func addLandscapeConstraints(){
-        /*  if lblSourceTopConstraint != nil && lblSourceTopConstraint != nil && viewLikeDislikeBottom != nil{
-         NSLayoutConstraint.deactivate([lblTimesTopConstraint])
-         NSLayoutConstraint.deactivate([lblSourceTopConstraint])
-         NSLayoutConstraint.deactivate([viewLikeDislikeBottom])
-         }
-         viewLikeDislikeHeightConstraint.constant = -9.5
-         lblSourceTopConstraint = NSLayoutConstraint (item: lblSource,
-         attribute: NSLayoutAttribute.bottom,
-         relatedBy: NSLayoutRelation.equal,
-         toItem: viewNewsArea,
-         attribute: NSLayoutAttribute.bottom,
-         multiplier: 1,
-         constant: -45)
-         lblTimesTopConstraint = NSLayoutConstraint (item: lblTimeAgo,
-         attribute: NSLayoutAttribute.bottom,
-         relatedBy: NSLayoutRelation.equal,
-         toItem: viewNewsArea,
-         attribute: NSLayoutAttribute.bottom,
-         multiplier: 1,
-         constant: -45)
-         viewLikeDislikeBottom = NSLayoutConstraint (item: viewLikeDislike,
-         attribute: NSLayoutAttribute.bottom,
-         relatedBy: NSLayoutRelation.equal,
-         toItem: suggestedView,
-         attribute: NSLayoutAttribute.bottom,
-         multiplier: 1,
-         constant: 0)
-         NSLayoutConstraint.activate([viewLikeDislikeBottom])
-         NSLayoutConstraint.activate([lblTimesTopConstraint])
-         NSLayoutConstraint.activate([lblSourceTopConstraint])*/
         if lblSourceBottomConstraint != nil && lblTimeAgoBottomConstraint != nil {
             NSLayoutConstraint.deactivate([lblSourceBottomConstraint])
             NSLayoutConstraint.deactivate([lblTimeAgoBottomConstraint])
@@ -308,12 +241,13 @@ class NewsDetailVC: UIViewController {
                                                         attribute: NSLayoutAttribute.bottom,
                                                         multiplier: 1,
                                                         constant: 0)
-            if viewLikeDislikeHeightConstraint != nil{
-                NSLayoutConstraint.deactivate([viewLikeDislikeHeightConstraint])
-                viewLikeDislikeHeightConstraint.constant = -9.5
-                NSLayoutConstraint.activate([viewLikeDislikeHeightConstraint])
-            }
+            
             NSLayoutConstraint.activate([viewLikeDislikeBottom])
+        }
+        if viewLikeDislikeHeightConstraint != nil{
+            NSLayoutConstraint.deactivate([viewLikeDislikeHeightConstraint])
+            viewLikeDislikeHeightConstraint.constant = -8.5
+            NSLayoutConstraint.activate([viewLikeDislikeHeightConstraint])
         }
     }
     
@@ -407,7 +341,7 @@ class NewsDetailVC: UIViewController {
     }
     
     @objc func tapped(gestureRecognizer: UITapGestureRecognizer) {
-        if UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.phone{
+        if UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.phone {
             if viewLikeDislike.isHidden == true{
                 viewLikeDislike.isHidden = false
             }
@@ -417,9 +351,10 @@ class NewsDetailVC: UIViewController {
         }
         if UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad{
             if statusBarOrientation.isPortrait {
-                if Device.orientationDetail != .unknown{
-                    viewLikeDislike.isHidden = false
-                }
+                viewLikeDislike.isHidden = false
+                //                if Device.orientationDetail != .unknown{
+                //                    viewLikeDislike.isHidden = false
+                //                }
             }
             else{
                 if viewLikeDislike.isHidden == true{
@@ -1015,6 +950,7 @@ extension NewsDetailVC:UICollectionViewDelegate, UICollectionViewDataSource, UIC
         }
         return CGSize(width: width, height: 145.0)
     }
+    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return (self.RecomArticleData.count != 0) ? self.RecomArticleData[0].body!.articles.count + 1 : 0
     }

@@ -39,13 +39,10 @@
 #import "SentryCrash.h"
 #endif
 
-#if SENTRY_HAS_UIKIT
-#import <UIKit/UIKit.h>
-#endif
 
 NS_ASSUME_NONNULL_BEGIN
 
-NSString *const SentryClientVersionString = @"4.2.1";
+NSString *const SentryClientVersionString = @"4.1.1";
 NSString *const SentryClientSdkName = @"sentry-cocoa";
 
 static SentryClient *sharedClient = nil;
@@ -130,20 +127,6 @@ requestManager:(id <SentryRequestManager>)requestManager
 
 - (void)enableAutomaticBreadcrumbTracking {
     [[SentryBreadcrumbTracker alloc] start];
-}
-
-- (void)trackMemoryPressureAsEvent {
-    #if SENTRY_HAS_UIKIT
-    __weak SentryClient *weakSelf = self;
-    SentryEvent *event = [[SentryEvent alloc] initWithLevel:kSentrySeverityWarning];
-    event.message = @"Memory Warning";
-    [NSNotificationCenter.defaultCenter addObserverForName:UIApplicationDidReceiveMemoryWarningNotification
-                                                    object:nil
-                                                     queue:nil
-                                                usingBlock:^(NSNotification *notification) {
-                                                    [weakSelf storeEvent:event];
-                                                }];
-    #endif
 }
 
 #pragma mark Static Getter/Setter
@@ -255,11 +238,7 @@ withCompletionHandler:(_Nullable SentryRequestOperationFinished)completionHandle
 }
 
 - (void)sendAllStoredEvents {
-    dispatch_group_t dispatchGroup = dispatch_group_create();
-
     for (NSDictionary<NSString *, id> *fileDictionary in [self.fileManager getAllStoredEvents]) {
-        dispatch_group_enter(dispatchGroup);
-
         SentryNSURLRequest *request = [[SentryNSURLRequest alloc] initStoreRequestWithDsn:self.dsn
                                                                                   andData:fileDictionary[@"data"]
                                                                          didFailWithError:nil];
@@ -279,16 +258,8 @@ withCompletionHandler:(_Nullable SentryRequestOperationFinished)completionHandle
             if (response != nil) {
                 [self.fileManager removeFileAtPath:fileDictionary[@"path"]];
             }
-
-            dispatch_group_leave(dispatchGroup);
         }];
     }
-
-    dispatch_group_notify(dispatchGroup, dispatch_get_main_queue(), ^{
-        [NSNotificationCenter.defaultCenter postNotificationName:@"Sentry/allStoredEventsSent"
-                                                          object:nil
-                                                        userInfo:nil];
-    });
 }
 
 - (void)setSharedPropertiesOnEvent:(SentryEvent *)event {
@@ -383,7 +354,7 @@ withCompletionHandler:(_Nullable SentryRequestOperationFinished)completionHandle
     self.fileManager.maxEvents = maxEvents;
 }
 
-- (void)setMaxBreadcrumbs:(NSUInteger)maxBreadcrumbs {
+-(void)setMaxBreadcrumbs:(NSUInteger)maxBreadcrumbs {
     self.fileManager.maxBreadcrumbs = maxBreadcrumbs;
 }
 

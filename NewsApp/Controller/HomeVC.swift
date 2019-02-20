@@ -14,7 +14,7 @@ import CoreData
 import MaterialComponents.MaterialActivityIndicator
 import SDWebImage
 import NightNight
-import Sentry
+
 class HomeVC: UIViewController{
     
     @IBOutlet weak var HomeNewsTV: UITableView!
@@ -204,43 +204,6 @@ class HomeVC: UIViewController{
         saveArticlesInDB(url:  APPURL.ArticlesByCategoryURL + "\(selectedCategory)" )
     }
     
-    /* func ArticlesAPICall(){
-     APICall().loadNewsbyCategoryAPI(url: APPURL.ArticlesByCategoryURL + "\(selectedCategory)" ){ (status, response) in
-     switch response {
-     case .Success(let data) :
-     if data.count > 0{
-     self.articlesArr = data[0].body!.articles
-     if data[0].body!.next != nil{
-     self.nextURL = data[0].body!.next!
-     }
-     if data[0].body!.articles.count == 0{
-     self.activityIndicator.stopAnimating()
-     self.lblNonews.isHidden = false
-     }
-     else{
-     self.HomeNewsTV.reloadData()
-     }
-     }
-     case .Failure(let errormessage) :
-     self.activityIndicator.startAnimating()
-     self.HomeNewsTV.makeToast(errormessage, duration: 2.0, position: .center)
-     case .Change(let code):
-     if code == 404{
-     let defaults = UserDefaults.standard
-     defaults.removeObject(forKey: "googleToken")
-     defaults.removeObject(forKey: "FBToken")
-     defaults.removeObject(forKey: "token")
-     defaults.removeObject(forKey: "email")
-     defaults.removeObject(forKey: "first_name")
-     defaults.removeObject(forKey: "last_name")
-     defaults.synchronize()
-     self.showMsg(title: "Please login to continue..", msg: "")
-     }
-     }
-     }
-     }
-     */
-    
     func showMsg(title: String, msg : String)
     {
         let alertController = UIAlertController(title: title, message: msg, preferredStyle: .alert)
@@ -391,46 +354,6 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
         }
     }
     
-    
-    //check whether tableview scrolled up or down
-    /* func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
-     if targetContentOffset.pointee.y < scrollView.contentOffset.y {
-     if nextURL != "" {
-     APICall().loadNewsbyCategoryAPI(url: nextURL){
-     (status, response) in
-     switch response {
-     case .Success(let data) :
-     if data.count > 0 {
-     self.articlesArr.append(contentsOf: data[0].body.articles)
-     if data[0].body.next != nil{
-     self.nextURL = data[0].body.next!
-     }
-     else{
-     self.nextURL = ""
-     self.view.makeToast("No more news to show", duration: 1.0, position: .center)
-     }
-     self.HomeNewsTV.reloadData()
-     }
-     case .Failure(let errormessage) :
-     self.activityIndicator.startAnimating()
-     self.view.makeToast(errormessage, duration: 2.0, position: .center)
-     case .Change(let code):
-     if code == 404{
-     let defaults = UserDefaults.standard
-     defaults.removeObject(forKey: "googleToken")
-     defaults.removeObject(forKey: "FBToken")
-     defaults.removeObject(forKey: "token")
-     defaults.removeObject(forKey: "email")
-     defaults.removeObject(forKey: "first_name")
-     defaults.removeObject(forKey: "last_name")
-     defaults.synchronize()
-     self.showMsg(title: "Please login to continue..", msg: "")
-     }
-     }
-     }
-     }
-     }
-     }*/
 }
 
 extension HomeVC: IndicatorInfoProvider{
