@@ -197,25 +197,24 @@ class NewsDetailVC: UIViewController {
     func addPotraitConstraint(){
         if viewLikeDislikeBottom != nil{
             NSLayoutConstraint.deactivate([viewLikeDislikeBottom])
+            viewLikeDislikeBottom = NSLayoutConstraint (item: viewLikeDislike,
+                                                        attribute: NSLayoutAttribute.bottom,
+                                                        relatedBy: NSLayoutRelation.equal,
+                                                        toItem: suggestedView,
+                                                        attribute: NSLayoutAttribute.bottom,
+                                                        multiplier: 1,
+                                                        constant: 0)
+            NSLayoutConstraint.activate([viewLikeDislikeBottom])
         }
-        
         newsAreaHeightConstraint.constant = 100
         viewLikeDislikeHeightConstraint.constant = -26.5
-        viewLikeDislikeBottom = NSLayoutConstraint (item: viewLikeDislike,
-                                                    attribute: NSLayoutAttribute.bottom,
-                                                    relatedBy: NSLayoutRelation.equal,
-                                                    toItem: suggestedView,
-                                                    attribute: NSLayoutAttribute.bottom,
-                                                    multiplier: 1,
-                                                    constant: 0)
-        NSLayoutConstraint.activate([viewLikeDislikeBottom])
     }
     
     func addLandscapeConstraints(){
         if lblSourceBottomConstraint != nil && lblTimeAgoBottomConstraint != nil {
             NSLayoutConstraint.deactivate([lblSourceBottomConstraint])
             NSLayoutConstraint.deactivate([lblTimeAgoBottomConstraint])
-            lblSourceBottomConstraint = NSLayoutConstraint (item: lblSource,
+            lblSourceBottomConstraint = NSLayoutConstraint (item:lblSource,
                                                             attribute: NSLayoutAttribute.bottom,
                                                             relatedBy: NSLayoutRelation.equal,
                                                             toItem: suggestedView,
@@ -234,7 +233,7 @@ class NewsDetailVC: UIViewController {
         }
         if viewLikeDislikeBottom != nil{
             NSLayoutConstraint.deactivate([viewLikeDislikeBottom])
-            viewLikeDislikeBottom = NSLayoutConstraint (item: viewLikeDislike,
+            viewLikeDislikeBottom = NSLayoutConstraint (item:viewLikeDislike,
                                                         attribute: NSLayoutAttribute.bottom,
                                                         relatedBy: NSLayoutRelation.equal,
                                                         toItem: suggestedView,
@@ -840,6 +839,7 @@ class NewsDetailVC: UIViewController {
             btnBookamark.setImage(UIImage(named: AssetConstants.bookmark), for: .normal)
         }
     }
+    
     @IBAction func btnShareActn(_ sender: Any) {
         let text = ShowArticle[newsCurrentIndex].title
         let webURL = "Sent via NewsCout : (www.newscout.in)"
