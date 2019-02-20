@@ -97,7 +97,7 @@ class NewsDetailVC: UIViewController {
         }else{
             indexCount = SearchArticle.count
         }
-        APICall().loadRecommendationNewsAPI(articleId: articleId){ (status,response) in
+      /*  APICall().loadRecommendationNewsAPI(articleId: articleId){ (status,response) in
             switch response {
             case .Success(let data) :
                 self.RecomArticleData = data
@@ -120,7 +120,7 @@ class NewsDetailVC: UIViewController {
                 }
             }
         }
-        
+        */
         NotificationCenter.default.addObserver(self, selector: #selector(darkModeEnabled(_:)), name: .darkModeEnabled, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(darkModeDisabled(_:)), name: .darkModeDisabled, object: nil)
         darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
@@ -552,10 +552,9 @@ class NewsDetailVC: UIViewController {
                         self.playbackSlider.addTarget(self, action: #selector(NewsDetailVC.playbackSliderValueChanged(_:)), for: .valueChanged)
                         self.avPlayerView.addSubview(self.playbackSlider)
                         self.btnPlayVideo.isHidden = false
-                        self.activityIndicator.stopAnimating()
                     }
                     DispatchQueue.main.async {
-                        print("Time consuming task has completed. From here we are allowed to update user interface.")
+                        self.activityIndicator.stopAnimating()
                     }
                 }
             }
@@ -565,6 +564,7 @@ class NewsDetailVC: UIViewController {
                 self.avPlayerView.isHidden = true
                 self.imgNews.sd_setImage(with: URL(string: currentArticle.imageURL!), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
             }
+            
             if UserDefaults.standard.value(forKey: "token") != nil{
                 if currentArticle.likeDislike?.isLike == 0 {
                     btnLike.setImage(UIImage(named: AssetConstants.thumb_up_filled), for: .normal)
@@ -588,8 +588,6 @@ class NewsDetailVC: UIViewController {
                 btnDislike.setImage(UIImage(named: AssetConstants.thumb_down), for: .normal)
                 ResetBookmarkImg()
             }
-            
-            
         }
         else if SearchArticle.count != 0 {
             currentEntity = "SearchArticles"
@@ -646,19 +644,20 @@ class NewsDetailVC: UIViewController {
                         self.playbackSlider.addTarget(self, action: #selector(NewsDetailVC.playbackSliderValueChanged(_:)), for: .valueChanged)
                         self.avPlayerView.addSubview(self.playbackSlider)
                         self.btnPlayVideo.isHidden = false
-                        self.activityIndicator.stopAnimating()
                     }
                     DispatchQueue.main.async {
-                        print("Time consuming task has completed. From here we are allowed to update user interface.")
+                         self.activityIndicator.stopAnimating()
                     }
                 }
-            }
                 
+            }
             else{
                 self.btnPlayVideo.isHidden = true
                 self.avPlayerView.isHidden = true
                 self.imgNews.sd_setImage(with: URL(string: currentArticle.imageURL!), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
             }
+           
+            
             if UserDefaults.standard.value(forKey: "token") != nil{
                 if currentArticle.likeDislike?.isLike == 0 {
                     btnLike.setImage(UIImage(named: AssetConstants.thumb_up_filled), for: .normal)
@@ -682,13 +681,10 @@ class NewsDetailVC: UIViewController {
                 btnDislike.setImage(UIImage(named: AssetConstants.thumb_down), for: .normal)
                 ResetBookmarkImg()
             }
-            
-            
         }
         if imgNews.image == nil{
             imgNews.image = UIImage(named: AssetConstants.NoImage)
         }
-        
     }
     
     @IBAction func btnLikeActn(_ sender: Any) {

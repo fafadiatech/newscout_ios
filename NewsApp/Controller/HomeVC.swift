@@ -34,6 +34,7 @@ class HomeVC: UIViewController{
     
     override func viewDidLoad(){
         super.viewDidLoad()
+        self.activityIndicator.startAnimating()
         lblNonews.isHidden = true
         NotificationCenter.default.addObserver(self, selector: #selector(darkModeEnabled(_:)), name: .darkModeEnabled, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(darkModeDisabled(_:)), name: .darkModeDisabled, object: nil)
@@ -104,16 +105,19 @@ class HomeVC: UIViewController{
                     self.filterNews(selectedCat: "All News" )
                 }else{
                     self.filterNews(selectedCat: selectedCategory )
+                
                 }
                 self.HomeNewsTV.reloadData()
             }
-            else{
-                lblNonews.isHidden = false
-                activityIndicator.stopAnimating()
-            }
+           
         case .Failure(let errorMsg) :
             print(errorMsg)
         }
+        if ShowArticle.count == 0{
+        self.activityIndicator.stopAnimating()
+        lblNonews.isHidden = false
+        }
+
     }
     
     func saveArticlesInDB(url: String){
@@ -230,26 +234,10 @@ class HomeVC: UIViewController{
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
-    
-    func background(work: @escaping () -> ()) {
-        DispatchQueue.global(qos: .userInitiated).async {
-            work()
-        }
-    }
-    
-    func main(work: @escaping () -> ()) {
-        DispatchQueue.main.async {
-            work()
-        }
-    }
 }
 
 extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelegate{
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if ShowArticle.count == 0{
-            lblNonews.isHidden = false
-            activityIndicator.stopAnimating()
-        }
         return (ShowArticle.count != 0) ? self.ShowArticle.count : 0
     }
     
@@ -289,7 +277,6 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
             cell.lblTimesAgo.text = agoDate
             cell.imgNews.sd_setImage(with: URL(string: currentArticle.imageURL!), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
         }
-        
         let textSizeSelected = UserDefaults.standard.value(forKey: "textSize") as! Int
         if textSizeSelected == 0{
             cell.lblSource.font = FontConstants.smallFontContent
@@ -345,7 +332,6 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
                     }
                 }
                 else{
-                    lblNonews.isHidden = false
                     activityIndicator.stopAnimating()
                 }
             case .Failure(let errorMsg) :
