@@ -20,7 +20,6 @@ class SearchVC: UIViewController {
     @IBOutlet weak var titleView: UIView!
     @IBOutlet weak var txtSearch: UITextField!
     @IBOutlet weak var lblTitle: UILabel!
-    @IBOutlet weak var searchAutocompleteTV: UITableView!
     @IBOutlet weak var lblNoNews: UILabel!
     let activityIndicator = MDCActivityIndicator()
     //variables
@@ -38,11 +37,10 @@ class SearchVC: UIViewController {
             txtSearch.text = UserDefaults.standard.value(forKey: "searchTxt") as! String
         }
         lblNoNews.isHidden = true
-        searchAutocompleteTV.isHidden = true
         NotificationCenter.default.addObserver(self, selector: #selector(darkModeEnabled(_:)), name: .darkModeEnabled, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(darkModeDisabled(_:)), name: .darkModeDisabled, object: nil)
         activityIndicator.cycleColors = [.blue]
-        activityIndicator.frame = CGRect(x: view.frame.width/2, y: view.frame.height/2 - 100, width: 40, height: 40)
+        activityIndicator.frame = CGRect(x: view.frame.width/2, y: view.frame.height/2 - 30, width: 40, height: 40)
         activityIndicator.sizeToFit()
         activityIndicator.indicatorMode = .indeterminate
         activityIndicator.progress = 2.0
@@ -152,7 +150,7 @@ class SearchVC: UIViewController {
             }
             else{
                 self.activityIndicator.stopAnimating()
-                self.searchResultTV.makeToast("News does not exist", duration: 3.0, position: .center)
+                self.lblNoNews.isHidden = false
             }
         }
     }
@@ -340,9 +338,11 @@ extension SearchVC: UITextFieldDelegate
             activityIndicator.startAnimating()
             if recordCount == 0 {
                 activityIndicator.stopAnimating()
-                self.searchResultTV.makeToast("News does not exist", duration: 2.0, position: .center)
+                lblNoNews.isHidden = false
             }
-            searchResultTV.reloadData()
+            else{
+                searchResultTV.reloadData()
+            }
         case .Failure(let errorMsg) :
             self.searchResultTV.makeToast("Please try again later", duration: 2.0, position: .center)
         }
@@ -360,7 +360,7 @@ extension SearchVC: UITextFieldDelegate
             searchResultTV.reloadData()
             
             if recordCount == 0 {
-                self.searchResultTV.makeToast("News does not exist", duration: 2.0, position: .center)
+                lblNoNews.isHidden = false
             }
         }
         catch {
