@@ -296,13 +296,8 @@ class APICall{
                             completion(jsonData.header.status,jsonData.errors!.Msg!)
                         }
                         else{
-                            let defaults = UserDefaults.standard
-                            defaults.removeObject(forKey: "token")
-                            defaults.removeObject(forKey: "first_name")
-                            defaults.removeObject(forKey: "last_name")
-                            defaults.removeObject(forKey: "user_id")
-                            defaults.removeObject(forKey: "email")
-                            defaults.synchronize()
+                            let defaultList = ["token", "first_name", "last_name", "user_id", "email"]
+                            Helper().clearDefaults(list : defaultList)
                             var categoryList : [String] = []
                             
                              categoryList = UserDefaults.standard.value(forKey: "categories") as! [String]

@@ -259,7 +259,9 @@ extension SearchVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDele
         let contentYoffset = scrollView.contentOffset.y
         let distanceFromBottom = scrollView.contentSize.height - contentYoffset
         if distanceFromBottom < height {
+            if recordCount > 0 {
             activityIndicator.startAnimating()
+            }
         }
     }
 }

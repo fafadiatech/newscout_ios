@@ -101,14 +101,8 @@ class BookmarkDetailVC: UIViewController {
                 self.view.makeToast(errormessage, duration: 2.0, position: .center)
             case .Change(let code):
                 if code == 404{
-                    let defaults = UserDefaults.standard
-                    defaults.removeObject(forKey: "googleToken")
-                    defaults.removeObject(forKey: "FBToken")
-                    defaults.removeObject(forKey: "token")
-                    defaults.removeObject(forKey: "email")
-                    defaults.removeObject(forKey: "first_name")
-                    defaults.removeObject(forKey: "last_name")
-                    defaults.synchronize()
+                    let defaultList = ["googleToken","FBToken", "token", "first_name", "last_name", "user_id", "email"]
+                    Helper().clearDefaults(list : defaultList)
                     self.showMsg(title: "Please login to continue..", msg: "")
                 }
             }
