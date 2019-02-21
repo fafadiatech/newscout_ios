@@ -97,30 +97,30 @@ class NewsDetailVC: UIViewController {
         }else{
             indexCount = SearchArticle.count
         }
-      /*  APICall().loadRecommendationNewsAPI(articleId: articleId){ (status,response) in
-            switch response {
-            case .Success(let data) :
-                self.RecomArticleData = data
-                self.suggestedCV.reloadData()
-            case .Failure(let errormessage) :
-                if errormessage == "no net"{
-                    self.view.makeToast(errormessage, duration: 2.0, position: .center)
-                }
-            case .Change(let code):
-                if code == 404{
-                    let defaults = UserDefaults.standard
-                    defaults.removeObject(forKey: "googleToken")
-                    defaults.removeObject(forKey: "FBToken")
-                    defaults.removeObject(forKey: "token")
-                    defaults.removeObject(forKey: "email")
-                    defaults.removeObject(forKey: "first_name")
-                    defaults.removeObject(forKey: "last_name")
-                    defaults.synchronize()
-                    self.showMsg(title: "Please login to continue..", msg: "")
-                }
-            }
-        }
-        */
+        /*  APICall().loadRecommendationNewsAPI(articleId: articleId){ (status,response) in
+         switch response {
+         case .Success(let data) :
+         self.RecomArticleData = data
+         self.suggestedCV.reloadData()
+         case .Failure(let errormessage) :
+         if errormessage == "no net"{
+         self.view.makeToast(errormessage, duration: 2.0, position: .center)
+         }
+         case .Change(let code):
+         if code == 404{
+         let defaults = UserDefaults.standard
+         defaults.removeObject(forKey: "googleToken")
+         defaults.removeObject(forKey: "FBToken")
+         defaults.removeObject(forKey: "token")
+         defaults.removeObject(forKey: "email")
+         defaults.removeObject(forKey: "first_name")
+         defaults.removeObject(forKey: "last_name")
+         defaults.synchronize()
+         self.showMsg(title: "Please login to continue..", msg: "")
+         }
+         }
+         }
+         */
         NotificationCenter.default.addObserver(self, selector: #selector(darkModeEnabled(_:)), name: .darkModeEnabled, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(darkModeDisabled(_:)), name: .darkModeDisabled, object: nil)
         darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
@@ -149,11 +149,11 @@ class NewsDetailVC: UIViewController {
         
         let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapped(gestureRecognizer:)))
         viewNewsArea.addGestureRecognizer(tapRecognizer)
-        tapRecognizer.delegate = self as! UIGestureRecognizerDelegate
+        tapRecognizer.delegate = self as UIGestureRecognizerDelegate
         
         let PlayerTapRecognizer = UITapGestureRecognizer(target: self, action: #selector(PlayerViewtapped(gestureRecognizer:)))
         avPlayerView.addGestureRecognizer(PlayerTapRecognizer)
-        PlayerTapRecognizer.delegate = self as! UIGestureRecognizerDelegate
+        PlayerTapRecognizer.delegate = self as UIGestureRecognizerDelegate
     }
     
     func addipadPotraitConstraint(){
@@ -182,7 +182,7 @@ class NewsDetailVC: UIViewController {
                                                             attribute: NSLayoutAttribute.top,
                                                             multiplier: 1,
                                                             constant: -10)
-            lblTimeAgoBottomConstraint = NSLayoutConstraint (item: lblTimeAgo,
+            lblTimeAgoBottomConstraint = NSLayoutConstraint (item:lblTimeAgo,
                                                              attribute: NSLayoutAttribute.bottom,
                                                              relatedBy: NSLayoutRelation.equal,
                                                              toItem: viewLikeDislike,
@@ -214,14 +214,14 @@ class NewsDetailVC: UIViewController {
         if lblSourceBottomConstraint != nil && lblTimeAgoBottomConstraint != nil {
             NSLayoutConstraint.deactivate([lblSourceBottomConstraint])
             NSLayoutConstraint.deactivate([lblTimeAgoBottomConstraint])
-            lblSourceBottomConstraint = NSLayoutConstraint (item:lblSource,
+            lblSourceBottomConstraint = NSLayoutConstraint(item:lblSource,
                                                             attribute: NSLayoutAttribute.bottom,
                                                             relatedBy: NSLayoutRelation.equal,
                                                             toItem: suggestedView,
                                                             attribute: NSLayoutAttribute.top,
                                                             multiplier: 1,
                                                             constant: -10)
-            lblTimeAgoBottomConstraint = NSLayoutConstraint (item: lblTimeAgo,
+            lblTimeAgoBottomConstraint = NSLayoutConstraint (item:lblTimeAgo,
                                                              attribute: NSLayoutAttribute.bottom,
                                                              relatedBy: NSLayoutRelation.equal,
                                                              toItem: suggestedView,
@@ -233,7 +233,7 @@ class NewsDetailVC: UIViewController {
         }
         if viewLikeDislikeBottom != nil{
             NSLayoutConstraint.deactivate([viewLikeDislikeBottom])
-            viewLikeDislikeBottom = NSLayoutConstraint (item:viewLikeDislike,
+            viewLikeDislikeBottom = NSLayoutConstraint(item:viewLikeDislike,
                                                         attribute: NSLayoutAttribute.bottom,
                                                         relatedBy: NSLayoutRelation.equal,
                                                         toItem: suggestedView,
@@ -646,7 +646,7 @@ class NewsDetailVC: UIViewController {
                         self.btnPlayVideo.isHidden = false
                     }
                     DispatchQueue.main.async {
-                         self.activityIndicator.stopAnimating()
+                        self.activityIndicator.stopAnimating()
                     }
                 }
                 
@@ -656,7 +656,7 @@ class NewsDetailVC: UIViewController {
                 self.avPlayerView.isHidden = true
                 self.imgNews.sd_setImage(with: URL(string: currentArticle.imageURL!), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
             }
-           
+            
             
             if UserDefaults.standard.value(forKey: "token") != nil{
                 if currentArticle.likeDislike?.isLike == 0 {

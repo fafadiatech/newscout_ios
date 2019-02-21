@@ -180,6 +180,7 @@ extension CategoryListVC:UITableViewDelegate, UITableViewDataSource{
             protocolObj?.updateCategoryList(catName: selectedCat)
             SaveRemoveCategoryAPICall(type: "save")
             let Homevc = HomeVC()
+            Homevc.activityIndicator.startAnimating()
             Homevc.selectedCategory = selectedCat
         }
         else{

@@ -82,6 +82,10 @@ class HomeVC: UIViewController{
             if self.coredataRecordCount != 0 {
                 self.fetchArticlesFromDB()
             }
+            else{
+                activityIndicator.stopAnimating()
+                lblNonews.isHidden = true
+            }
         }
         saveCategoryInDB()
     }
@@ -105,25 +109,29 @@ class HomeVC: UIViewController{
                     self.filterNews(selectedCat: "All News" )
                 }else{
                     self.filterNews(selectedCat: selectedCategory )
-                
+                    
                 }
                 self.HomeNewsTV.reloadData()
             }
-           
+            
         case .Failure(let errorMsg) :
             print(errorMsg)
         }
         if ShowArticle.count == 0{
-        self.activityIndicator.stopAnimating()
-        lblNonews.isHidden = false
+            self.activityIndicator.stopAnimating()
+            lblNonews.isHidden = false
         }
-
+        
     }
     
     func saveArticlesInDB(url: String){
         DBManager().SaveDataDB(nextUrl: url){response in
             if response == true{
                 self.fetchArticlesFromDB()
+            }
+            else{
+                self.activityIndicator.stopAnimating()
+                self.lblNonews.isHidden = false
             }
         }
     }
@@ -174,19 +182,18 @@ class HomeVC: UIViewController{
         refreshControl.endRefreshing()
     }
     
-    func filterNews(selectedCat : String)
-    {
-        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "NewsArticle")
-        fetchRequest.predicate = NSPredicate(format: "category CONTAINS[c] %@", selectedCat)
-        let managedContext =
-            self.appDelegate?.persistentContainer.viewContext
-        do {
-            self.ShowArticle = (try managedContext?.fetch(fetchRequest))! as! [NewsArticle]
-        }
-        catch {
-            print("error executing fetch request: \(error)")
-        }
+    func filterNews(selectedCat : String){
+    let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "NewsArticle")
+    fetchRequest.predicate = NSPredicate(format: "category CONTAINS[c] %@", selectedCat)
+    let managedContext =
+        self.appDelegate?.persistentContainer.viewContext
+    do {
+        self.ShowArticle = (try managedContext?.fetch(fetchRequest))! as! [NewsArticle]
     }
+    catch {
+        print("error executing fetch request: \(error)")
+    }
+}
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -198,18 +205,17 @@ class HomeVC: UIViewController{
             selectedCategory = tabBarTitle
         }
         
-        coredataRecordCount = DBManager().IsCoreDataEmpty(entity: "NewsArticle")
-        if self.coredataRecordCount != 0{
-            self.fetchArticlesFromDB()
-        }
+        //        coredataRecordCount = DBManager().IsCoreDataEmpty(entity: "NewsArticle")
+        //        if self.coredataRecordCount != 0{
+        //            self.fetchArticlesFromDB()
+        //        }
     }
     
     func FetchArticlesAPICall(){
         saveArticlesInDB(url:  APPURL.ArticlesByCategoryURL + "\(selectedCategory)" )
     }
     
-    func showMsg(title: String, msg : String)
-    {
+    func showMsg(title: String, msg : String){
         let alertController = UIAlertController(title: title, message: msg, preferredStyle: .alert)
         if UI_USER_INTERFACE_IDIOM() == .pad
         {
