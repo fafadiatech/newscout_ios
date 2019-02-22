@@ -117,7 +117,7 @@ struct themeColor{
 
 struct APPURL {
     private struct Domains {
-        static let Local = "http://192.168.2.204" //"http://192.168.2.151:8000"//
+        static let Local = "http://192.168.2.132:8000" // "http://192.168.2.204" //"http://192.168.2.151:8000"//
         static let Server = ""
         static let version = "/api/v1/"
     }

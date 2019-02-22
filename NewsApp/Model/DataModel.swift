@@ -40,6 +40,7 @@ struct Article: Decodable{
     var url : String?
     var published_on : String?
     var blurb : String?
+    var hash_tags : [HashTag]
     
     enum CodingKeys: String, CodingKey{
         case article_id = "id"
@@ -50,6 +51,7 @@ struct Article: Decodable{
         case title
         case published_on
         case blurb
+        case hash_tags
     }
 }
 
@@ -90,7 +92,8 @@ struct ArticleDict: Decodable{
 }
 
 struct CategoryList: Decodable{
-    let categories : [CategoryDetails]
+    let header : Header
+    let body :  Body
 }
 
 struct CategoryDetails : Decodable{
@@ -101,6 +104,10 @@ struct CategoryDetails : Decodable{
         case cat_id = "id"
         case title = "name"
     }
+}
+
+struct HashTag : Decodable{
+    let name : String
 }
 
 struct MainModel: Decodable{
@@ -149,11 +156,13 @@ struct Body : Decodable{
     let Msg : String?
     let user: User?
     let listResult: [LikeBookmarkList]?
+    let categories : [CategoryDetails]
     
     enum CodingKeys: String, CodingKey{
         case Msg = "Msg"
         case user =  "user"
         case listResult = "results"
+        case categories = "categories"
     }
 }
 

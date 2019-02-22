@@ -32,7 +32,7 @@ class DBManager{
             }
             if self.ArticleData.count != 0{
                 if self.ArticleData[0].header.status == "1" {
-                    if self.ArticleData[0].body?.next != nil{
+                   /* if self.ArticleData[0].body?.next != nil{
                         if self.someEntityExists(id: (self.ArticleData[0].body!.categoryDetail?.cat_id)!, entity: "NewsURL", keyword: "") == false{
                             let newUrl = NewsURL(context: managedContext!)
                             newUrl.cat_id = Int16((self.ArticleData[0].body?.categoryDetail?.cat_id)!)
@@ -56,7 +56,7 @@ class DBManager{
                             }
                         }
                         self.saveBlock()
-                    }
+                    }*/
                     for news in self.ArticleData[0].body!.articles{
                         if  self.someEntityExists(id: Int(news.article_id!), entity: "NewsArticle", keyword: "") == false
                         {
@@ -68,8 +68,8 @@ class DBManager{
                             newArticle.source_url = news.url
                             newArticle.published_on = news.published_on
                             newArticle.blurb = news.blurb
-                            newArticle.category = (self.ArticleData[0].body?.categoryDetail?.title)!
-                            newArticle.category_id = Int16((self.ArticleData[0].body?.categoryDetail?.cat_id)!)
+                            newArticle.category = news.category  //(self.ArticleData[0].body?.categoryDetail?.title)!
+                            //newArticle.category_id = Int16((self.ArticleData[0].body?.categoryDetail?.cat_id)!)
                             self.saveBlock()
                         }
                     }
@@ -211,8 +211,8 @@ class DBManager{
                 print(errormessage)
             }
             
-            if self.CategoryData.count != 0{
-                for cat in self.CategoryData[0].categories{
+            if self.CategoryData[0].body.categories.count > 0{
+                for cat in self.CategoryData[0].body.categories{
                     if  self.someEntityExists(id: Int(cat.cat_id), entity: "Category", keyword: "") == false
                     {
                         let newCategory = Category(context: managedContext!)
