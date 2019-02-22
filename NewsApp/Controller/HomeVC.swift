@@ -34,6 +34,7 @@ class HomeVC: UIViewController{
     
     override func viewDidLoad(){
         super.viewDidLoad()
+        saveCategoryInDB()
         self.activityIndicator.startAnimating()
         lblNonews.isHidden = true
         NotificationCenter.default.addObserver(self, selector: #selector(darkModeEnabled(_:)), name: .darkModeEnabled, object: nil)
@@ -87,7 +88,7 @@ class HomeVC: UIViewController{
                 lblNonews.isHidden = true
             }
         }
-        saveCategoryInDB()
+        
     }
     
     func saveCategoryInDB(){
@@ -126,13 +127,7 @@ class HomeVC: UIViewController{
     
     func saveArticlesInDB(url: String){
         DBManager().SaveDataDB(nextUrl: url){response in
-            if response == true{
-                self.fetchArticlesFromDB()
-            }
-            else{
-                self.activityIndicator.stopAnimating()
-                self.lblNonews.isHidden = false
-            }
+            self.fetchArticlesFromDB()
         }
     }
     

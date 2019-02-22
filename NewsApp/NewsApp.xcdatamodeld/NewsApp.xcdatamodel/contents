@@ -11,6 +11,10 @@
         <attribute name="cat_id" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
+    <entity name="HashTag" representedClassName="HashTag" syncable="YES" codeGenerationType="class">
+        <attribute name="articleId" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
     <entity name="LikeDislike" representedClassName="LikeDislike" syncable="YES" codeGenerationType="class">
         <attribute name="article_id" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="isLike" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
@@ -18,11 +22,17 @@
         <relationship name="likedArticle" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="NewsArticle" inverseName="likeDislike" inverseEntity="NewsArticle" syncable="YES"/>
         <relationship name="searchlikeArticles" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="SearchArticles" inverseName="likeDislike" inverseEntity="SearchArticles" syncable="YES"/>
     </entity>
+    <entity name="Media" representedClassName="Media" syncable="YES" codeGenerationType="class">
+        <attribute name="articleId" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="imageURL" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="mediaId" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="type" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="videoURL" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
     <entity name="NewsArticle" representedClassName="NewsArticle" syncable="YES" codeGenerationType="class">
         <attribute name="article_id" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="blurb" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="category" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="category_id" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="imageURL" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="published_on" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="source" optional="YES" attributeType="String" syncable="YES"/>
@@ -32,7 +42,6 @@
         <relationship name="likeDislike" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="LikeDislike" inverseName="likedArticle" inverseEntity="LikeDislike" syncable="YES"/>
     </entity>
     <entity name="NewsURL" representedClassName="NewsURL" syncable="YES" codeGenerationType="class">
-        <attribute name="cat_id" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="category" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="nextURL" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="prevURL" optional="YES" attributeType="String" syncable="YES"/>
@@ -52,9 +61,11 @@
     <elements>
         <element name="BookmarkArticles" positionX="405" positionY="18" width="128" height="120"/>
         <element name="Category" positionX="405" positionY="18" width="128" height="75"/>
+        <element name="HashTag" positionX="405" positionY="90" width="128" height="75"/>
         <element name="LikeDislike" positionX="405" positionY="36" width="128" height="120"/>
-        <element name="NewsArticle" positionX="407.63671875" positionY="-45.1953125" width="128" height="210"/>
-        <element name="NewsURL" positionX="405" positionY="63" width="128" height="105"/>
+        <element name="NewsArticle" positionX="407.63671875" positionY="-45.1953125" width="128" height="195"/>
+        <element name="NewsURL" positionX="405" positionY="63" width="128" height="90"/>
         <element name="SearchArticles" positionX="405" positionY="54" width="128" height="195"/>
+        <element name="Media" positionX="414" positionY="99" width="128" height="120"/>
     </elements>
 </model>

@@ -2,7 +2,7 @@
 //  NewsURL+CoreDataProperties.swift
 //  
 //
-//  Created by Jayashree on 30/01/19.
+//  Created by Jayashri on 22/02/19.
 //
 //
 
@@ -16,7 +16,6 @@ extension NewsURL {
         return NSFetchRequest<NewsURL>(entityName: "NewsURL")
     }
 
-    @NSManaged public var cat_id: Int16
     @NSManaged public var category: String?
     @NSManaged public var nextURL: String?
     @NSManaged public var prevURL: String?

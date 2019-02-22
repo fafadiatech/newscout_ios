@@ -40,7 +40,8 @@ struct Article: Decodable{
     var url : String?
     var published_on : String?
     var blurb : String?
-    var hash_tags : [HashTag]
+    var hash_tags : [Tag]
+    var article_media : [ArticleMedia]?
     
     enum CodingKeys: String, CodingKey{
         case article_id = "id"
@@ -52,6 +53,7 @@ struct Article: Decodable{
         case published_on
         case blurb
         case hash_tags
+        case article_media
     }
 }
 
@@ -106,8 +108,24 @@ struct CategoryDetails : Decodable{
     }
 }
 
-struct HashTag : Decodable{
+struct Tag: Decodable{
     let name : String
+}
+
+struct ArticleMedia: Decodable{
+    let media_id : Int
+    let category : String
+    let img_url : String
+    let video_url : String
+    let article_id : Int
+    
+    enum CodingKeys: String, CodingKey{
+        case media_id = "id"
+        case article_id = "article"
+        case category
+        case video_url
+        case img_url = "url"
+    }
 }
 
 struct MainModel: Decodable{

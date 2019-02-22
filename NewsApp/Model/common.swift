@@ -124,7 +124,7 @@ struct APPURL {
     
     private  struct Routes {
         static let Articles = Domains.version + "articles/?page="
-        static let ArticlesByCategory = Domains.version + "articles/?categories="
+        static let ArticlesByCategory = Domains.version + "articles/?category="
         static let ArticleDetail = Domains.version + "articles/"
         static let Login = Domains.version + "login/"
         static let SignUp = Domains.version + "signup/"

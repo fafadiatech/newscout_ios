@@ -30,19 +30,20 @@ class DBManager{
             case .Change(let code):
                 print(code)
             }
+        
             if self.ArticleData.count != 0{
+                
                 if self.ArticleData[0].header.status == "1" {
-                   /* if self.ArticleData[0].body?.next != nil{
-                        if self.someEntityExists(id: (self.ArticleData[0].body!.categoryDetail?.cat_id)!, entity: "NewsURL", keyword: "") == false{
+                    if self.ArticleData[0].body?.next != nil{
+                        if self.someEntityExists(id: 0, entity: "NewsURL", keyword: (self.ArticleData[0].body?.articles[0].category)!) == false {
                             let newUrl = NewsURL(context: managedContext!)
-                            newUrl.cat_id = Int16((self.ArticleData[0].body?.categoryDetail?.cat_id)!)
-                            newUrl.category = self.ArticleData[0].body?.categoryDetail?.title
+                            newUrl.category = self.ArticleData[0].body?.articles[0].category
                             newUrl.nextURL = self.ArticleData[0].body?.next
                         }
                         else{
                             let fetchRequest =
                                 NSFetchRequest<NSManagedObject>(entityName: "NewsURL")
-                            fetchRequest.predicate = NSPredicate(format: "cat_id  = %d", (self.ArticleData[0].body!.categoryDetail?.cat_id)!)
+                            fetchRequest.predicate = NSPredicate(format: "category  = %s", (self.ArticleData[0].body!.articles[0].category)!)
                             
                             do {
                                 URLData = try managedContext?.fetch(fetchRequest) as! [NewsURL]
@@ -50,13 +51,13 @@ class DBManager{
                                 print("Could not fetch. \(error), \(error.userInfo)")
                             }
                             for url in URLData{
-                                if url.cat_id == Int16((self.ArticleData[0].body?.categoryDetail?.cat_id)!){
+                                if url.category == self.ArticleData[0].body!.articles[0].category {
                                     url.nextURL = self.ArticleData[0].body?.next
                                 }
                             }
                         }
                         self.saveBlock()
-                    }*/
+                    }
                     for news in self.ArticleData[0].body!.articles{
                         if  self.someEntityExists(id: Int(news.article_id!), entity: "NewsArticle", keyword: "") == false
                         {
@@ -68,8 +69,31 @@ class DBManager{
                             newArticle.source_url = news.url
                             newArticle.published_on = news.published_on
                             newArticle.blurb = news.blurb
-                            newArticle.category = news.category  //(self.ArticleData[0].body?.categoryDetail?.title)!
-                            //newArticle.category_id = Int16((self.ArticleData[0].body?.categoryDetail?.cat_id)!)
+                            newArticle.category = news.category
+                            if news.hash_tags.count > 0 {
+                                for tag in news.hash_tags {
+                                    if  self.someEntityExists(id: 0 , entity: "HashTag", keyword: tag.name) == false
+                                    {
+                                        let newTag = HashTag(context: managedContext!)
+                                        newTag.name = tag.name
+                                        newTag.articleId = Int64(news.article_id)
+                                    }
+                                }
+                                
+                            }
+                            if news.article_media!.count > 0 {
+                                for media in news.article_media!{
+                                    if self.someEntityExists(id: media.media_id, entity: "Media", keyword: "") == false {
+                                        let newMedia =  Media(context: managedContext!)
+                                        newMedia.articleId = Int64(news.article_id)
+                                        newMedia.imageURL =   media.img_url
+                                        newMedia.videoURL = media.video_url
+                                        newMedia.type = media.category
+                                        newMedia.mediaId =  Int64(media.media_id)
+                                    }
+                    
+                                }
+                            }
                             self.saveBlock()
                         }
                     }
@@ -90,11 +114,20 @@ class DBManager{
         if entity == "NewsArticle" || entity == "BookmarkArticles" || entity == "LikeDislike" || entity == "SearchArticles" {
             fetchRequest.predicate = NSPredicate(format: "article_id == \(id)")
         }
-        else if entity == "NewsURL" || entity == "Category"{
-            fetchRequest.predicate = NSPredicate(format: "cat_id == \(id)")
+        else if entity == "NewsURL" || entity == "Category" || entity == "Media"{
+            if entity == "Media"{
+            fetchRequest.predicate = NSPredicate(format: "mediaId == \(id)")
+            }else{
+                fetchRequest.predicate = NSPredicate(format: "cat_id == \(id)")
+            }
         }
+        
         if keyword != ""{
+            if entity == "HashTag"{
+                fetchRequest.predicate = NSPredicate(format: "name contains[c] %@", keyword)
+            }else{
             fetchRequest.predicate = NSPredicate(format: "category contains[c] %@",keyword)
+            }
         }
         let managedContext =
             appDelegate?.persistentContainer.viewContext
@@ -200,6 +233,7 @@ class DBManager{
     //save categories in DB
     func SaveCategoryDB(_ completion : @escaping (Bool) -> ())
     {
+        var categoryDefaults : [Int : String] = [:]
         let managedContext =
             appDelegate?.persistentContainer.viewContext
         APICall().loadCategoriesAPI{
@@ -218,8 +252,11 @@ class DBManager{
                         let newCategory = Category(context: managedContext!)
                         newCategory.cat_id = Int16(cat.cat_id)
                         newCategory.title = cat.title
-                        self.saveBlock()
+                        categoryDefaults.updateValue(cat.title, forKey: cat.cat_id)
                     }
+                }
+                if UserDefaults.standard.value(forKey: "categoryDefaults") != nil{
+                UserDefaults.standard.set(categoryDefaults, forKey: "categoryDefaults")
                 }
                 completion(true)
             }
@@ -546,7 +583,6 @@ class DBManager{
                     if self.ArticleData[0].body?.next != nil{
                         if self.someEntityExists(id: 0, entity: "NewsURL", keyword: search) == false{
                             let newUrl = NewsURL(context: managedContext!)
-                            newUrl.cat_id = 0
                             newUrl.category = search
                             newUrl.nextURL = self.ArticleData[0].body?.next
                         }
@@ -688,7 +724,8 @@ class DBManager{
         let result = try? managedContext?.fetch(deleteFetch)
         let resultData = result as! [NewsURL]
         let lastRecord = resultData.last
-        if lastRecord?.cat_id == 0{
+        var search = UserDefaults.standard.value(forKey: "searchTxt") as! String
+        if lastRecord?.category == search {
             managedContext!.delete(lastRecord!)
         }
         saveBlock()

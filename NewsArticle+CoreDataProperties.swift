@@ -2,7 +2,7 @@
 //  NewsArticle+CoreDataProperties.swift
 //  
 //
-//  Created by Jayashree on 08/02/19.
+//  Created by Jayashri on 22/02/19.
 //
 //
 
@@ -19,7 +19,6 @@ extension NewsArticle {
     @NSManaged public var article_id: Int64
     @NSManaged public var blurb: String?
     @NSManaged public var category: String?
-    @NSManaged public var category_id: Int16
     @NSManaged public var imageURL: String?
     @NSManaged public var published_on: String?
     @NSManaged public var source: String?

@@ -2,7 +2,7 @@
 //  SearchArticles+CoreDataProperties.swift
 //  
 //
-//  Created by Jayashree on 08/02/19.
+//  Created by Jayashri on 22/02/19.
 //
 //
 
@@ -24,7 +24,7 @@ extension SearchArticles {
     @NSManaged public var source: String?
     @NSManaged public var source_url: String?
     @NSManaged public var title: String?
-    @NSManaged public var likeDislike: LikeDislike?
     @NSManaged public var bookmark: BookmarkArticles?
+    @NSManaged public var likeDislike: LikeDislike?
 
 }

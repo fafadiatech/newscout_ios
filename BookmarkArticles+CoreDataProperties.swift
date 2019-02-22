@@ -2,7 +2,7 @@
 //  BookmarkArticles+CoreDataProperties.swift
 //  
 //
-//  Created by Jayashree on 08/02/19.
+//  Created by Jayashri on 22/02/19.
 //
 //
 
