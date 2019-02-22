@@ -40,6 +40,9 @@ class NewsDetailVC: UIViewController {
     @IBOutlet weak var btnPlayVideo: UIButton!
     @IBOutlet weak var newsAreaHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var viewLikeDislikeHeightConstraint: NSLayoutConstraint!
+    @IBOutlet weak var lblSourceBottomConstraint: NSLayoutConstraint!
+    @IBOutlet weak var lblTimeAgoBottomConstraint: NSLayoutConstraint!
+    @IBOutlet weak var viewLikeDislikeBottom: NSLayoutConstraint!
     @IBOutlet weak var avPlayerView: AVPlayerView!
     let imageCache = NSCache<NSString, UIImage>()
     var playbackSlider = UISlider()
@@ -75,23 +78,18 @@ class NewsDetailVC: UIViewController {
         activityIndicator.indicatorMode = .indeterminate
         activityIndicator.progress = 2.0
         imgNews.addSubview(activityIndicator)
+        txtViewNewsDesc.textContainer.lineBreakMode = NSLineBreakMode.byTruncatingTail
         if UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad && statusBarOrientation.isPortrait{
             viewLikeDislike.isHidden = false
-            addPotraitConstraint()
+            addsourceConstraint()
         }
-        else if UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad {
-            
-            if statusBarOrientation.isLandscape{
-                viewLikeDislike.isHidden = true
-                if viewLikeDislikeHeightConstraint != nil{
-                    NSLayoutConstraint.deactivate([viewLikeDislikeHeightConstraint])
-                    viewLikeDislikeHeightConstraint.constant = -9.5
-                    NSLayoutConstraint.activate([viewLikeDislikeHeightConstraint])
-                }
-            }
+        else if UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad && statusBarOrientation.isLandscape {
+            viewLikeDislike.isHidden = true
+            addLandscapeConstraints()
         }
         else{
             viewLikeDislike.isHidden = true
+            addPotraitConstraint()
         }
         viewLikeDislike.backgroundColor = colorConstants.redColor
         ViewWebContainer.isHidden = true
@@ -100,27 +98,6 @@ class NewsDetailVC: UIViewController {
         }else{
             indexCount = SearchArticle.count
         }
-        APICall().loadRecommendationNewsAPI(articleId: articleId){ (status,response) in
-            switch response {
-            case .Success(let data) :
-                self.RecomArticleData = data
-                self.suggestedCV.reloadData()
-            case .Failure(let errormessage) :
-                self.view.makeToast(errormessage, duration: 2.0, position: .center)
-            case .Change(let code):
-                if code == 404{
-                    let defaults = UserDefaults.standard
-                    defaults.removeObject(forKey: "googleToken")
-                    defaults.removeObject(forKey: "FBToken")
-                    defaults.removeObject(forKey: "token")
-                    defaults.removeObject(forKey: "email")
-                    defaults.removeObject(forKey: "first_name")
-                    defaults.removeObject(forKey: "last_name")
-                    defaults.synchronize()
-                    self.showMsg(title: "Please login to continue..", msg: "")
-                }
-            }
-        }
         
         NotificationCenter.default.addObserver(self, selector: #selector(darkModeEnabled(_:)), name: .darkModeEnabled, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(darkModeDisabled(_:)), name: .darkModeDisabled, object: nil)
@@ -128,8 +105,6 @@ class NewsDetailVC: UIViewController {
         if  darkModeStatus == true{
             changeTheme()
         }
-        
-        
         //newsDetailAPICall(currentIndex: articleId)
         ShowNews(currentIndex: newsCurrentIndex)
         let swipeUp = UISwipeGestureRecognizer(target: self, action: #selector(self.respondToSwipeGesture))
@@ -150,84 +125,125 @@ class NewsDetailVC: UIViewController {
         
         let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapped(gestureRecognizer:)))
         viewNewsArea.addGestureRecognizer(tapRecognizer)
-        tapRecognizer.delegate = self as! UIGestureRecognizerDelegate
+        tapRecognizer.delegate = self as UIGestureRecognizerDelegate
         
         let PlayerTapRecognizer = UITapGestureRecognizer(target: self, action: #selector(PlayerViewtapped(gestureRecognizer:)))
         avPlayerView.addGestureRecognizer(PlayerTapRecognizer)
-        PlayerTapRecognizer.delegate = self as! UIGestureRecognizerDelegate
+        PlayerTapRecognizer.delegate = self as UIGestureRecognizerDelegate
     }
     
-    /*func newsDetailAPICall(currentIndex: Int){
-     
-     APICall().articleDetailAPI(articleId: currentIndex){ (status,response) in
-     switch response {
-     case .Success(let data) :
-     self.ArticleDetail = data
-     print(self.ArticleDetail)
-     self.ShowNews(currentArticle: self.ArticleDetail.body.article)
-     case .Failure(let errormessage) :
-     print(errormessage)
-     self.view.makeToast(errormessage, duration: 2.0, position: .center)
-     }
-     }
-     }*/
+    func RecommendationAPICall(){
+        APICall().loadRecommendationNewsAPI(articleId: articleId){ (status,response) in
+            switch response {
+            case .Success(let data) :
+                self.RecomArticleData = data
+                self.suggestedCV.reloadData()
+            case .Failure(let errormessage) :
+                if errormessage == "no net"{
+                    self.view.makeToast(errormessage, duration: 2.0, position: .center)
+                }
+            case .Change(let code):
+                if code == 404{
+                    let defaultList = ["googleToken","FBToken","token", "first_name", "last_name", "user_id", "email"]
+                    Helper().clearDefaults(list : defaultList)
+                    self.NavigationToLogin()
+                }
+            }
+        }
+    }
+    
+    func addipadPotraitConstraint(){
+        if viewLikeDislikeBottom != nil {
+            NSLayoutConstraint.deactivate([viewLikeDislikeBottom])
+            viewLikeDislikeBottom = NSLayoutConstraint (item: viewLikeDislike,
+                                                        attribute: NSLayoutAttribute.bottom,
+                                                        relatedBy: NSLayoutRelation.equal,
+                                                        toItem: suggestedView,
+                                                        attribute: NSLayoutAttribute.top,
+                                                        multiplier: 1,
+                                                        constant: 0)
+            NSLayoutConstraint.activate([viewLikeDislikeBottom])
+            addsourceConstraint()
+        }
+    }
+    
+    func addsourceConstraint(){
+        if lblSourceBottomConstraint != nil && lblTimeAgoBottomConstraint != nil {
+            NSLayoutConstraint.deactivate([lblSourceBottomConstraint])
+            NSLayoutConstraint.deactivate([lblTimeAgoBottomConstraint])
+            lblSourceBottomConstraint = NSLayoutConstraint (item: lblSource,
+                                                            attribute: NSLayoutAttribute.bottom,
+                                                            relatedBy: NSLayoutRelation.equal,
+                                                            toItem: viewLikeDislike,
+                                                            attribute: NSLayoutAttribute.top,
+                                                            multiplier: 1,
+                                                            constant: -10)
+            lblTimeAgoBottomConstraint = NSLayoutConstraint (item:lblTimeAgo,
+                                                             attribute: NSLayoutAttribute.bottom,
+                                                             relatedBy: NSLayoutRelation.equal,
+                                                             toItem: viewLikeDislike,
+                                                             attribute: NSLayoutAttribute.top,
+                                                             multiplier: 1,
+                                                             constant: -10)
+            NSLayoutConstraint.activate([lblTimeAgoBottomConstraint])
+            NSLayoutConstraint.activate([lblSourceBottomConstraint])
+        }
+    }
     
     func addPotraitConstraint(){
-        if lblSourceTopConstraint != nil && lblSourceTopConstraint != nil && viewLikeDislikeBottomConstraint != nil{
-            NSLayoutConstraint.deactivate([lblTimesTopConstraint])
-            NSLayoutConstraint.deactivate([lblSourceTopConstraint])
-            NSLayoutConstraint.deactivate([viewLikeDislikeBottomConstraint])
+        if viewLikeDislikeBottom != nil{
+            NSLayoutConstraint.deactivate([viewLikeDislikeBottom])
+            viewLikeDislikeBottom = NSLayoutConstraint (item: viewLikeDislike,
+                                                        attribute: NSLayoutAttribute.bottom,
+                                                        relatedBy: NSLayoutRelation.equal,
+                                                        toItem: suggestedView,
+                                                        attribute: NSLayoutAttribute.bottom,
+                                                        multiplier: 1,
+                                                        constant: 0)
+            NSLayoutConstraint.activate([viewLikeDislikeBottom])
         }
-        lblSourceTopConstraint = NSLayoutConstraint (item: lblSource,
-                                                     attribute: NSLayoutAttribute.bottom,
-                                                     relatedBy: NSLayoutRelation.equal,
-                                                     toItem: viewLikeDislike,
-                                                     attribute: NSLayoutAttribute.top,
-                                                     multiplier: 1,
-                                                     constant: -10)
-        lblTimesTopConstraint = NSLayoutConstraint (item: lblTimeAgo,
-                                                    attribute: NSLayoutAttribute.bottom,
-                                                    relatedBy: NSLayoutRelation.equal,
-                                                    toItem: viewLikeDislike,
-                                                    attribute: NSLayoutAttribute.top,
-                                                    multiplier: 1,
-                                                    constant: -10)
         newsAreaHeightConstraint.constant = 100
         viewLikeDislikeHeightConstraint.constant = -26.5
-        viewLikeDislikeBottomConstraint = NSLayoutConstraint (item: viewLikeDislike,
-                                                              attribute: NSLayoutAttribute.bottom,
-                                                              relatedBy: NSLayoutRelation.equal,
-                                                              toItem: viewNewsArea,
-                                                              attribute: NSLayoutAttribute.bottom,
-                                                              multiplier: 1,
-                                                              constant: -30)
-        NSLayoutConstraint.activate([lblTimesTopConstraint])
-        NSLayoutConstraint.activate([lblSourceTopConstraint])
-        NSLayoutConstraint.activate([viewLikeDislikeBottomConstraint])
     }
     
     func addLandscapeConstraints(){
-        if lblSourceTopConstraint != nil && lblSourceTopConstraint != nil{
-            NSLayoutConstraint.deactivate([lblTimesTopConstraint])
-            NSLayoutConstraint.deactivate([lblSourceTopConstraint])
+        if lblSourceBottomConstraint != nil && lblTimeAgoBottomConstraint != nil {
+            NSLayoutConstraint.deactivate([lblSourceBottomConstraint])
+            NSLayoutConstraint.deactivate([lblTimeAgoBottomConstraint])
+            lblSourceBottomConstraint = NSLayoutConstraint(item:lblSource,
+                                                           attribute: NSLayoutAttribute.bottom,
+                                                           relatedBy: NSLayoutRelation.equal,
+                                                           toItem: suggestedView,
+                                                           attribute: NSLayoutAttribute.top,
+                                                           multiplier: 1,
+                                                           constant: -10)
+            lblTimeAgoBottomConstraint = NSLayoutConstraint (item:lblTimeAgo,
+                                                             attribute: NSLayoutAttribute.bottom,
+                                                             relatedBy: NSLayoutRelation.equal,
+                                                             toItem: suggestedView,
+                                                             attribute: NSLayoutAttribute.top,
+                                                             multiplier: 1,
+                                                             constant: -10)
+            NSLayoutConstraint.activate([lblTimeAgoBottomConstraint])
+            NSLayoutConstraint.activate([lblSourceBottomConstraint])
         }
-        viewLikeDislikeHeightConstraint.constant = -9.5
-        lblSourceTopConstraint = NSLayoutConstraint (item: lblSource,
-                                                     attribute: NSLayoutAttribute.bottom,
-                                                     relatedBy: NSLayoutRelation.equal,
-                                                     toItem: viewNewsArea,
-                                                     attribute: NSLayoutAttribute.bottom,
-                                                     multiplier: 1,
-                                                     constant: -45)
-        lblTimesTopConstraint = NSLayoutConstraint (item: lblTimeAgo,
-                                                    attribute: NSLayoutAttribute.bottom,
-                                                    relatedBy: NSLayoutRelation.equal,
-                                                    toItem: viewNewsArea,
-                                                    attribute: NSLayoutAttribute.bottom,
-                                                    multiplier: 1,
-                                                    constant: -45)
-        NSLayoutConstraint.activate([lblTimesTopConstraint])
-        NSLayoutConstraint.activate([lblSourceTopConstraint])
+        if viewLikeDislikeBottom != nil{
+            NSLayoutConstraint.deactivate([viewLikeDislikeBottom])
+            viewLikeDislikeBottom = NSLayoutConstraint(item:viewLikeDislike,
+                                                       attribute: NSLayoutAttribute.bottom,
+                                                       relatedBy: NSLayoutRelation.equal,
+                                                       toItem: suggestedView,
+                                                       attribute: NSLayoutAttribute.bottom,
+                                                       multiplier: 1,
+                                                       constant: 0)
+            
+            NSLayoutConstraint.activate([viewLikeDislikeBottom])
+        }
+        if viewLikeDislikeHeightConstraint != nil{
+            NSLayoutConstraint.deactivate([viewLikeDislikeHeightConstraint])
+            viewLikeDislikeHeightConstraint.constant = -8.5
+            NSLayoutConstraint.activate([viewLikeDislikeHeightConstraint])
+        }
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -243,7 +259,12 @@ class NewsDetailVC: UIViewController {
             print(UIDevice.current.orientation)
             print("potrait")
             viewLikeDislike.isHidden = false
-            addPotraitConstraint()
+            if UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad{
+                addipadPotraitConstraint()
+            }
+            else{
+                addPotraitConstraint()
+            }
         }
     }
     
@@ -315,7 +336,7 @@ class NewsDetailVC: UIViewController {
     }
     
     @objc func tapped(gestureRecognizer: UITapGestureRecognizer) {
-        if UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.phone{
+        if UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.phone {
             if viewLikeDislike.isHidden == true{
                 viewLikeDislike.isHidden = false
             }
@@ -325,9 +346,7 @@ class NewsDetailVC: UIViewController {
         }
         if UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad{
             if statusBarOrientation.isPortrait {
-                if Device.orientationDetail != .unknown{
-                    viewLikeDislike.isHidden = false
-                }
+                viewLikeDislike.isHidden = false
             }
             else{
                 if viewLikeDislike.isHidden == true{
@@ -338,7 +357,6 @@ class NewsDetailVC: UIViewController {
                 }
             }
         }
-        
     }
     
     override var prefersStatusBarHidden: Bool {
@@ -526,10 +544,9 @@ class NewsDetailVC: UIViewController {
                         self.playbackSlider.addTarget(self, action: #selector(NewsDetailVC.playbackSliderValueChanged(_:)), for: .valueChanged)
                         self.avPlayerView.addSubview(self.playbackSlider)
                         self.btnPlayVideo.isHidden = false
-                        self.activityIndicator.stopAnimating()
                     }
                     DispatchQueue.main.async {
-                        print("Time consuming task has completed. From here we are allowed to update user interface.")
+                        self.activityIndicator.stopAnimating()
                     }
                 }
             }
@@ -539,6 +556,7 @@ class NewsDetailVC: UIViewController {
                 self.avPlayerView.isHidden = true
                 self.imgNews.sd_setImage(with: URL(string: currentArticle.imageURL!), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
             }
+            
             if UserDefaults.standard.value(forKey: "token") != nil{
                 if currentArticle.likeDislike?.isLike == 0 {
                     btnLike.setImage(UIImage(named: AssetConstants.thumb_up_filled), for: .normal)
@@ -562,8 +580,6 @@ class NewsDetailVC: UIViewController {
                 btnDislike.setImage(UIImage(named: AssetConstants.thumb_down), for: .normal)
                 ResetBookmarkImg()
             }
-            
-            
         }
         else if SearchArticle.count != 0 {
             currentEntity = "SearchArticles"
@@ -620,19 +636,19 @@ class NewsDetailVC: UIViewController {
                         self.playbackSlider.addTarget(self, action: #selector(NewsDetailVC.playbackSliderValueChanged(_:)), for: .valueChanged)
                         self.avPlayerView.addSubview(self.playbackSlider)
                         self.btnPlayVideo.isHidden = false
-                        self.activityIndicator.stopAnimating()
                     }
                     DispatchQueue.main.async {
-                        print("Time consuming task has completed. From here we are allowed to update user interface.")
+                        self.activityIndicator.stopAnimating()
                     }
                 }
-            }
                 
+            }
             else{
                 self.btnPlayVideo.isHidden = true
                 self.avPlayerView.isHidden = true
                 self.imgNews.sd_setImage(with: URL(string: currentArticle.imageURL!), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
             }
+            
             if UserDefaults.standard.value(forKey: "token") != nil{
                 if currentArticle.likeDislike?.isLike == 0 {
                     btnLike.setImage(UIImage(named: AssetConstants.thumb_up_filled), for: .normal)
@@ -656,13 +672,10 @@ class NewsDetailVC: UIViewController {
                 btnDislike.setImage(UIImage(named: AssetConstants.thumb_down), for: .normal)
                 ResetBookmarkImg()
             }
-            
-            
         }
         if imgNews.image == nil{
             imgNews.image = UIImage(named: AssetConstants.NoImage)
         }
-        
     }
     
     @IBAction func btnLikeActn(_ sender: Any) {
@@ -681,6 +694,7 @@ class NewsDetailVC: UIViewController {
                             self.btnDislike.setImage(UIImage(named: AssetConstants.thumb_down), for: .normal)
                             
                         }
+                          self.view.makeToast(response, duration: 1.0, position: .center)
                         DBManager().addLikedArticle(tempentity: self.currentEntity, id: self.articleId, status: 0)
                     }
                 }
@@ -705,7 +719,7 @@ class NewsDetailVC: UIViewController {
             }
         }
         else{
-            showMsg(title: "Please login to continue..", msg: "")
+            NavigationToLogin()
         }
     }
     
@@ -724,6 +738,7 @@ class NewsDetailVC: UIViewController {
                         if (self.btnLike.currentImage?.isEqual(UIImage(named: AssetConstants.thumb_up_filled)))! {
                             self.btnLike.setImage(UIImage(named: AssetConstants.thumb_up), for: .normal)
                         }
+                       self.view.makeToast(response, duration: 1.0, position: .center)
                         DBManager().addLikedArticle(tempentity:self.currentEntity, id: self.articleId, status: 1)
                     }
                 }
@@ -747,7 +762,7 @@ class NewsDetailVC: UIViewController {
             }
         }
         else{
-            showMsg(title: "Please login to continue..", msg: "")
+            NavigationToLogin()
         }
     }
     
@@ -783,8 +798,15 @@ class NewsDetailVC: UIViewController {
             }
         }
         else{
-            showMsg(title: "Please login to continue..", msg: "")
+            NavigationToLogin()
         }
+    }
+    
+    func NavigationToLogin(){
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let vc:LoginVC = storyboard.instantiateViewController(withIdentifier: "LoginID") as! LoginVC
+        self.present(vc, animated: true, completion: nil)
+        UserDefaults.standard.set(false, forKey: "isSettingsLogin")
     }
     
     func setBookmarkImg(){
@@ -804,6 +826,7 @@ class NewsDetailVC: UIViewController {
             btnBookamark.setImage(UIImage(named: AssetConstants.bookmark), for: .normal)
         }
     }
+    
     @IBAction func btnShareActn(_ sender: Any) {
         let text = ShowArticle[newsCurrentIndex].title
         let webURL = "Sent via NewsCout : (www.newscout.in)"
@@ -869,27 +892,6 @@ class NewsDetailVC: UIViewController {
         self.dismiss(animated: false)
     }
     
-    func showMsg(title: String, msg : String){
-        let alertController = UIAlertController(title: title, message: msg, preferredStyle: .alert)
-        if UI_USER_INTERFACE_IDIOM() == .pad{
-            alertController.popoverPresentationController?.sourceView = self.view
-            alertController.popoverPresentationController?.sourceRect = CGRect(x: self.view.bounds.midX, y: self.view.bounds.midY, width: 0, height: 0)
-        }
-        let action1 = UIAlertAction(title: "OK", style: .default) { (action:UIAlertAction) in
-            let storyboard = UIStoryboard(name: "Main", bundle: nil)
-            let vc:LoginVC = storyboard.instantiateViewController(withIdentifier: "LoginID") as! LoginVC
-            self.present(vc, animated: true, completion: nil)
-        }
-        
-        alertController.addAction(action1)
-        
-        let action2 = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.default) { (action:UIAlertAction) in
-        }
-        alertController.addAction(action2)
-        
-        self.present(alertController, animated: true, completion: nil)
-    }
-    
     @IBAction func PlayButtonTapped() -> Void {
     }
     
@@ -899,8 +901,8 @@ class NewsDetailVC: UIViewController {
 }
 
 extension NewsDetailVC:UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout{
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize
-    {   var width = 1.0
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize{
+        var width = 1.0
         if indexPath.row == 0{
             if (UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad){
                 width = 200.0
@@ -914,6 +916,7 @@ extension NewsDetailVC:UICollectionViewDelegate, UICollectionViewDataSource, UIC
         }
         return CGSize(width: width, height: 145.0)
     }
+    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return (self.RecomArticleData.count != 0) ? self.RecomArticleData[0].body!.articles.count + 1 : 0
     }

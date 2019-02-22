@@ -34,6 +34,7 @@ class HomeVC: UIViewController{
     
     override func viewDidLoad(){
         super.viewDidLoad()
+        self.activityIndicator.startAnimating()
         lblNonews.isHidden = true
         NotificationCenter.default.addObserver(self, selector: #selector(darkModeEnabled(_:)), name: .darkModeEnabled, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(darkModeDisabled(_:)), name: .darkModeDisabled, object: nil)
@@ -81,6 +82,10 @@ class HomeVC: UIViewController{
             if self.coredataRecordCount != 0 {
                 self.fetchArticlesFromDB()
             }
+            else{
+                activityIndicator.stopAnimating()
+                lblNonews.isHidden = true
+            }
         }
         saveCategoryInDB()
     }
@@ -104,22 +109,29 @@ class HomeVC: UIViewController{
                     self.filterNews(selectedCat: "All News" )
                 }else{
                     self.filterNews(selectedCat: selectedCategory )
+                    
                 }
                 self.HomeNewsTV.reloadData()
             }
-            else{
-                lblNonews.isHidden = false
-                activityIndicator.stopAnimating()
-            }
+            
         case .Failure(let errorMsg) :
             print(errorMsg)
         }
+        if ShowArticle.count == 0{
+            self.activityIndicator.stopAnimating()
+            lblNonews.isHidden = false
+        }
+        
     }
     
     func saveArticlesInDB(url: String){
         DBManager().SaveDataDB(nextUrl: url){response in
             if response == true{
                 self.fetchArticlesFromDB()
+            }
+            else{
+                self.activityIndicator.stopAnimating()
+                self.lblNonews.isHidden = false
             }
         }
     }
@@ -170,19 +182,18 @@ class HomeVC: UIViewController{
         refreshControl.endRefreshing()
     }
     
-    func filterNews(selectedCat : String)
-    {
-        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "NewsArticle")
-        fetchRequest.predicate = NSPredicate(format: "category CONTAINS[c] %@", selectedCat)
-        let managedContext =
-            self.appDelegate?.persistentContainer.viewContext
-        do {
-            self.ShowArticle = (try managedContext?.fetch(fetchRequest))! as! [NewsArticle]
-        }
-        catch {
-            print("error executing fetch request: \(error)")
-        }
+    func filterNews(selectedCat : String){
+    let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "NewsArticle")
+    fetchRequest.predicate = NSPredicate(format: "category CONTAINS[c] %@", selectedCat)
+    let managedContext =
+        self.appDelegate?.persistentContainer.viewContext
+    do {
+        self.ShowArticle = (try managedContext?.fetch(fetchRequest))! as! [NewsArticle]
     }
+    catch {
+        print("error executing fetch request: \(error)")
+    }
+}
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -193,56 +204,13 @@ class HomeVC: UIViewController{
         else{
             selectedCategory = tabBarTitle
         }
-        
-        coredataRecordCount = DBManager().IsCoreDataEmpty(entity: "NewsArticle")
-        if self.coredataRecordCount != 0{
-            self.fetchArticlesFromDB()
-        }
     }
     
     func FetchArticlesAPICall(){
         saveArticlesInDB(url:  APPURL.ArticlesByCategoryURL + "\(selectedCategory)" )
     }
     
-    /* func ArticlesAPICall(){
-     APICall().loadNewsbyCategoryAPI(url: APPURL.ArticlesByCategoryURL + "\(selectedCategory)" ){ (status, response) in
-     switch response {
-     case .Success(let data) :
-     if data.count > 0{
-     self.articlesArr = data[0].body!.articles
-     if data[0].body!.next != nil{
-     self.nextURL = data[0].body!.next!
-     }
-     if data[0].body!.articles.count == 0{
-     self.activityIndicator.stopAnimating()
-     self.lblNonews.isHidden = false
-     }
-     else{
-     self.HomeNewsTV.reloadData()
-     }
-     }
-     case .Failure(let errormessage) :
-     self.activityIndicator.startAnimating()
-     self.HomeNewsTV.makeToast(errormessage, duration: 2.0, position: .center)
-     case .Change(let code):
-     if code == 404{
-     let defaults = UserDefaults.standard
-     defaults.removeObject(forKey: "googleToken")
-     defaults.removeObject(forKey: "FBToken")
-     defaults.removeObject(forKey: "token")
-     defaults.removeObject(forKey: "email")
-     defaults.removeObject(forKey: "first_name")
-     defaults.removeObject(forKey: "last_name")
-     defaults.synchronize()
-     self.showMsg(title: "Please login to continue..", msg: "")
-     }
-     }
-     }
-     }
-     */
-    
-    func showMsg(title: String, msg : String)
-    {
+    func showMsg(title: String, msg : String){
         let alertController = UIAlertController(title: title, message: msg, preferredStyle: .alert)
         if UI_USER_INTERFACE_IDIOM() == .pad
         {
@@ -267,26 +235,10 @@ class HomeVC: UIViewController{
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
-    
-    func background(work: @escaping () -> ()) {
-        DispatchQueue.global(qos: .userInitiated).async {
-            work()
-        }
-    }
-    
-    func main(work: @escaping () -> ()) {
-        DispatchQueue.main.async {
-            work()
-        }
-    }
 }
 
 extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelegate{
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if ShowArticle.count == 0{
-            lblNonews.isHidden = false
-            activityIndicator.stopAnimating()
-        }
         return (ShowArticle.count != 0) ? self.ShowArticle.count : 0
     }
     
@@ -326,7 +278,6 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
             cell.lblTimesAgo.text = agoDate
             cell.imgNews.sd_setImage(with: URL(string: currentArticle.imageURL!), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
         }
-        
         let textSizeSelected = UserDefaults.standard.value(forKey: "textSize") as! Int
         if textSizeSelected == 0{
             cell.lblSource.font = FontConstants.smallFontContent
@@ -382,7 +333,6 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
                     }
                 }
                 else{
-                    lblNonews.isHidden = false
                     activityIndicator.stopAnimating()
                 }
             case .Failure(let errorMsg) :
@@ -391,46 +341,6 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
         }
     }
     
-    
-    //check whether tableview scrolled up or down
-    /* func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
-     if targetContentOffset.pointee.y < scrollView.contentOffset.y {
-     if nextURL != "" {
-     APICall().loadNewsbyCategoryAPI(url: nextURL){
-     (status, response) in
-     switch response {
-     case .Success(let data) :
-     if data.count > 0 {
-     self.articlesArr.append(contentsOf: data[0].body.articles)
-     if data[0].body.next != nil{
-     self.nextURL = data[0].body.next!
-     }
-     else{
-     self.nextURL = ""
-     self.view.makeToast("No more news to show", duration: 1.0, position: .center)
-     }
-     self.HomeNewsTV.reloadData()
-     }
-     case .Failure(let errormessage) :
-     self.activityIndicator.startAnimating()
-     self.view.makeToast(errormessage, duration: 2.0, position: .center)
-     case .Change(let code):
-     if code == 404{
-     let defaults = UserDefaults.standard
-     defaults.removeObject(forKey: "googleToken")
-     defaults.removeObject(forKey: "FBToken")
-     defaults.removeObject(forKey: "token")
-     defaults.removeObject(forKey: "email")
-     defaults.removeObject(forKey: "first_name")
-     defaults.removeObject(forKey: "last_name")
-     defaults.synchronize()
-     self.showMsg(title: "Please login to continue..", msg: "")
-     }
-     }
-     }
-     }
-     }
-     }*/
 }
 
 extension HomeVC: IndicatorInfoProvider{

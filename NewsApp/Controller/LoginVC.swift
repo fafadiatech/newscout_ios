@@ -160,6 +160,7 @@ class LoginVC: UIViewController, GIDSignInUIDelegate, FBSDKLoginButtonDelegate {
     }
     
     @IBAction func btnLoginActn(_ sender: Any) {
+    
         var categories : [String] = []
         if txtUsername.text == "" || txtPassword.text == ""{
             self.view.makeToast("Please enter valid Email and Password..", duration: 1.0, position: .center)
@@ -177,10 +178,15 @@ class LoginVC: UIViewController, GIDSignInUIDelegate, FBSDKLoginButtonDelegate {
                             UserDefaults.standard.setValue(categories, forKey: "categories")
                         }
                     }
+                    let check = UserDefaults.standard.value(forKey: "isSettingsLogin") as! Bool
+                    if check == true{
                     let storyboard = UIStoryboard(name: "Main", bundle: nil)
                     let HomeVc:HomeParentVC = storyboard.instantiateViewController(withIdentifier: "HomeParentID") as! HomeParentVC
                     self.present(HomeVc, animated: true, completion: nil)
-                    
+                    }
+                    else{
+                         self.dismiss(animated: false)
+                    }
                 }
                 else{
                     self.view.makeToast(response, duration: 1.0, position: .center)
@@ -216,12 +222,8 @@ class LoginVC: UIViewController, GIDSignInUIDelegate, FBSDKLoginButtonDelegate {
     }
     
     func loginButtonDidLogOut(_ loginButton: FBSDKLoginButton!) {
-        let defaults = UserDefaults.standard
-        defaults.removeObject(forKey: "FBToken")
-        defaults.removeObject(forKey: "email")
-        defaults.removeObject(forKey: "first_name")
-        defaults.removeObject(forKey: "last_name")
-        defaults.synchronize()
+        let defaultList = ["FBToken", "first_name", "last_name", "email"]
+        Helper().clearDefaults(list : defaultList)
         self.view.makeToast("Succesfully Logged out..", duration: 1.0, position: .center)
     }
     

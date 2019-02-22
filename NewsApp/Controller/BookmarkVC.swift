@@ -49,9 +49,11 @@ class BookmarkVC: UIViewController {
             self.view.makeToast("You need to login", duration: 1.0, position: .center)
         }
         let refreshControl = UIRefreshControl()
+         if UserDefaults.standard.value(forKey: "token") != nil || UserDefaults.standard.value(forKey: "FBToken") != nil || UserDefaults.standard.value(forKey: "googleToken") != nil{
         refreshControl.addTarget(self, action: #selector(refreshBookmarkedNews), for: .valueChanged)
         bookmarkResultTV.refreshControl = refreshControl
         refreshControl.attributedTitle = NSAttributedString(string: "Pull  to Refresh...")
+        }
         if (UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad){
             bookmarkResultTV.rowHeight = 190;
         }
@@ -172,10 +174,8 @@ class BookmarkVC: UIViewController {
     }
     
     @objc func refreshBookmarkedNews(refreshControl: UIRefreshControl) {
-        if UserDefaults.standard.value(forKey: "token") != nil || UserDefaults.standard.value(forKey: "FBToken") != nil || UserDefaults.standard.value(forKey: "googleToken") != nil{
             BookmarkAPICall()
             refreshControl.endRefreshing()
-        }
     }
     
     @IBAction func btnBackActn(_ sender: Any) {

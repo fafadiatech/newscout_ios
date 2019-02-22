@@ -74,6 +74,14 @@ func timeAgoSinceDate(_ date:Date, numericDates:Bool = false) -> String {
     }
 }
 
+    func clearDefaults(list : [String]){
+        let userDefaults = UserDefaults.standard
+        for key in list {
+            userDefaults.removeObject(forKey: key)
+        }
+        userDefaults.synchronize()
+    }
+    
 //email validation
 func validateEmail(enteredEmail:String) -> Bool {
     

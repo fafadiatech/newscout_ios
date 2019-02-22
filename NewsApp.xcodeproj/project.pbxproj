@@ -35,7 +35,6 @@
 		2685CF17216DDEB300C2CECF /* HelveticaNeueBoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2685CF0E216DDEB300C2CECF /* HelveticaNeueBoldItalic.ttf */; };
 		268C112321E4C0F300C76B9C /* BookmarkVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 268C112221E4C0F200C76B9C /* BookmarkVC.swift */; };
 		268C112521E4C36E00C76B9C /* BookmarkTVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 268C112421E4C36E00C76B9C /* BookmarkTVCell.swift */; };
-		268C112721E5DF0700C76B9C /* SearchAutoCompleteTVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 268C112621E5DF0700C76B9C /* SearchAutoCompleteTVCell.swift */; };
 		2690F3CC21BF8C12003E65CA /* SettingsTVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2690F3CB21BF8C12003E65CA /* SettingsTVCell.swift */; };
 		269A53D622016D6B0031DD78 /* BookmarkDetailVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 269A53D522016D6B0031DD78 /* BookmarkDetailVC.swift */; };
 		26ACEA94216733BA000EF3C7 /* CategoryListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26ACEA93216733BA000EF3C7 /* CategoryListVC.swift */; };
@@ -118,7 +117,6 @@
 		2685CF0E216DDEB300C2CECF /* HelveticaNeueBoldItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = HelveticaNeueBoldItalic.ttf; sourceTree = "<group>"; };
 		268C112221E4C0F200C76B9C /* BookmarkVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkVC.swift; sourceTree = "<group>"; };
 		268C112421E4C36E00C76B9C /* BookmarkTVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkTVCell.swift; sourceTree = "<group>"; };
-		268C112621E5DF0700C76B9C /* SearchAutoCompleteTVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchAutoCompleteTVCell.swift; sourceTree = "<group>"; };
 		2690F3CB21BF8C12003E65CA /* SettingsTVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTVCell.swift; sourceTree = "<group>"; };
 		269A53D522016D6B0031DD78 /* BookmarkDetailVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkDetailVC.swift; sourceTree = "<group>"; };
 		26ACEA93216733BA000EF3C7 /* CategoryListVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryListVC.swift; sourceTree = "<group>"; };
@@ -323,7 +321,6 @@
 		421ADFEB2156553500C00F6F /* Cell */ = {
 			isa = PBXGroup;
 			children = (
-				268C112621E5DF0700C76B9C /* SearchAutoCompleteTVCell.swift */,
 				268C112421E4C36E00C76B9C /* BookmarkTVCell.swift */,
 				2690F3CB21BF8C12003E65CA /* SettingsTVCell.swift */,
 				26ACEA95216738BB000EF3C7 /* CategoryListTVCell.swift */,
@@ -378,6 +375,7 @@
 				421ADFB32156407400C00F6F /* Resources */,
 				E625024055F7036CE7E77A23 /* [CP] Embed Pods Frameworks */,
 				13535408023F39BB35B8B79C /* [CP] Copy Pods Resources */,
+				26080AD9221ACB06004B58E6 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -535,6 +533,21 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-NewsApp/Pods-NewsApp-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
+		26080AD9221ACB06004B58E6 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"",
+				"",
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Fabric/run\" 195cccfe5890fe695edaa04247191f89302a448f 7f01ca72db222c17e5cf2aa5f19cf00269f2c224a039932a54b9f401d767c378\n";
+		};
 		2A61B467375C987B24EE6A90 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -592,6 +605,7 @@
 				"${BUILT_PRODUCTS_DIR}/MotionInterchange/MotionInterchange.framework",
 				"${BUILT_PRODUCTS_DIR}/NightNight/NightNight.framework",
 				"${BUILT_PRODUCTS_DIR}/SDWebImage/SDWebImage.framework",
+				"${BUILT_PRODUCTS_DIR}/Sentry/Sentry.framework",
 				"${BUILT_PRODUCTS_DIR}/SkyFloatingLabelTextField/SkyFloatingLabelTextField.framework",
 				"${BUILT_PRODUCTS_DIR}/SwiftDevice/SwiftDevice.framework",
 				"${BUILT_PRODUCTS_DIR}/SwiftyJSON/SwiftyJSON.framework",
@@ -614,6 +628,7 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MotionInterchange.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/NightNight.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SDWebImage.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Sentry.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SkyFloatingLabelTextField.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftDevice.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftyJSON.framework",
@@ -653,7 +668,6 @@
 				421ADFBB2156407400C00F6F /* HomeVC.swift in Sources */,
 				264C5396219AAAD60050F79D /* Toast.swift in Sources */,
 				263421F321624AD200C8510F /* SettingsTVC.swift in Sources */,
-				268C112721E5DF0700C76B9C /* SearchAutoCompleteTVCell.swift in Sources */,
 				26ACEA94216733BA000EF3C7 /* CategoryListVC.swift in Sources */,
 				421ADFB92156407400C00F6F /* AppDelegate.swift in Sources */,
 				263421F12162310D00C8510F /* LoginVC.swift in Sources */,
@@ -778,7 +792,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
-				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;

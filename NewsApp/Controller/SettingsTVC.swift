@@ -137,12 +137,8 @@ class SettingsTVC: UITableViewController, GIDSignInUIDelegate {
     @IBAction func btnLogoutActn(_ sender: Any) {
         if UserDefaults.standard.value(forKey: "googleToken") != nil{
             GIDSignIn.sharedInstance().signOut()
-            let defaults = UserDefaults.standard
-            defaults.removeObject(forKey: "googleToken")
-            defaults.removeObject(forKey: "email")
-            defaults.removeObject(forKey: "first_name")
-            defaults.removeObject(forKey: "last_name")
-            defaults.synchronize()
+            let defaultList = ["googleToken", "first_name", "last_name", "email"]
+            Helper().clearDefaults(list : defaultList)
             self.btnLogout.isHidden = true
             self.lblLogin.text = "Login"
             print("google sign out successful..")
@@ -153,12 +149,8 @@ class SettingsTVC: UITableViewController, GIDSignInUIDelegate {
             FBSDKAccessToken.setCurrent(nil)
             FBSDKProfile.setCurrent(nil)
             self.btnLogout.isHidden = true
-            let defaults = UserDefaults.standard
-            defaults.removeObject(forKey: "FBToken")
-            defaults.removeObject(forKey: "email")
-            defaults.removeObject(forKey: "first_name")
-            defaults.removeObject(forKey: "last_name")
-            defaults.synchronize()
+            let defaultList = ["FBToken", "first_name", "last_name", "email"]
+            Helper().clearDefaults(list : defaultList)
             self.lblLogin.text = "Login"
             print("google sign out successful..")
         }
@@ -226,6 +218,7 @@ class SettingsTVC: UITableViewController, GIDSignInUIDelegate {
     override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
         if indexPath.section == 2 && indexPath.row == 0{
             if UserDefaults.standard.value(forKey: "token") == nil && UserDefaults.standard.value(forKey: "googleToken") == nil && UserDefaults.standard.value(forKey: "FBToken") == nil {
+                UserDefaults.standard.set(true, forKey: "isSettingsLogin")
                 let storyboard = UIStoryboard(name: "Main", bundle: nil)
                 let vc:LoginVC = storyboard.instantiateViewController(withIdentifier: "LoginID") as! LoginVC
                 print(indexPath.section)

@@ -20,7 +20,6 @@ class SearchVC: UIViewController {
     @IBOutlet weak var titleView: UIView!
     @IBOutlet weak var txtSearch: UITextField!
     @IBOutlet weak var lblTitle: UILabel!
-    @IBOutlet weak var searchAutocompleteTV: UITableView!
     @IBOutlet weak var lblNoNews: UILabel!
     let activityIndicator = MDCActivityIndicator()
     //variables
@@ -35,14 +34,13 @@ class SearchVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         if UserDefaults.standard.value(forKey: "searchTxt") != nil{
-            txtSearch.text = UserDefaults.standard.value(forKey: "searchTxt") as! String
+            txtSearch.text = (UserDefaults.standard.value(forKey: "searchTxt") as! String)
         }
         lblNoNews.isHidden = true
-        searchAutocompleteTV.isHidden = true
         NotificationCenter.default.addObserver(self, selector: #selector(darkModeEnabled(_:)), name: .darkModeEnabled, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(darkModeDisabled(_:)), name: .darkModeDisabled, object: nil)
         activityIndicator.cycleColors = [.blue]
-        activityIndicator.frame = CGRect(x: view.frame.width/2, y: view.frame.height/2 - 100, width: 40, height: 40)
+        activityIndicator.frame = CGRect(x: view.frame.width/2, y: view.frame.height/2 - 30, width: 40, height: 40)
         activityIndicator.sizeToFit()
         activityIndicator.indicatorMode = .indeterminate
         activityIndicator.progress = 2.0
@@ -51,7 +49,12 @@ class SearchVC: UIViewController {
         txtSearch.font = FontConstants.NormalFontContent
         lblTitle.textColor = colorConstants.whiteColor
         lblTitle.font = FontConstants.viewTitleFont
-        
+        if (UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad){
+            searchResultTV.rowHeight = 190;
+        }
+        else {
+            searchResultTV.rowHeight = 129;
+        }
     }
     
     @objc private func darkModeEnabled(_ notification: Notification){
@@ -122,6 +125,7 @@ class SearchVC: UIViewController {
         UserDefaults.standard.set("", forKey: "isSearch")
         self.view.window!.rootViewController?.dismiss(animated: false, completion: nil)
     }
+    
     func fetchBookmarkDataFromDB(){
         let result = DBManager().FetchSearchLikeBookmarkFromDB()
         switch result {
@@ -129,7 +133,7 @@ class SearchVC: UIViewController {
             if DBData.count == 0{
                 searchResultTV.reloadData()
             }
-        case .Failure(let errorMsg) : break
+        case .Failure( _) : break
         }
     }
     
@@ -152,7 +156,7 @@ class SearchVC: UIViewController {
             }
             else{
                 self.activityIndicator.stopAnimating()
-                self.searchResultTV.makeToast("News does not exist", duration: 3.0, position: .center)
+                self.lblNoNews.isHidden = false
             }
         }
     }
@@ -261,50 +265,12 @@ extension SearchVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDele
         let contentYoffset = scrollView.contentOffset.y
         let distanceFromBottom = scrollView.contentSize.height - contentYoffset
         if distanceFromBottom < height {
+            if recordCount > 0 {
             activityIndicator.startAnimating()
+            }
         }
     }
-    /*  func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
-     if targetContentOffset.pointee.y < scrollView.contentOffset.y {
-     print("it's going up")
-     if nextURL != "" {
-     APICall().loadSearchAPI(url: nextURL){ (Status, response) in
-     switch response {
-     case .Success(let data) :
-     if data.count > 0 {
-     self.searchArticlesArr.append(contentsOf: data[0].body!.articles)
-     if data[0].body!.next != nil{
-     self.nextURL = data[0].body!.next!
-     }
-     else{
-     self.nextURL = ""
-     self.view.makeToast("No more news to show", duration: 1.0, position: .center)
-     }
-     self.searchResultTV.reloadData()
-     }
-     case .Failure(let errormessage) :
-     print(errormessage)
-     self.activityIndicator.startAnimating()
-     self.view.makeToast(errormessage, duration: 2.0, position: .center)
-     case .Change(let code):
-     if code == 404{
-     let defaults = UserDefaults.standard
-     defaults.removeObject(forKey: "googleToken")
-     defaults.removeObject(forKey: "FBToken")
-     defaults.removeObject(forKey: "token")
-     defaults.removeObject(forKey: "email")
-     defaults.removeObject(forKey: "first_name")
-     defaults.removeObject(forKey: "last_name")
-     defaults.synchronize()
-     self.showMsg(title: "Please login to continue..", msg: "")
-     }
-     }
-     }
-     }
-     }
-     }*/
 }
-
 
 extension String {
     func makeHTMLfriendly() -> String {
@@ -380,10 +346,12 @@ extension SearchVC: UITextFieldDelegate
             activityIndicator.startAnimating()
             if recordCount == 0 {
                 activityIndicator.stopAnimating()
-                self.searchResultTV.makeToast("News does not exist", duration: 2.0, position: .center)
+                lblNoNews.isHidden = false
             }
-            searchResultTV.reloadData()
-        case .Failure(let errorMsg) :
+            else{
+                searchResultTV.reloadData()
+            }
+        case .Failure( _) :
             self.searchResultTV.makeToast("Please try again later", duration: 2.0, position: .center)
         }
     }
@@ -400,7 +368,7 @@ extension SearchVC: UITextFieldDelegate
             searchResultTV.reloadData()
             
             if recordCount == 0 {
-                self.searchResultTV.makeToast("News does not exist", duration: 2.0, position: .center)
+                lblNoNews.isHidden = false
             }
         }
         catch {
