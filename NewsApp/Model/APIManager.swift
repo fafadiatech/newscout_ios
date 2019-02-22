@@ -61,7 +61,7 @@ class APICall{
         else{
             headers = ["Authorization": ""]
         }
-        var newurl = url.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)!
+        let newurl = url.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)!
         Alamofire.request(newurl,method: .get, headers: headers).responseString{
             response in
             if(response.result.isSuccess){

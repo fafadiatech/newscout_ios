@@ -204,11 +204,6 @@ class HomeVC: UIViewController{
         else{
             selectedCategory = tabBarTitle
         }
-        
-        //        coredataRecordCount = DBManager().IsCoreDataEmpty(entity: "NewsArticle")
-        //        if self.coredataRecordCount != 0{
-        //            self.fetchArticlesFromDB()
-        //        }
     }
     
     func FetchArticlesAPICall(){

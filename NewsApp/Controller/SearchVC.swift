@@ -34,7 +34,7 @@ class SearchVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         if UserDefaults.standard.value(forKey: "searchTxt") != nil{
-            txtSearch.text = UserDefaults.standard.value(forKey: "searchTxt") as! String
+            txtSearch.text = (UserDefaults.standard.value(forKey: "searchTxt") as! String)
         }
         lblNoNews.isHidden = true
         NotificationCenter.default.addObserver(self, selector: #selector(darkModeEnabled(_:)), name: .darkModeEnabled, object: nil)
@@ -49,6 +49,12 @@ class SearchVC: UIViewController {
         txtSearch.font = FontConstants.NormalFontContent
         lblTitle.textColor = colorConstants.whiteColor
         lblTitle.font = FontConstants.viewTitleFont
+        if (UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad){
+            searchResultTV.rowHeight = 190;
+        }
+        else {
+            searchResultTV.rowHeight = 129;
+        }
     }
     
     @objc private func darkModeEnabled(_ notification: Notification){
@@ -127,7 +133,7 @@ class SearchVC: UIViewController {
             if DBData.count == 0{
                 searchResultTV.reloadData()
             }
-        case .Failure(let errorMsg) : break
+        case .Failure( _) : break
         }
     }
     
@@ -345,7 +351,7 @@ extension SearchVC: UITextFieldDelegate
             else{
                 searchResultTV.reloadData()
             }
-        case .Failure(let errorMsg) :
+        case .Failure( _) :
             self.searchResultTV.makeToast("Please try again later", duration: 2.0, position: .center)
         }
     }
