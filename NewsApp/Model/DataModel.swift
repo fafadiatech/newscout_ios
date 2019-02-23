@@ -93,6 +93,10 @@ struct ArticleDict: Decodable{
     }
 }
 
+struct Menu : Decodable {
+    let header : Header
+}
+
 struct CategoryList: Decodable{
     let header : Header
     let body :  Body

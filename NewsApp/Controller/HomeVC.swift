@@ -88,7 +88,7 @@ class HomeVC: UIViewController{
                 lblNonews.isHidden = true
             }
         }
-        
+      
     }
     
     func saveCategoryInDB(){
@@ -343,6 +343,3 @@ extension HomeVC: IndicatorInfoProvider{
         return IndicatorInfo(title: tabBarTitle)
     }
 }
-
-
-

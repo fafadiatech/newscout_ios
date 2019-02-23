@@ -11,14 +11,34 @@ import XLPagerTabStrip
 import Floaty
 import NightNight
 
+struct ExpandableNames {
+    var isExpanded : Bool
+    var names : [String]
+}
+
+struct Contact {
+    let names : String
+}
 class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
     
     @IBOutlet weak var viewAppTitle: UIView!
     @IBOutlet weak var lblAppName: UILabel!
+    @IBOutlet weak var sideMenuTV: UITableView!
+    @IBOutlet weak var sideView: UIView!
+    @IBOutlet weak var btnMenu: UIButton!
+    @IBOutlet weak var viewSideCOntainer: UIView!
     var childrenVC = [UIViewController]()
     var categories : [String] = []
+    var arr = ["abc", "xyz", "pqr"]
+    var isSideBarOpen : Bool = Bool()
+   
     
+   
     override func viewDidLoad() {
+        isSideBarOpen = false
+        viewSideCOntainer.isHidden = true
+        sideView.isHidden = true
+        sideMenuTV.isHidden = true
         settings.style.buttonBarItemsShouldFillAvailiableWidth = false
         super.viewDidLoad()
         NotificationCenter.default.addObserver(self, selector: #selector(darkModeEnabled(_:)), name: .darkModeEnabled, object: nil)
@@ -26,6 +46,17 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
         lblAppName.font = FontConstants.appFont
         viewAppTitle.backgroundColor = colorConstants.redColor
         lblAppName.textColor = colorConstants.whiteColor
+        
+        let tap = UITapGestureRecognizer(target: self, action: #selector(self.handleTap(_:)))
+        
+        viewSideCOntainer.addGestureRecognizer(tap)
+        
+        viewSideCOntainer.isUserInteractionEnabled = true
+        
+        self.view.addSubview(viewSideCOntainer)
+
+
+        
         if UserDefaults.standard.value(forKey: "textSize") == nil{
             UserDefaults.standard.set(1, forKey: "textSize")
         }
@@ -92,6 +123,15 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
         }
     }
     
+    @objc func handleTap(_ sender: UITapGestureRecognizer) {
+        if isSideBarOpen{
+            sideMenuTV.isHidden = true
+            sideView.isHidden = true
+            isSideBarOpen = false
+            viewSideCOntainer.isHidden = true
+        }
+    }
+    
     deinit {
         NotificationCenter.default.removeObserver(self, name: .darkModeEnabled, object: nil)
         NotificationCenter.default.removeObserver(self, name: .darkModeDisabled, object: nil)
@@ -122,6 +162,16 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
         
     }
     
+    @IBAction func btnMenuActn(_ sender: Any) {
+       
+        self.view.bringSubview(toFront: sideView)
+        if !isSideBarOpen{
+            viewSideCOntainer.isHidden = false
+            isSideBarOpen = true
+            sideView.isHidden = false
+            sideMenuTV.isHidden = false
+        }
+    }
     override func viewControllers(for pagerTabStripController: PagerTabStripViewController) -> [UIViewController] {
         
         //Clear children viewcontrollers
@@ -156,4 +206,17 @@ extension HomeParentVC:CategoryListProtocol{
         UserDefaults.standard.set(categories, forKey: "categories")
         self.reloadPagerTabStripView()
     }
+}
+extension HomeParentVC: UITableViewDelegate, UITableViewDataSource{
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return arr.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+         let cell = tableView.dequeueReusableCell(withIdentifier: "menuID", for:indexPath) as! MenuTVCell
+        cell.lblMenu.text = arr[indexPath.row]
+        return cell
+    }
+    
+    
 }
