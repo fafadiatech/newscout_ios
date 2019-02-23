@@ -1,8 +1,9 @@
 //
 //  Category+CoreDataClass.swift
-//  
+//  NewsApp
 //
-//  Created by Jayashree on 30/01/19.
+//  Created by Jayashree on 23/02/19.
+//  Copyright © 2019 Fafadia Tech. All rights reserved.
 //
 //
 

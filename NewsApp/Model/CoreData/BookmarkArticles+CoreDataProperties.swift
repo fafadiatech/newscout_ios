@@ -1,8 +1,9 @@
 //
 //  BookmarkArticles+CoreDataProperties.swift
-//  
+//  NewsApp
 //
-//  Created by Jayashri on 22/02/19.
+//  Created by Jayashree on 23/02/19.
+//  Copyright © 2019 Fafadia Tech. All rights reserved.
 //
 //
 

@@ -26,17 +26,16 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
     @IBOutlet weak var sideMenuTV: UITableView!
     @IBOutlet weak var sideView: UIView!
     @IBOutlet weak var btnMenu: UIButton!
-    @IBOutlet weak var viewSideCOntainer: UIView!
+    @IBOutlet weak var viewSideContainer: UIView!
     var childrenVC = [UIViewController]()
     var categories : [String] = []
-    var arr = ["abc", "xyz", "pqr"]
+    let arr = ["abc", "xyz", "pqr"]
     var isSideBarOpen : Bool = Bool()
-   
+    var jsonData : [Result] = []
     
-   
     override func viewDidLoad() {
         isSideBarOpen = false
-        viewSideCOntainer.isHidden = true
+        viewSideContainer.isHidden = true
         sideView.isHidden = true
         sideMenuTV.isHidden = true
         settings.style.buttonBarItemsShouldFillAvailiableWidth = false
@@ -49,14 +48,14 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
         
         let tap = UITapGestureRecognizer(target: self, action: #selector(self.handleTap(_:)))
         
-        viewSideCOntainer.addGestureRecognizer(tap)
+        viewSideContainer.addGestureRecognizer(tap)
         
-        viewSideCOntainer.isUserInteractionEnabled = true
+        viewSideContainer.isUserInteractionEnabled = true
         
-        self.view.addSubview(viewSideCOntainer)
+        self.view.addSubview(viewSideContainer)
 
+         jsonData = loadJson(filename: "navmenu")!
 
-        
         if UserDefaults.standard.value(forKey: "textSize") == nil{
             UserDefaults.standard.set(1, forKey: "textSize")
         }
@@ -123,12 +122,30 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
         }
     }
     
+    func loadJson(filename fileName: String) -> [Result]?
+    {
+        if let url = Bundle.main.url(forResource: fileName, withExtension: "json") {
+            do {
+                let data = try Data(contentsOf: url)
+                let decoder = JSONDecoder()
+                let jsonData = try decoder.decode(Menu.self, from: data)
+                
+                print("jsondata: \(jsonData)")
+                
+                return jsonData.body.results
+            } catch {
+                print("error:\(error)")
+            }
+        }
+        return nil
+    }
+    
     @objc func handleTap(_ sender: UITapGestureRecognizer) {
         if isSideBarOpen{
             sideMenuTV.isHidden = true
             sideView.isHidden = true
             isSideBarOpen = false
-            viewSideCOntainer.isHidden = true
+            viewSideContainer.isHidden = true
         }
     }
     
@@ -163,10 +180,10 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
     }
     
     @IBAction func btnMenuActn(_ sender: Any) {
-       
+       sideMenuTV.reloadData()
         self.view.bringSubview(toFront: sideView)
         if !isSideBarOpen{
-            viewSideCOntainer.isHidden = false
+            viewSideContainer.isHidden = false
             isSideBarOpen = true
             sideView.isHidden = false
             sideMenuTV.isHidden = false
@@ -209,12 +226,12 @@ extension HomeParentVC:CategoryListProtocol{
 }
 extension HomeParentVC: UITableViewDelegate, UITableViewDataSource{
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return arr.count
+        return jsonData.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
          let cell = tableView.dequeueReusableCell(withIdentifier: "menuID", for:indexPath) as! MenuTVCell
-        cell.lblMenu.text = arr[indexPath.row]
+        cell.lblMenu.text = jsonData[indexPath.row].heading.headingName
         return cell
     }
     

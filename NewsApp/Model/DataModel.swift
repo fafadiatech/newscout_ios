@@ -95,6 +95,7 @@ struct ArticleDict: Decodable{
 
 struct Menu : Decodable {
     let header : Header
+    let body : MenuBody
 }
 
 struct CategoryList: Decodable{
@@ -179,13 +180,44 @@ struct Body : Decodable{
     let user: User?
     let listResult: [LikeBookmarkList]?
     let categories : [CategoryDetails]
-    
+
     enum CodingKeys: String, CodingKey{
         case Msg = "Msg"
         case user =  "user"
         case listResult = "results"
         case categories = "categories"
     }
+}
+
+struct MenuBody : Decodable{
+    let results : [Result]
+}
+
+struct Result : Decodable{
+    let heading : Heading
+}
+
+struct Heading : Decodable{
+    let headingId : Int
+    let headingName : String
+    let submenu : [SubMenu]
+    
+    enum CodingKeys: String, CodingKey{
+        case headingId = "id"
+        case headingName = "name"
+        case submenu = "submenu"
+    }
+}
+
+struct SubMenu : Decodable{
+    let id : Int
+    let name : String
+    let tags : [TagList]
+}
+
+struct TagList : Decodable{
+    let id : Int
+    let name : String
 }
 
 struct GetLikeBookmarkList: Decodable{

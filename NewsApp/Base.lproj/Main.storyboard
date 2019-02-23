@@ -123,7 +123,7 @@
                                                             <autoresizingMask key="autoresizingMask"/>
                                                             <subviews>
                                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Business" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="10d-WV-KgB">
-                                                                    <rect key="frame" x="80" y="12" width="125" height="21"/>
+                                                                    <rect key="frame" x="80" y="12" width="179" height="21"/>
                                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                                     <nil key="textColor"/>
@@ -191,7 +191,7 @@
                         <outlet property="sideMenuTV" destination="5ag-B0-bac" id="ctB-zL-rdb"/>
                         <outlet property="sideView" destination="YbJ-If-LIb" id="rE2-XL-JaF"/>
                         <outlet property="viewAppTitle" destination="ao8-14-oL8" id="ko8-sk-Rjl"/>
-                        <outlet property="viewSideCOntainer" destination="3jY-cA-gMj" id="EoX-bd-LB9"/>
+                        <outlet property="viewSideContainer" destination="3jY-cA-gMj" id="gf2-PQ-prS"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ped-Xd-m0V" userLabel="First Responder" sceneMemberID="firstResponder"/>

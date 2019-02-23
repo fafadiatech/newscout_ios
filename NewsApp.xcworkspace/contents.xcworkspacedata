@@ -2,54 +2,6 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "group:Media+CoreDataClass.swift">
-   </FileRef>
-   <FileRef
-      location = "group:Media+CoreDataProperties.swift">
-   </FileRef>
-   <FileRef
-      location = "group:HashTag+CoreDataClass.swift">
-   </FileRef>
-   <FileRef
-      location = "group:HashTag+CoreDataProperties.swift">
-   </FileRef>
-   <FileRef
-      location = "group:SearchArticles+CoreDataClass.swift">
-   </FileRef>
-   <FileRef
-      location = "group:SearchArticles+CoreDataProperties.swift">
-   </FileRef>
-   <FileRef
-      location = "group:NewsArticle+CoreDataClass.swift">
-   </FileRef>
-   <FileRef
-      location = "group:NewsArticle+CoreDataProperties.swift">
-   </FileRef>
-   <FileRef
-      location = "group:BookmarkArticles+CoreDataClass.swift">
-   </FileRef>
-   <FileRef
-      location = "group:BookmarkArticles+CoreDataProperties.swift">
-   </FileRef>
-   <FileRef
-      location = "group:Category+CoreDataClass.swift">
-   </FileRef>
-   <FileRef
-      location = "group:Category+CoreDataProperties.swift">
-   </FileRef>
-   <FileRef
-      location = "group:NewsURL+CoreDataClass.swift">
-   </FileRef>
-   <FileRef
-      location = "group:NewsURL+CoreDataProperties.swift">
-   </FileRef>
-   <FileRef
-      location = "group:LikeDislike+CoreDataClass.swift">
-   </FileRef>
-   <FileRef
-      location = "group:LikeDislike+CoreDataProperties.swift">
-   </FileRef>
-   <FileRef
       location = "group:NewsApp.xcodeproj">
    </FileRef>
    <FileRef

@@ -1,8 +1,9 @@
 //
-//  NewsArticle+CoreDataProperties.swift
-//  
+//  SearchArticles+CoreDataProperties.swift
+//  NewsApp
 //
-//  Created by Jayashri on 22/02/19.
+//  Created by Jayashree on 23/02/19.
+//  Copyright © 2019 Fafadia Tech. All rights reserved.
 //
 //
 
@@ -10,10 +11,10 @@ import Foundation
 import CoreData
 
 
-extension NewsArticle {
+extension SearchArticles {
 
-    @nonobjc public class func fetchRequest() -> NSFetchRequest<NewsArticle> {
-        return NSFetchRequest<NewsArticle>(entityName: "NewsArticle")
+    @nonobjc public class func fetchRequest() -> NSFetchRequest<SearchArticles> {
+        return NSFetchRequest<SearchArticles>(entityName: "SearchArticles")
     }
 
     @NSManaged public var article_id: Int64
