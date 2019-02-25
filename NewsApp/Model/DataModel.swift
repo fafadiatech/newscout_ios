@@ -115,6 +115,8 @@ struct CategoryDetails : Decodable{
 
 struct Tag: Decodable{
     let name : String
+    let id : Int
+    let count : String
 }
 
 struct ArticleMedia: Decodable{
@@ -180,7 +182,7 @@ struct Body : Decodable{
     let user: User?
     let listResult: [LikeBookmarkList]?
     let categories : [CategoryDetails]
-
+    
     enum CodingKeys: String, CodingKey{
         case Msg = "Msg"
         case user =  "user"
@@ -216,8 +218,19 @@ struct SubMenu : Decodable{
 }
 
 struct TagList : Decodable{
-    let id : Int
+    let id : Int?
     let name : String
+    let count : Int?
+}
+
+struct DailyTags : Decodable{
+    let header : Header
+    let body : DailyTagBody
+}
+
+struct DailyTagBody: Decodable {
+    let results : [TagList]
+    let count : Int
 }
 
 struct GetLikeBookmarkList: Decodable{
@@ -259,6 +272,11 @@ enum ArticleDBfetchResult {
     case Failure(String)
 }
 
+enum DailyTagAPIResult {
+    case Success([DailyTags])
+    case Failure(String)
+}
+
 enum BookmarkArticleDBfetchResult {
     case Success([BookmarkArticles])
     case Failure(String)
@@ -283,12 +301,19 @@ enum LikeBookmarkListAPIResult {
     case Success(GetLikeBookmarkList)
     case Failure(String)
 }
+
 enum SearchDBfetchResult {
     case Success([SearchArticles])
     case Failure(String)
 }
+
 enum NextURLDBfetchResult {
     case Success([NewsURL])
+    case Failure(String)
+}
+
+enum PeriodicTagDBfetchResult {
+    case Success([PeriodicTags])
     case Failure(String)
 }
 

@@ -55,7 +55,13 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
         self.view.addSubview(viewSideContainer)
 
          jsonData = loadJson(filename: "navmenu")!
-
+         categories = UserDefaults.standard.array(forKey: "categories") as! [String]
+//        for  res in jsonData{
+//            if !categories.contains(res.heading.headingName){
+//            categories.append(res.heading.headingName)
+//            }
+//        }
+   //     self.reloadPagerTabStripView()
         if UserDefaults.standard.value(forKey: "textSize") == nil{
             UserDefaults.standard.set(1, forKey: "textSize")
         }
@@ -193,8 +199,12 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
         
         //Clear children viewcontrollers
         childrenVC.removeAll()
-        //Create children viewcontrolles based on categories passed from CategoryListVC
+        
         categories = UserDefaults.standard.array(forKey: "categories") as! [String]
+        for  res in jsonData{
+            categories.append(res.heading.headingName)
+        }
+        UserDefaults.standard.set(categories, forKey: "categories")
         for cat in categories
         {
             let childVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "HomeVC") as! HomeVC
@@ -207,7 +217,8 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
         childMore.protocolObj = self
         childrenVC.append(childMore)
         return childrenVC
-    }  
+    }
+    
 }
 
 extension HomeParentVC:CategoryListProtocol{

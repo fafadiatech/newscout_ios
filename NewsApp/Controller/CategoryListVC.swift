@@ -10,6 +10,7 @@ import UIKit
 import XLPagerTabStrip
 import MaterialComponents.MaterialActivityIndicator
 import NightNight
+import CoreData
 
 protocol CategoryListProtocol {
     func updateCategoryList(catName: String)
@@ -25,6 +26,12 @@ class CategoryListVC: UIViewController {
     var selectedCat = ""
     let activityIndicator = MDCActivityIndicator()
     var  categories : [String] = []
+    var tagData = [PeriodicTags]()
+    var dailyTags = [PeriodicTags]()
+    var monthlyTags = [PeriodicTags]()
+    var weeklyTags = [PeriodicTags]()
+    let appDelegate = UIApplication.shared.delegate as? AppDelegate
+    var headerArr = ["Daily Tags", "Weekly Tags","Monthly Tags"]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -44,15 +51,31 @@ class CategoryListVC: UIViewController {
         else {
             tableCategoryLIst.rowHeight = 50;
         }
-        let coredataRecordCount = DBManager().IsCategoryDataEmpty()
-        if coredataRecordCount != 0{
-            fetchCategoryFromDB()
-        }
-        else{
-            saveCategoryInDB()
-        }
+        
+        DBManager().saveTags()
+        fetchTags()
+        tableCategoryLIst.reloadData()
     }
     
+    func fetchTags(){
+        var types = ["daily", "weekly", "monthly"]
+        for type in types{
+            let result = DBManager().fetchTags(type: type)
+            switch(result){
+            case .Success(let DBData) :
+                if type == "daily"{
+                    self.dailyTags = DBData
+                }else if type == "weekly"{
+                    self.weeklyTags = DBData
+                }
+                else if type == "monthly"{
+                    self.monthlyTags = DBData
+                }
+            case .Failure(let errorMsg) :
+                print(errorMsg)
+            }
+        }
+    }
     @objc private func darkModeEnabled(_ notification: Notification) {
         NightNight.theme = .night
         tableCategoryLIst.backgroundColor = colorConstants.grayBackground3
@@ -114,60 +137,85 @@ extension CategoryListVC:UITableViewDelegate, UITableViewDataSource{
             }
         }
     }
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return headerArr.count
+    }
+    
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        return headerArr[section]
+    }
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int)  -> UIView? {
+        let headerView = UIView()
+        let headerLabel = UILabel(frame: CGRect(x: 8, y: 0 , width: tableView.bounds.size.width, height: tableView.bounds.size.height))
+        headerLabel.text = self.tableView(self.tableCategoryLIst, titleForHeaderInSection: section)
+        headerLabel.font = UIFont(name: AppFontName.bold, size: 21)
+        headerLabel.sizeToFit()
+        headerView.addSubview(headerLabel)
+        return headerView
+    }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return (showCategory.count != 0) ? self.showCategory.count : 0
+        switch (section) {
+        case 0:
+            return (dailyTags.count != 0) ? dailyTags.count : 0
+        case 1:
+            return (weeklyTags.count != 0) ? weeklyTags.count : 0
+        default:
+            return (monthlyTags.count != 0) ? monthlyTags.count : 0
+        }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableCategoryLIst.dequeueReusableCell(withIdentifier: "CategoryListID", for:indexPath) as! CategoryListTVCell
-        let catData = showCategory[indexPath.row]
         var textSizeSelected = UserDefaults.standard.value(forKey: "textSize") as! Int
         if (UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.phone){
             if textSizeSelected == 0{
-                cell.lblCategoryName.font = UIFont(name: AppFontName.bold, size: 18)
+                cell.lblCategoryName.font = UIFont(name: AppFontName.regular, size: 18)
+                cell.lblCount.font = UIFont(name: AppFontName.regular, size: 18)
             }
             else if textSizeSelected == 2{
-                cell.lblCategoryName.font = UIFont(name: AppFontName.bold, size: 20)
+                cell.lblCategoryName.font = UIFont(name: AppFontName.regular, size: 20)
+                cell.lblCount.font = UIFont(name: AppFontName.regular, size: 20)
             }
             else{
-                cell.lblCategoryName.font =  UIFont(name: AppFontName.bold, size: 22)
+                cell.lblCategoryName.font =  UIFont(name: AppFontName.regular, size: 22)
+                cell.lblCount.font = UIFont(name: AppFontName.regular, size: 22)
             }
         }
         else{
             if textSizeSelected == 0{
-                cell.lblCategoryName.font = UIFont(name: AppFontName.bold, size: 30)
+                cell.lblCategoryName.font = UIFont(name: AppFontName.regular, size: 30)
+                cell.lblCount.font = UIFont(name: AppFontName.regular, size: 30)
             }
             else if textSizeSelected == 2{
-                cell.lblCategoryName.font = UIFont(name: AppFontName.bold, size: 34)
+                cell.lblCategoryName.font = UIFont(name: AppFontName.regular, size: 34)
+                cell.lblCount.font = UIFont(name: AppFontName.regular, size: 34)
             }
             else{
-                cell.lblCategoryName.font =  UIFont(name: AppFontName.bold, size: 32)
-            }
-        }
-        
-        cell.lblCategoryName.text = catData.title
-        
-        if categories.contains(catData.title!){
-            cell.imgDelete.isHidden = false
-        }
-        else{
-            cell.imgDelete.isHidden = true
-        }
-        if cell.lblCategoryName.text == "Trending"{
-            if UserDefaults.standard.value(forKey: "token") == nil{
-                cell.isUserInteractionEnabled = false
-                cell.imgDelete.isHidden = true
+                cell.lblCategoryName.font =  UIFont(name: AppFontName.regular, size: 32)
+                cell.lblCount.font = UIFont(name: AppFontName.regular, size: 32)
             }
         }
         let darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
         if  darkModeStatus == true{
             cell.backgroundColor = colorConstants.grayBackground2
             cell.lblCategoryName.textColor = colorConstants.nightModeText
+            cell.lblCount.textColor = colorConstants.nightModeText
             NightNight.theme =  .night
         }
         else{
             NightNight.theme =  .normal
+        }
+        switch (indexPath.section) {
+        case 0:
+            cell.lblCategoryName.text =  dailyTags[indexPath.row].tagName
+            cell.lblCount.text =  String(dailyTags[indexPath.row].count)
+        case 1:
+            cell.lblCategoryName.text = weeklyTags[indexPath.row].tagName
+            cell.lblCount.text =  String(dailyTags[indexPath.row].count)
+        default:
+            cell.lblCategoryName.text = monthlyTags[indexPath.row].tagName
+            cell.lblCount.text =  String(dailyTags[indexPath.row].count)
         }
         activityIndicator.stopAnimating()
         return cell

@@ -1590,12 +1590,12 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="eVO-Ev-inh">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="eVO-Ev-inh">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="CategoryListID" rowHeight="67" id="O8I-oU-aqi" customClass="CategoryListTVCell" customModule="NewsApp" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="28" width="320" height="67"/>
+                                        <rect key="frame" x="0.0" y="55.5" width="320" height="67"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="O8I-oU-aqi" id="fgR-9q-NVa">
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="67"/>
@@ -1607,29 +1607,24 @@
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="cross" translatesAutoresizingMaskIntoConstraints="NO" id="FgY-PE-PEg">
-                                                    <rect key="frame" x="192" y="22.5" width="23" height="22"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="width" constant="23" id="YmS-n8-MCl">
-                                                            <variation key="heightClass=regular-widthClass=regular" constant="33"/>
-                                                        </constraint>
-                                                        <constraint firstAttribute="height" constant="22" id="yhG-7z-kQC">
-                                                            <variation key="heightClass=regular-widthClass=regular" constant="33"/>
-                                                        </constraint>
-                                                    </constraints>
-                                                </imageView>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TPu-zW-AUG">
+                                                    <rect key="frame" x="248" y="23.5" width="42" height="20"/>
+                                                    <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
                                             </subviews>
                                             <constraints>
                                                 <constraint firstItem="2yK-82-s2H" firstAttribute="leading" secondItem="fgR-9q-NVa" secondAttribute="leadingMargin" constant="15" id="4B9-H1-luQ"/>
-                                                <constraint firstItem="FgY-PE-PEg" firstAttribute="centerY" secondItem="fgR-9q-NVa" secondAttribute="centerY" id="gah-lu-rRe"/>
+                                                <constraint firstItem="TPu-zW-AUG" firstAttribute="centerY" secondItem="fgR-9q-NVa" secondAttribute="centerY" id="Rns-jz-Edi"/>
                                                 <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="2yK-82-s2H" secondAttribute="trailingMargin" id="h6a-Uy-dof"/>
-                                                <constraint firstAttribute="trailingMargin" secondItem="FgY-PE-PEg" secondAttribute="trailing" constant="90" id="mkw-Qf-PKT"/>
+                                                <constraint firstAttribute="trailingMargin" secondItem="TPu-zW-AUG" secondAttribute="trailing" constant="15" id="l9C-5j-W5y"/>
                                                 <constraint firstItem="2yK-82-s2H" firstAttribute="centerY" secondItem="fgR-9q-NVa" secondAttribute="centerY" id="sQq-OH-IJV"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>
-                                            <outlet property="imgDelete" destination="FgY-PE-PEg" id="aO8-VL-aza"/>
                                             <outlet property="lblCategoryName" destination="2yK-82-s2H" id="MTo-dL-hEv"/>
+                                            <outlet property="lblCount" destination="TPu-zW-AUG" id="vnP-Vu-lgv"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
@@ -3345,7 +3340,6 @@
     <resources>
         <image name="NoImage" width="512" height="512"/>
         <image name="back1" width="512" height="512"/>
-        <image name="cross" width="512" height="512"/>
         <image name="flogo" width="512" height="512"/>
         <image name="glogo" width="48" height="48"/>
         <image name="logo" width="512" height="512"/>

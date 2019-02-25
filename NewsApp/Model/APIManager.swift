@@ -100,17 +100,17 @@ class APICall{
         Alamofire.request(url,method: .post).responseJSON{
             response in
             if(response.result.isSuccess){
-                    if let data = response.data {
-                        let jsonDecoder = JSONDecoder()
-                        do {
-                            let jsonData = try jsonDecoder.decode(ArticleStatus.self, from: data)
-                            completion(String((response.response?.statusCode)!),ArticleAPIResult.Success([jsonData]))
-                        }
-                        catch {
-                            completion(String((response.response?.statusCode)!), ArticleAPIResult.Failure(error.localizedDescription))
-                        }
+                if let data = response.data {
+                    let jsonDecoder = JSONDecoder()
+                    do {
+                        let jsonData = try jsonDecoder.decode(ArticleStatus.self, from: data)
+                        completion(String((response.response?.statusCode)!),ArticleAPIResult.Success([jsonData]))
                     }
-               
+                    catch {
+                        completion(String((response.response?.statusCode)!), ArticleAPIResult.Failure(error.localizedDescription))
+                    }
+                }
+                
             }
             else{
                 if let err = response.result.error as? URLError, err.code == .notConnectedToInternet {
@@ -119,9 +119,9 @@ class APICall{
                 else{
                     completion(String((response.response?.statusCode)!), ArticleAPIResult.Failure("\(String(describing: response.response?.statusCode))"))
                 }
-                }
             }
         }
+    }
     
     func loadCategoriesAPI(_ completion : @escaping (Int, CategoryAPIResult) -> ()){
         let url = APPURL.CategoriesURL
@@ -158,21 +158,21 @@ class APICall{
             response in
             if(response.result.isSuccess){
                 //if response.response?.statusCode == 200{
-                    if let data = response.data {
-                        let  jsonDecoder = JSONDecoder()
-                        do {
-                            let jsonData = try jsonDecoder.decode(ArticleStatus.self, from: data)
-                            if jsonData.header.status == "0" {
-                                completion(String((response.response?.statusCode)!), ArticleAPIResult.Failure((jsonData.errors?.Msg)!))
-                            }else{
+                if let data = response.data {
+                    let  jsonDecoder = JSONDecoder()
+                    do {
+                        let jsonData = try jsonDecoder.decode(ArticleStatus.self, from: data)
+                        if jsonData.header.status == "0" {
+                            completion(String((response.response?.statusCode)!), ArticleAPIResult.Failure((jsonData.errors?.Msg)!))
+                        }else{
                             completion(String((response.response?.statusCode)!), ArticleAPIResult.Success([jsonData]))
-                            }
-                        }
-                        catch {
-                            completion(String((response.response?.statusCode)!), ArticleAPIResult.Failure(error as! String))
                         }
                     }
-               // }
+                    catch {
+                        completion(String((response.response?.statusCode)!), ArticleAPIResult.Failure(error as! String))
+                    }
+                }
+                    // }
                 else{
                     completion(String((response.response?.statusCode)!), ArticleAPIResult.Failure("\(response.response?.statusCode)"))
                 }
@@ -300,10 +300,10 @@ class APICall{
                             Helper().clearDefaults(list : defaultList)
                             var categoryList : [String] = []
                             
-                             categoryList = UserDefaults.standard.value(forKey: "categories") as! [String]
+                            categoryList = UserDefaults.standard.value(forKey: "categories") as! [String]
                             categoryList.remove(at: 0)
                             if !categoryList.contains("Trending"){
-                            categoryList.insert("Trending", at: 0)
+                                categoryList.insert("Trending", at: 0)
                             }
                             UserDefaults.standard.setValue(categoryList, forKey: "categories")
                             completion(jsonData.header.status,jsonData.body!.Msg!)
@@ -620,13 +620,13 @@ class APICall{
                         }
                         else{
                             var error_msg = ""
-                           if response.response?.statusCode == 400{
-                            error_msg = (jsonData.errors?.Msg)!
+                            if response.response?.statusCode == 400{
+                                error_msg = (jsonData.errors?.Msg)!
                             }
-                           else if response.response?.statusCode == 404{
-                            error_msg = (jsonData.errors!.invalid_credentials!)
+                            else if response.response?.statusCode == 404{
+                                error_msg = (jsonData.errors!.invalid_credentials!)
                             }
-                        completion(SaveRemoveCategoryResult.Failure(error_msg))
+                            completion(SaveRemoveCategoryResult.Failure(error_msg))
                         }
                     }
                     catch {
@@ -660,7 +660,7 @@ class APICall{
         else{
             headers = ["Authorization": ""]
         }
-       
+        
         Alamofire.request(url,method: .get,headers: headers).responseJSON{
             response in
             if(response.result.isSuccess){
@@ -679,6 +679,32 @@ class APICall{
             else{
                 if let err = response.result.error as? URLError, err.code == .notConnectedToInternet {
                     completion(LikeBookmarkListAPIResult.Failure(Constants.InternetErrorMsg))
+                }
+            }
+        }
+    }
+    
+    //get daily,weekly and monthly tags
+    func getTags(url : String,type : String, _ completion : @escaping (DailyTagAPIResult) ->()){
+        let param = [type : 1]
+        Alamofire.request(url,method: .get, parameters: param).responseString{
+            response in
+            if(response.result.isSuccess){
+                if let data = response.data {
+                    let jsonDecoder = JSONDecoder()
+                    do {
+                        let jsonData = try jsonDecoder.decode(DailyTags.self, from: data)
+                        completion(DailyTagAPIResult.Success([jsonData]))
+                    }
+                    catch {
+                        completion(DailyTagAPIResult.Failure(error.localizedDescription
+                        ))
+                    }
+                }
+            }
+            else{
+                if let err = response.result.error as? URLError, err.code == .notConnectedToInternet {
+                    completion(DailyTagAPIResult.Failure(Constants.InternetErrorMsg))
                 }
             }
         }

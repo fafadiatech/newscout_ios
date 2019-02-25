@@ -19,5 +19,7 @@ extension HashTag {
 
     @NSManaged public var articleId: Int64
     @NSManaged public var name: String?
+    @NSManaged public var tagId: Int64
+    @NSManaged public var articleCount: Int64
 
 }

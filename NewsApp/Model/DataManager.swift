@@ -14,7 +14,7 @@ class DBManager{
     let appDelegate = UIApplication.shared.delegate as? AppDelegate
     var ArticleData = [ArticleStatus]()
     var CategoryData = [CategoryList]()
-    
+    var tagType = ""
     //save articles in DB
     func SaveDataDB(nextUrl:String,_ completion : @escaping (Bool) -> ())
     {
@@ -30,7 +30,7 @@ class DBManager{
             case .Change(let code):
                 print(code)
             }
-        
+            
             if self.ArticleData.count != 0{
                 
                 if self.ArticleData[0].header.status == "1" {
@@ -91,7 +91,7 @@ class DBManager{
                                         newMedia.type = media.category
                                         newMedia.mediaId =  Int64(media.media_id)
                                     }
-                    
+                                    
                                 }
                             }
                             self.saveBlock()
@@ -116,7 +116,7 @@ class DBManager{
         }
         else if entity == "NewsURL" || entity == "Category" || entity == "Media"{
             if entity == "Media"{
-            fetchRequest.predicate = NSPredicate(format: "mediaId == \(id)")
+                fetchRequest.predicate = NSPredicate(format: "mediaId == \(id)")
             }else{
                 fetchRequest.predicate = NSPredicate(format: "cat_id == \(id)")
             }
@@ -125,8 +125,11 @@ class DBManager{
         if keyword != ""{
             if entity == "HashTag"{
                 fetchRequest.predicate = NSPredicate(format: "name contains[c] %@", keyword)
-            }else{
-            fetchRequest.predicate = NSPredicate(format: "category contains[c] %@",keyword)
+            }else if entity == "PeriodicTags"{
+                fetchRequest.predicate = NSPredicate(format: "tagName contains[c] %@ AND type contains[c] %@", keyword, tagType)
+            }
+            else{
+                fetchRequest.predicate = NSPredicate(format: "category contains[c] %@",keyword)
             }
         }
         let managedContext =
@@ -256,7 +259,7 @@ class DBManager{
                     }
                 }
                 if UserDefaults.standard.value(forKey: "categoryDefaults") != nil{
-                UserDefaults.standard.set(categoryDefaults, forKey: "categoryDefaults")
+                    UserDefaults.standard.set(categoryDefaults, forKey: "categoryDefaults")
                 }
                 completion(true)
             }
@@ -741,8 +744,53 @@ class DBManager{
             let NewsURL = try (managedContext?.fetch(fetchRequest))!
             return NextURLDBfetchResult.Success(NewsURL)
         } catch let error as NSError {
-            print("Could not fetch. \(error), \(error.userInfo)")
             return NextURLDBfetchResult.Failure(error as! String)
+        }
+    }
+    
+    func saveTags() {
+        let managedContext =
+            appDelegate?.persistentContainer.viewContext
+        var tagsData = [DailyTags]()
+        let types = ["daily", "weekly", "monthly"]
+        for type in types{
+            APICall().getTags(url:APPURL.getTagsURL, type: type){
+                (response)  in
+                switch response {
+                case .Success(let data) :
+                    tagsData  = data
+                    if tagsData[0].header.status == "1" {
+                        if tagsData[0].body.count > 0{
+                            for tag in tagsData[0].body.results{
+                                self.tagType = type
+                                if self.someEntityExists(id: 0, entity: "PeriodicTags", keyword: tag.name) == false{
+                                    let newTag = PeriodicTags(context: managedContext!)
+                                    newTag.tagName =  tag.name
+                                    newTag.count = Int64(tag.count!)
+                                    newTag.type = type
+                                    self.saveBlock()
+                                }
+                            }
+                        }
+                    }
+                case .Failure(let errormessage) :
+                    print(errormessage)
+                }
+            }
+        }
+    }
+    
+    func fetchTags(type : String) -> PeriodicTagDBfetchResult {
+        let managedContext =
+            appDelegate?.persistentContainer.viewContext
+        let fetchRequest =
+            NSFetchRequest<PeriodicTags>(entityName: "PeriodicTags")
+        fetchRequest.predicate = NSPredicate(format: "type contains[c] %@",type)
+        do {
+            let tagsData = try (managedContext?.fetch(fetchRequest))!
+            return PeriodicTagDBfetchResult.Success(tagsData)
+        } catch let error as NSError {
+            return PeriodicTagDBfetchResult.Failure(error as! String)
         }
     }
 }
