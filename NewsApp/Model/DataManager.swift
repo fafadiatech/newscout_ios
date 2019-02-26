@@ -70,7 +70,8 @@ class DBManager{
                             newArticle.published_on = news.published_on
                             newArticle.blurb = news.blurb
                             newArticle.category = news.category
-                            if news.hash_tags.count > 0 {
+                            
+                          /*  if news.hash_tags.count > 0 {
                                 for tag in news.hash_tags {
                                     if  self.someEntityExists(id: 0 , entity: "HashTag", keyword: tag.name) == false
                                     {
@@ -80,7 +81,7 @@ class DBManager{
                                     }
                                 }
                                 
-                            }
+                            }*/
                             if news.article_media!.count > 0 {
                                 for media in news.article_media!{
                                     if self.someEntityExists(id: media.media_id, entity: "Media", keyword: "") == false {

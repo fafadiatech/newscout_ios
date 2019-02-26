@@ -36,8 +36,8 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
     var headingArr : [String] = []
     var subMenuArr = [[String]]()
     var submenu : [String] = []
+    
     override func viewDidLoad() {
-        
         isSideBarOpen = false
         viewSideContainer.isHidden = true
         sideView.isHidden = true
@@ -53,6 +53,7 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
         let tap = UITapGestureRecognizer(target: self, action: #selector(self.handleTap(_:)))
         
         viewSideContainer.addGestureRecognizer(tap)
+        tap.cancelsTouchesInView = false
         viewSideContainer.isUserInteractionEnabled = true
         self.view.addSubview(viewSideContainer)
         
@@ -247,6 +248,18 @@ extension HomeParentVC:CategoryListProtocol{
 }
 
 extension HomeParentVC: UITableViewDelegate, UITableViewDataSource{
+       func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+          var url = APPURL.ArticlesByTagsURL + "tag=\(subMenuArr[indexPath.section][indexPath.row])"
+        if jsonData[0].heading.headingName == headingArr[indexPath.section]{
+            for temptag in jsonData[0].heading.submenu[indexPath.row].tags{
+                url = url + "&tag=" + temptag.name
+            }
+        }
+        let homeObj =  HomeVC()
+        homeObj.saveArticlesInDB(url:url)
+        print("tag url is:\(url)" )
+    }
+//
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if self.expandData[section].value(forKey: "isOpen") as! String == "1"{
             return 0

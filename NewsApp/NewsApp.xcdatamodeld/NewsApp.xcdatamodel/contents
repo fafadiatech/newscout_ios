@@ -35,11 +35,14 @@
         <attribute name="article_id" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="blurb" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="category" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="current_page" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="imageURL" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="published_on" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="source" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="source_url" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="tags" optional="YES" attributeType="Transformable" customClassName="[String]" syncable="YES"/>
         <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="total_pages" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <relationship name="bookmark" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="BookmarkArticles" inverseName="article" inverseEntity="BookmarkArticles" syncable="YES"/>
         <relationship name="likeDislike" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="LikeDislike" inverseName="likedArticle" inverseEntity="LikeDislike" syncable="YES"/>
     </entity>
@@ -71,9 +74,9 @@
         <element name="HashTag" positionX="405" positionY="90" width="128" height="105"/>
         <element name="LikeDislike" positionX="405" positionY="36" width="128" height="120"/>
         <element name="Media" positionX="414" positionY="99" width="128" height="120"/>
-        <element name="NewsArticle" positionX="407.63671875" positionY="-45.1953125" width="128" height="195"/>
+        <element name="NewsArticle" positionX="407.63671875" positionY="-45.1953125" width="128" height="240"/>
         <element name="NewsURL" positionX="405" positionY="63" width="128" height="90"/>
-        <element name="SearchArticles" positionX="405" positionY="54" width="128" height="195"/>
         <element name="PeriodicTags" positionX="405" positionY="90" width="128" height="90"/>
+        <element name="SearchArticles" positionX="405" positionY="54" width="128" height="195"/>
     </elements>
 </model>

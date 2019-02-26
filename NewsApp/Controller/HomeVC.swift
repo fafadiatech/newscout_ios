@@ -76,8 +76,8 @@ class HomeVC: UIViewController{
         }
         if Reachability.isConnectedToNetwork(){
             activityIndicator.startAnimating()
-            let url = APPURL.ArticlesByCategoryURL + "\(self.selectedCategory)"
-            self.saveArticlesInDB(url : url)
+           // let url = APPURL.ArticlesByCategoryURL + "\(self.selectedCategory)"
+            self.saveArticlesInDB(url : "")
         }else{
             coredataRecordCount = DBManager().IsCoreDataEmpty(entity: "NewsArticle")
             if self.coredataRecordCount != 0 {
@@ -120,7 +120,7 @@ class HomeVC: UIViewController{
         }
         if ShowArticle.count == 0{
             self.activityIndicator.stopAnimating()
-            lblNonews.isHidden = false
+          //  lblNonews.isHidden = false
         }
         
     }
