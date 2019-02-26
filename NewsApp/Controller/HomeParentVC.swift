@@ -32,8 +32,12 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
     let arr = ["abc", "xyz", "pqr"]
     var isSideBarOpen : Bool = Bool()
     var jsonData : [Result] = []
-    
+    var expandData = [NSMutableDictionary]()
+    var headingArr : [String] = []
+    var subMenuArr = [[String]]()
+    var submenu : [String] = []
     override func viewDidLoad() {
+        
         isSideBarOpen = false
         viewSideContainer.isHidden = true
         sideView.isHidden = true
@@ -49,19 +53,22 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
         let tap = UITapGestureRecognizer(target: self, action: #selector(self.handleTap(_:)))
         
         viewSideContainer.addGestureRecognizer(tap)
-        
         viewSideContainer.isUserInteractionEnabled = true
-        
         self.view.addSubview(viewSideContainer)
-
-         jsonData = loadJson(filename: "navmenu")!
-         categories = UserDefaults.standard.array(forKey: "categories") as! [String]
-//        for  res in jsonData{
-//            if !categories.contains(res.heading.headingName){
-//            categories.append(res.heading.headingName)
-//            }
-//        }
-   //     self.reloadPagerTabStripView()
+        
+        jsonData = loadJson(filename: "navmenu")!
+        var j = 0
+        for _ in headingArr{
+            self.expandData.append(["isOpen":"1","data": subMenuArr[j]])
+            j = j + 1
+        }
+        categories = UserDefaults.standard.array(forKey: "categories") as! [String]
+        //        for  res in jsonData{
+        //            if !categories.contains(res.heading.headingName){
+        //            categories.append(res.heading.headingName)
+        //            }
+        //        }
+        //     self.reloadPagerTabStripView()
         if UserDefaults.standard.value(forKey: "textSize") == nil{
             UserDefaults.standard.set(1, forKey: "textSize")
         }
@@ -76,9 +83,7 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
             buttonBarView.backgroundColor = .white
             buttonBarView.backgroundView?.backgroundColor = .white
             buttonBarView.selectedBar.backgroundColor = .red
-            
         }
-        
         lblAppName.text = Constants.AppName
         let floaty = Floaty()
         floaty.itemButtonColor = colorConstants.redColor
@@ -135,9 +140,14 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
                 let data = try Data(contentsOf: url)
                 let decoder = JSONDecoder()
                 let jsonData = try decoder.decode(Menu.self, from: data)
-                
-                print("jsondata: \(jsonData)")
-                
+                for res in jsonData.body.results{
+                    headingArr.append(res.heading.headingName)
+                    submenu.removeAll()
+                    for i in res.heading.submenu{
+                        submenu.append(i.name)
+                    }
+                    subMenuArr.append(submenu)
+                }
                 return jsonData.body.results
             } catch {
                 print("error:\(error)")
@@ -186,7 +196,7 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
     }
     
     @IBAction func btnMenuActn(_ sender: Any) {
-       sideMenuTV.reloadData()
+        sideMenuTV.reloadData()
         self.view.bringSubview(toFront: sideView)
         if !isSideBarOpen{
             viewSideContainer.isHidden = false
@@ -235,16 +245,50 @@ extension HomeParentVC:CategoryListProtocol{
         self.reloadPagerTabStripView()
     }
 }
+
 extension HomeParentVC: UITableViewDelegate, UITableViewDataSource{
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return jsonData.count
+        if self.expandData[section].value(forKey: "isOpen") as! String == "1"{
+            return 0
+        }else{
+            let dataarray = self.expandData[section].value(forKey: "data") as! NSArray
+            return dataarray.count
+        }
+    }
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return self.expandData.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-         let cell = tableView.dequeueReusableCell(withIdentifier: "menuID", for:indexPath) as! MenuTVCell
-        cell.lblMenu.text = jsonData[indexPath.row].heading.headingName
+        let cell = tableView.dequeueReusableCell(withIdentifier: "menuID", for: indexPath) as! MenuTVCell
+        let dataarray = self.expandData[indexPath.section].value(forKey: "data") as! NSArray
+        cell.lblMenu.text = dataarray[indexPath.row] as? String
         return cell
     }
     
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView?{
+        let headerView = UIView(frame: CGRect(x: 0, y: 0, width: tableView.bounds.size.width, height: tableView.bounds.size.height))
+        headerView.backgroundColor = UIColor.gray
+        let label = UILabel(frame: CGRect(x: 5, y: 10, width: headerView.frame.size.width , height: headerView.frame.size.height))
+        label.text = headingArr[section]
+        label.font = UIFont(name: AppFontName.bold, size: 21)
+        label.sizeToFit()
+        headerView.addSubview(label)
+        headerView.tag = section + 100
+        
+        let tapgesture = UITapGestureRecognizer(target: self , action: #selector(self.sectionTapped(_:)))
+        headerView.addGestureRecognizer(tapgesture)
+        return headerView
+    }
+    
+    @objc func sectionTapped(_ sender: UITapGestureRecognizer){
+        if(self.expandData[(sender.view?.tag)! - 100].value(forKey: "isOpen") as! String == "1"){
+            self.expandData[(sender.view?.tag)! - 100].setValue("0", forKey: "isOpen")
+        }else{
+            self.expandData[(sender.view?.tag)! - 100].setValue("1", forKey: "isOpen")
+        }
+        self.sideMenuTV.reloadSections(IndexSet(integer: (sender.view?.tag)! - 100), with: .automatic)
+    }
     
 }
