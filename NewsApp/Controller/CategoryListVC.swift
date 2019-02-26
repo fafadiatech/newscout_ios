@@ -71,6 +71,7 @@ class CategoryListVC: UIViewController {
                 else if type == "monthly"{
                     self.monthlyTags = DBData
                 }
+                self.tableCategoryLIst.reloadData()
             case .Failure(let errorMsg) :
                 print(errorMsg)
             }
@@ -215,7 +216,7 @@ extension CategoryListVC:UITableViewDelegate, UITableViewDataSource{
             cell.lblCount.text =  String(dailyTags[indexPath.row].count)
         default:
             cell.lblCategoryName.text = monthlyTags[indexPath.row].tagName
-            cell.lblCount.text =  String(dailyTags[indexPath.row].count)
+            cell.lblCount.text =  String(monthlyTags[indexPath.row].count)
         }
         activityIndicator.stopAnimating()
         return cell

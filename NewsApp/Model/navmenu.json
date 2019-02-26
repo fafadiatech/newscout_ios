@@ -1,0 +1,389 @@
+{
+  "header": {
+    "status": "1"
+  },
+  "body": {
+    "results": [
+      {
+        "heading": {
+          "id": 1,
+          "name": "Sector Updates",
+          "submenu": [
+            {
+              "id": 1,
+              "name": "banking",
+              "tags": [
+                {
+                  "id": 1,
+                  "name": "bank_tag1"
+                },
+                {
+                  "id": 2,
+                  "name": "bank_tag2"
+                },
+                {
+                  "id": 3,
+                  "name": "bank_tag3"
+                }
+              ]
+            },
+            {
+              "id": 2,
+              "name": "retail industry",
+              "tags": [
+                {
+                  "id": 4,
+                  "name": "retail_industry_tag1"
+                },
+                {
+                  "id": 2,
+                  "name": "bank_tag2"
+                },
+                {
+                  "id": 5,
+                  "name": "retail_industry_tag2"
+                }
+              ]
+            },
+            {
+              "id": 3,
+              "name": "oil/energy industry",
+              "tags": [
+                {
+                  "id": 6,
+                  "name": "energy_tag1"
+                },
+                {
+                  "id": 7,
+                  "name": "oil_tag2"
+                },
+                {
+                  "id": 8,
+                  "name": "energy_tag3"
+                }
+              ]
+            },
+            {
+              "id": 4,
+              "name": "food & drink industry",
+              "tags": [
+                {
+                  "id": 9,
+                  "name": "f&d_tag1"
+                },
+                {
+                  "id": 2,
+                  "name": "bank_tag2"
+                },
+                {
+                  "id": 10,
+                  "name": "f&d_tag2"
+                },
+                {
+                  "id": 11,
+                  "name": "f&d_tag3"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "heading": {
+          "id": 2,
+          "name": "Regional Updates",
+          "submenu": [
+            {
+              "id": 5,
+              "name": "US",
+              "tags": [
+                {
+                  "id": 12,
+                  "name": "us_tag1"
+                },
+                {
+                  "id": 13,
+                  "name": "us_tag2"
+                },
+                {
+                  "id": 3,
+                  "name": "bank_tag3"
+                },
+                {
+                  "id": 14,
+                  "name": "us_tag3"
+                }
+              ]
+            },
+            {
+              "id": 6,
+              "name": "china",
+              "tags": [
+                {
+                  "id": 15,
+                  "name": "china_tag1"
+                },
+                {
+                  "id": 9,
+                  "name": "f&d_tag1"
+                },
+                {
+                  "id": 16,
+                  "name": "china_tag2"
+                }
+              ]
+            },
+            {
+              "id": 7,
+              "name": "asia",
+              "tags": [
+                {
+                  "id": 17,
+                  "name": "asia_tag1"
+                },
+                {
+                  "id": 18,
+                  "name": "asia_tag2"
+                },
+                {
+                  "id": 7,
+                  "name": "oil_tag2"
+                },
+                {
+                  "id": 19,
+                  "name": "asia_tag3"
+                }
+              ]
+            },
+            {
+              "id": 8,
+              "name": "japan",
+              "tags": [
+                {
+                  "id": 20,
+                  "name": "japan_tag1"
+                },
+                {
+                  "id": 21,
+                  "name": "japan_tag2"
+                },
+                {
+                  "id": 22,
+                  "name": "japan_tag3"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "heading": {
+          "id": 3,
+          "name": "Finance",
+          "submenu": [
+            {
+              "id": 9,
+              "name": "recession/financial crisis",
+              "tags": [
+                {
+                  "id": 23,
+                  "name": "rfc_tag1"
+                },
+                {
+                  "id": 15,
+                  "name": "china_tag1"
+                },
+                {
+                  "id": 24,
+                  "name": "rfc_tag2"
+                },
+                {
+                  "id": 25,
+                  "name": "rfc_tag3"
+                }
+              ]
+            },
+            {
+              "id": 10,
+              "name": "personal finance",
+              "tags": [
+                {
+                  "id": 26,
+                  "name": "pf_tag1"
+                },
+                {
+                  "id": 20,
+                  "name": "japan_tag1"
+                },
+                {
+                  "id": 27,
+                  "name": "pf_tag2"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "heading": {
+          "id": 4,
+          "name": "Economics",
+          "submenu": [
+            {
+              "id": 11,
+              "name": "economic policy",
+              "tags": [
+                {
+                  "id": 28,
+                  "name": "ep_tag1"
+                },
+                {
+                  "id": 29,
+                  "name": "ep_tag2"
+                },
+                {
+                  "id": 30,
+                  "name": "ep_tag3"
+                },
+                {
+                  "id": 3,
+                  "name": "bank_tag3"
+                },
+                {
+                  "id": 14,
+                  "name": "us_tag3"
+                }
+              ]
+            },
+            {
+              "id": 12,
+              "name": "us economy",
+              "tags": [
+                {
+                  "id": 31,
+                  "name": "ue_tag1"
+                },
+                {
+                  "id": 32,
+                  "name": "ue_tag2"
+                }
+              ]
+            },
+            {
+              "id": 13,
+              "name": "global economy",
+              "tags": [
+                {
+                  "id": 33,
+                  "name": "ge_tag1"
+                },
+                {
+                  "id": 34,
+                  "name": "ge_tag2"
+                },
+                {
+                  "id": 17,
+                  "name": "asia_tag1"
+                },
+                {
+                  "id": 35,
+                  "name": "ge_tag3"
+                }
+              ]
+            },
+            {
+              "id": 14,
+              "name": "housing market",
+              "tags": [
+                {
+                  "id": 36,
+                  "name": "hm_tag1"
+                },
+                {
+                  "id": 37,
+                  "name": "hm_tag2"
+                },
+                {
+                  "id": 38,
+                  "name": "hm_tag3"
+                }
+              ]
+            },
+            {
+              "id": 15,
+              "name": "interest rates",
+              "tags": [
+                {
+                  "id": 39,
+                  "name": "ir_tag1"
+                },
+                {
+                  "id": 40,
+                  "name": "ir_tag2"
+                },
+                {
+                  "id": 41,
+                  "name": "ir_tag3"
+                }
+              ]
+            },
+            {
+              "id": 16,
+              "name": "economic growth (gdp)",
+              "tags": [
+                {
+                  "id": 42,
+                  "name": "gdp_tag1"
+                },
+                {
+                  "id": 43,
+                  "name": "gdp_tag2"
+                },
+                {
+                  "id": 44,
+                  "name": "gdp_tag3"
+                }
+              ]
+            },
+            {
+              "id": 17,
+              "name": "commodities",
+              "tags": [
+                {
+                  "id": 45,
+                  "name": "co_tag1"
+                },
+                {
+                  "id": 46,
+                  "name": "co_tag2"
+                },
+                {
+                  "id": 47,
+                  "name": "co_tag3"
+                }
+              ]
+            },
+            {
+              "id": 18,
+              "name": "inflation",
+              "tags": [
+                {
+                  "id": 48,
+                  "name": "in_tag1"
+                },
+                {
+                  "id": 49,
+                  "name": "in_tag2"
+                },
+                {
+                  "id": 50,
+                  "name": "in_tag3"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    ]
+  }
+}
