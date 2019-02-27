@@ -162,6 +162,7 @@ class DBManager{
         do {
             let ShowArticle = try (managedContext?.fetch(fetchRequest))!
             return ArticleDBfetchResult.Success(ShowArticle as! [NewsArticle])
+            
         } catch let error as NSError {
             print("Could not fetch. \(error), \(error.userInfo)")
             return ArticleDBfetchResult.Failure(error as! String)

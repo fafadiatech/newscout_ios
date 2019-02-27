@@ -11,14 +11,6 @@ import XLPagerTabStrip
 import Floaty
 import NightNight
 
-struct ExpandableNames {
-    var isExpanded : Bool
-    var names : [String]
-}
-
-struct Contact {
-    let names : String
-}
 class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
     
     @IBOutlet weak var viewAppTitle: UIView!
@@ -28,8 +20,7 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
     @IBOutlet weak var btnMenu: UIButton!
     @IBOutlet weak var viewSideContainer: UIView!
     var childrenVC = [UIViewController]()
-    var categories : [String] = []
-    let arr = ["abc", "xyz", "pqr"]
+    var categories = ["Sector Updates", "Regional Updates", "Finance", "Economics"]
     var isSideBarOpen : Bool = Bool()
     var jsonData : [Result] = []
     var expandData = [NSMutableDictionary]()
@@ -63,7 +54,7 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
             self.expandData.append(["isOpen":"1","data": subMenuArr[j]])
             j = j + 1
         }
-        categories = UserDefaults.standard.array(forKey: "categories") as! [String]
+        
         //        for  res in jsonData{
         //            if !categories.contains(res.heading.headingName){
         //            categories.append(res.heading.headingName)
@@ -210,12 +201,6 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
         
         //Clear children viewcontrollers
         childrenVC.removeAll()
-        
-        categories = UserDefaults.standard.array(forKey: "categories") as! [String]
-        for  res in jsonData{
-            categories.append(res.heading.headingName)
-        }
-        UserDefaults.standard.set(categories, forKey: "categories")
         for cat in categories
         {
             let childVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "HomeVC") as! HomeVC
@@ -225,27 +210,12 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
         }
         //Append CategoryListVC in the end
         let childMore = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "CategoryListID") as! CategoryListVC
-        childMore.protocolObj = self
         childrenVC.append(childMore)
         return childrenVC
     }
     
 }
 
-extension HomeParentVC:CategoryListProtocol{
-    
-    func updateCategoryList(catName: String) {
-        categories.append(catName)
-        UserDefaults.standard.set(categories, forKey: "categories")
-        self.reloadPagerTabStripView()
-    }
-    
-    func deleteCategory(currentCategory: String) {
-        categories = categories.filter{$0 != currentCategory}
-        UserDefaults.standard.set(categories, forKey: "categories")
-        self.reloadPagerTabStripView()
-    }
-}
 
 extension HomeParentVC: UITableViewDelegate, UITableViewDataSource{
        func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -256,10 +226,11 @@ extension HomeParentVC: UITableViewDelegate, UITableViewDataSource{
             }
         }
         let homeObj =  HomeVC()
+        homeObj.selectedCategory = subMenuArr[indexPath.section][indexPath.row]
         homeObj.saveArticlesInDB(url:url)
        
     }
-//
+
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if self.expandData[section].value(forKey: "isOpen") as! String == "1"{
             return 0

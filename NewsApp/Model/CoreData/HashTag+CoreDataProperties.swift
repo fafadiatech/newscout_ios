@@ -2,7 +2,7 @@
 //  HashTag+CoreDataProperties.swift
 //  NewsApp
 //
-//  Created by Jayashree on 23/02/19.
+//  Created by Jayashree on 27/02/19.
 //  Copyright © 2019 Fafadia Tech. All rights reserved.
 //
 //
@@ -17,9 +17,9 @@ extension HashTag {
         return NSFetchRequest<HashTag>(entityName: "HashTag")
     }
 
+    @NSManaged public var articleCount: Int64
     @NSManaged public var articleId: Int64
     @NSManaged public var name: String?
     @NSManaged public var tagId: Int64
-    @NSManaged public var articleCount: Int64
 
 }

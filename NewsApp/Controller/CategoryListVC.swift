@@ -12,20 +12,10 @@ import MaterialComponents.MaterialActivityIndicator
 import NightNight
 import CoreData
 
-protocol CategoryListProtocol {
-    func updateCategoryList(catName: String)
-    func deleteCategory(currentCategory: String)
-}
-
 class CategoryListVC: UIViewController {
     
     @IBOutlet weak var tableCategoryLIst: UITableView!
-    var protocolObj : CategoryListProtocol?
-    var showCategory = [Category]()
-    var CategoryData = [CategoryList]()
-    var selectedCat = ""
     let activityIndicator = MDCActivityIndicator()
-    var  categories : [String] = []
     var tagData = [PeriodicTags]()
     var dailyTags = [PeriodicTags]()
     var monthlyTags = [PeriodicTags]()
@@ -37,7 +27,6 @@ class CategoryListVC: UIViewController {
         super.viewDidLoad()
         NotificationCenter.default.addObserver(self, selector: #selector(darkModeEnabled(_:)), name: .darkModeEnabled, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(darkModeDisabled(_:)), name: .darkModeDisabled, object: nil)
-        categories = UserDefaults.standard.array(forKey: "categories") as! [String]
         activityIndicator.cycleColors = [.blue]
         activityIndicator.frame = CGRect(x: view.frame.width/2, y: view.frame.height/2 - 100, width: 40, height: 40)
         activityIndicator.sizeToFit()
@@ -103,41 +92,12 @@ class CategoryListVC: UIViewController {
         self.dismiss(animated:false)
     }
     
-    func fetchCategoryFromDB(){
-        let result = DBManager().FetchCategoryFromDB()
-        switch result {
-        case .Success(let DBData) :
-            self.showCategory = DBData
-            self.tableCategoryLIst.reloadData()
-        case .Failure(let errorMsg) :
-            self.tableCategoryLIst.makeToast(errorMsg, duration: 2.0, position: .center)
-        }
-    }
-    
-    func saveCategoryInDB(){
-        DBManager().SaveCategoryDB{response in
-            if response == true{
-                self.fetchCategoryFromDB()
-            }
-        }
-    }
-    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
 }
 
 extension CategoryListVC:UITableViewDelegate, UITableViewDataSource{
-    func SaveRemoveCategoryAPICall(type: String){
-        APICall().saveRemoveCategoryAPI(category: selectedCat, type: type){response in
-            switch response {
-            case .Success(let msg) :
-                self.tableCategoryLIst.makeToast(msg, duration: 2.0, position: .center)
-            case .Failure(let error) :
-                self.tableCategoryLIst.makeToast(error, duration: 2.0, position: .center)
-            }
-        }
-    }
     func numberOfSections(in tableView: UITableView) -> Int {
         return headerArr.count
     }
@@ -223,27 +183,13 @@ extension CategoryListVC:UITableViewDelegate, UITableViewDataSource{
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        selectedCat = showCategory[indexPath.row].title!
-        
-        if !categories.contains(selectedCat){
-            protocolObj?.updateCategoryList(catName: selectedCat)
-            SaveRemoveCategoryAPICall(type: "save")
-            let Homevc = HomeVC()
-            Homevc.activityIndicator.startAnimating()
-            Homevc.selectedCategory = selectedCat
-        }
-        else{
-            protocolObj?.deleteCategory(currentCategory: selectedCat)
-            SaveRemoveCategoryAPICall(type: "delete")
-            categories = UserDefaults.standard.array(forKey: "categories") as! [String]
-            tableCategoryLIst.reloadData()
-        }
+
     }
 }
 
 extension CategoryListVC:IndicatorInfoProvider{
     
     func indicatorInfo(for pagerTabStripController: PagerTabStripViewController) -> IndicatorInfo {
-        return IndicatorInfo(title: "Categories")
+        return IndicatorInfo(title: "Tags")
     }
 }

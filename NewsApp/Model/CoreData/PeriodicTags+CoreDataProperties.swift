@@ -2,7 +2,7 @@
 //  PeriodicTags+CoreDataProperties.swift
 //  NewsApp
 //
-//  Created by Jayashree on 25/02/19.
+//  Created by Jayashree on 27/02/19.
 //  Copyright © 2019 Fafadia Tech. All rights reserved.
 //
 //
@@ -17,8 +17,8 @@ extension PeriodicTags {
         return NSFetchRequest<PeriodicTags>(entityName: "PeriodicTags")
     }
 
-    @NSManaged public var tagName: String?
     @NSManaged public var count: Int64
+    @NSManaged public var tagName: String?
     @NSManaged public var type: String?
 
 }
