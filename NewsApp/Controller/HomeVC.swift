@@ -112,7 +112,7 @@ class HomeVC: UIViewController{
                     self.filterNews(selectedCat: selectedCategory )
                     
                 }
-                self.HomeNewsTV.reloadData()
+                //self.HomeNewsTV.reloadData()
             }
             
         case .Failure(let errorMsg) :

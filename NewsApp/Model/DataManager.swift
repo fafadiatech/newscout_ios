@@ -70,7 +70,7 @@ class DBManager{
                             newArticle.published_on = news.published_on
                             newArticle.blurb = news.blurb
                             newArticle.category = news.category
-                            
+                            newArticle.tags = news.hash_tags
                           /*  if news.hash_tags.count > 0 {
                                 for tag in news.hash_tags {
                                     if  self.someEntityExists(id: 0 , entity: "HashTag", keyword: tag.name) == false

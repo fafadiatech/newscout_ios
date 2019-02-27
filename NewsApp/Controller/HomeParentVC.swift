@@ -257,7 +257,7 @@ extension HomeParentVC: UITableViewDelegate, UITableViewDataSource{
         }
         let homeObj =  HomeVC()
         homeObj.saveArticlesInDB(url:url)
-        print("tag url is:\(url)" )
+       
     }
 //
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

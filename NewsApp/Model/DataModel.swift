@@ -23,6 +23,7 @@ struct articleBody : Decodable{
     let previous : String?
     var articles : [Article]
     var categoryDetail : CategoryDetails?
+   // var filters : [ArticleFilter]?
     
     enum CodingKeys: String, CodingKey{
         case articles = "results"
@@ -32,7 +33,26 @@ struct articleBody : Decodable{
         case categoryDetail = "category"
         case current_page
         case total_pages
+      //  case filters
     }
+}
+
+struct ArticleFilter : Decodable{
+    let category : [FilterCategory]
+    let source : [FilterCategory]
+    let hash_tags : [FilterCategory]
+}
+struct FilterCategory : Decodable{
+    let key : String
+    let doc_count : Int
+}
+struct sourceCat : Decodable{
+    let key : String
+    let doc_count : Int
+}
+struct tagCat : Decodable{
+    let key : String
+    let doc_count : Int
 }
 
 struct Article: Decodable{
@@ -44,7 +64,7 @@ struct Article: Decodable{
     var url : String?
     var published_on : String?
     var blurb : String?
-    var hash_tags : [Tag]
+    var hash_tags : [String]
     var article_media : [ArticleMedia]?
     
     enum CodingKeys: String, CodingKey{
@@ -127,8 +147,10 @@ struct ArticleMedia: Decodable{
     let media_id : Int
     let category : String
     let img_url : String
-    let video_url : String
+    let video_url : String?
     let article_id : Int
+    let created_at : String
+    let modified_at: String
     
     enum CodingKeys: String, CodingKey{
         case media_id = "id"
@@ -136,6 +158,8 @@ struct ArticleMedia: Decodable{
         case category
         case video_url
         case img_url = "url"
+        case created_at
+        case modified_at
     }
 }
 

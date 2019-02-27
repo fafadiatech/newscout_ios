@@ -85,6 +85,10 @@ class APICall{
                 if let err = response.result.error as? URLError, err.code == .notConnectedToInternet {
                     completion("no net", ArticleAPIResult.Failure(err.localizedDescription))
                 }
+                else{
+                    let err = response.result.error as? URLError
+                    print(err)
+                }
             }
         }
     }
