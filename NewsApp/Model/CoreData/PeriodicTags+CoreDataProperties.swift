@@ -2,7 +2,7 @@
 //  PeriodicTags+CoreDataProperties.swift
 //  NewsApp
 //
-//  Created by Jayashree on 27/02/19.
+//  Created by Jayashree on 28/02/19.
 //  Copyright © 2019 Fafadia Tech. All rights reserved.
 //
 //

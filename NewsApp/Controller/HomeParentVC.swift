@@ -226,9 +226,9 @@ extension HomeParentVC: UITableViewDelegate, UITableViewDataSource{
             }
         }
         let homeObj =  HomeVC()
-        homeObj.selectedCategory = subMenuArr[indexPath.section][indexPath.row]
         homeObj.saveArticlesInDB(url:url)
-       
+    UserDefaults.standard.set(subMenuArr[indexPath.section][indexPath.row], forKey: "selectedCategory")
+        
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

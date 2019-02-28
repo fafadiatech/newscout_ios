@@ -26,14 +26,17 @@ class HomeVC: UIViewController{
     var pageNum = 0
     var coredataRecordCount = 0
     var currentCategory = "All News"
-    var selectedCategory = "banking"
     var nextURL = ""
     var lastContentOffset: CGFloat = 0
     var articlesArr = [Article]()
     var categories = [String]()
+    var selectedCategory = ""
     
     override func viewDidLoad(){
         super.viewDidLoad()
+        if UserDefaults.standard.value(forKey: "selectedCategory") != nil{
+            selectedCategory = UserDefaults.standard.value(forKey: "selectedCategory") as! String
+        }
         self.activityIndicator.startAnimating()
         lblNonews.isHidden = true
         NotificationCenter.default.addObserver(self, selector: #selector(darkModeEnabled(_:)), name: .darkModeEnabled, object: nil)
@@ -75,13 +78,15 @@ class HomeVC: UIViewController{
         }
         if Reachability.isConnectedToNetwork(){
             activityIndicator.startAnimating()
-           // let url = APPURL.ArticlesByCategoryURL + "\(self.selectedCategory)"
-            self.fetchArticlesFromDB()
-           // self.saveArticlesInDB(url : "")
+            // let url = APPURL.ArticlesByCategoryURL + "\(self.selectedCategory)"
+            
+            // self.fetchArticlesFromDB()
+            self.saveArticlesInDB(url : "")
+            fetchByTags()
         }else{
             coredataRecordCount = DBManager().IsCoreDataEmpty(entity: "NewsArticle")
             if self.coredataRecordCount != 0 {
-                self.fetchArticlesFromDB()
+                self.fetchByTags()
             }
             else{
                 activityIndicator.stopAnimating()
@@ -90,18 +95,45 @@ class HomeVC: UIViewController{
         }
     }
     
+    func fetchByTags(){
+        var tags = [HashTag]()
+        if UserDefaults.standard.value(forKey: "selectedCategory") != nil{
+            selectedCategory = UserDefaults.standard.value(forKey: "selectedCategory") as! String
+        }
+        let managedContext =
+            appDelegate?.persistentContainer.viewContext
+        let fetchRequest =
+            NSFetchRequest<NewsArticle>(entityName: "NewsArticle")
+        let tagRequest =  NSFetchRequest<HashTag>(entityName: "HashTag")
+        
+          tagRequest.predicate = NSPredicate(format: "name contains[c] %@", selectedCategory)
+        do {
+            tags =  try (managedContext?.fetch(tagRequest))!
+        }catch let error as NSError {
+            print("Could not fetch. \(error), \(error.userInfo)")
+        }
+        for tag in tags{
+            fetchRequest.predicate = NSPredicate(format: "article_id = %d ",tag.articleId )
+            do {
+                var article =  try (managedContext?.fetch(fetchRequest))!
+                ShowArticle.append(article[0])
+            }catch let error as NSError {
+                print("Could not fetch. \(error), \(error.userInfo)")
+            }
+        }
+        HomeNewsTV.reloadData()
+    }
+    
     func fetchArticlesFromDB(){
         let result = DBManager().FetchDataFromDB(entity: "NewsArticle")
         switch result {
         case .Success(let DBData) :
             let articles = DBData
             if articles.count != 0{
-                for tag in articles[0].tags!{
-                    print(tag)
-                }
-                    self.filterNews(selectedTag: selectedCategory )
-               // self.ShowArticle = DBData
-               
+                
+                self.filterNews(selectedTag: selectedCategory )
+                // self.ShowArticle = DBData
+                
                 
                 self.HomeNewsTV.reloadData()
             }
@@ -111,14 +143,15 @@ class HomeVC: UIViewController{
         }
         if ShowArticle.count == 0{
             self.activityIndicator.stopAnimating()
-          //  lblNonews.isHidden = false
+            //  lblNonews.isHidden = false
         }
         
     }
     
     func saveArticlesInDB(url: String){
         DBManager().SaveDataDB(nextUrl: url){response in
-            self.fetchArticlesFromDB()
+            //self.fetchArticlesFromDB()
+            self.fetchByTags()
         }
     }
     
@@ -169,27 +202,26 @@ class HomeVC: UIViewController{
     }
     
     func filterNews(selectedTag : String){
-    let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "NewsArticle")
-        fetchRequest.predicate = NSPredicate(format: "tags  contains[c] %@", selectedCategory)
-    let managedContext =
-        self.appDelegate?.persistentContainer.viewContext
-    do {
-        self.ShowArticle = (try managedContext?.fetch(fetchRequest))! as! [NewsArticle]
+        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "NewsArticle")
+        let managedContext =
+            self.appDelegate?.persistentContainer.viewContext
+        do {
+            self.ShowArticle = (try managedContext?.fetch(fetchRequest))! as! [NewsArticle]
+        }
+        catch {
+            print("error executing fetch request: \(error)")
+        }
     }
-    catch {
-        print("error executing fetch request: \(error)")
-    }
-}
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-//        if tabBarTitle == "For You"{
-//            selectedCategory = "All News"
-//        }
-//        else{
-//            selectedCategory = tabBarTitle
-//        }
+        //        if tabBarTitle == "For You"{
+        //            selectedCategory = "All News"
+        //        }
+        //        else{
+        //            selectedCategory = tabBarTitle
+        //        }
     }
     
     func FetchArticlesAPICall(){

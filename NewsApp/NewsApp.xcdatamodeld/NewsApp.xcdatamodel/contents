@@ -12,10 +12,9 @@
         <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <entity name="HashTag" representedClassName="HashTag" syncable="YES">
-        <attribute name="articleCount" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="articleId" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="tagId" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <relationship name="articleTags" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="NewsArticle" inverseName="hashTags" inverseEntity="NewsArticle" syncable="YES"/>
     </entity>
     <entity name="LikeDislike" representedClassName="LikeDislike" syncable="YES">
         <attribute name="article_id" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
@@ -40,10 +39,10 @@
         <attribute name="published_on" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="source" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="source_url" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="tags" optional="YES" attributeType="Transformable" customClassName="[String]" syncable="YES"/>
         <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="total_pages" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <relationship name="bookmark" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="BookmarkArticles" inverseName="article" inverseEntity="BookmarkArticles" syncable="YES"/>
+        <relationship name="hashTags" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="HashTag" inverseName="articleTags" inverseEntity="HashTag" syncable="YES"/>
         <relationship name="likeDislike" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="LikeDislike" inverseName="likedArticle" inverseEntity="LikeDislike" syncable="YES"/>
     </entity>
     <entity name="NewsURL" representedClassName="NewsURL" syncable="YES">
@@ -71,7 +70,7 @@
     <elements>
         <element name="BookmarkArticles" positionX="405" positionY="18" width="128" height="120"/>
         <element name="Category" positionX="405" positionY="18" width="128" height="75"/>
-        <element name="HashTag" positionX="405" positionY="90" width="128" height="105"/>
+        <element name="HashTag" positionX="405" positionY="90" width="128" height="90"/>
         <element name="LikeDislike" positionX="405" positionY="36" width="128" height="120"/>
         <element name="Media" positionX="414" positionY="99" width="128" height="120"/>
         <element name="NewsArticle" positionX="407.63671875" positionY="-45.1953125" width="128" height="240"/>

@@ -70,18 +70,8 @@ class DBManager{
                             newArticle.published_on = news.published_on
                             newArticle.blurb = news.blurb
                             newArticle.category = news.category
-                            newArticle.tags = news.hash_tags
-                          /*  if news.hash_tags.count > 0 {
-                                for tag in news.hash_tags {
-                                    if  self.someEntityExists(id: 0 , entity: "HashTag", keyword: tag.name) == false
-                                    {
-                                        let newTag = HashTag(context: managedContext!)
-                                        newTag.name = tag.name
-                                        newTag.articleId = Int64(news.article_id)
-                                    }
-                                }
-                                
-                            }*/
+                            newArticle.current_page = Int64(self.ArticleData[0].body!.current_page)
+                            newArticle.total_pages = Int64(self.ArticleData[0].body!.total_pages)
                             if news.article_media!.count > 0 {
                                 for media in news.article_media!{
                                     if self.someEntityExists(id: media.media_id, entity: "Media", keyword: "") == false {
@@ -94,6 +84,16 @@ class DBManager{
                                     }
                                     
                                 }
+                            }
+                            if news.hash_tags.count > 0 {
+                                for tag in news.hash_tags {
+                                        let newTag = HashTag(context: managedContext!)
+                                        newTag.articleId = Int64(news.article_id!)
+                                        newTag.name = tag
+                                    newTag.addToArticleTags(newArticle)
+                                    //newArticle.addToHashTags(newTag)
+                                }
+                                
                             }
                             self.saveBlock()
                         }

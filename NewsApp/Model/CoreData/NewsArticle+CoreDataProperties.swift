@@ -2,7 +2,7 @@
 //  NewsArticle+CoreDataProperties.swift
 //  NewsApp
 //
-//  Created by Jayashree on 27/02/19.
+//  Created by Jayashree on 28/02/19.
 //  Copyright © 2019 Fafadia Tech. All rights reserved.
 //
 //
@@ -25,10 +25,27 @@ extension NewsArticle {
     @NSManaged public var published_on: String?
     @NSManaged public var source: String?
     @NSManaged public var source_url: String?
-    @NSManaged public var tags: [String]?
     @NSManaged public var title: String?
     @NSManaged public var total_pages: Int64
     @NSManaged public var bookmark: BookmarkArticles?
     @NSManaged public var likeDislike: LikeDislike?
+    @NSManaged public var hashTags: NSSet?
+
+}
+
+// MARK: Generated accessors for hashTags
+extension NewsArticle {
+
+    @objc(addHashTagsObject:)
+    @NSManaged public func addToHashTags(_ value: HashTag)
+
+    @objc(removeHashTagsObject:)
+    @NSManaged public func removeFromHashTags(_ value: HashTag)
+
+    @objc(addHashTags:)
+    @NSManaged public func addToHashTags(_ values: NSSet)
+
+    @objc(removeHashTags:)
+    @NSManaged public func removeFromHashTags(_ values: NSSet)
 
 }
