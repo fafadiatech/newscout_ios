@@ -43,7 +43,6 @@ class CategoryListVC: UIViewController {
         
         DBManager().saveTags()
         fetchTags()
-        tableCategoryLIst.reloadData()
     }
     
     func fetchTags(){
@@ -173,7 +172,7 @@ extension CategoryListVC:UITableViewDelegate, UITableViewDataSource{
             cell.lblCount.text =  String(dailyTags[indexPath.row].count)
         case 1:
             cell.lblCategoryName.text = weeklyTags[indexPath.row].tagName
-            cell.lblCount.text =  String(dailyTags[indexPath.row].count)
+            cell.lblCount.text =  String(weeklyTags[indexPath.row].count)
         default:
             cell.lblCategoryName.text = monthlyTags[indexPath.row].tagName
             cell.lblCount.text =  String(monthlyTags[indexPath.row].count)

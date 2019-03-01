@@ -13,6 +13,7 @@ import NightNight
 
 class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
     
+    @IBOutlet weak var subMenuCV: UICollectionView!
     @IBOutlet weak var viewAppTitle: UIView!
     @IBOutlet weak var lblAppName: UILabel!
     @IBOutlet weak var sideMenuTV: UITableView!
@@ -20,6 +21,8 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
     @IBOutlet weak var btnMenu: UIButton!
     @IBOutlet weak var viewSideContainer: UIView!
     var childrenVC = [UIViewController]()
+    var subchildern = [UIViewController]()
+    var submenuList = ["banking", "sub2", "sub3"]
     var categories = ["Sector Updates", "Regional Updates", "Finance", "Economics"]
     var isSideBarOpen : Bool = Bool()
     var jsonData : [Result] = []
@@ -197,6 +200,7 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
             sideMenuTV.isHidden = false
         }
     }
+    
     override func viewControllers(for pagerTabStripController: PagerTabStripViewController) -> [UIViewController] {
         
         //Clear children viewcontrollers
@@ -214,6 +218,42 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
         return childrenVC
     }
     
+    override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        if (collectionView == buttonBarView) {
+            return super.collectionView(collectionView, numberOfItemsInSection: section)
+        }
+        else{
+            return submenuList.count
+        }
+    }
+    
+    override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        if (collectionView == buttonBarView) {
+            return super.collectionView(collectionView, cellForItemAt: indexPath)
+        }
+        else{
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "subMenuID", for: indexPath) as! submenuCVCell
+            cell.lblSubMenu.text = submenuList[indexPath.row]
+            return cell
+        }
+    }
+  override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+    if (collectionView == buttonBarView) {
+        return super.collectionView(collectionView,didSelectItemAt: indexPath)
+    }
+    else{
+        
+        var url = APPURL.ArticlesByTagsURL + "tag=\(subMenuArr[indexPath.section][indexPath.row])"
+        if jsonData[0].heading.headingName == headingArr[indexPath.section]{
+            for temptag in jsonData[0].heading.submenu[indexPath.row].tags{
+                url = url + "&tag=" + temptag.name
+            }
+        }
+         UserDefaults.standard.set(subMenuArr[indexPath.section][indexPath.row], forKey: "selectedCategory")
+//       let homeObj = HomeVC()
+        homeObj.saveArticlesInDB(url:url)
+    }
+    }
 }
 
 
@@ -225,6 +265,7 @@ extension HomeParentVC: UITableViewDelegate, UITableViewDataSource{
                 url = url + "&tag=" + temptag.name
             }
         }
+        print("URL IS: \(url)")
         let homeObj =  HomeVC()
         homeObj.saveArticlesInDB(url:url)
     UserDefaults.standard.set(subMenuArr[indexPath.section][indexPath.row], forKey: "selectedCategory")
@@ -276,3 +317,4 @@ extension HomeParentVC: UITableViewDelegate, UITableViewDataSource{
     }
     
 }
+

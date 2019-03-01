@@ -78,10 +78,12 @@ class HomeVC: UIViewController{
         }
         if Reachability.isConnectedToNetwork(){
             activityIndicator.startAnimating()
-            // let url = APPURL.ArticlesByCategoryURL + "\(self.selectedCategory)"
+            if UserDefaults.standard.value(forKey: "selectedCategory") != nil{
+                selectedCategory = UserDefaults.standard.value(forKey: "selectedCategory") as! String
+            }
             
             // self.fetchArticlesFromDB()
-            self.saveArticlesInDB(url : "")
+            self.saveArticlesInDB(url : selectedCategory)
             fetchByTags()
         }else{
             coredataRecordCount = DBManager().IsCoreDataEmpty(entity: "NewsArticle")
