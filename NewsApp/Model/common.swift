@@ -117,7 +117,7 @@ struct themeColor{
 
 struct APPURL {
     private struct Domains {
-        static let Local = "http://192.168.2.204" // http://192.168.2.132:8000" // "http://192.168.2.204" //"http://192.168.2.151:8000"//
+        static let Local = "http://192.168.2.132:8000" // " // "http://192.168.2.204" //"http://192.168.2.151:8000"//
         static let Server = ""
         static let version = "/api/v1/"
     }
@@ -142,6 +142,7 @@ struct APPURL {
         static let getBookmarkList = Domains.version + "bookmark-articles/bookmark-news-list/"
         static let getTags = Domains.version + "tags/"
         static let ArticlesBytags = Domains.version + "article/search/?"
+        static let menu = Domains.version + "menus"
     }
     
     static let ArticlesURL = Domains.Local + Routes.Articles
@@ -163,6 +164,7 @@ struct APPURL {
     static let getBookmarkListURL = Domains.Local + Routes.getBookmarkList
     static let getTagsURL = Domains.Local + Routes.getTags
     static let ArticlesByTagsURL = Domains.Local + Routes.ArticlesBytags
+    static let getMenus = Domains.Local + Routes.menu
 }
 
 

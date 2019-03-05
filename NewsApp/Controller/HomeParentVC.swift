@@ -45,12 +45,11 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
         lblAppName.textColor = colorConstants.whiteColor
         
         let tap = UITapGestureRecognizer(target: self, action: #selector(self.handleTap(_:)))
-        
         viewSideContainer.addGestureRecognizer(tap)
         tap.cancelsTouchesInView = false
         viewSideContainer.isUserInteractionEnabled = true
         self.view.addSubview(viewSideContainer)
-        
+        DBManager().saveMenu()
         jsonData = loadJson(filename: "navmenu")!
         var j = 0
         for _ in headingArr{
@@ -223,7 +222,7 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
             return super.collectionView(collectionView, numberOfItemsInSection: section)
         }
         else{
-            return submenuList.count
+            return jsonData[0].heading.submenu.count
         }
     }
     
@@ -233,25 +232,28 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
         }
         else{
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "subMenuID", for: indexPath) as! submenuCVCell
-            cell.lblSubMenu.text = submenuList[indexPath.row]
+            cell.lblSubMenu.text = jsonData[indexPath.row].heading.submenu[indexPath.row].name
             return cell
         }
     }
   override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
     if (collectionView == buttonBarView) {
+        
         return super.collectionView(collectionView,didSelectItemAt: indexPath)
     }
     else{
-        
+       
         var url = APPURL.ArticlesByTagsURL + "tag=\(subMenuArr[indexPath.section][indexPath.row])"
         if jsonData[0].heading.headingName == headingArr[indexPath.section]{
-            for temptag in jsonData[0].heading.submenu[indexPath.row].tags{
+            for temptag in jsonData[0].heading.submenu[indexPath.row].hash_tags{
                 url = url + "&tag=" + temptag.name
             }
         }
+        UserDefaults.standard.set(url, forKey: "submenuURL")
          UserDefaults.standard.set(subMenuArr[indexPath.section][indexPath.row], forKey: "selectedCategory")
-//       let homeObj = HomeVC()
-        homeObj.saveArticlesInDB(url:url)
+     return super.collectionView(collectionView,didSelectItemAt: indexPath)
+      let homeObj = HomeVC()
+        //homeObj.saveArticlesInDB(url:url)
     }
     }
 }
@@ -261,7 +263,7 @@ extension HomeParentVC: UITableViewDelegate, UITableViewDataSource{
        func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
           var url = APPURL.ArticlesByTagsURL + "tag=\(subMenuArr[indexPath.section][indexPath.row])"
         if jsonData[0].heading.headingName == headingArr[indexPath.section]{
-            for temptag in jsonData[0].heading.submenu[indexPath.row].tags{
+            for temptag in jsonData[0].heading.submenu[indexPath.row].hash_tags{
                 url = url + "&tag=" + temptag.name
             }
         }

@@ -795,4 +795,35 @@ class DBManager{
             return PeriodicTagDBfetchResult.Failure(error as! String)
         }
     }
+    
+    func saveMenu(){
+        var menuData =  [Menu]()
+        let managedContext =
+            appDelegate?.persistentContainer.viewContext
+        APICall().getMenu{
+            response  in
+            switch response {
+            case .Success(let data) :
+                 menuData = data
+                 if  menuData[0].header.status == "1"{
+                    for res in menuData[0].body.results{
+                        let newheading = MenuHeadings(context: managedContext!)
+                        newheading.headingName =  res.heading.headingName
+                        newheading.headingId = Int64(res.heading.headingId)
+
+                             let newsubMenu = HeadingSubMenu(context: managedContext!)
+                            newsubMenu.subMenuName = sub.name
+                            newsubMenu.subMenuId = Int64(sub.id)
+                            newsubMenu.headingId = Int64(res.heading.headingId)
+                        }
+                    }
+                    self.saveBlock()
+                    }
+                
+            case .Failure(let errormessage) :
+                print(errormessage)
+                
+            }
+        }
+    }
 }

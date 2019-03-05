@@ -83,8 +83,11 @@ class HomeVC: UIViewController{
             }
             
             // self.fetchArticlesFromDB()
-            self.saveArticlesInDB(url : selectedCategory)
+            if UserDefaults.standard.value(forKey: "submenuURL") != nil{
+            var submenuURL = UserDefaults.standard.value(forKey: "submenuURL") as! String
+            self.saveArticlesInDB(url : submenuURL)
             fetchByTags()
+            }
         }else{
             coredataRecordCount = DBManager().IsCoreDataEmpty(entity: "NewsArticle")
             if self.coredataRecordCount != 0 {
@@ -151,7 +154,11 @@ class HomeVC: UIViewController{
     }
     
     func saveArticlesInDB(url: String){
-        DBManager().SaveDataDB(nextUrl: url){response in
+        var subMenuURL = ""
+        if UserDefaults.standard.value(forKey: "submenuURL") != nil{
+         subMenuURL =  UserDefaults.standard.value(forKey: "submenuURL") as! String
+        }
+        DBManager().SaveDataDB(nextUrl: subMenuURL ){response in
             //self.fetchArticlesFromDB()
             self.fetchByTags()
         }

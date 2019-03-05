@@ -242,7 +242,7 @@ struct Heading : Decodable{
 struct SubMenu : Decodable{
     let id : Int
     let name : String
-    let tags : [TagList]
+    let hash_tags : [TagList]
 }
 
 struct TagList : Decodable{
@@ -342,6 +342,16 @@ enum NextURLDBfetchResult {
 
 enum PeriodicTagDBfetchResult {
     case Success([PeriodicTags])
+    case Failure(String)
+}
+
+enum MenuAPIResult {
+    case Success([Menu])
+    case Failure(String)
+}
+
+enum MenuDBFetchResult {
+    case Success([Menu])
     case Failure(String)
 }
 

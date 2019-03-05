@@ -66,7 +66,7 @@ class APICall{
             response in
             if(response.result.isSuccess){
                 if let data = response.data {
-                    let jsonDecoder = JSONDecoder()
+                     let jsonDecoder = JSONDecoder()
                     do {
                         if response.response?.statusCode == 404{
                             completion("error 404",ArticleAPIResult.Change(404))
@@ -709,6 +709,31 @@ class APICall{
             else{
                 if let err = response.result.error as? URLError, err.code == .notConnectedToInternet {
                     completion(DailyTagAPIResult.Failure(Constants.InternetErrorMsg))
+                }
+            }
+        }
+    }
+    
+    func getMenu(_ completion : @escaping (MenuAPIResult) ->()){
+        Alamofire.request(APPURL.getMenus, method: .get).responseString{
+            response in
+            print("menu response: \(response)")
+            if(response.result.isSuccess){
+                if let data = response.data {
+                    let jsonDecoder = JSONDecoder()
+                    do {
+                        let jsonData = try jsonDecoder.decode(Menu.self, from: data)
+                        completion(MenuAPIResult.Success([jsonData]))
+                    }
+                    catch {
+                        completion(MenuAPIResult.Failure(error.localizedDescription
+                        ))
+                    }
+                }
+            }
+            else{
+                if let err = response.result.error as? URLError, err.code == .notConnectedToInternet {
+                    completion(MenuAPIResult.Failure(Constants.InternetErrorMsg))
                 }
             }
         }

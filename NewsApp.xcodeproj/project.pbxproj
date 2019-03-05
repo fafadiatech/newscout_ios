@@ -57,6 +57,12 @@
 		269A53D622016D6B0031DD78 /* BookmarkDetailVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 269A53D522016D6B0031DD78 /* BookmarkDetailVC.swift */; };
 		26ACEA94216733BA000EF3C7 /* CategoryListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26ACEA93216733BA000EF3C7 /* CategoryListVC.swift */; };
 		26ACEA96216738BB000EF3C7 /* CategoryListTVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26ACEA95216738BB000EF3C7 /* CategoryListTVCell.swift */; };
+		26BEF806222E77700002DEBD /* MenuHashTag+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26BEF800222E77700002DEBD /* MenuHashTag+CoreDataClass.swift */; };
+		26BEF807222E77700002DEBD /* MenuHashTag+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26BEF801222E77700002DEBD /* MenuHashTag+CoreDataProperties.swift */; };
+		26BEF80A222E77700002DEBD /* MenuHeadings+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26BEF804222E77700002DEBD /* MenuHeadings+CoreDataClass.swift */; };
+		26BEF80B222E77700002DEBD /* MenuHeadings+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26BEF805222E77700002DEBD /* MenuHeadings+CoreDataProperties.swift */; };
+		26BEF80E222E7C9F0002DEBD /* HeadingSubMenu+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26BEF80C222E7C9F0002DEBD /* HeadingSubMenu+CoreDataClass.swift */; };
+		26BEF80F222E7C9F0002DEBD /* HeadingSubMenu+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26BEF80D222E7C9F0002DEBD /* HeadingSubMenu+CoreDataProperties.swift */; };
 		26C24721219D95D000A87A3B /* GmailCredentials.plist in Resources */ = {isa = PBXBuildFile; fileRef = 26C24720219D95CF00A87A3B /* GmailCredentials.plist */; };
 		26C24723219DA6C200A87A3B /* ForgotPasswordVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26C24722219DA6C200A87A3B /* ForgotPasswordVC.swift */; };
 		26D3C90A21CBAC9C003F7331 /* AVPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26D3C90921CBAC9C003F7331 /* AVPlayerView.swift */; };
@@ -161,6 +167,12 @@
 		269A53D522016D6B0031DD78 /* BookmarkDetailVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkDetailVC.swift; sourceTree = "<group>"; };
 		26ACEA93216733BA000EF3C7 /* CategoryListVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryListVC.swift; sourceTree = "<group>"; };
 		26ACEA95216738BB000EF3C7 /* CategoryListTVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryListTVCell.swift; sourceTree = "<group>"; };
+		26BEF800222E77700002DEBD /* MenuHashTag+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MenuHashTag+CoreDataClass.swift"; sourceTree = "<group>"; };
+		26BEF801222E77700002DEBD /* MenuHashTag+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MenuHashTag+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		26BEF804222E77700002DEBD /* MenuHeadings+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MenuHeadings+CoreDataClass.swift"; sourceTree = "<group>"; };
+		26BEF805222E77700002DEBD /* MenuHeadings+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MenuHeadings+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		26BEF80C222E7C9F0002DEBD /* HeadingSubMenu+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HeadingSubMenu+CoreDataClass.swift"; sourceTree = "<group>"; };
+		26BEF80D222E7C9F0002DEBD /* HeadingSubMenu+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HeadingSubMenu+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		26C24720219D95CF00A87A3B /* GmailCredentials.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = GmailCredentials.plist; sourceTree = "<group>"; };
 		26C24722219DA6C200A87A3B /* ForgotPasswordVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForgotPasswordVC.swift; sourceTree = "<group>"; };
 		26D3C90921CBAC9C003F7331 /* AVPlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AVPlayerView.swift; sourceTree = "<group>"; };
@@ -246,6 +258,12 @@
 		260FB9DB222168D5008B0291 /* CoreData */ = {
 			isa = PBXGroup;
 			children = (
+				26BEF80C222E7C9F0002DEBD /* HeadingSubMenu+CoreDataClass.swift */,
+				26BEF80D222E7C9F0002DEBD /* HeadingSubMenu+CoreDataProperties.swift */,
+				26BEF800222E77700002DEBD /* MenuHashTag+CoreDataClass.swift */,
+				26BEF801222E77700002DEBD /* MenuHashTag+CoreDataProperties.swift */,
+				26BEF804222E77700002DEBD /* MenuHeadings+CoreDataClass.swift */,
+				26BEF805222E77700002DEBD /* MenuHeadings+CoreDataProperties.swift */,
 				26DE849A2223CC1C000A32F7 /* PeriodicTags+CoreDataClass.swift */,
 				26DE849B2223CC1C000A32F7 /* PeriodicTags+CoreDataProperties.swift */,
 				260FB9BB2221656F008B0291 /* HashTag+CoreDataClass.swift */,
@@ -741,6 +759,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				260FB9D12221656F008B0291 /* LikeDislike+CoreDataClass.swift in Sources */,
+				26BEF80A222E77700002DEBD /* MenuHeadings+CoreDataClass.swift in Sources */,
 				260FB9CF2221656F008B0291 /* BookmarkArticles+CoreDataClass.swift in Sources */,
 				421ADFBB2156407400C00F6F /* HomeVC.swift in Sources */,
 				264C5396219AAAD60050F79D /* Toast.swift in Sources */,
@@ -760,16 +779,21 @@
 				261AA131217F40D20044585C /* APIManager.swift in Sources */,
 				263421EF216230F900C8510F /* SignUpVC.swift in Sources */,
 				260FB9D02221656F008B0291 /* BookmarkArticles+CoreDataProperties.swift in Sources */,
+				26BEF80B222E77700002DEBD /* MenuHeadings+CoreDataProperties.swift in Sources */,
 				26ACEA96216738BB000EF3C7 /* CategoryListTVCell.swift in Sources */,
 				42D12BF2215A0AEB0085EF12 /* SearchVC.swift in Sources */,
 				260FB9D82221656F008B0291 /* Category+CoreDataProperties.swift in Sources */,
+				26BEF806222E77700002DEBD /* MenuHashTag+CoreDataClass.swift in Sources */,
 				421ADFC12156407400C00F6F /* NewsApp.xcdatamodeld in Sources */,
 				4265E20821B8E9F800C3F0D7 /* NotificationsName+Extensions.swift in Sources */,
+				26BEF807222E77700002DEBD /* MenuHashTag+CoreDataProperties.swift in Sources */,
 				2690F3CC21BF8C12003E65CA /* SettingsTVCell.swift in Sources */,
 				260FB9CB2221656F008B0291 /* HashTag+CoreDataClass.swift in Sources */,
 				26D3C90A21CBAC9C003F7331 /* AVPlayerView.swift in Sources */,
+				26BEF80E222E7C9F0002DEBD /* HeadingSubMenu+CoreDataClass.swift in Sources */,
 				42D12BF4215A0FA60085EF12 /* common.swift in Sources */,
 				263F2D8F216B2DEE00764C45 /* DataModel.swift in Sources */,
+				26BEF80F222E7C9F0002DEBD /* HeadingSubMenu+CoreDataProperties.swift in Sources */,
 				260FB9DA2221656F008B0291 /* NewsURL+CoreDataProperties.swift in Sources */,
 				269A53D622016D6B0031DD78 /* BookmarkDetailVC.swift in Sources */,
 				264E30492229032C00F73147 /* ChildViewController.swift in Sources */,
@@ -972,7 +996,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = FHCLSYM87Q;
-				INFOPLIST_FILE = NewsApp/Info.plist;
+				INFOPLIST_FILE = /Users/jayashree/Codes/iOS/newsapp_ios/NewsApp/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.fafadiatech.Newscout;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -991,7 +1015,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = FHCLSYM87Q;
-				INFOPLIST_FILE = NewsApp/Info.plist;
+				INFOPLIST_FILE = /Users/jayashree/Codes/iOS/newsapp_ios/NewsApp/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.fafadiatech.Newscout;
 				PRODUCT_NAME = "$(TARGET_NAME)";
