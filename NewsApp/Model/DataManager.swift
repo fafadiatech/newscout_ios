@@ -115,10 +115,16 @@ class DBManager{
         if entity == "NewsArticle" || entity == "BookmarkArticles" || entity == "LikeDislike" || entity == "SearchArticles" {
             fetchRequest.predicate = NSPredicate(format: "article_id == \(id)")
         }
-        else if entity == "NewsURL" || entity == "Category" || entity == "Media"{
+        else if entity == "NewsURL" || entity == "Category" || entity == "Media" || entity == "MenuHeadings" || entity == "HeadingSubMenu"{
             if entity == "Media"{
                 fetchRequest.predicate = NSPredicate(format: "mediaId == \(id)")
-            }else{
+            }else if entity == "MenuHeadings"{
+                fetchRequest.predicate = NSPredicate(format: "headingId == \(id)")
+            }
+            else if entity == "HeadingSubMenu"{
+                fetchRequest.predicate = NSPredicate(format: "subMenuId == \(id)")
+            }
+            else{
                 fetchRequest.predicate = NSPredicate(format: "cat_id == \(id)")
             }
         }
@@ -796,7 +802,7 @@ class DBManager{
         }
     }
     
-    func saveMenu(){
+    func saveMenu(_ completion : @escaping (Bool) -> ()){
         var menuData =  [Menu]()
         let managedContext =
             appDelegate?.persistentContainer.viewContext
@@ -807,23 +813,74 @@ class DBManager{
                  menuData = data
                  if  menuData[0].header.status == "1"{
                     for res in menuData[0].body.results{
+                        if self.someEntityExists(id: res.heading.headingId, entity: "MenuHeadings", keyword: "") == false{
                         let newheading = MenuHeadings(context: managedContext!)
                         newheading.headingName =  res.heading.headingName
                         newheading.headingId = Int64(res.heading.headingId)
-
+                        }
+                        for sub in res.heading.submenu{
+                            if self.someEntityExists(id: sub.id, entity: "HeadingSubMenu", keyword: "") == false{
                              let newsubMenu = HeadingSubMenu(context: managedContext!)
                             newsubMenu.subMenuName = sub.name
                             newsubMenu.subMenuId = Int64(sub.id)
                             newsubMenu.headingId = Int64(res.heading.headingId)
+                            }
                         }
                     }
                     self.saveBlock()
                     }
+                completion(true)
                 
             case .Failure(let errormessage) :
-                print(errormessage)
+               completion(false)
                 
             }
+        }
+    }
+    
+    func fetchMenu() -> HeadingsDBFetchResult{
+        var headingsData = [MenuHeadings]()
+        let managedContext =
+            appDelegate?.persistentContainer.viewContext
+        let headingfetchRequest =
+            NSFetchRequest<MenuHeadings>(entityName: "MenuHeadings")
+       
+        do {
+             headingsData = try (managedContext?.fetch(headingfetchRequest))!
+            return HeadingsDBFetchResult.Success(headingsData)
+        } catch let error as NSError {
+            return HeadingsDBFetchResult.Failure(error as! String)
+        }
+    }
+   
+       
+    
+    func fetchSubMenu(headingId : Int) -> SubMenuDBFetchResult{
+          var subMenuData = [HeadingSubMenu]()
+         var subMenuArr = [[String]]()
+        let managedContext =
+            appDelegate?.persistentContainer.viewContext
+        let subMenufetchRequest = NSFetchRequest<HeadingSubMenu>(entityName: "HeadingSubMenu")
+        
+            do {
+                subMenufetchRequest.predicate = NSPredicate(format: "headingId = %d",headingId)
+                subMenuData = try (managedContext?.fetch(subMenufetchRequest))!
+            } catch let error as NSError {
+                return SubMenuDBFetchResult.Failure(error as! String)
+            }
+         return SubMenuDBFetchResult.Success(subMenuData)
+    }
+    
+    func fetchMenuTags() -> MenuHashTagDBFetchResult{
+        let managedContext =
+            appDelegate?.persistentContainer.viewContext
+        let tagfetchRequest = NSFetchRequest<MenuHashTag>(entityName:"MenuHashTag")
+        
+        do {
+            let tagsData = try (managedContext?.fetch(tagfetchRequest))!
+            return MenuHashTagDBFetchResult.Success(tagsData)
+        } catch let error as NSError {
+            return MenuHashTagDBFetchResult.Failure(error as! String)
         }
     }
 }

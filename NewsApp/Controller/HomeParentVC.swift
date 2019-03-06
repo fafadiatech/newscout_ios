@@ -16,53 +16,28 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
     @IBOutlet weak var subMenuCV: UICollectionView!
     @IBOutlet weak var viewAppTitle: UIView!
     @IBOutlet weak var lblAppName: UILabel!
-    @IBOutlet weak var sideMenuTV: UITableView!
-    @IBOutlet weak var sideView: UIView!
-    @IBOutlet weak var btnMenu: UIButton!
-    @IBOutlet weak var viewSideContainer: UIView!
     var childrenVC = [UIViewController]()
-    var subchildern = [UIViewController]()
-    var submenuList = ["banking", "sub2", "sub3"]
-    var categories = ["Sector Updates", "Regional Updates", "Finance", "Economics"]
-    var isSideBarOpen : Bool = Bool()
     var jsonData : [Result] = []
     var expandData = [NSMutableDictionary]()
     var headingArr : [String] = []
     var subMenuArr = [[String]]()
     var submenu : [String] = []
+    var HeadingRow = 0
     
     override func viewDidLoad() {
-        isSideBarOpen = false
-        viewSideContainer.isHidden = true
-        sideView.isHidden = true
-        sideMenuTV.isHidden = true
         settings.style.buttonBarItemsShouldFillAvailiableWidth = false
+         saveFetchMenu()
+        var j = 0
+        for _ in headingArr{
+            self.expandData.append(["isOpen":"1","data": subMenuArr[j]])
+            j = j + 1
+        }
         super.viewDidLoad()
         NotificationCenter.default.addObserver(self, selector: #selector(darkModeEnabled(_:)), name: .darkModeEnabled, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(darkModeDisabled(_:)), name: .darkModeDisabled, object: nil)
         lblAppName.font = FontConstants.appFont
         viewAppTitle.backgroundColor = colorConstants.redColor
         lblAppName.textColor = colorConstants.whiteColor
-        
-        let tap = UITapGestureRecognizer(target: self, action: #selector(self.handleTap(_:)))
-        viewSideContainer.addGestureRecognizer(tap)
-        tap.cancelsTouchesInView = false
-        viewSideContainer.isUserInteractionEnabled = true
-        self.view.addSubview(viewSideContainer)
-        DBManager().saveMenu()
-        jsonData = loadJson(filename: "navmenu")!
-        var j = 0
-        for _ in headingArr{
-            self.expandData.append(["isOpen":"1","data": subMenuArr[j]])
-            j = j + 1
-        }
-        
-        //        for  res in jsonData{
-        //            if !categories.contains(res.heading.headingName){
-        //            categories.append(res.heading.headingName)
-        //            }
-        //        }
-        //     self.reloadPagerTabStripView()
         if UserDefaults.standard.value(forKey: "textSize") == nil{
             UserDefaults.standard.set(1, forKey: "textSize")
         }
@@ -127,6 +102,43 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
         }
     }
     
+    func saveFetchMenu(){
+        DBManager().saveMenu(){response in
+            if response == true{
+                let result = DBManager().fetchMenu()
+                switch result {
+                case .Success(let headingData) :
+                    for i in headingData{
+                        self.headingArr.append(i.headingName!)
+                    }
+                    print("headingData: \(headingData)")
+                    print("headingArr: \(self.headingArr)")
+                    for heading in headingData{
+                        let subresult = DBManager().fetchSubMenu(headingId: Int(heading.headingId))
+                        switch subresult{
+                        case .Success(let subMenuData) :
+                            self.submenu.removeAll()
+                            for sub in subMenuData{
+                                self.submenu.append(sub.subMenuName!)
+                                print("submenu: \(self.submenu)")
+                                
+                            }
+                            self.subMenuArr.append(self.submenu)
+                            print("subMenuArr: \(self.subMenuArr)")
+                            self.reloadPagerTabStripView()
+                            self.subMenuCV.reloadData()
+                        case .Failure(let error):
+                            print(error)
+                            
+                        }
+                    }
+                case .Failure(let error) :
+                    print(error)
+                }
+            }
+        }
+    }
+    
     func loadJson(filename fileName: String) -> [Result]?
     {
         if let url = Bundle.main.url(forResource: fileName, withExtension: "json") {
@@ -139,24 +151,17 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
                     submenu.removeAll()
                     for i in res.heading.submenu{
                         submenu.append(i.name)
+                        print("submenu: \(submenu)")
                     }
                     subMenuArr.append(submenu)
                 }
+                print("subMenuArr: \(subMenuArr)")
                 return jsonData.body.results
             } catch {
                 print("error:\(error)")
             }
         }
         return nil
-    }
-    
-    @objc func handleTap(_ sender: UITapGestureRecognizer) {
-        if isSideBarOpen{
-            sideMenuTV.isHidden = true
-            sideView.isHidden = true
-            isSideBarOpen = false
-            viewSideContainer.isHidden = true
-        }
     }
     
     deinit {
@@ -189,27 +194,18 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
         
     }
     
-    @IBAction func btnMenuActn(_ sender: Any) {
-        sideMenuTV.reloadData()
-        self.view.bringSubview(toFront: sideView)
-        if !isSideBarOpen{
-            viewSideContainer.isHidden = false
-            isSideBarOpen = true
-            sideView.isHidden = false
-            sideMenuTV.isHidden = false
-        }
-    }
-    
     override func viewControllers(for pagerTabStripController: PagerTabStripViewController) -> [UIViewController] {
         
         //Clear children viewcontrollers
         childrenVC.removeAll()
-        for cat in categories
+        if headingArr.count > 0{
+        for cat in headingArr
         {
             let childVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "HomeVC") as! HomeVC
             childVC.tabBarTitle = cat
             
             childrenVC.append(childVC)
+        }
         }
         //Append CategoryListVC in the end
         let childMore = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "CategoryListID") as! CategoryListVC
@@ -222,7 +218,12 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
             return super.collectionView(collectionView, numberOfItemsInSection: section)
         }
         else{
-            return jsonData[0].heading.submenu.count
+            if HeadingRow == headingArr.count{
+                 return  0
+            }
+            else{
+            return subMenuArr.count != 0 ? subMenuArr[HeadingRow].count  : 0
+            }
         }
     }
     
@@ -232,25 +233,26 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
         }
         else{
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "subMenuID", for: indexPath) as! submenuCVCell
-            cell.lblSubMenu.text = jsonData[indexPath.row].heading.submenu[indexPath.row].name
+            cell.lblSubMenu.text = subMenuArr[HeadingRow][indexPath.row]
             return cell
         }
     }
   override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
     if (collectionView == buttonBarView) {
-        
+       HeadingRow = indexPath.row
+        subMenuCV.reloadData()
         return super.collectionView(collectionView,didSelectItemAt: indexPath)
     }
     else{
        
-        var url = APPURL.ArticlesByTagsURL + "tag=\(subMenuArr[indexPath.section][indexPath.row])"
-        if jsonData[0].heading.headingName == headingArr[indexPath.section]{
-            for temptag in jsonData[0].heading.submenu[indexPath.row].hash_tags{
-                url = url + "&tag=" + temptag.name
-            }
-        }
-        UserDefaults.standard.set(url, forKey: "submenuURL")
-         UserDefaults.standard.set(subMenuArr[indexPath.section][indexPath.row], forKey: "selectedCategory")
+//        var url = APPURL.ArticlesByTagsURL + "tag=\(subMenuArr[indexPath.section][indexPath.row])"
+//        if jsonData[0].heading.headingName == headingArr[indexPath.section]{
+//            for temptag in jsonData[0].heading.submenu[indexPath.row].hash_tags{
+//                url = url + "&tag=" + temptag.name
+//            }
+//        }
+//        UserDefaults.standard.set(url, forKey: "submenuURL")
+//         UserDefaults.standard.set(subMenuArr[indexPath.section][indexPath.row], forKey: "selectedCategory")
      return super.collectionView(collectionView,didSelectItemAt: indexPath)
       let homeObj = HomeVC()
         //homeObj.saveArticlesInDB(url:url)
@@ -258,65 +260,4 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
     }
 }
 
-
-extension HomeParentVC: UITableViewDelegate, UITableViewDataSource{
-       func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-          var url = APPURL.ArticlesByTagsURL + "tag=\(subMenuArr[indexPath.section][indexPath.row])"
-        if jsonData[0].heading.headingName == headingArr[indexPath.section]{
-            for temptag in jsonData[0].heading.submenu[indexPath.row].hash_tags{
-                url = url + "&tag=" + temptag.name
-            }
-        }
-        print("URL IS: \(url)")
-        let homeObj =  HomeVC()
-        homeObj.saveArticlesInDB(url:url)
-    UserDefaults.standard.set(subMenuArr[indexPath.section][indexPath.row], forKey: "selectedCategory")
-        
-    }
-
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if self.expandData[section].value(forKey: "isOpen") as! String == "1"{
-            return 0
-        }else{
-            let dataarray = self.expandData[section].value(forKey: "data") as! NSArray
-            return dataarray.count
-        }
-    }
-    
-    func numberOfSections(in tableView: UITableView) -> Int {
-        return self.expandData.count
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "menuID", for: indexPath) as! MenuTVCell
-        let dataarray = self.expandData[indexPath.section].value(forKey: "data") as! NSArray
-        cell.lblMenu.text = dataarray[indexPath.row] as? String
-        return cell
-    }
-    
-    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView?{
-        let headerView = UIView(frame: CGRect(x: 0, y: 0, width: tableView.bounds.size.width, height: tableView.bounds.size.height))
-        headerView.backgroundColor = UIColor.gray
-        let label = UILabel(frame: CGRect(x: 5, y: 10, width: headerView.frame.size.width , height: headerView.frame.size.height))
-        label.text = headingArr[section]
-        label.font = UIFont(name: AppFontName.bold, size: 21)
-        label.sizeToFit()
-        headerView.addSubview(label)
-        headerView.tag = section + 100
-        
-        let tapgesture = UITapGestureRecognizer(target: self , action: #selector(self.sectionTapped(_:)))
-        headerView.addGestureRecognizer(tapgesture)
-        return headerView
-    }
-    
-    @objc func sectionTapped(_ sender: UITapGestureRecognizer){
-        if(self.expandData[(sender.view?.tag)! - 100].value(forKey: "isOpen") as! String == "1"){
-            self.expandData[(sender.view?.tag)! - 100].setValue("0", forKey: "isOpen")
-        }else{
-            self.expandData[(sender.view?.tag)! - 100].setValue("1", forKey: "isOpen")
-        }
-        self.sideMenuTV.reloadSections(IndexSet(integer: (sender.view?.tag)! - 100), with: .automatic)
-    }
-    
-}
 

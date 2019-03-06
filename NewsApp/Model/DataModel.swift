@@ -350,8 +350,16 @@ enum MenuAPIResult {
     case Failure(String)
 }
 
-enum MenuDBFetchResult {
-    case Success([Menu])
+enum HeadingsDBFetchResult {
+    case Success([MenuHeadings])
     case Failure(String)
 }
 
+enum SubMenuDBFetchResult {
+    case Success([HeadingSubMenu])
+    case Failure(String)
+}
+enum MenuHashTagDBFetchResult {
+    case Success([MenuHashTag])
+    case Failure(String)
+}
