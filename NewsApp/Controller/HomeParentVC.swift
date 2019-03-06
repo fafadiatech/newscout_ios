@@ -23,15 +23,10 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
     var subMenuArr = [[String]]()
     var submenu : [String] = []
     var HeadingRow = 0
-    
+    var tagArr : [String] = []
     override func viewDidLoad() {
         settings.style.buttonBarItemsShouldFillAvailiableWidth = false
          saveFetchMenu()
-        var j = 0
-        for _ in headingArr{
-            self.expandData.append(["isOpen":"1","data": subMenuArr[j]])
-            j = j + 1
-        }
         super.viewDidLoad()
         NotificationCenter.default.addObserver(self, selector: #selector(darkModeEnabled(_:)), name: .darkModeEnabled, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(darkModeDisabled(_:)), name: .darkModeDisabled, object: nil)
@@ -138,7 +133,19 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
             }
         }
     }
-    
+    func fetchTags(submenu : String){
+        let tagresult = DBManager().fetchMenuTags(subMenuName: submenu)
+        switch tagresult{
+        case .Success(let tagData) :
+            tagArr.removeAll()
+            for tag in tagData{
+                tagArr.append(tag.hashTagName!)
+            }
+            print("tagData is of \(submenu) is : \(tagData.debugDescription)")
+        case .Failure(let error):
+            print(error)
+        }
+    }
     func loadJson(filename fileName: String) -> [Result]?
     {
         if let url = Bundle.main.url(forResource: fileName, withExtension: "json") {
@@ -212,14 +219,18 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
         childrenVC.append(childMore)
         return childrenVC
     }
-    
-    override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+   
+
+  override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if (collectionView == buttonBarView) {
             return super.collectionView(collectionView, numberOfItemsInSection: section)
         }
         else{
+            if headingArr.count > 0{
             if HeadingRow == headingArr.count{
-                 return  0
+              return 0
+            }
+                   return  headingArr.count
             }
             else{
             return subMenuArr.count != 0 ? subMenuArr[HeadingRow].count  : 0
@@ -233,7 +244,7 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
         }
         else{
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "subMenuID", for: indexPath) as! submenuCVCell
-            cell.lblSubMenu.text = subMenuArr[HeadingRow][indexPath.row]
+            cell.lblSubMenu.text = subMenuArr[HeadingRow][indexPath.row].localizedCapitalized
             return cell
         }
     }
@@ -244,7 +255,14 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
         return super.collectionView(collectionView,didSelectItemAt: indexPath)
     }
     else{
-       
+       fetchTags(submenu: subMenuArr[HeadingRow][indexPath.row])
+        print("tag array : \(tagArr)")
+          var url = APPURL.ArticlesByTagsURL + "tag= \(subMenuArr[HeadingRow][indexPath.row])"
+        for tag in tagArr {
+            url = url + "&tag=" + tag
+        }
+        print("url to get tag is: \(url)")
+        
 //        var url = APPURL.ArticlesByTagsURL + "tag=\(subMenuArr[indexPath.section][indexPath.row])"
 //        if jsonData[0].heading.headingName == headingArr[indexPath.section]{
 //            for temptag in jsonData[0].heading.submenu[indexPath.row].hash_tags{

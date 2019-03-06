@@ -246,9 +246,9 @@ struct SubMenu : Decodable{
 }
 
 struct TagList : Decodable{
-    let id : Int?
+    let id : Int
     let name : String
-    let count : Int?
+    let count : Int
 }
 
 struct DailyTags : Decodable{

@@ -115,7 +115,7 @@ class DBManager{
         if entity == "NewsArticle" || entity == "BookmarkArticles" || entity == "LikeDislike" || entity == "SearchArticles" {
             fetchRequest.predicate = NSPredicate(format: "article_id == \(id)")
         }
-        else if entity == "NewsURL" || entity == "Category" || entity == "Media" || entity == "MenuHeadings" || entity == "HeadingSubMenu"{
+        else if entity == "NewsURL" || entity == "Category" || entity == "Media" || entity == "MenuHeadings" || entity == "HeadingSubMenu" || entity == "MenuHashTag"{
             if entity == "Media"{
                 fetchRequest.predicate = NSPredicate(format: "mediaId == \(id)")
             }else if entity == "MenuHeadings"{
@@ -123,6 +123,9 @@ class DBManager{
             }
             else if entity == "HeadingSubMenu"{
                 fetchRequest.predicate = NSPredicate(format: "subMenuId == \(id)")
+            }
+            else if entity == "MenuHashTag"{
+                fetchRequest.predicate =  NSPredicate(format: "hashTagId == \(id)")
             }
             else{
                 fetchRequest.predicate = NSPredicate(format: "cat_id == \(id)")
@@ -774,7 +777,7 @@ class DBManager{
                                 if self.someEntityExists(id: 0, entity: "PeriodicTags", keyword: tag.name) == false{
                                     let newTag = PeriodicTags(context: managedContext!)
                                     newTag.tagName =  tag.name
-                                    newTag.count = Int64(tag.count!)
+                                    newTag.count = Int64(tag.count)
                                     newTag.type = type
                                     self.saveBlock()
                                 }
@@ -824,11 +827,23 @@ class DBManager{
                             newsubMenu.subMenuName = sub.name
                             newsubMenu.subMenuId = Int64(sub.id)
                             newsubMenu.headingId = Int64(res.heading.headingId)
+                           
+                            for tag in sub.hash_tags{
+                                if self.someEntityExists(id: tag.id, entity: "MenuHashTag", keyword: "") == false{
+                                    let newTag = MenuHashTag(context: managedContext!)
+                                    newTag.hashTagId = Int64(tag.id)
+                                    newTag.hashTagName = tag.name
+                                    newTag.subMenuId = Int64(sub.id)
+                                    newTag.subMenuName = sub.name
+                                    newsubMenu.addToTags(newTag)
+                                }
                             }
                         }
+                       
                     }
                     self.saveBlock()
                     }
+                 }
                 completion(true)
                 
             case .Failure(let errormessage) :
@@ -871,12 +886,13 @@ class DBManager{
          return SubMenuDBFetchResult.Success(subMenuData)
     }
     
-    func fetchMenuTags() -> MenuHashTagDBFetchResult{
+    func fetchMenuTags(subMenuName : String) -> MenuHashTagDBFetchResult{
         let managedContext =
             appDelegate?.persistentContainer.viewContext
         let tagfetchRequest = NSFetchRequest<MenuHashTag>(entityName:"MenuHashTag")
         
         do {
+              tagfetchRequest.predicate = NSPredicate(format: "subMenuName == '\(subMenuName)'")
             let tagsData = try (managedContext?.fetch(tagfetchRequest))!
             return MenuHashTagDBFetchResult.Success(tagsData)
         } catch let error as NSError {
