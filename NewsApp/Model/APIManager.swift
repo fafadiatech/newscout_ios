@@ -64,6 +64,7 @@ class APICall{
         let newurl = url.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)!
         Alamofire.request(newurl,method: .get, headers: headers).responseString{
             response in
+            print("artilce by tags response: \(response)")
             if(response.result.isSuccess){
                 if let data = response.data {
                      let jsonDecoder = JSONDecoder()

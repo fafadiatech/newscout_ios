@@ -341,10 +341,10 @@ open class ButtonBarPagerTabStripViewController: PagerTabStripViewController, Pa
         print(cell.label.text)
         cell.accessibilityLabel = indicatorInfo.accessibilityLabel
         if (UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.phone){
-            cell.label.font = UIFont(name:"HelveticaNeue-Light", size: 22.0)
+            cell.label.font = UIFont(name:"HelveticaNeue-Light", size: 20.0)
         }
         else{
-            cell.label.font = UIFont(name:"HelveticaNeue-Light", size: 28.0)
+            cell.label.font = UIFont(name:"HelveticaNeue-Light", size: 26.0)
         }
         cell.contentView.backgroundColor = settings.style.buttonBarItemBackgroundColor ?? cell.contentView.backgroundColor
        let darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool

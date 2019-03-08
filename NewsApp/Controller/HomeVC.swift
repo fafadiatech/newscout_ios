@@ -60,8 +60,7 @@ class HomeVC: UIViewController{
         else {
             HomeNewsTV.rowHeight = 129;
         }
-        //save and fetch data from DB
-        //selectedCategory = tabBarTitle
+        //save and fetch like and bookmark data from DB
         if UserDefaults.standard.value(forKey: "token") != nil{
             if Reachability.isConnectedToNetwork(){
                 saveBookmarkDataInDB(url : APPURL.bookmarkedArticlesURL)
@@ -76,6 +75,7 @@ class HomeVC: UIViewController{
             }
             
         }
+        
         if Reachability.isConnectedToNetwork(){
             activityIndicator.startAnimating()
             if UserDefaults.standard.value(forKey: "selectedCategory") != nil{
@@ -86,12 +86,12 @@ class HomeVC: UIViewController{
             if UserDefaults.standard.value(forKey: "submenuURL") != nil{
             var submenuURL = UserDefaults.standard.value(forKey: "submenuURL") as! String
             self.saveArticlesInDB(url : submenuURL)
-            fetchByTags()
+            fetchArticlesFromDB()
             }
         }else{
             coredataRecordCount = DBManager().IsCoreDataEmpty(entity: "NewsArticle")
             if self.coredataRecordCount != 0 {
-                self.fetchByTags()
+                self.fetchArticlesFromDB()
             }
             else{
                 activityIndicator.stopAnimating()
@@ -99,58 +99,34 @@ class HomeVC: UIViewController{
             }
         }
     }
-    
     func fetchByTags(){
-        var tags = [HashTag]()
-        if UserDefaults.standard.value(forKey: "selectedCategory") != nil{
-            selectedCategory = UserDefaults.standard.value(forKey: "selectedCategory") as! String
-        }
         let managedContext =
             appDelegate?.persistentContainer.viewContext
         let fetchRequest =
             NSFetchRequest<NewsArticle>(entityName: "NewsArticle")
-        let tagRequest =  NSFetchRequest<HashTag>(entityName: "HashTag")
-        
-          tagRequest.predicate = NSPredicate(format: "name contains[c] %@", selectedCategory)
         do {
-            tags =  try (managedContext?.fetch(tagRequest))!
+            ShowArticle =  try (managedContext?.fetch(fetchRequest))!
         }catch let error as NSError {
             print("Could not fetch. \(error), \(error.userInfo)")
         }
-        for tag in tags{
-            fetchRequest.predicate = NSPredicate(format: "article_id = %d ",tag.articleId )
-            do {
-                var article =  try (managedContext?.fetch(fetchRequest))!
-                ShowArticle.append(article[0])
-            }catch let error as NSError {
-                print("Could not fetch. \(error), \(error.userInfo)")
-            }
-        }
-        HomeNewsTV.reloadData()
+        //HomeNewsTV.reloadData()
     }
+   
     
     func fetchArticlesFromDB(){
-        let result = DBManager().FetchDataFromDB(entity: "NewsArticle")
+        let result = DBManager().ArticlesfetchByTags()
         switch result {
         case .Success(let DBData) :
-            let articles = DBData
-            if articles.count != 0{
-                
-                self.filterNews(selectedTag: selectedCategory )
-                // self.ShowArticle = DBData
-                
-                
+            ShowArticle = DBData
+            if ShowArticle.count != 0{
                 self.HomeNewsTV.reloadData()
             }
-            
+            else{
+                activityIndicator.stopAnimating()
+            }
         case .Failure(let errorMsg) :
             print(errorMsg)
         }
-        if ShowArticle.count == 0{
-            self.activityIndicator.stopAnimating()
-            //  lblNonews.isHidden = false
-        }
-        
     }
     
     func saveArticlesInDB(url: String){
@@ -159,8 +135,8 @@ class HomeVC: UIViewController{
          subMenuURL =  UserDefaults.standard.value(forKey: "submenuURL") as! String
         }
         DBManager().SaveDataDB(nextUrl: subMenuURL ){response in
-            //self.fetchArticlesFromDB()
-            self.fetchByTags()
+            self.fetchArticlesFromDB()
+           // self.fetchByTags()
         }
     }
     

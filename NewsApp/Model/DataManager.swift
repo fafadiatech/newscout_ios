@@ -70,8 +70,8 @@ class DBManager{
                             newArticle.published_on = news.published_on
                             newArticle.blurb = news.blurb
                             newArticle.category = news.category
-                            newArticle.current_page = Int64(self.ArticleData[0].body!.current_page)
-                            newArticle.total_pages = Int64(self.ArticleData[0].body!.total_pages)
+                            //newArticle.current_page = Int64(self.ArticleData[0].body!.current_page)
+                           // newArticle.total_pages = Int64(self.ArticleData[0].body!.total_pages)
                             if news.article_media!.count > 0 {
                                 for media in news.article_media!{
                                     if self.someEntityExists(id: media.media_id, entity: "Media", keyword: "") == false {
@@ -109,6 +109,35 @@ class DBManager{
         }
     }
     
+    //fetch newsArticle heading->submenu->tags
+    func ArticlesfetchByTags() -> ArticleDBfetchResult{
+        var ShowArticle = [NewsArticle]()
+        var tagData = [HashTag]()
+        let managedContext =
+            appDelegate?.persistentContainer.viewContext
+        let fetchRequest =
+            NSFetchRequest<NewsArticle>(entityName: "NewsArticle")
+        let tagArr =  UserDefaults.standard.value(forKey: "subMenuTags") as! [String]
+        let tagRequest =  NSFetchRequest<HashTag>(entityName: "HashTag")
+        for tag in tagArr{
+            tagRequest.predicate = NSPredicate(format: "name contains[c] %@", tag)
+            do {
+                tagData =  try (managedContext?.fetch(tagRequest))!
+            }catch let error as NSError {
+                print("Could not fetch. \(error), \(error.userInfo)")
+            }
+        }
+        for tag in tagData{
+            fetchRequest.predicate = NSPredicate(format: "article_id = %d ",tag.articleId )
+            do {
+                var article =  try (managedContext?.fetch(fetchRequest))!
+                ShowArticle.append(article[0])
+            }catch let error as NSError {
+                return ArticleDBfetchResult.Failure(error.localizedDescription)
+            }
+        }
+        return ArticleDBfetchResult.Success(ShowArticle)
+    }
     //check for existing entry in DB
     func someEntityExists(id: Int, entity : String, keyword: String) -> Bool {
         let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: entity)
@@ -174,7 +203,7 @@ class DBManager{
             
         } catch let error as NSError {
             print("Could not fetch. \(error), \(error.userInfo)")
-            return ArticleDBfetchResult.Failure(error as! String)
+            return ArticleDBfetchResult.Failure(error.localizedDescription)
         }
     }
     
@@ -293,7 +322,7 @@ class DBManager{
             
         } catch let error as NSError {
             print("Could not fetch. \(error), \(error.userInfo)")
-            return CategoryDBfetchResult.Failure(error as! String)
+            return CategoryDBfetchResult.Failure(error.localizedDescription)
         }
     }
     
@@ -335,7 +364,7 @@ class DBManager{
                 
             } catch let error as NSError {
                 print("Could not fetch. \(error), \(error.userInfo)")
-                return ArticleDBfetchResult.Failure(error as! String)
+                return ArticleDBfetchResult.Failure(error.localizedDescription)
             }
         }
         for like in LikeArticle{
@@ -349,7 +378,7 @@ class DBManager{
                 
             } catch let error as NSError {
                 print("Could not fetch. \(error), \(error.userInfo)")
-                return ArticleDBfetchResult.Failure(error as! String)
+                return ArticleDBfetchResult.Failure(error.localizedDescription)
             }
         }
         return ArticleDBfetchResult.Success(ShowArticle)
