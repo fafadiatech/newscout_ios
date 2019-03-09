@@ -34,9 +34,6 @@ class HomeVC: UIViewController{
     
     override func viewDidLoad(){
         super.viewDidLoad()
-        if UserDefaults.standard.value(forKey: "selectedCategory") != nil{
-            selectedCategory = UserDefaults.standard.value(forKey: "selectedCategory") as! String
-        }
         self.activityIndicator.startAnimating()
         lblNonews.isHidden = true
         NotificationCenter.default.addObserver(self, selector: #selector(darkModeEnabled(_:)), name: .darkModeEnabled, object: nil)
@@ -78,11 +75,6 @@ class HomeVC: UIViewController{
         
         if Reachability.isConnectedToNetwork(){
             activityIndicator.startAnimating()
-            if UserDefaults.standard.value(forKey: "selectedCategory") != nil{
-                selectedCategory = UserDefaults.standard.value(forKey: "selectedCategory") as! String
-            }
-            
-            // self.fetchArticlesFromDB()
             if UserDefaults.standard.value(forKey: "submenuURL") != nil{
             var submenuURL = UserDefaults.standard.value(forKey: "submenuURL") as! String
             self.saveArticlesInDB(url : submenuURL)
@@ -119,10 +111,14 @@ class HomeVC: UIViewController{
         case .Success(let DBData) :
             ShowArticle = DBData
             if ShowArticle.count != 0{
+                lblNonews.isHidden = true
                 self.HomeNewsTV.reloadData()
             }
             else{
+                self.HomeNewsTV.reloadData()
+                lblNonews.isHidden =  false
                 activityIndicator.stopAnimating()
+                
             }
         case .Failure(let errorMsg) :
             print(errorMsg)
@@ -182,7 +178,7 @@ class HomeVC: UIViewController{
     }
     
     @objc func refreshNews(refreshControl: UIRefreshControl) {
-        FetchArticlesAPICall()
+       // FetchArticlesAPICall()
         refreshControl.endRefreshing()
     }
     
@@ -200,13 +196,23 @@ class HomeVC: UIViewController{
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
-        //        if tabBarTitle == "For You"{
-        //            selectedCategory = "All News"
-        //        }
-        //        else{
-        //            selectedCategory = tabBarTitle
-        //        }
+        if Reachability.isConnectedToNetwork(){
+            activityIndicator.startAnimating()
+            if UserDefaults.standard.value(forKey: "submenuURL") != nil{
+                var submenuURL = UserDefaults.standard.value(forKey: "submenuURL") as! String
+                self.saveArticlesInDB(url : submenuURL)
+                fetchArticlesFromDB()
+            }
+        }else{
+            coredataRecordCount = DBManager().IsCoreDataEmpty(entity: "NewsArticle")
+            if self.coredataRecordCount != 0 {
+                self.fetchArticlesFromDB()
+            }
+            else{
+                activityIndicator.stopAnimating()
+                //lblNonews.isHidden = true
+            }
+        }
     }
     
     func FetchArticlesAPICall(){
@@ -276,6 +282,9 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
             let currentArticle = ShowArticle[indexPath.row]
             cell.lblNewsHeading.text = currentArticle.title
             cell.lblSource.text = currentArticle.source
+            if !(currentArticle.published_on?.contains("Z"))!{
+                currentArticle.published_on?.append("Z")
+            }
             let newDate = dateFormatter.date(from: currentArticle.published_on!)
             let agoDate = Helper().timeAgoSinceDate(newDate!)
             cell.lblTimesAgo.text = agoDate
@@ -323,7 +332,7 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
         return cell
     }
     
-    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+    /*func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         if indexPath.row == tableView.numberOfRows(inSection: indexPath.section) - 1 {
             let result =  DBManager().FetchNextURL(category: selectedCategory)
             switch result {
@@ -342,7 +351,7 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
                 print(errorMsg)
             }
         }
-    }
+    }*/
     
 }
 

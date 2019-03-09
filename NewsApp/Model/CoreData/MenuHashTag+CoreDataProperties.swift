@@ -2,7 +2,7 @@
 //  MenuHashTag+CoreDataProperties.swift
 //  NewsApp
 //
-//  Created by Jayashree on 06/03/19.
+//  Created by Jayashree on 09/03/19.
 //  Copyright © 2019 Fafadia Tech. All rights reserved.
 //
 //

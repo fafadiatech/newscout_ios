@@ -25,6 +25,7 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
     var HeadingRow = 0
     var subMenuRow = 0
     var tagArr : [String] = []
+    var submenuIndexArr = [[String]]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -100,45 +101,56 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
     }
     
     func saveFetchMenu(){
+        var coredataRecordCount = DBManager().IsCoreDataEmpty(entity: "MenuHeadings")
+        if coredataRecordCount != 0 {
+           fetchMenuFromDB()
+        }
+        else{
         DBManager().saveMenu(){response in
             if response == true{
-                let result = DBManager().fetchMenu()
-                switch result {
-                case .Success(let headingData) :
-                    for i in headingData{
-                        self.headingArr.append(i.headingName!)
-                    }
-                      self.menuCV.reloadData()
-                    print("headingData: \(headingData)")
-                    print("headingArr: \(self.headingArr)")
-                    for heading in headingData{
-                        let subresult = DBManager().fetchSubMenu(headingId: Int(heading.headingId))
-                       
-                        switch subresult{
-                        case .Success(let subMenuData) :
-                            self.submenu.removeAll()
-                            for sub in subMenuData{
-                                self.submenu.append(sub.subMenuName!)
-                                print("submenu: \(self.submenu)")
-                                
-                            }
-                            self.subMenuArr.append(self.submenu)
-                            print("subMenuArr: \(self.subMenuArr)")
-                            self.fetchTags(submenu: self.subMenuArr[self.HeadingRow][self.subMenuRow])
-                            self.reloadPagerTabStripView()
-                        
-                        case .Failure(let error):
-                            print(error)
-                            
-                        }
-                    }
-                case .Failure(let error) :
-                    print(error)
-                }
+                self.fetchMenuFromDB()
             }
         }
+        }
     }
-    func fetchTags(submenu : String){
+    
+    func fetchMenuFromDB(){
+        let result = DBManager().fetchMenu()
+        switch result {
+        case .Success(let headingData) :
+            for i in headingData{
+                self.headingArr.append(i.headingName!)
+            }
+            self.menuCV.reloadData()
+            print("headingData: \(headingData)")
+            print("headingArr: \(self.headingArr)")
+            for heading in headingData{
+                let subresult = DBManager().fetchSubMenu(headingId: Int(heading.headingId))
+                
+                switch subresult{
+                case .Success(let subMenuData) :
+                    self.submenu.removeAll()
+                    for sub in subMenuData{
+                        self.submenu.append(sub.subMenuName!)
+                        print("submenu: \(self.submenu)")
+                        
+                    }
+                    self.subMenuArr.append(self.submenu)
+                    print("subMenuArr: \(self.subMenuArr)")
+                    self.fetchsubMenuTags(submenu: self.subMenuArr[self.HeadingRow][self.subMenuRow])
+                    self.reloadPagerTabStripView()
+                    
+                case .Failure(let error):
+                    print(error)
+                    
+                }
+            }
+        case .Failure(let error) :
+            print(error)
+        }
+    }
+    
+    func fetchsubMenuTags(submenu : String){
         let tagresult = DBManager().fetchMenuTags(subMenuName: submenu)
         switch tagresult{
         case .Success(let tagData) :
@@ -198,13 +210,14 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
         return true
     }
     
+  
     override func viewWillAppear(_ animated: Bool) {
          super.viewWillAppear(animated)
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        
+       
     }
     
     override func viewControllers(for pagerTabStripController: PagerTabStripViewController) -> [UIViewController] {
@@ -226,9 +239,6 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
             
             childrenVC.append(childVC)
         }
-        //Append CategoryListVC in the end
-//        let childMore = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "CategoryListID") as! CategoryListVC
-//        childrenVC.append(childMore)
         return childrenVC
     }
    
@@ -237,11 +247,14 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
             return super.collectionView(collectionView,layout: UICollectionViewFlowLayout.init(), sizeForItemAtIndexPath : indexPath)
         }
            else{
-        
+         let size: CGSize = headingArr[indexPath.row].size(withAttributes: nil)
            // return CGSize(width:menuCV.frame.size.width/2, height: menuCV.frame.size.height)
-
-            let size: CGSize = headingArr[indexPath.row].size(withAttributes: nil)
+            if (UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad){
+                 return CGSize(width: size.width + 180.0, height: menuCV.bounds.size.height)
+            }else{
+           
             return CGSize(width: size.width + 100.0, height: menuCV.bounds.size.height)
+            }
         }
         
         }
@@ -260,10 +273,6 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         if collectionView ==  menuCV {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "subMenuID", for: indexPath) as! submenuCVCell
-            if (indexPath.row == 0){
-                menuCV.selectItem(at: indexPath, animated: true, scrollPosition: UICollectionViewScrollPosition.centeredHorizontally)
-                cell.lblMenu.textColor = colorConstants.redColor
-            }
             cell.lblMenu.text = headingArr[indexPath.row].localizedCapitalized
             return cell
         }
@@ -274,23 +283,27 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
   override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
     if (collectionView == buttonBarView) {
         subMenuRow = indexPath.row
-        fetchTags(submenu: subMenuArr[HeadingRow][indexPath.row])
+        fetchsubMenuTags(submenu: subMenuArr[HeadingRow][indexPath.row])
         print("tag array : \(tagArr)")
-        var newURL = "https://api.myjson.com/bins/1f3gca"
-        UserDefaults.standard.set(newURL, forKey: "submenuURL")
+        var url = APPURL.ArticlesByTagsURL
+        for tag in tagArr {
+            url = url + "&tag=" + tag
+        }
+        print("url to get tag is: \(url)")
+        UserDefaults.standard.set(url, forKey: "submenuURL")
         return super.collectionView(collectionView,didSelectItemAt: indexPath)
-        /*var url = APPURL.ArticlesByTagsURL2 + "tag=\(subMenuArr[HeadingRow][indexPath.row].lowercased())"
-         for tag in tagArr {
-         url = url + "&tag=" + tag
-         }
-         print("url to get tag is: \(url)")*/
+        
     }
     else{
           HeadingRow = indexPath.row
-     
+//         fetchsubMenuTags(submenu: subMenuArr[HeadingRow][0])
+//        var url = APPURL.ArticlesByTagsURL
+//        for tag in tagArr {
+//            url = url + "&tag=" + tag
+//        }
+//        print("url to get tag is: \(url)")
+//        UserDefaults.standard.set(url, forKey: "submenuURL")
         reloadPagerTabStripView()
-      
-        
     }
     }
 }

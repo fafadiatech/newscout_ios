@@ -2,7 +2,7 @@
 //  NewsArticle+CoreDataProperties.swift
 //  NewsApp
 //
-//  Created by Jayashree on 28/02/19.
+//  Created by Jayashree on 09/03/19.
 //  Copyright © 2019 Fafadia Tech. All rights reserved.
 //
 //
@@ -28,8 +28,8 @@ extension NewsArticle {
     @NSManaged public var title: String?
     @NSManaged public var total_pages: Int64
     @NSManaged public var bookmark: BookmarkArticles?
-    @NSManaged public var likeDislike: LikeDislike?
     @NSManaged public var hashTags: NSSet?
+    @NSManaged public var likeDislike: LikeDislike?
 
 }
 

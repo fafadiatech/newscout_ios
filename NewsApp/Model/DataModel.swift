@@ -23,7 +23,7 @@ struct articleBody : Decodable{
     let previous : String?
     var articles : [Article]
     var categoryDetail : CategoryDetails?
-   // var filters : [ArticleFilter]?
+    var filters : ArticleFilter?
     
     enum CodingKeys: String, CodingKey{
         case articles = "results"
@@ -33,7 +33,7 @@ struct articleBody : Decodable{
         case categoryDetail = "category"
         case current_page
         case total_pages
-      //  case filters
+        case filters
     }
 }
 

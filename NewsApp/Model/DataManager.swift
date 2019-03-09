@@ -34,7 +34,7 @@ class DBManager{
             if self.ArticleData.count != 0{
                 
                 if self.ArticleData[0].header.status == "1" {
-                    if self.ArticleData[0].body?.next != nil{
+                  /*  if self.ArticleData[0].body?.next != nil{
                         if self.someEntityExists(id: 0, entity: "NewsURL", keyword: (self.ArticleData[0].body?.articles[0].category)!) == false {
                             let newUrl = NewsURL(context: managedContext!)
                             newUrl.category = self.ArticleData[0].body?.articles[0].category
@@ -57,7 +57,7 @@ class DBManager{
                             }
                         }
                         self.saveBlock()
-                    }
+                    }*/
                     for news in self.ArticleData[0].body!.articles{
                         if  self.someEntityExists(id: Int(news.article_id!), entity: "NewsArticle", keyword: "") == false
                         {
@@ -123,19 +123,24 @@ class DBManager{
             tagRequest.predicate = NSPredicate(format: "name contains[c] %@", tag)
             do {
                 tagData =  try (managedContext?.fetch(tagRequest))!
+                for tag in tagData{
+                    fetchRequest.predicate = NSPredicate(format: "article_id = %d ",tag.articleId )
+                    do {
+                        var article =  try (managedContext?.fetch(fetchRequest))!
+                        if article.count > 0{
+                            if !ShowArticle.contains(article[0]){
+                                ShowArticle.append(article[0])
+                            }
+                        }
+                    }catch let error as NSError {
+                        return ArticleDBfetchResult.Failure(error.localizedDescription)
+                    }
+                }
             }catch let error as NSError {
                 print("Could not fetch. \(error), \(error.userInfo)")
             }
         }
-        for tag in tagData{
-            fetchRequest.predicate = NSPredicate(format: "article_id = %d ",tag.articleId )
-            do {
-                var article =  try (managedContext?.fetch(fetchRequest))!
-                ShowArticle.append(article[0])
-            }catch let error as NSError {
-                return ArticleDBfetchResult.Failure(error.localizedDescription)
-            }
-        }
+        
         return ArticleDBfetchResult.Success(ShowArticle)
     }
     //check for existing entry in DB
@@ -248,6 +253,16 @@ class DBManager{
             var records = [SearchArticles]()
             do {
                 records = (try managedContext?.fetch(fetchRequest)) as! [SearchArticles]
+            }
+            catch {
+                print("error executing fetch request: \(error)")
+            }
+            recordCount = records.count
+        }
+        else if entity == "MenuHeadings"{
+            var records = [MenuHeadings]()
+            do {
+                records = (try managedContext?.fetch(fetchRequest)) as! [MenuHeadings]
             }
             catch {
                 print("error executing fetch request: \(error)")
