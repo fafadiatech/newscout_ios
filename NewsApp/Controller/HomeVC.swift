@@ -31,7 +31,7 @@ class HomeVC: UIViewController{
     var articlesArr = [Article]()
     var categories = [String]()
     var selectedCategory = ""
-    
+      var tagArr : [String] = []
     override func viewDidLoad(){
         super.viewDidLoad()
         self.activityIndicator.startAnimating()
@@ -57,6 +57,18 @@ class HomeVC: UIViewController{
         else {
             HomeNewsTV.rowHeight = 129;
         }
+        
+        //change data on swipe
+       /*
+        fetchsubMenuTags(submenu: tabBarTitle)
+        print("tag array : \(tagArr)")
+        var url = APPURL.ArticlesByTagsURL
+        for tag in tagArr {
+            url = url + "&tag=" + tag
+        }
+        print("url to get tag is: \(url)")
+        UserDefaults.standard.set(url, forKey: "submenuURL")*/
+        
         //save and fetch like and bookmark data from DB
         if UserDefaults.standard.value(forKey: "token") != nil{
             if Reachability.isConnectedToNetwork(){
@@ -90,6 +102,7 @@ class HomeVC: UIViewController{
                 lblNonews.isHidden = true
             }
         }
+      
     }
     func fetchByTags(){
         let managedContext =
@@ -104,6 +117,20 @@ class HomeVC: UIViewController{
         //HomeNewsTV.reloadData()
     }
    
+    func fetchsubMenuTags(submenu : String){
+        let tagresult = DBManager().fetchMenuTags(subMenuName: submenu)
+        switch tagresult{
+        case .Success(let tagData) :
+            tagArr.removeAll()
+            for tag in tagData{
+                tagArr.append(tag.hashTagName!)
+            }
+            UserDefaults.standard.setValue(tagArr, forKey: "subMenuTags")
+            print("tagData is of \(submenu) is : \(tagData.debugDescription)")
+        case .Failure(let error):
+            print(error)
+        }
+    }
     
     func fetchArticlesFromDB(){
         let result = DBManager().ArticlesfetchByTags()

@@ -117,6 +117,7 @@ class DBManager{
             appDelegate?.persistentContainer.viewContext
         let fetchRequest =
             NSFetchRequest<NewsArticle>(entityName: "NewsArticle")
+        if UserDefaults.standard.value(forKey: "subMenuTags") != nil{
         let tagArr =  UserDefaults.standard.value(forKey: "subMenuTags") as! [String]
         let tagRequest =  NSFetchRequest<HashTag>(entityName: "HashTag")
         for tag in tagArr{
@@ -139,6 +140,7 @@ class DBManager{
             }catch let error as NSError {
                 print("Could not fetch. \(error), \(error.userInfo)")
             }
+        }
         }
         
         return ArticleDBfetchResult.Success(ShowArticle)

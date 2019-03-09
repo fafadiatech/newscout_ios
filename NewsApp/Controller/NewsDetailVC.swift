@@ -918,7 +918,8 @@ extension NewsDetailVC:UICollectionViewDelegate, UICollectionViewDataSource, UIC
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return (self.RecomArticleData.count != 0) ? self.RecomArticleData[0].body!.articles.count + 1 : 0
+       // return (self.RecomArticleData.count != 0) ? self.RecomArticleData[0].body!.articles.count + 1 : 0
+        return ShowArticle.count != 0 ? ShowArticle.count : 0
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -936,7 +937,7 @@ extension NewsDetailVC:UICollectionViewDelegate, UICollectionViewDataSource, UIC
             cell.imgNews.isHidden = false
             cell.lblTitle.isHidden = false
             cell.lblMoreStories.isHidden = true
-            let currentArticle =  RecomArticleData[0].body!.articles[indexPath.row - 1]
+            let currentArticle =  ShowArticle[indexPath.row - 1] //RecomArticleData[0].body!.articles[indexPath.row - 1]
             cell.lblTitle.text = currentArticle.title
             if currentArticle.imageURL != nil{
                 
@@ -989,8 +990,8 @@ extension NewsDetailVC:UICollectionViewDelegate, UICollectionViewDataSource, UIC
                 UserDefaults.standard.set("recommend", forKey: "isSearch")
             }
             newsDetailvc.newsCurrentIndex = indexPath.row - 1
-            newsDetailvc.articleArr = RecomArticleData[0].body!.articles
-            newsDetailvc.articleId = RecomArticleData[0].body!.articles[indexPath.row - 1].article_id!
+            newsDetailvc.ShowArticle =  ShowArticle //RecomArticleData[0].body!.articles
+            newsDetailvc.articleId = Int(ShowArticle[indexPath.row].article_id)  //RecomArticleData[0].body!.articles[indexPath.row - 1].article_id!
             present(newsDetailvc, animated: true, completion: nil)
         }
     }

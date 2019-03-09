@@ -98,6 +98,7 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
                 newCell?.backgroundColor = colorConstants.whiteColor
             }
         }
+      
     }
     
     func saveFetchMenu(){
@@ -241,7 +242,7 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
         }
         return childrenVC
     }
-   
+  
     override func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: IndexPath) -> CGSize {
            if (collectionView == buttonBarView) {
             return super.collectionView(collectionView,layout: UICollectionViewFlowLayout.init(), sizeForItemAtIndexPath : indexPath)

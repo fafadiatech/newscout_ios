@@ -179,7 +179,18 @@ open class ButtonBarPagerTabStripViewController: PagerTabStripViewController, Pa
         super.viewWillAppear(animated)
         buttonBarView.layoutIfNeeded()
     }
+ /*   func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        print("scrollViewDidEndDecelerating")
+        shouldUpdateButtonBarView = true
+        buttonBarView.reloadData()
+        
+    }
     
+    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        print("scrollViewDidEndDragging")
+        shouldUpdateButtonBarView = true
+        buttonBarView.reloadData()
+    }*/
     open override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
@@ -240,7 +251,7 @@ open class ButtonBarPagerTabStripViewController: PagerTabStripViewController, Pa
     
     open func updateIndicator(for viewController: PagerTabStripViewController, fromIndex: Int, toIndex: Int) {
         guard shouldUpdateButtonBarView else { return }
-        if UICollectionView.self == ButtonBarView.self{
+    if UICollectionView.self == ButtonBarView.self{
         buttonBarView.moveTo(index: toIndex, animated: false, swipeDirection: toIndex < fromIndex ? .right : .left, pagerScroll: .yes)
         
         if let changeCurrentIndex = changeCurrentIndex {
