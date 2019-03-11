@@ -179,18 +179,19 @@ open class ButtonBarPagerTabStripViewController: PagerTabStripViewController, Pa
         super.viewWillAppear(animated)
         buttonBarView.layoutIfNeeded()
     }
- /*   func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+    
+   func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         print("scrollViewDidEndDecelerating")
         shouldUpdateButtonBarView = true
-        buttonBarView.reloadData()
+        reloadPagerTabStripView()
         
     }
     
     func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
         print("scrollViewDidEndDragging")
         shouldUpdateButtonBarView = true
-        buttonBarView.reloadData()
-    }*/
+        reloadPagerTabStripView()
+    }
     open override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
@@ -222,9 +223,9 @@ open class ButtonBarPagerTabStripViewController: PagerTabStripViewController, Pa
         guard isViewLoaded else { return }
         buttonBarView.reloadData()
         cachedCellWidths = calculateWidths()
-        if UICollectionView.self == ButtonBarView.self{
-        buttonBarView.moveTo(index: currentIndex, animated: false, swipeDirection: .none, pagerScroll: .yes)
-        }
+        //if UICollectionView.self == ButtonBarView.self{
+        buttonBarView.moveTo(index: currentIndex, animated: true, swipeDirection: .none, pagerScroll: .yes)
+        //}
     }
     
     open func calculateStretchedCellWidths(_ minimumCellWidths: [CGFloat], suggestedStretchedCellWidth: CGFloat, previousNumberOfLargeCells: Int) -> CGFloat {
@@ -251,7 +252,7 @@ open class ButtonBarPagerTabStripViewController: PagerTabStripViewController, Pa
     
     open func updateIndicator(for viewController: PagerTabStripViewController, fromIndex: Int, toIndex: Int) {
         guard shouldUpdateButtonBarView else { return }
-    if UICollectionView.self == ButtonBarView.self{
+  //  if UICollectionView.self == ButtonBarView.self{
         buttonBarView.moveTo(index: toIndex, animated: false, swipeDirection: toIndex < fromIndex ? .right : .left, pagerScroll: .yes)
         
         if let changeCurrentIndex = changeCurrentIndex {
@@ -261,7 +262,7 @@ open class ButtonBarPagerTabStripViewController: PagerTabStripViewController, Pa
             let cells = cellForItems(at: [oldIndexPath, newIndexPath], reloadIfNotVisible: collectionViewDidLoad)
             changeCurrentIndex(cells.first!, cells.last!, true)
             print(changeCurrentIndex)
-        }
+      //  }
         }
     }
     

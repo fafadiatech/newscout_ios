@@ -17,8 +17,8 @@ struct ArticleStatus : Decodable{
 
 struct articleBody : Decodable{
     let count :  Int?
-    let current_page : Int?
-    let total_pages : Int?
+    let current_page : Int
+    let total_pages : Int
     let next : String?
     let previous : String?
     var articles : [Article]

@@ -123,8 +123,6 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
                 self.headingArr.append(i.headingName!)
             }
             self.menuCV.reloadData()
-            print("headingData: \(headingData)")
-            print("headingArr: \(self.headingArr)")
             for heading in headingData{
                 let subresult = DBManager().fetchSubMenu(headingId: Int(heading.headingId))
                 
@@ -133,11 +131,8 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
                     self.submenu.removeAll()
                     for sub in subMenuData{
                         self.submenu.append(sub.subMenuName!)
-                        print("submenu: \(self.submenu)")
-                        
                     }
                     self.subMenuArr.append(self.submenu)
-                    print("subMenuArr: \(self.subMenuArr)")
                     self.fetchsubMenuTags(submenu: self.subMenuArr[self.HeadingRow][self.subMenuRow])
                     self.reloadPagerTabStripView()
                     
@@ -160,7 +155,6 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
                 tagArr.append(tag.hashTagName!)
             }
              UserDefaults.standard.setValue(tagArr, forKey: "subMenuTags")
-            print("tagData is of \(submenu) is : \(tagData.debugDescription)")
         case .Failure(let error):
             print(error)
         }
@@ -177,11 +171,9 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
                     submenu.removeAll()
                     for i in res.heading.submenu{
                         submenu.append(i.name)
-                        print("submenu: \(submenu)")
                     }
                     subMenuArr.append(submenu)
                 }
-                print("subMenuArr: \(subMenuArr)")
                 return jsonData.body.results
             } catch {
                 print("error:\(error)")
@@ -285,12 +277,10 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
     if (collectionView == buttonBarView) {
         subMenuRow = indexPath.row
         fetchsubMenuTags(submenu: subMenuArr[HeadingRow][indexPath.row])
-        print("tag array : \(tagArr)")
         var url = APPURL.ArticlesByTagsURL
         for tag in tagArr {
             url = url + "&tag=" + tag
         }
-        print("url to get tag is: \(url)")
         UserDefaults.standard.set(url, forKey: "submenuURL")
         return super.collectionView(collectionView,didSelectItemAt: indexPath)
         

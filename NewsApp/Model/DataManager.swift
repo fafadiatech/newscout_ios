@@ -58,6 +58,7 @@ class DBManager{
                         }
                         self.saveBlock()
                     }*/
+                    
                     for news in self.ArticleData[0].body!.articles{
                         if  self.someEntityExists(id: Int(news.article_id!), entity: "NewsArticle", keyword: "") == false
                         {
@@ -70,8 +71,8 @@ class DBManager{
                             newArticle.published_on = news.published_on
                             newArticle.blurb = news.blurb
                             newArticle.category = news.category
-                            //newArticle.current_page = Int64(self.ArticleData[0].body!.current_page)
-                           // newArticle.total_pages = Int64(self.ArticleData[0].body!.total_pages)
+                            newArticle.current_page = Int64(self.ArticleData[0].body!.current_page)
+                            newArticle.total_pages = Int64(self.ArticleData[0].body!.total_pages)
                             if news.article_media!.count > 0 {
                                 for media in news.article_media!{
                                     if self.someEntityExists(id: media.media_id, entity: "Media", keyword: "") == false {

@@ -34,6 +34,7 @@ class HomeVC: UIViewController{
       var tagArr : [String] = []
     override func viewDidLoad(){
         super.viewDidLoad()
+        
         self.activityIndicator.startAnimating()
         lblNonews.isHidden = true
         NotificationCenter.default.addObserver(self, selector: #selector(darkModeEnabled(_:)), name: .darkModeEnabled, object: nil)
@@ -59,15 +60,12 @@ class HomeVC: UIViewController{
         }
         
         //change data on swipe
-       /*
         fetchsubMenuTags(submenu: tabBarTitle)
-        print("tag array : \(tagArr)")
         var url = APPURL.ArticlesByTagsURL
         for tag in tagArr {
             url = url + "&tag=" + tag
         }
-        print("url to get tag is: \(url)")
-        UserDefaults.standard.set(url, forKey: "submenuURL")*/
+        UserDefaults.standard.set(url, forKey: "submenuURL")
         
         //save and fetch like and bookmark data from DB
         if UserDefaults.standard.value(forKey: "token") != nil{
@@ -126,7 +124,6 @@ class HomeVC: UIViewController{
                 tagArr.append(tag.hashTagName!)
             }
             UserDefaults.standard.setValue(tagArr, forKey: "subMenuTags")
-            print("tagData is of \(submenu) is : \(tagData.debugDescription)")
         case .Failure(let error):
             print(error)
         }
@@ -305,6 +302,7 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
         cell.lblSource.textColor = colorConstants.txtDarkGrayColor
         cell.lblTimesAgo.textColor = colorConstants.txtDarkGrayColor
         //display data from DB
+        
         if ShowArticle.count != 0{
             let currentArticle = ShowArticle[indexPath.row]
             cell.lblNewsHeading.text = currentArticle.title
