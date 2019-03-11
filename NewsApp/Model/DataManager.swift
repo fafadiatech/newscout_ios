@@ -143,7 +143,6 @@ class DBManager{
             }
         }
         }
-        
         return ArticleDBfetchResult.Success(ShowArticle)
     }
     //check for existing entry in DB

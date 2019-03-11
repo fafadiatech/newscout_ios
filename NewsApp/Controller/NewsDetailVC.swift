@@ -44,6 +44,7 @@ class NewsDetailVC: UIViewController {
     @IBOutlet weak var lblTimeAgoBottomConstraint: NSLayoutConstraint!
     @IBOutlet weak var viewLikeDislikeBottom: NSLayoutConstraint!
     @IBOutlet weak var avPlayerView: AVPlayerView!
+    @IBOutlet weak var viewBack: UIView!
     let imageCache = NSCache<NSString, UIImage>()
     var playbackSlider = UISlider()
     var RecomArticleData = [ArticleStatus]()

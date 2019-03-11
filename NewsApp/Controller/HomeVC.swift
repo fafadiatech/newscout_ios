@@ -159,7 +159,9 @@ class HomeVC: UIViewController{
            // self.fetchByTags()
         }
     }
-    
+//    func filterList() {
+//      ShowArticle.sorted{ $0.published_on < $1.published_on }
+//    }
     func fetchBookmarkDataFromDB(){
         let result = DBManager().FetchLikeBookmarkFromDB()
         switch result {
@@ -302,9 +304,10 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
         cell.lblSource.textColor = colorConstants.txtDarkGrayColor
         cell.lblTimesAgo.textColor = colorConstants.txtDarkGrayColor
         //display data from DB
+        let sortedData = ShowArticle.sorted{ $0.published_on! > $1.published_on! }
         
         if ShowArticle.count != 0{
-            let currentArticle = ShowArticle[indexPath.row]
+            let currentArticle = sortedData[indexPath.row]
             cell.lblNewsHeading.text = currentArticle.title
             cell.lblSource.text = currentArticle.source
             if !(currentArticle.published_on?.contains("Z"))!{
