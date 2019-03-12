@@ -28,7 +28,6 @@ class HomeVC: UIViewController{
     var nextURL = ""
     var lastContentOffset: CGFloat = 0
     var articlesArr = [Article]()
-    var categories = [String]()
     var selectedCategory = ""
       var tagArr : [String] = []
     override func viewDidLoad(){
@@ -44,7 +43,6 @@ class HomeVC: UIViewController{
         activityIndicator.indicatorMode = .indeterminate
         activityIndicator.progress = 2.0
         view.addSubview(activityIndicator)
-        categories = UserDefaults.standard.array(forKey: "categories") as! [String]
         var paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
         print("path is :\(paths[0])")
         let refreshControl = UIRefreshControl()

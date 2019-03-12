@@ -43,7 +43,7 @@ class APITests: XCTestCase{
                 self.TestArticleData = data
                 if status == "200"{
                     if self.TestArticleData[0].header.status == "1"{
-                        for article in self.TestArticleData[0].body.articles{
+                        for article in self.TestArticleData[0].body!.articles{
                             
                             if article.title != nil && article.source != nil && article.article_id != nil && article.blurb != nil && article.category != nil && article.imageURL != nil && article.published_on != nil{
                                 print("all values are present")
@@ -64,33 +64,6 @@ class APITests: XCTestCase{
         }
         waitForExpectations(timeout: 5, handler: nil)
         XCTAssertGreaterThan(self.TestArticleData[0].body.articles.count, 0)
-    }
-    
-    func test_CategoriesURL(){
-        let promise = expectation(description: "200")
-        XCTAssertEqual(self.CategoryData.count, 0, "category data should be empty before API() runs")
-        APICall().loadCategoriesAPI{
-            (status, response) in
-            print(response)
-            XCTAssertNotNil(response)
-            switch response {
-            case .Success(let data) :
-                self.CategoryData = data
-                if status == 200 {
-                    for cat in self.CategoryData[0].categories{
-                        if cat.cat_id != nil && cat.title != nil {
-                            print("all values are present")
-                        }
-                    }
-                    promise.fulfill()
-                }
-            case .Failure(let errormessage) :
-                print(errormessage)
-                XCTFail("errormessage: \(errormessage)")
-            }
-        }
-        waitForExpectations(timeout: 2, handler: nil)
-        XCTAssertGreaterThan(self.CategoryData[0].categories.count, 0)
     }
     
     //sample test

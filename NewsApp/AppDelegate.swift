@@ -19,8 +19,7 @@ import Sentry
 class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
     
     var window: UIWindow?
-    var categories : [String] = []
-    
+   
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         GIDSignIn.sharedInstance().clientID = "424337192018-pnik0j5sm85mjg48uf0u02ucrb64e6lc.apps.googleusercontent.com"
         GIDSignIn.sharedInstance().delegate = self as! GIDSignInDelegate
@@ -28,17 +27,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
         if UserDefaults.standard.value(forKey: "darkModeEnabled") == nil{
             UserDefaults.standard.set(false, forKey: "darkModeEnabled")
         }
-        if UserDefaults.standard.value(forKey: "categories") == nil{
-            
-            if UserDefaults.standard.value(forKey: "token") == nil || UserDefaults.standard.value(forKey: "FBToken") == nil || UserDefaults.standard.value(forKey: "googleToken") == nil{
-                categories = ["Trending"]
-                UserDefaults.standard.setValue(categories, forKey: "categories")
-            }
-            else{
-                categories = ["For You"]
-                UserDefaults.standard.setValue(categories, forKey: "categories")
-            }
-        }
+       
         if UserDefaults.standard.value(forKey: "darkModeEnabled") == nil{
             UserDefaults.standard.setValue(false, forKey: "darkModeEnabled")
         }

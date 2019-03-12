@@ -290,59 +290,6 @@ class DBManager{
         return records.count
     }
     
-    //save categories in DB
-    func SaveCategoryDB(_ completion : @escaping (Bool) -> ())
-    {
-        var categoryDefaults : [Int : String] = [:]
-        let managedContext =
-            appDelegate?.persistentContainer.viewContext
-        APICall().loadCategoriesAPI{
-            (status,response) in
-            switch response {
-            case .Success(let data) :
-                self.CategoryData = data
-            case .Failure(let errormessage) :
-                print(errormessage)
-            }
-            
-            if self.CategoryData[0].body.categories.count > 0{
-                for cat in self.CategoryData[0].body.categories{
-                    if  self.someEntityExists(id: Int(cat.cat_id), entity: "Category", keyword: "") == false
-                    {
-                        let newCategory = Category(context: managedContext!)
-                        newCategory.cat_id = Int16(cat.cat_id)
-                        newCategory.title = cat.title
-                        categoryDefaults.updateValue(cat.title, forKey: cat.cat_id)
-                    }
-                }
-                if UserDefaults.standard.value(forKey: "categoryDefaults") != nil{
-                    UserDefaults.standard.set(categoryDefaults, forKey: "categoryDefaults")
-                }
-                completion(true)
-            }
-            else{
-                completion(false)
-            }
-        }
-    }
-    
-    //fetch categories from DB
-    func FetchCategoryFromDB() -> CategoryDBfetchResult
-    {
-        let managedContext =
-            appDelegate?.persistentContainer.viewContext
-        let fetchRequest =
-            NSFetchRequest<Category>(entityName: "Category")
-        do {
-            let ShowCategory = try (managedContext?.fetch(fetchRequest))!
-            return CategoryDBfetchResult.Success(ShowCategory)
-            
-        } catch let error as NSError {
-            print("Could not fetch. \(error), \(error.userInfo)")
-            return CategoryDBfetchResult.Failure(error.localizedDescription)
-        }
-    }
-    
     //fetch bookmarked articles
     func FetchLikeBookmarkFromDB() -> ArticleDBfetchResult
     {

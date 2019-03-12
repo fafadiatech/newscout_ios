@@ -209,7 +209,7 @@ struct Body : Decodable{
     let Msg : String?
     let user: User?
     let listResult: [LikeBookmarkList]?
-    let categories : [CategoryDetails]
+    let categories : [CategoryDetails]?
     
     enum CodingKeys: String, CodingKey{
         case Msg = "Msg"

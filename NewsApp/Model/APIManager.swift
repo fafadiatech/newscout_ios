@@ -127,36 +127,6 @@ class APICall{
         }
     }
     
-    func loadCategoriesAPI(_ completion : @escaping (Int, CategoryAPIResult) -> ()){
-        let url = APPURL.CategoriesURL
-        Alamofire.request(url,method: .get).responseJSON{
-            response in
-            if(response.result.isSuccess){
-                if response.response?.statusCode == 200{
-                    if let data = response.data {
-                        let jsonDecoder = JSONDecoder()
-                        do {
-                            let jsonData = try jsonDecoder.decode(CategoryList.self, from: data)
-                            
-                            completion((response.response?.statusCode)!, CategoryAPIResult.Success([jsonData]))
-                        }
-                        catch {
-                            completion((response.response?.statusCode)!, CategoryAPIResult.Failure(error as! String))
-                        }
-                    }
-                }
-                else{
-                    completion((response.response?.statusCode)!, CategoryAPIResult.Failure(""))
-                }
-            }
-            else{
-                if let err = response.result.error as? URLError, err.code == .notConnectedToInternet {
-                    completion(0, CategoryAPIResult.Failure(Constants.InternetErrorMsg))
-                }
-            }
-        }
-    }
-    
     func loadSearchAPI(url: String,_ completion : @escaping (String, ArticleAPIResult) -> ()){
         Alamofire.request(url,method: .get, encoding: URLEncoding.default).responseJSON{
             response in
@@ -223,7 +193,6 @@ class APICall{
     //Login API
     func LoginAPI(param : Dictionary<String, String>,_ completion : @escaping (Int , String) ->()) {
         let url = APPURL.LoginURL
-        var categories : [String] = []
         Alamofire.request(url,method: .post, parameters: param).responseString{
             response in
             if(response.result.isSuccess){
@@ -240,14 +209,6 @@ class APICall{
                             }
                         }
                         else{
-                            UserDefaults.standard.removeObject(forKey: "categories")
-                            UserDefaults.standard.synchronize()
-                            categories = ["For You"]
-                            UserDefaults.standard.setValue(categories, forKey: "categories")
-                            for cat in (jsonData.body?.user?.passion)!{
-                                categories.append(cat.name)
-                            }
-                            UserDefaults.standard.setValue(categories, forKey: "categories")
                             UserDefaults.standard.set(jsonData.body!.user!.token, forKey: "token")
                             UserDefaults.standard.set(jsonData.body!.user!.first_name, forKey: "first_name")
                             UserDefaults.standard.set(jsonData.body!.user!.last_name, forKey: "last_name")
@@ -302,14 +263,6 @@ class APICall{
                         else{
                             let defaultList = ["token", "first_name", "last_name", "user_id", "email"]
                             Helper().clearDefaults(list : defaultList)
-                            var categoryList : [String] = []
-                            
-                            categoryList = UserDefaults.standard.value(forKey: "categories") as! [String]
-                            categoryList.remove(at: 0)
-                            if !categoryList.contains("Trending"){
-                                categoryList.insert("Trending", at: 0)
-                            }
-                            UserDefaults.standard.setValue(categoryList, forKey: "categories")
                             completion(jsonData.header.status,jsonData.body!.Msg!)
                         }
                     }
@@ -577,70 +530,6 @@ class APICall{
             else{
                 if let err = response.result.error as? URLError, err.code == .notConnectedToInternet {
                     completion("no net", ArticleDetailAPIResult.Failure(err.localizedDescription))
-                }
-            }
-        }
-    }
-    
-    //save and remove category (user specific)
-    func saveRemoveCategoryAPI(category: String,type: String,_ completion : @escaping (SaveRemoveCategoryResult) -> ()){
-        var headers : [String: String]
-        var method : HTTPMethod
-        if UserDefaults.standard.value(forKey: "token") != nil{
-            let token = "Token " + "\(UserDefaults.standard.value(forKey: "token")!)"
-            headers = ["Authorization": token]
-        }
-        else if UserDefaults.standard.value(forKey: "googleToken") != nil{
-            let token = "Token " + "\(UserDefaults.standard.value(forKey: "googleToken")!)"
-            headers = ["Authorization": token]
-        }
-        else if UserDefaults.standard.value(forKey: "FBToken") != nil{
-            let token = "Token " + "\(UserDefaults.standard.value(forKey: "FBToken")!)"
-            headers = ["Authorization": token]
-        }
-        else{
-            headers = ["Authorization": ""]
-        }
-        
-        let url = APPURL.saveRemoveCategoryURL
-        let param = ["category" : category]
-        if type == "save"{
-            method = .post
-        }
-        else{
-            method = .delete
-        }
-        Alamofire.request(url,method: method, parameters: param,encoding: URLEncoding.httpBody, headers: headers).responseString{
-            response in
-            if(response.result.isSuccess){
-                
-                if let data = response.data {
-                    let  jsonDecoder = JSONDecoder()
-                    do {
-                        let jsonData = try jsonDecoder.decode(MainModel.self, from: data)
-                        
-                        if jsonData.header.status == "1" {
-                            completion(SaveRemoveCategoryResult.Success((jsonData.body?.Msg)!))
-                        }
-                        else{
-                            var error_msg = ""
-                            if response.response?.statusCode == 400{
-                                error_msg = (jsonData.errors?.Msg)!
-                            }
-                            else if response.response?.statusCode == 404{
-                                error_msg = (jsonData.errors!.invalid_credentials!)
-                            }
-                            completion(SaveRemoveCategoryResult.Failure(error_msg))
-                        }
-                    }
-                    catch {
-                        completion(SaveRemoveCategoryResult.Failure(("error")))
-                    }
-                }
-            }
-            else{
-                if let err = response.result.error as? URLError, err.code == .notConnectedToInternet {
-                    completion(SaveRemoveCategoryResult.Failure(err.localizedDescription))
                 }
             }
         }

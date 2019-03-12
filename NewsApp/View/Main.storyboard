@@ -1787,7 +1787,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Enter Email" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="D2r-fh-K4O" customClass="SkyFloatingLabelTextField" customModule="SkyFloatingLabelTextField">
-                                <rect key="frame" x="65.5" y="237.5" width="244" height="24"/>
+                                <rect key="frame" x="65.5" y="215.5" width="244" height="46"/>
                                 <nil key="textColor"/>
                                 <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="29"/>
                                 <textInputTraits key="textInputTraits"/>
@@ -1887,21 +1887,6 @@
             </objects>
             <point key="canvasLocation" x="3890.4000000000001" y="700.29985007496259"/>
         </scene>
-        <!--Child View Controller-->
-        <scene sceneID="QtZ-68-27c">
-            <objects>
-                <viewController id="daf-BB-in7" customClass="ChildViewController" customModule="NewsApp" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="X4y-dR-oSX">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        <viewLayoutGuide key="safeArea" id="t6F-lN-hNr"/>
-                    </view>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="AEI-aa-5Xo" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="4554" y="683"/>
-        </scene>
         <!--News DetailVC-->
         <scene sceneID="KvS-be-s0a">
             <objects>
@@ -1925,12 +1910,9 @@
                                         <rect key="frame" x="0.0" y="0.0" width="375" height="51"/>
                                         <subviews>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hzz-HH-x4b">
-                                                <rect key="frame" x="0.0" y="0.0" width="55" height="55"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="55" height="51"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" constant="75" id="3sw-cK-bAk">
-                                                        <variation key="heightClass=regular-widthClass=compact" constant="55"/>
-                                                    </constraint>
-                                                    <constraint firstAttribute="height" constant="75" id="xsV-FT-VcD">
                                                         <variation key="heightClass=regular-widthClass=compact" constant="55"/>
                                                     </constraint>
                                                 </constraints>
@@ -1942,6 +1924,7 @@
                                         </subviews>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
+                                            <constraint firstItem="hzz-HH-x4b" firstAttribute="height" secondItem="P2Z-xr-irS" secondAttribute="height" id="8y6-cO-xvX"/>
                                             <constraint firstItem="hzz-HH-x4b" firstAttribute="top" secondItem="P2Z-xr-irS" secondAttribute="top" id="p0r-8k-295"/>
                                             <constraint firstItem="hzz-HH-x4b" firstAttribute="leading" secondItem="P2Z-xr-irS" secondAttribute="leading" id="tZo-z9-Voa"/>
                                         </constraints>
@@ -2653,10 +2636,10 @@
                                 </constraints>
                             </view>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="6" translatesAutoresizingMaskIntoConstraints="NO" id="GB5-jB-3xm">
-                                <rect key="frame" x="56.5" y="147" width="262.5" height="62"/>
+                                <rect key="frame" x="56.5" y="110.5" width="262.5" height="98.5"/>
                                 <subviews>
                                     <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="line" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="WNS-Ff-LIs" customClass="SkyFloatingLabelTextField" customModule="SkyFloatingLabelTextField">
-                                        <rect key="frame" x="0.0" y="0.0" width="262.5" height="28"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="262.5" height="46"/>
                                         <nil key="textColor"/>
                                         <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="30"/>
                                         <textInputTraits key="textInputTraits"/>
@@ -2683,7 +2666,7 @@
                                         </connections>
                                     </textField>
                                     <textField opaque="NO" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="line" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="dQv-vb-8U3" customClass="SkyFloatingLabelTextField" customModule="SkyFloatingLabelTextField">
-                                        <rect key="frame" x="0.0" y="34" width="262.5" height="28"/>
+                                        <rect key="frame" x="0.0" y="52" width="262.5" height="46.5"/>
                                         <nil key="textColor"/>
                                         <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="30"/>
                                         <textInputTraits key="textInputTraits" secureTextEntry="YES" textContentType="password"/>

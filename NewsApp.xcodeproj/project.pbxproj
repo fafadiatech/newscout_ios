@@ -35,7 +35,6 @@
 		2648C69521C915F300CCB657 /* SocialLoginTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2648C69421C915F300CCB657 /* SocialLoginTests.swift */; };
 		2648C69721C917D500CCB657 /* FunctionalityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2648C69621C917D500CCB657 /* FunctionalityTests.swift */; };
 		264C5396219AAAD60050F79D /* Toast.swift in Sources */ = {isa = PBXBuildFile; fileRef = 264C5395219AAAD60050F79D /* Toast.swift */; };
-		264E30492229032C00F73147 /* ChildViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 264E30482229032C00F73147 /* ChildViewController.swift */; };
 		264E304B2229151E00F73147 /* submenuCVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 264E304A2229151E00F73147 /* submenuCVCell.swift */; };
 		265E218621649ACE0053E5A0 /* SettingsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 265E218521649ACE0053E5A0 /* SettingsVC.swift */; };
 		266C6B302158C2B6009A0A9D /* SearchResultTVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 266C6B2F2158C2B6009A0A9D /* SearchResultTVCell.swift */; };
@@ -144,7 +143,6 @@
 		2648C69421C915F300CCB657 /* SocialLoginTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocialLoginTests.swift; sourceTree = "<group>"; };
 		2648C69621C917D500CCB657 /* FunctionalityTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FunctionalityTests.swift; sourceTree = "<group>"; };
 		264C5395219AAAD60050F79D /* Toast.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Toast.swift; sourceTree = "<group>"; };
-		264E30482229032C00F73147 /* ChildViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChildViewController.swift; sourceTree = "<group>"; };
 		264E304A2229151E00F73147 /* submenuCVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = submenuCVCell.swift; sourceTree = "<group>"; };
 		2652532921EF5C950061F8E0 /* NewsApp.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = NewsApp.entitlements; sourceTree = "<group>"; };
 		265E218521649ACE0053E5A0 /* SettingsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsVC.swift; sourceTree = "<group>"; };
@@ -399,7 +397,6 @@
 				7E1D1398216CC79000FE342A /* HomeParentVC.swift */,
 				265E218521649ACE0053E5A0 /* SettingsVC.swift */,
 				421ADFBA2156407400C00F6F /* HomeVC.swift */,
-				264E30482229032C00F73147 /* ChildViewController.swift */,
 				421ADFEF21566FE000C00F6F /* NewsDetailVC.swift */,
 				42D12BF1215A0AEB0085EF12 /* SearchVC.swift */,
 			);
@@ -796,7 +793,6 @@
 				26BEF80F222E7C9F0002DEBD /* HeadingSubMenu+CoreDataProperties.swift in Sources */,
 				260FB9DA2221656F008B0291 /* NewsURL+CoreDataProperties.swift in Sources */,
 				269A53D622016D6B0031DD78 /* BookmarkDetailVC.swift in Sources */,
-				264E30492229032C00F73147 /* ChildViewController.swift in Sources */,
 				263F2D9C216B7FC700764C45 /* ProfileVC.swift in Sources */,
 				421ADFF22156755100C00F6F /* SuggestedNewsCVCell.swift in Sources */,
 				260FB9D72221656F008B0291 /* Category+CoreDataClass.swift in Sources */,
