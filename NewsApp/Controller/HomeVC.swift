@@ -29,10 +29,10 @@ class HomeVC: UIViewController{
     var lastContentOffset: CGFloat = 0
     var articlesArr = [Article]()
     var selectedCategory = ""
-      var tagArr : [String] = []
+    var tagArr : [String] = []
+    
     override func viewDidLoad(){
         super.viewDidLoad()
-        
         self.activityIndicator.startAnimating()
         lblNonews.isHidden = true
         NotificationCenter.default.addObserver(self, selector: #selector(darkModeEnabled(_:)), name: .darkModeEnabled, object: nil)
@@ -63,7 +63,7 @@ class HomeVC: UIViewController{
             url = url + "&tag=" + tag
         }
         if tagArr.count > 0{
-        UserDefaults.standard.set(url, forKey: "submenuURL")
+            UserDefaults.standard.set(url, forKey: "submenuURL")
         }else{
             UserDefaults.standard.set("", forKey: "submenuURL")
         }
@@ -81,15 +81,13 @@ class HomeVC: UIViewController{
                     fetchBookmarkDataFromDB()
                 }
             }
-            
         }
         
         if Reachability.isConnectedToNetwork(){
             activityIndicator.startAnimating()
             if UserDefaults.standard.value(forKey: "submenuURL") != nil{
-            var submenuURL = UserDefaults.standard.value(forKey: "submenuURL") as! String
-            self.saveArticlesInDB(url : submenuURL)
-            fetchArticlesFromDB()
+                self.saveArticlesInDB()
+                fetchArticlesFromDB()
             }
         }else{
             coredataRecordCount = DBManager().IsCoreDataEmpty(entity: "NewsArticle")
@@ -101,21 +99,9 @@ class HomeVC: UIViewController{
                 lblNonews.isHidden = true
             }
         }
-      
+        
     }
-    func fetchByTags(){
-        let managedContext =
-            appDelegate?.persistentContainer.viewContext
-        let fetchRequest =
-            NSFetchRequest<NewsArticle>(entityName: "NewsArticle")
-        do {
-            ShowArticle =  try (managedContext?.fetch(fetchRequest))!
-        }catch let error as NSError {
-            print("Could not fetch. \(error), \(error.userInfo)")
-        }
-        //HomeNewsTV.reloadData()
-    }
-   
+    
     func fetchsubMenuTags(submenu : String){
         let tagresult = DBManager().fetchMenuTags(subMenuName: submenu)
         switch tagresult{
@@ -150,19 +136,16 @@ class HomeVC: UIViewController{
         }
     }
     
-    func saveArticlesInDB(url: String){
+    func saveArticlesInDB(){
         var subMenuURL = ""
         if UserDefaults.standard.value(forKey: "submenuURL") != nil{
-         subMenuURL =  UserDefaults.standard.value(forKey: "submenuURL") as! String
+            subMenuURL =  UserDefaults.standard.value(forKey: "submenuURL") as! String
         }
         DBManager().SaveDataDB(nextUrl: subMenuURL ){response in
             self.fetchArticlesFromDB()
-           // self.fetchByTags()
         }
     }
-//    func filterList() {
-//      ShowArticle.sorted{ $0.published_on < $1.published_on }
-//    }
+    
     func fetchBookmarkDataFromDB(){
         let result = DBManager().FetchLikeBookmarkFromDB()
         switch result {
@@ -205,7 +188,7 @@ class HomeVC: UIViewController{
     }
     
     @objc func refreshNews(refreshControl: UIRefreshControl) {
-       // FetchArticlesAPICall()
+        saveArticlesInDB()
         refreshControl.endRefreshing()
     }
     
@@ -226,8 +209,7 @@ class HomeVC: UIViewController{
         if Reachability.isConnectedToNetwork(){
             activityIndicator.startAnimating()
             if UserDefaults.standard.value(forKey: "submenuURL") != nil{
-                var submenuURL = UserDefaults.standard.value(forKey: "submenuURL") as! String
-                self.saveArticlesInDB(url : submenuURL)
+                self.saveArticlesInDB()
                 fetchArticlesFromDB()
             }
         }else{
@@ -243,7 +225,7 @@ class HomeVC: UIViewController{
     }
     
     func FetchArticlesAPICall(){
-        saveArticlesInDB(url:  APPURL.ArticlesByCategoryURL + "\(selectedCategory)" )
+        saveArticlesInDB()
     }
     
     func showMsg(title: String, msg : String){
@@ -372,7 +354,7 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
                     if nextURL[0].category == submenu {
                         let nexturl = nextURL[0].nextURL
                         UserDefaults.standard.set(nexturl, forKey: "submenuURL")
-                        self.saveArticlesInDB(url : nexturl!)
+                        self.saveArticlesInDB()
                     }
                 }
                 else{
