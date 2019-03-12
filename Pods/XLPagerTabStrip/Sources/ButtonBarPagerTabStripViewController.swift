@@ -192,6 +192,7 @@ open class ButtonBarPagerTabStripViewController: PagerTabStripViewController, Pa
         shouldUpdateButtonBarView = true
         reloadPagerTabStripView()
     }
+    
     open override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         

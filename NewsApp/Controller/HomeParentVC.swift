@@ -57,21 +57,21 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
         floaty.buttonColor = colorConstants.redColor
         floaty.plusColor = .black
         
-        floaty.addItem("Search", icon: UIImage(named: AssetConstants.search)!) { item in
+        floaty.addItem("  Search  ", icon: UIImage(named: AssetConstants.search)!) { item in
             floaty.autoCloseOnTap = true
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             let searchvc:SearchVC = storyboard.instantiateViewController(withIdentifier: "SearchID") as! SearchVC
             self.present(searchvc, animated: true, completion: nil)
         }
         
-        floaty.addItem("Settings", icon: UIImage(named: AssetConstants.settings)!) { item in
+        floaty.addItem("  Settings  ", icon: UIImage(named: AssetConstants.settings)!) { item in
             floaty.autoCloseOnTap = true
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             let settingvc:SettingsVC = storyboard.instantiateViewController(withIdentifier: "SettingsID") as! SettingsVC
             self.present(settingvc, animated: true, completion: nil)
         }
         
-        floaty.addItem("Bookmark", icon: UIImage(named: AssetConstants.bookmark)!) { item in
+        floaty.addItem("  Bookmark  ", icon: UIImage(named: AssetConstants.bookmark)!) { item in
             floaty.autoCloseOnTap = true
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             let bookmarkvc:BookmarkVC = storyboard.instantiateViewController(withIdentifier: "BookmarkID") as! BookmarkVC

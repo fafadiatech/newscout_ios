@@ -82,23 +82,38 @@ class HomeVC: UIViewController{
                 }
             }
         }
-        
-        if Reachability.isConnectedToNetwork(){
-            activityIndicator.startAnimating()
-            if UserDefaults.standard.value(forKey: "submenuURL") != nil{
-                self.saveArticlesInDB()
-                fetchArticlesFromDB()
-            }
-        }else{
-            coredataRecordCount = DBManager().IsCoreDataEmpty(entity: "NewsArticle")
-            if self.coredataRecordCount != 0 {
-                self.fetchArticlesFromDB()
-            }
-            else{
-                activityIndicator.stopAnimating()
-                lblNonews.isHidden = true
+        coredataRecordCount = DBManager().IsCoreDataEmpty(entity: "NewsArticle")
+        if self.coredataRecordCount != 0 {
+            self.fetchArticlesFromDB()
+        }
+        else{
+            if Reachability.isConnectedToNetwork(){
+                activityIndicator.startAnimating()
+                if UserDefaults.standard.value(forKey: "submenuURL") != nil{
+                    self.saveArticlesInDB()
+                }
+            }else{
+            activityIndicator.stopAnimating()
+            lblNonews.isHidden = true
             }
         }
+        
+//        if Reachability.isConnectedToNetwork(){
+//            activityIndicator.startAnimating()
+//            if UserDefaults.standard.value(forKey: "submenuURL") != nil{
+//                self.saveArticlesInDB()
+//                fetchArticlesFromDB()
+//            }
+//        }else{
+//            coredataRecordCount = DBManager().IsCoreDataEmpty(entity: "NewsArticle")
+//            if self.coredataRecordCount != 0 {
+//                self.fetchArticlesFromDB()
+//            }
+//            else{
+//                activityIndicator.stopAnimating()
+//                lblNonews.isHidden = true
+//            }
+//        }
         
     }
     
