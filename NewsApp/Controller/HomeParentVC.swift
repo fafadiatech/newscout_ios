@@ -134,6 +134,7 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
                     }
                     self.subMenuArr.append(self.submenu)
                     self.fetchsubMenuTags(submenu: self.subMenuArr[self.HeadingRow][self.subMenuRow])
+                      UserDefaults.standard.set(self.subMenuArr[self.HeadingRow][self.subMenuRow], forKey: "submenu")
                     self.reloadPagerTabStripView()
                     
                 case .Failure(let error):
@@ -276,12 +277,18 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
   override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
     if (collectionView == buttonBarView) {
         subMenuRow = indexPath.row
+        UserDefaults.standard.set(subMenuArr[HeadingRow][indexPath.row], forKey: "submenu")
         fetchsubMenuTags(submenu: subMenuArr[HeadingRow][indexPath.row])
         var url = APPURL.ArticlesByTagsURL
         for tag in tagArr {
             url = url + "&tag=" + tag
         }
+        if tagArr.count > 0{
         UserDefaults.standard.set(url, forKey: "submenuURL")
+        }
+        else{
+            UserDefaults.standard.set("", forKey: "submenuURL")
+        }
         return super.collectionView(collectionView,didSelectItemAt: indexPath)
         
     }

@@ -62,7 +62,11 @@ class HomeVC: UIViewController{
         for tag in tagArr {
             url = url + "&tag=" + tag
         }
+        if tagArr.count > 0{
         UserDefaults.standard.set(url, forKey: "submenuURL")
+        }else{
+            UserDefaults.standard.set("", forKey: "submenuURL")
+        }
         
         //save and fetch like and bookmark data from DB
         if UserDefaults.standard.value(forKey: "token") != nil{
@@ -357,15 +361,17 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
         return cell
     }
     
-    /*func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         if indexPath.row == tableView.numberOfRows(inSection: indexPath.section) - 1 {
-            let result =  DBManager().FetchNextURL(category: selectedCategory)
+            var submenu = UserDefaults.standard.value(forKey: "submenu") as! String
+            let result =  DBManager().FetchNextURL(category: submenu)
             switch result {
             case .Success(let DBData) :
                 let nextURL = DBData
                 if nextURL.count != 0{
-                    if nextURL[0].category == selectedCategory{
+                    if nextURL[0].category == submenu {
                         let nexturl = nextURL[0].nextURL
+                        UserDefaults.standard.set(nexturl, forKey: "submenuURL")
                         self.saveArticlesInDB(url : nexturl!)
                     }
                 }
@@ -376,7 +382,7 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
                 print(errorMsg)
             }
         }
-    }*/
+    }
     
 }
 

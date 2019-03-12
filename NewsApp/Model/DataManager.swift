@@ -34,16 +34,17 @@ class DBManager{
             if self.ArticleData.count != 0{
                 
                 if self.ArticleData[0].header.status == "1" {
-                  /*  if self.ArticleData[0].body?.next != nil{
-                        if self.someEntityExists(id: 0, entity: "NewsURL", keyword: (self.ArticleData[0].body?.articles[0].category)!) == false {
+                    if self.ArticleData[0].body?.next != nil{
+                        var submenu = UserDefaults.standard.value(forKey: "submenu") as! String
+                        if self.someEntityExists(id: 0, entity: "NewsURL", keyword: submenu) == false {
                             let newUrl = NewsURL(context: managedContext!)
-                            newUrl.category = self.ArticleData[0].body?.articles[0].category
+                            newUrl.category = submenu
                             newUrl.nextURL = self.ArticleData[0].body?.next
                         }
                         else{
                             let fetchRequest =
                                 NSFetchRequest<NSManagedObject>(entityName: "NewsURL")
-                            fetchRequest.predicate = NSPredicate(format: "category  = %s", (self.ArticleData[0].body!.articles[0].category)!)
+                            fetchRequest.predicate = NSPredicate(format: "category contains[c] %@", submenu)
                             
                             do {
                                 URLData = try managedContext?.fetch(fetchRequest) as! [NewsURL]
@@ -51,13 +52,13 @@ class DBManager{
                                 print("Could not fetch. \(error), \(error.userInfo)")
                             }
                             for url in URLData{
-                                if url.category == self.ArticleData[0].body!.articles[0].category {
+                                if url.category == submenu {
                                     url.nextURL = self.ArticleData[0].body?.next
                                 }
                             }
                         }
                         self.saveBlock()
-                    }*/
+                    }
                     
                     for news in self.ArticleData[0].body!.articles{
                         if  self.someEntityExists(id: Int(news.article_id!), entity: "NewsArticle", keyword: "") == false
