@@ -1921,10 +1921,30 @@
                                         <rect key="frame" x="0.0" y="0.0" width="375" height="249.5"/>
                                         <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     </view>
-                                    <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="P2Z-xr-irS">
-                                        <rect key="frame" x="0.0" y="0.0" width="375" height="50"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="P2Z-xr-irS">
+                                        <rect key="frame" x="0.0" y="0.0" width="375" height="51"/>
+                                        <subviews>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hzz-HH-x4b">
+                                                <rect key="frame" x="0.0" y="0.0" width="55" height="55"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" constant="75" id="3sw-cK-bAk">
+                                                        <variation key="heightClass=regular-widthClass=compact" constant="55"/>
+                                                    </constraint>
+                                                    <constraint firstAttribute="height" constant="75" id="xsV-FT-VcD">
+                                                        <variation key="heightClass=regular-widthClass=compact" constant="55"/>
+                                                    </constraint>
+                                                </constraints>
+                                                <state key="normal" backgroundImage="back1"/>
+                                                <connections>
+                                                    <action selector="btnBackAction:" destination="yxW-qj-gIF" eventType="touchUpInside" id="PqB-5n-a9h"/>
+                                                </connections>
+                                            </button>
+                                        </subviews>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <constraints>
+                                            <constraint firstItem="hzz-HH-x4b" firstAttribute="top" secondItem="P2Z-xr-irS" secondAttribute="top" id="p0r-8k-295"/>
+                                            <constraint firstItem="hzz-HH-x4b" firstAttribute="leading" secondItem="P2Z-xr-irS" secondAttribute="leading" id="tZo-z9-Voa"/>
+                                        </constraints>
                                     </view>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="has-VQ-hNu">
                                         <rect key="frame" x="164.5" y="110" width="100" height="50"/>
@@ -2044,6 +2064,7 @@
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstItem="NRh-4q-HXp" firstAttribute="top" secondItem="RxT-xW-cwM" secondAttribute="top" id="0fy-LF-lhK"/>
+                                    <constraint firstAttribute="trailing" secondItem="P2Z-xr-irS" secondAttribute="trailing" id="9NB-qQ-CRb"/>
                                     <constraint firstAttribute="trailing" secondItem="RN0-l8-Mx1" secondAttribute="trailing" id="Ahl-iq-Dhe"/>
                                     <constraint firstItem="RN0-l8-Mx1" firstAttribute="height" secondItem="RxT-xW-cwM" secondAttribute="height" multiplier="0.4" id="Bkb-Su-I7N">
                                         <variation key="heightClass=regular-widthClass=compact" constant="62"/>
@@ -2053,7 +2074,9 @@
                                         <variation key="heightClass=regular-widthClass=regular" constant="0.0"/>
                                     </constraint>
                                     <constraint firstItem="RN0-l8-Mx1" firstAttribute="width" secondItem="RxT-xW-cwM" secondAttribute="width" id="JOB-5A-Qw0"/>
+                                    <constraint firstItem="P2Z-xr-irS" firstAttribute="top" secondItem="RxT-xW-cwM" secondAttribute="top" id="KRM-Zo-wBQ"/>
                                     <constraint firstItem="has-VQ-hNu" firstAttribute="centerX" secondItem="pm3-HD-Vbj" secondAttribute="centerX" constant="27" id="LNZ-ob-GZj"/>
+                                    <constraint firstItem="P2Z-xr-irS" firstAttribute="leading" secondItem="RxT-xW-cwM" secondAttribute="leading" id="NI4-mV-eec"/>
                                     <constraint firstItem="has-VQ-hNu" firstAttribute="centerY" secondItem="pm3-HD-Vbj" secondAttribute="centerY" constant="10.25" id="Ow9-aT-ajs"/>
                                     <constraint firstItem="fW6-pK-tzj" firstAttribute="height" secondItem="RxT-xW-cwM" secondAttribute="height" multiplier="0.28" id="T9E-wp-YJk">
                                         <variation key="heightClass=regular-widthClass=compact" constant="0.0"/>
@@ -2172,21 +2195,6 @@
                                     <constraint firstItem="jGY-TI-WKc" firstAttribute="leading" secondItem="Ume-RY-B4l" secondAttribute="leading" id="fj4-s0-MQv"/>
                                 </constraints>
                             </view>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hzz-HH-x4b">
-                                <rect key="frame" x="0.0" y="0.0" width="55" height="55"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="75" id="3sw-cK-bAk">
-                                        <variation key="heightClass=regular-widthClass=compact" constant="55"/>
-                                    </constraint>
-                                    <constraint firstAttribute="height" constant="75" id="xsV-FT-VcD">
-                                        <variation key="heightClass=regular-widthClass=compact" constant="55"/>
-                                    </constraint>
-                                </constraints>
-                                <state key="normal" backgroundImage="back1"/>
-                                <connections>
-                                    <action selector="btnBackAction:" destination="yxW-qj-gIF" eventType="touchUpInside" id="PqB-5n-a9h"/>
-                                </connections>
-                            </button>
                             <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="d60-rI-rFg">
                                 <rect key="frame" x="0.0" y="-768" width="1024" height="768"/>
                                 <subviews>
@@ -2311,6 +2319,7 @@
                             <constraint firstItem="ZdY-Zp-FHd" firstAttribute="trailing" secondItem="wzi-s7-o2w" secondAttribute="trailing" id="A2e-EY-ss2"/>
                             <constraint firstItem="d60-rI-rFg" firstAttribute="leading" secondItem="wzi-s7-o2w" secondAttribute="leading" id="BXI-Ye-nJ3"/>
                             <constraint firstItem="Ume-RY-B4l" firstAttribute="leading" secondItem="wzi-s7-o2w" secondAttribute="leading" id="H82-RC-QMQ"/>
+                            <constraint firstItem="P2Z-xr-irS" firstAttribute="height" secondItem="ZdY-Zp-FHd" secondAttribute="height" id="K1q-Cz-1gI"/>
                             <constraint firstItem="HS9-vL-0jm" firstAttribute="height" secondItem="ZoE-gQ-3zk" secondAttribute="height" multiplier="0.082" id="Nxf-BZ-pg0"/>
                             <constraint firstItem="Ume-RY-B4l" firstAttribute="top" secondItem="RxT-xW-cwM" secondAttribute="bottom" constant="8" id="Sxt-pB-lVd"/>
                             <constraint firstItem="RxT-xW-cwM" firstAttribute="trailing" secondItem="wzi-s7-o2w" secondAttribute="trailing" id="U55-v8-8Dd"/>
@@ -2321,9 +2330,7 @@
                             <constraint firstItem="d60-rI-rFg" firstAttribute="top" secondItem="ZoE-gQ-3zk" secondAttribute="top" id="fq7-Cs-Pgp"/>
                             <constraint firstItem="d60-rI-rFg" firstAttribute="trailing" secondItem="wzi-s7-o2w" secondAttribute="trailing" id="h2z-6d-jmv"/>
                             <constraint firstItem="Ume-RY-B4l" firstAttribute="bottom" secondItem="wzi-s7-o2w" secondAttribute="bottom" id="hl6-jQ-VW6"/>
-                            <constraint firstItem="hzz-HH-x4b" firstAttribute="leading" secondItem="wzi-s7-o2w" secondAttribute="leading" id="iZU-HQ-S7m"/>
                             <constraint firstItem="Ume-RY-B4l" firstAttribute="trailing" secondItem="wzi-s7-o2w" secondAttribute="trailing" id="juw-sr-kUf"/>
-                            <constraint firstItem="hzz-HH-x4b" firstAttribute="top" secondItem="ZoE-gQ-3zk" secondAttribute="top" id="kTG-6c-dpC"/>
                             <constraint firstItem="RxT-xW-cwM" firstAttribute="top" secondItem="ZoE-gQ-3zk" secondAttribute="top" id="npb-Q3-6Hf"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="wzi-s7-o2w"/>

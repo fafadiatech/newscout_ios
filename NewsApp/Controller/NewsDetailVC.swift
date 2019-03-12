@@ -45,6 +45,7 @@ class NewsDetailVC: UIViewController {
     @IBOutlet weak var viewLikeDislikeBottom: NSLayoutConstraint!
     @IBOutlet weak var avPlayerView: AVPlayerView!
     @IBOutlet weak var viewBack: UIView!
+    
     let imageCache = NSCache<NSString, UIImage>()
     var playbackSlider = UISlider()
     var RecomArticleData = [ArticleStatus]()
@@ -71,6 +72,7 @@ class NewsDetailVC: UIViewController {
     let activityIndicator = MDCActivityIndicator()
     var indexCount = 0
     var currentEntity = ""
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         activityIndicator.cycleColors = [.blue]
@@ -82,17 +84,21 @@ class NewsDetailVC: UIViewController {
         txtViewNewsDesc.textContainer.lineBreakMode = NSLineBreakMode.byTruncatingTail
         if UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad && statusBarOrientation.isPortrait{
             viewLikeDislike.isHidden = false
+            viewBack.isHidden = false
             addsourceConstraint()
         }
         else if UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad && statusBarOrientation.isLandscape {
             viewLikeDislike.isHidden = true
+            viewBack.isHidden = true
             addLandscapeConstraints()
         }
         else{
             viewLikeDislike.isHidden = true
+            viewBack.isHidden = true
             addPotraitConstraint()
         }
         viewLikeDislike.backgroundColor = colorConstants.redColor
+        viewBack.backgroundColor = colorConstants.redColor
         ViewWebContainer.isHidden = true
         if ShowArticle.count != 0 {
             indexCount = ShowArticle.count
@@ -254,12 +260,14 @@ class NewsDetailVC: UIViewController {
         if UIDevice.current.orientation.isLandscape {
             print(UIDevice.current.orientation)
             viewLikeDislike.isHidden = true
+            viewBack.isHidden = true
             print("landscape")
             addLandscapeConstraints()
         } else {
             print(UIDevice.current.orientation)
             print("potrait")
             viewLikeDislike.isHidden = false
+            viewBack.isHidden = false
             if UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad{
                 addipadPotraitConstraint()
             }
@@ -340,21 +348,26 @@ class NewsDetailVC: UIViewController {
         if UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.phone {
             if viewLikeDislike.isHidden == true{
                 viewLikeDislike.isHidden = false
+                viewBack.isHidden = false
             }
             else{
                 viewLikeDislike.isHidden = true
+                viewBack.isHidden = true
             }
         }
         if UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad{
             if statusBarOrientation.isPortrait {
                 viewLikeDislike.isHidden = false
+                viewBack.isHidden = false
             }
             else{
                 if viewLikeDislike.isHidden == true{
                     viewLikeDislike.isHidden = false
+                    viewBack.isHidden = false
                 }
                 else{
                     viewLikeDislike.isHidden = true
+                    viewBack.isHidden = true
                 }
             }
         }
@@ -404,6 +417,7 @@ class NewsDetailVC: UIViewController {
             case UISwipeGestureRecognizerDirection.right:
                 ViewWebContainer.isHidden = true
                 viewLikeDislike.isHidden = false
+                viewBack.isHidden = false
                 
             case UISwipeGestureRecognizerDirection.down:
                 if newsCurrentIndex > 0
@@ -420,6 +434,7 @@ class NewsDetailVC: UIViewController {
             case UISwipeGestureRecognizerDirection.left:
                 ViewWebContainer.isHidden = false
                 viewLikeDislike.isHidden = true
+                viewBack.isHidden = true
                 let url = URL(string: sourceURL)
                 let domain = url?.host
                 lblWebSource.text = "\(domain!)"
@@ -886,6 +901,7 @@ class NewsDetailVC: UIViewController {
     @IBAction func btnWebBackAction(_ sender: Any) {
         ViewWebContainer.isHidden = true
         viewLikeDislike.isHidden = false
+        viewBack.isHidden = false
     }
     
     //btn Back Action

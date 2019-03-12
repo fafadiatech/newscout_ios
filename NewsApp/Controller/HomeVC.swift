@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import Floaty
 import XLPagerTabStrip
 import Alamofire
 import CoreData
