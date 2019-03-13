@@ -359,7 +359,13 @@ enum SubMenuDBFetchResult {
     case Success([HeadingSubMenu])
     case Failure(String)
 }
+
 enum MenuHashTagDBFetchResult {
     case Success([MenuHashTag])
+    case Failure(String)
+}
+
+enum MediaDBFetchResult {
+    case Success([Media])
     case Failure(String)
 }

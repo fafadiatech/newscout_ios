@@ -89,9 +89,9 @@ class DBManager{
                             }
                             if news.hash_tags.count > 0 {
                                 for tag in news.hash_tags {
-                                        let newTag = HashTag(context: managedContext!)
-                                        newTag.articleId = Int64(news.article_id!)
-                                        newTag.name = tag
+                                    let newTag = HashTag(context: managedContext!)
+                                    newTag.articleId = Int64(news.article_id!)
+                                    newTag.name = tag
                                     newTag.addToArticleTags(newArticle)
                                     //newArticle.addToHashTags(newTag)
                                 }
@@ -111,6 +111,21 @@ class DBManager{
         }
     }
     
+    //fetch article media
+    func fetchArticleMedia(articleId : Int) -> MediaDBFetchResult{
+        var  mediaData = [Media]()
+        let managedContext =
+            appDelegate?.persistentContainer.viewContext
+        let mediaRequest =  NSFetchRequest<Media>(entityName: "Media")
+        mediaRequest.predicate = NSPredicate(format: "article_id = %d", articleId)
+        do {
+            mediaData = try (managedContext?.fetch(mediaRequest))!
+        }catch let error as NSError {
+            return MediaDBFetchResult.Failure(error.localizedDescription)
+        }
+        return MediaDBFetchResult.Success(mediaData)
+    }
+    
     //fetch newsArticle heading->submenu->tags
     func ArticlesfetchByTags() -> ArticleDBfetchResult{
         var ShowArticle = [NewsArticle]()
@@ -120,29 +135,29 @@ class DBManager{
         let fetchRequest =
             NSFetchRequest<NewsArticle>(entityName: "NewsArticle")
         if UserDefaults.standard.value(forKey: "subMenuTags") != nil{
-        let tagArr =  UserDefaults.standard.value(forKey: "subMenuTags") as! [String]
-        let tagRequest =  NSFetchRequest<HashTag>(entityName: "HashTag")
-        for tag in tagArr{
-            tagRequest.predicate = NSPredicate(format: "name contains[c] %@", tag)
-            do {
-                tagData =  try (managedContext?.fetch(tagRequest))!
-                for tag in tagData{
-                    fetchRequest.predicate = NSPredicate(format: "article_id = %d ",tag.articleId )
-                    do {
-                        var article =  try (managedContext?.fetch(fetchRequest))!
-                        if article.count > 0{
-                            if !ShowArticle.contains(article[0]){
-                                ShowArticle.append(article[0])
+            let tagArr =  UserDefaults.standard.value(forKey: "subMenuTags") as! [String]
+            let tagRequest =  NSFetchRequest<HashTag>(entityName: "HashTag")
+            for tag in tagArr{
+                tagRequest.predicate = NSPredicate(format: "name contains[c] %@", tag)
+                do {
+                    tagData =  try (managedContext?.fetch(tagRequest))!
+                    for tag in tagData{
+                        fetchRequest.predicate = NSPredicate(format: "article_id = %d ",tag.articleId )
+                        do {
+                            var article =  try (managedContext?.fetch(fetchRequest))!
+                            if article.count > 0{
+                                if !ShowArticle.contains(article[0]){
+                                    ShowArticle.append(article[0])
+                                }
                             }
+                        }catch let error as NSError {
+                            return ArticleDBfetchResult.Failure(error.localizedDescription)
                         }
-                    }catch let error as NSError {
-                        return ArticleDBfetchResult.Failure(error.localizedDescription)
                     }
+                }catch let error as NSError {
+                    print("Could not fetch. \(error), \(error.userInfo)")
                 }
-            }catch let error as NSError {
-                print("Could not fetch. \(error), \(error.userInfo)")
             }
-        }
         }
         return ArticleDBfetchResult.Success(ShowArticle)
     }
@@ -807,41 +822,41 @@ class DBManager{
             response  in
             switch response {
             case .Success(let data) :
-                 menuData = data
-                 if  menuData[0].header.status == "1"{
+                menuData = data
+                if  menuData[0].header.status == "1"{
                     for res in menuData[0].body.results{
                         if self.someEntityExists(id: res.heading.headingId, entity: "MenuHeadings", keyword: "") == false{
-                        let newheading = MenuHeadings(context: managedContext!)
-                        newheading.headingName =  res.heading.headingName
-                        newheading.headingId = Int64(res.heading.headingId)
+                            let newheading = MenuHeadings(context: managedContext!)
+                            newheading.headingName =  res.heading.headingName
+                            newheading.headingId = Int64(res.heading.headingId)
                         }
                         for sub in res.heading.submenu{
                             if self.someEntityExists(id: sub.id, entity: "HeadingSubMenu", keyword: "") == false{
-                             let newsubMenu = HeadingSubMenu(context: managedContext!)
-                            newsubMenu.subMenuName = sub.name
-                            newsubMenu.subMenuId = Int64(sub.id)
-                            newsubMenu.headingId = Int64(res.heading.headingId)
-                           
-                            for tag in sub.hash_tags{
-                                if self.someEntityExists(id: tag.id, entity: "MenuHashTag", keyword: "") == false{
-                                    let newTag = MenuHashTag(context: managedContext!)
-                                    newTag.hashTagId = Int64(tag.id)
-                                    newTag.hashTagName = tag.name
-                                    newTag.subMenuId = Int64(sub.id)
-                                    newTag.subMenuName = sub.name
-                                    newsubMenu.addToTags(newTag)
+                                let newsubMenu = HeadingSubMenu(context: managedContext!)
+                                newsubMenu.subMenuName = sub.name
+                                newsubMenu.subMenuId = Int64(sub.id)
+                                newsubMenu.headingId = Int64(res.heading.headingId)
+                                
+                                for tag in sub.hash_tags{
+                                    if self.someEntityExists(id: tag.id, entity: "MenuHashTag", keyword: "") == false{
+                                        let newTag = MenuHashTag(context: managedContext!)
+                                        newTag.hashTagId = Int64(tag.id)
+                                        newTag.hashTagName = tag.name
+                                        newTag.subMenuId = Int64(sub.id)
+                                        newTag.subMenuName = sub.name
+                                        newsubMenu.addToTags(newTag)
+                                    }
                                 }
                             }
+                            
                         }
-                       
+                        self.saveBlock()
                     }
-                    self.saveBlock()
-                    }
-                 }
+                }
                 completion(true)
                 
             case .Failure(let errormessage) :
-               completion(false)
+                completion(false)
                 
             }
         }
@@ -853,31 +868,31 @@ class DBManager{
             appDelegate?.persistentContainer.viewContext
         let headingfetchRequest =
             NSFetchRequest<MenuHeadings>(entityName: "MenuHeadings")
-       
+        
         do {
-             headingsData = try (managedContext?.fetch(headingfetchRequest))!
+            headingsData = try (managedContext?.fetch(headingfetchRequest))!
             return HeadingsDBFetchResult.Success(headingsData)
         } catch let error as NSError {
             return HeadingsDBFetchResult.Failure(error as! String)
         }
     }
-   
-       
+    
+    
     
     func fetchSubMenu(headingId : Int) -> SubMenuDBFetchResult{
-          var subMenuData = [HeadingSubMenu]()
-         var subMenuArr = [[String]]()
+        var subMenuData = [HeadingSubMenu]()
+        var subMenuArr = [[String]]()
         let managedContext =
             appDelegate?.persistentContainer.viewContext
         let subMenufetchRequest = NSFetchRequest<HeadingSubMenu>(entityName: "HeadingSubMenu")
         
-            do {
-                subMenufetchRequest.predicate = NSPredicate(format: "headingId = %d",headingId)
-                subMenuData = try (managedContext?.fetch(subMenufetchRequest))!
-            } catch let error as NSError {
-                return SubMenuDBFetchResult.Failure(error as! String)
-            }
-         return SubMenuDBFetchResult.Success(subMenuData)
+        do {
+            subMenufetchRequest.predicate = NSPredicate(format: "headingId = %d",headingId)
+            subMenuData = try (managedContext?.fetch(subMenufetchRequest))!
+        } catch let error as NSError {
+            return SubMenuDBFetchResult.Failure(error as! String)
+        }
+        return SubMenuDBFetchResult.Success(subMenuData)
     }
     
     func fetchMenuTags(subMenuName : String) -> MenuHashTagDBFetchResult{
@@ -886,7 +901,7 @@ class DBManager{
         let tagfetchRequest = NSFetchRequest<MenuHashTag>(entityName:"MenuHashTag")
         
         do {
-              tagfetchRequest.predicate = NSPredicate(format: "subMenuName == '\(subMenuName)'")
+            tagfetchRequest.predicate = NSPredicate(format: "subMenuName == '\(subMenuName)'")
             let tagsData = try (managedContext?.fetch(tagfetchRequest))!
             return MenuHashTagDBFetchResult.Success(tagsData)
         } catch let error as NSError {

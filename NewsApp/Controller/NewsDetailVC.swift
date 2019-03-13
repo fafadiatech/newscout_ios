@@ -45,6 +45,7 @@ class NewsDetailVC: UIViewController {
     @IBOutlet weak var viewLikeDislikeBottom: NSLayoutConstraint!
     @IBOutlet weak var avPlayerView: AVPlayerView!
     @IBOutlet weak var viewBack: UIView!
+    @IBOutlet weak var imgScrollView: UIScrollView!
     
     let imageCache = NSCache<NSString, UIImage>()
     var playbackSlider = UISlider()
@@ -72,9 +73,15 @@ class NewsDetailVC: UIViewController {
     let activityIndicator = MDCActivityIndicator()
     var indexCount = 0
     var currentEntity = ""
+    var imgArray = [UIImage]()
+    var MediaData = [Media]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        imgScrollView.delegate = self
+       //imgScrollView.frame = view.frame
+        btnPlayVideo.isHidden = true
+        imgArray = [#imageLiteral(resourceName: "f3"),#imageLiteral(resourceName: "f1") ,#imageLiteral(resourceName: "f2")]
         activityIndicator.cycleColors = [.blue]
         activityIndicator.frame = CGRect(x: view.frame.width/2, y: view.frame.height/2 - 100, width: 40, height: 40)
         activityIndicator.sizeToFit()
@@ -114,13 +121,21 @@ class NewsDetailVC: UIViewController {
         }
         //newsDetailAPICall(currentIndex: articleId)
         ShowNews(currentIndex: newsCurrentIndex)
+        let result = DBManager().fetchArticleMedia(articleId: Int(ShowArticle[newsCurrentIndex].article_id))
+        switch result {
+        case .Success(let DBData) :
+            MediaData = DBData
+        case .Failure(let errorMsg) :
+            print(errorMsg)
+        }
+       // MediaData = DBManager().fetchArticleMedia(articleId: Int(ShowArticle[newsCurrentIndex].article_id))
         let swipeUp = UISwipeGestureRecognizer(target: self, action: #selector(self.respondToSwipeGesture))
         swipeUp.direction = UISwipeGestureRecognizerDirection.up
         self.newsView.addGestureRecognizer(swipeUp)
         
-        let swipeLeft = UISwipeGestureRecognizer(target: self, action: #selector(self.respondToSwipeGesture))
-        swipeLeft.direction = UISwipeGestureRecognizerDirection.left
-        self.newsView.addGestureRecognizer(swipeLeft)
+//        let swipeLeft = UISwipeGestureRecognizer(target: self, action: #selector(self.respondToSwipeGesture))
+//        swipeLeft.direction = UISwipeGestureRecognizerDirection.left
+//        self.newsView.addGestureRecognizer(swipeLeft)
         
         let swipeRight = UISwipeGestureRecognizer(target: self, action: #selector(self.respondToSwipeGesture))
         swipeRight.direction = UISwipeGestureRecognizerDirection.right
@@ -515,8 +530,22 @@ class NewsDetailVC: UIViewController {
             lblSource.text = currentArticle.source
             lblTimeAgo.text = agoDate
             sourceURL = currentArticle.source_url!
-            
-            var checkImg = false
+             imgNews.isHidden = true
+            for img in 0..<MediaData.count {
+                                     //imgArray.count {
+               
+                let imageView = UIImageView()
+                let xPosition = self.imgScrollView.frame.width * CGFloat(img)
+                imageView.frame = CGRect(x:xPosition, y: 0, width: self.imgScrollView.frame.width, height: self.imgScrollView.frame.height)
+                imageView.contentMode = .scaleAspectFit
+                imageView.sd_setImage(with: URL(string: ), placeholderImage: nil, options: SDWebImageOptions.refreshCached)//imgArray[img]
+                imgScrollView.contentSize.width = imgScrollView.frame.width * CGFloat(img + 1)
+                
+                imgScrollView.addSubview(imageView)
+             
+                
+            }
+           /* var checkImg = false
             let imageFormats = ["jpg", "jpeg", "png", "gif"]
             for ext in imageFormats{
                 if currentArticle.imageURL!.contains(ext){
@@ -571,7 +600,7 @@ class NewsDetailVC: UIViewController {
                 self.btnPlayVideo.isHidden = true
                 self.avPlayerView.isHidden = true
                 self.imgNews.sd_setImage(with: URL(string: currentArticle.imageURL!), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
-            }
+            }*/
             
             if UserDefaults.standard.value(forKey: "token") != nil{
                 if currentArticle.likeDislike?.isLike == 0 {
