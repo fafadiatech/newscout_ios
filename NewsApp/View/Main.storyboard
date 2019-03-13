@@ -1787,7 +1787,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Enter Email" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="D2r-fh-K4O" customClass="SkyFloatingLabelTextField" customModule="SkyFloatingLabelTextField">
-                                <rect key="frame" x="65.5" y="237.5" width="244" height="24"/>
+                                <rect key="frame" x="65.5" y="215.5" width="244" height="46"/>
                                 <nil key="textColor"/>
                                 <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="29"/>
                                 <textInputTraits key="textInputTraits"/>
@@ -1901,20 +1901,22 @@
                                     <view contentMode="scaleAspectFill" translatesAutoresizingMaskIntoConstraints="NO" id="NRh-4q-HXp" customClass="AVPlayerView" customModule="NewsApp" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="0.0" width="375" height="249.5"/>
                                         <color key="backgroundColor" white="0.91300223209999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <color key="tintColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                     </view>
                                     <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" pagingEnabled="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1dH-wX-DEd">
-                                        <rect key="frame" x="0.0" y="-20" width="375" height="289.5"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="375" height="249.5"/>
                                         <subviews>
                                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="pm3-HD-Vbj">
-                                                <rect key="frame" x="0.0" y="20" width="375" height="249.5"/>
-                                                <color key="backgroundColor" white="0.91300223209999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="375" height="249.5"/>
+                                                <color key="backgroundColor" red="0.93725490570000003" green="0.93725490570000003" blue="0.95686274770000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             </imageView>
                                         </subviews>
+                                        <color key="backgroundColor" red="0.93725490570000003" green="0.93725490570000003" blue="0.95686274770000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <constraints>
                                             <constraint firstAttribute="trailing" secondItem="pm3-HD-Vbj" secondAttribute="trailing" id="3tx-9l-QX7"/>
                                             <constraint firstItem="pm3-HD-Vbj" firstAttribute="top" secondItem="1dH-wX-DEd" secondAttribute="top" id="EgN-MI-Nyu"/>
+                                            <constraint firstAttribute="bottom" secondItem="pm3-HD-Vbj" secondAttribute="bottom" id="FVj-Ak-znR"/>
                                             <constraint firstItem="pm3-HD-Vbj" firstAttribute="leading" secondItem="1dH-wX-DEd" secondAttribute="leading" id="Plq-rw-BN0"/>
-                                            <constraint firstItem="pm3-HD-Vbj" firstAttribute="width" secondItem="1dH-wX-DEd" secondAttribute="width" id="R1R-d7-zVf"/>
                                         </constraints>
                                     </scrollView>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="P2Z-xr-irS">
@@ -2074,7 +2076,7 @@
                                         <variation key="heightClass=regular-widthClass=regular" constant="-97"/>
                                     </constraint>
                                     <constraint firstAttribute="trailing" secondItem="NRh-4q-HXp" secondAttribute="trailing" id="bdC-zx-vTo"/>
-                                    <constraint firstItem="RN0-l8-Mx1" firstAttribute="top" secondItem="1dH-wX-DEd" secondAttribute="bottom" id="lRU-2q-pmk"/>
+                                    <constraint firstItem="1dH-wX-DEd" firstAttribute="bottom" secondItem="RN0-l8-Mx1" secondAttribute="top" id="lRU-2q-pmk"/>
                                     <constraint firstItem="1dH-wX-DEd" firstAttribute="leading" secondItem="RxT-xW-cwM" secondAttribute="leading" id="m6M-kB-Cym"/>
                                     <constraint firstItem="NRh-4q-HXp" firstAttribute="leading" secondItem="RxT-xW-cwM" secondAttribute="leading" id="oEI-Up-Tsh"/>
                                     <constraint firstItem="RN0-l8-Mx1" firstAttribute="top" secondItem="NRh-4q-HXp" secondAttribute="bottom" id="suW-bv-Hu0"/>

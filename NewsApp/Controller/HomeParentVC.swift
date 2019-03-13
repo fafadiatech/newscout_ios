@@ -238,7 +238,7 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
   
     override func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: IndexPath) -> CGSize {
            if (collectionView == buttonBarView) {
-            return super.collectionView(collectionView,layout: UICollectionViewFlowLayout.init(), sizeForItemAtIndexPath : indexPath)
+            return super.collectionView(collectionView,layout: UICollectionViewLayout.init(), sizeForItemAtIndexPath : indexPath)
         }
            else{
          let size: CGSize = headingArr[indexPath.row].size(withAttributes: nil)

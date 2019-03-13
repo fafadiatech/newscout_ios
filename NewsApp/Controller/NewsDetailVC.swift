@@ -75,11 +75,13 @@ class NewsDetailVC: UIViewController {
     var currentEntity = ""
     var imgArray = [UIImage]()
     var MediaData = [Media]()
-    
+   // let imageView = UIImageView()
     override func viewDidLoad() {
         super.viewDidLoad()
+         imgNews.isHidden = true
+       btnPlayVideo.isHidden = true
+       avPlayerView.isHidden = true
         imgScrollView.delegate = self
-       //imgScrollView.frame = view.frame
         btnPlayVideo.isHidden = true
         imgArray = [#imageLiteral(resourceName: "f3"),#imageLiteral(resourceName: "f1") ,#imageLiteral(resourceName: "f2")]
         activityIndicator.cycleColors = [.blue]
@@ -120,18 +122,12 @@ class NewsDetailVC: UIViewController {
             changeTheme()
         }
         //newsDetailAPICall(currentIndex: articleId)
+     
         ShowNews(currentIndex: newsCurrentIndex)
-        let result = DBManager().fetchArticleMedia(articleId: Int(ShowArticle[newsCurrentIndex].article_id))
-        switch result {
-        case .Success(let DBData) :
-            MediaData = DBData
-        case .Failure(let errorMsg) :
-            print(errorMsg)
-        }
        // MediaData = DBManager().fetchArticleMedia(articleId: Int(ShowArticle[newsCurrentIndex].article_id))
         let swipeUp = UISwipeGestureRecognizer(target: self, action: #selector(self.respondToSwipeGesture))
         swipeUp.direction = UISwipeGestureRecognizerDirection.up
-        self.newsView.addGestureRecognizer(swipeUp)
+        self.viewNewsArea.addGestureRecognizer(swipeUp)
         
 //        let swipeLeft = UISwipeGestureRecognizer(target: self, action: #selector(self.respondToSwipeGesture))
 //        swipeLeft.direction = UISwipeGestureRecognizerDirection.left
@@ -143,7 +139,7 @@ class NewsDetailVC: UIViewController {
         
         let swipeDown = UISwipeGestureRecognizer(target: self, action: #selector(self.respondToSwipeGesture))
         swipeDown.direction = UISwipeGestureRecognizerDirection.down
-        self.newsView.addGestureRecognizer(swipeDown)
+        self.viewNewsArea.addGestureRecognizer(swipeDown)
         
         let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapped(gestureRecognizer:)))
         viewNewsArea.addGestureRecognizer(tapRecognizer)
@@ -514,11 +510,14 @@ class NewsDetailVC: UIViewController {
     
     //func ShowNews(currentArticle: ArticleDict){ *for detail API pass articleDict
     func ShowNews(currentIndex: Int){
+        MediaData.removeAll()
+       activityIndicator.startAnimating()
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
         dateFormatter.timeZone = NSTimeZone.local
         playbackSlider.removeFromSuperview()
         avPlayerView.isHidden = true
+      
         if ShowArticle.count != 0{
             currentEntity = "ShowArticle"
             let currentArticle = ShowArticle[currentIndex]
@@ -530,21 +529,52 @@ class NewsDetailVC: UIViewController {
             lblSource.text = currentArticle.source
             lblTimeAgo.text = agoDate
             sourceURL = currentArticle.source_url!
-             imgNews.isHidden = true
-            for img in 0..<MediaData.count {
+            
+            let result = DBManager().fetchArticleMedia(articleId: Int(ShowArticle[currentIndex].article_id))
+            switch result {
+            case .Success(let DBData) :
+                MediaData = DBData
+            case .Failure(let errorMsg) :
+                print(errorMsg)
+            }
+           
+         
+            if currentArticle.imageURL != ""{
+               
+                for img in 0..<MediaData.count + 1 {
                                      //imgArray.count {
                
-                let imageView = UIImageView()
-                let xPosition = self.imgScrollView.frame.width * CGFloat(img)
-                imageView.frame = CGRect(x:xPosition, y: 0, width: self.imgScrollView.frame.width, height: self.imgScrollView.frame.height)
-                imageView.contentMode = .scaleAspectFit
-                imageView.sd_setImage(with: URL(string: ), placeholderImage: nil, options: SDWebImageOptions.refreshCached)//imgArray[img]
-                imgScrollView.contentSize.width = imgScrollView.frame.width * CGFloat(img + 1)
-                
-                imgScrollView.addSubview(imageView)
-             
-                
+                    let imageView = UIImageView()
+                    imageView.contentMode = .scaleAspectFit
+                let xPosition = imgScrollView.frame.width * CGFloat(img)
+                    imageView.frame = CGRect(x:xPosition, y: 0, width: avPlayerView.frame.width, height: avPlayerView.frame.height)
+                    
+                if img == 0 {
+                    imageView.sd_setImage(with: URL(string: currentArticle.imageURL!), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
+                }
+                else if img > 0{
+                    if MediaData[img - 1].videoURL == nil{
+                       imageView.sd_setImage(with: URL(string: MediaData[img - 1].imageURL!), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
+                 }else{
+                       imageView.sd_setImage(with: URL(string: MediaData[img - 1].videoURL!), placeholderImage: nil, options: SDWebImageOptions.refreshCached)//imgArray[img]
+                }
+                }
+                   imgScrollView.contentSize.width = imgScrollView.frame.width * CGFloat(img + 2)
+                 //  imgScrollView.contentSize.height  = avPlayerView.frame.height
+                    imgScrollView.addSubview(imageView)
             }
+            }
+            else{
+                let imageView = UIImageView()
+               imageView.frame = CGRect(x:0, y: 0, width: avPlayerView.frame.width, height: avPlayerView.frame.height)
+               imageView.contentMode = .scaleAspectFit
+               imgScrollView.contentSize.width = avPlayerView.frame.width
+                imgScrollView.contentSize.height  = avPlayerView.frame.height
+               imageView.image = UIImage(named: AssetConstants.NoImage)
+                imgScrollView.addSubview(imageView)
+            }
+            
+          
            /* var checkImg = false
             let imageFormats = ["jpg", "jpeg", "png", "gif"]
             for ext in imageFormats{

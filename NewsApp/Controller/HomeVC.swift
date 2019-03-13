@@ -30,7 +30,7 @@ class HomeVC: UIViewController{
     var articlesArr = [Article]()
     var selectedCategory = ""
     var tagArr : [String] = []
-    
+    var sortedData = [NewsArticle]()
     override func viewDidLoad(){
         super.viewDidLoad()
         self.activityIndicator.startAnimating()
@@ -279,8 +279,8 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let newsDetailvc:NewsDetailVC = storyboard.instantiateViewController(withIdentifier: "NewsDetailID") as! NewsDetailVC
         newsDetailvc.newsCurrentIndex = indexPath.row
-        newsDetailvc.ShowArticle = ShowArticle as! [NewsArticle]
-        newsDetailvc.articleId = Int(ShowArticle[indexPath.row].article_id)
+        newsDetailvc.ShowArticle = sortedData as! [NewsArticle]
+        newsDetailvc.articleId = Int(sortedData[indexPath.row].article_id)
         UserDefaults.standard.set("home", forKey: "isSearch")
         present(newsDetailvc, animated: true, completion: nil)
     }
@@ -302,7 +302,7 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
         cell.lblSource.textColor = colorConstants.txtDarkGrayColor
         cell.lblTimesAgo.textColor = colorConstants.txtDarkGrayColor
         //display data from DB
-        let sortedData = ShowArticle.sorted{ $0.published_on! > $1.published_on! }
+         sortedData = ShowArticle.sorted{ $0.published_on! > $1.published_on! }
         
         if ShowArticle.count != 0{
             let currentArticle = sortedData[indexPath.row]

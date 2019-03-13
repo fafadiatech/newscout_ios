@@ -117,7 +117,7 @@ class DBManager{
         let managedContext =
             appDelegate?.persistentContainer.viewContext
         let mediaRequest =  NSFetchRequest<Media>(entityName: "Media")
-        mediaRequest.predicate = NSPredicate(format: "article_id = %d", articleId)
+        mediaRequest.predicate = NSPredicate(format: "articleId = %d", articleId)
         do {
             mediaData = try (managedContext?.fetch(mediaRequest))!
         }catch let error as NSError {
