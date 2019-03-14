@@ -16,8 +16,9 @@ import AVKit
 import SwiftDevice
 import CoreData
 import MaterialComponents.MaterialActivityIndicator
+import TAPageControl
 
-class NewsDetailVC: UIViewController {
+class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegate {
     @IBOutlet weak var viewContainer: UIView!
     @IBOutlet weak var imgNews: UIImageView!
     @IBOutlet var newsView: UIView!
@@ -75,7 +76,10 @@ class NewsDetailVC: UIViewController {
     var currentEntity = ""
     var imgArray = [UIImage]()
     var MediaData = [Media]()
-  
+    var index = 0
+    var timer = Timer()
+    var customPagecontrol = TAPageControl()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
          imgNews.isHidden = true
@@ -150,6 +154,34 @@ class NewsDetailVC: UIViewController {
         PlayerTapRecognizer.delegate = self as UIGestureRecognizerDelegate
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        timer = Timer.scheduledTimer(timeInterval: 3, target: self, selector: #selector(runImages), userInfo: nil, repeats: true)
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        timer.invalidate()
+    }
+    
+    @objc func runImages(){
+        customPagecontrol.currentPage = index
+        if index == MediaData.count - 1{
+           index = 0
+        }else{
+            index = index + 1
+        }
+        self.taPageControl(customPagecontrol, didSelectPageAt: index)
+    }
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let pageindex = imgScrollView.contentOffset.x / imgScrollView.frame.size.width
+        customPagecontrol.currentPage = Int(pageindex)
+        index = Int(pageindex)
+    }
+    
+    func taPageControl(_ pageControl: TAPageControl!, didSelectPageAt currentIndex: Int) {
+        index =  currentIndex
+        imgScrollView.scrollRectToVisible(CGRect(x: view.frame.size.width * CGFloat(currentIndex), y:0, width: view.frame.width, height: imgScrollView.frame.height), animated: true)
+    }
     func RecommendationAPICall(){
         APICall().loadRecommendationNewsAPI(articleId: articleId){ (status,response) in
             switch response {
@@ -541,9 +573,11 @@ class NewsDetailVC: UIViewController {
             if currentArticle.imageURL != ""{
                
                 for img in 0..<MediaData.count + 1 {
-                                     //imgArray.count {
                
                     let imageView = UIImageView()
+                    let xPosition = imgScrollView.frame.width *  CGFloat(img)
+                    imageView.frame = CGRect(x:xPosition, y: 0, width: self.imgScrollView.frame.width, height: avPlayerView.frame.height)
+                     imageView.contentMode = .scaleAspectFit
                     if img == 0 {
                         imageView.sd_setImage(with: URL(string: currentArticle.imageURL!), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
                     }
@@ -553,15 +587,21 @@ class NewsDetailVC: UIViewController {
                         }else{
                             imageView.sd_setImage(with: URL(string: MediaData[img - 1].videoURL!), placeholderImage: nil, options: SDWebImageOptions.refreshCached)//imgArray[img]
                         }
-              
-                }
-                    let xPosition = imgScrollView.frame.width *  CGFloat(img)
-                    imageView.frame = CGRect(x:xPosition, y: 0, width: self.imgScrollView.frame.width, height: avPlayerView.frame.height)
-                     imageView.contentMode = .scaleAspectFit
-                   imgScrollView.contentSize.width = imgScrollView.frame.width * CGFloat(img + 1)
-                     imgScrollView.contentSize.height  = avPlayerView.frame.height
+                        
+                    }
+                   //imgScrollView.contentSize.width = imgScrollView.frame.width * CGFloat(img + 1)
+                    // imgScrollView.contentSize.height  = avPlayerView.frame.height
                     imgScrollView.addSubview(imageView)
+                    index = 0
+            
             }
+                // y: imgScrollView.frame.origin.y + imgScrollView.frame.size.height
+                customPagecontrol = TAPageControl(frame: CGRect(x : 0, y: 90, width: imgScrollView.frame.size.width, height : avPlayerView.frame.size.height))
+                customPagecontrol.delegate = self
+                customPagecontrol.numberOfPages = MediaData.count
+                customPagecontrol.dotSize = CGSize(width: 20,height: 20)
+                imgScrollView.contentSize = CGSize(width: view.frame.size.width * CGFloat(MediaData.count), height: imgScrollView.frame.size.height)
+                self.viewContainer.addSubview(customPagecontrol)
             }
             else{
                 let imageView = UIImageView()
@@ -572,7 +612,7 @@ class NewsDetailVC: UIViewController {
                imageView.image = UIImage(named: AssetConstants.NoImage)
                 imgScrollView.addSubview(imageView)
             }
-            
+           
           
            /* var checkImg = false
             let imageFormats = ["jpg", "jpeg", "png", "gif"]
