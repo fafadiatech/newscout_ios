@@ -31,6 +31,7 @@ class HomeVC: UIViewController{
     var selectedCategory = ""
     var tagArr : [String] = []
     var sortedData = [NewsArticle]()
+    var isAPICalled = false
     override func viewDidLoad(){
         super.viewDidLoad()
         self.activityIndicator.startAnimating()
@@ -361,11 +362,14 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         if indexPath.row == tableView.numberOfRows(inSection: indexPath.section) - 1 {
             var submenu = UserDefaults.standard.value(forKey: "submenu") as! String
+            if isAPICalled == false{
             let result =  DBManager().FetchNextURL(category: submenu)
             switch result {
             case .Success(let DBData) :
                 let nextURL = DBData
+              
                 if nextURL.count != 0{
+                      isAPICalled = false
                     if nextURL[0].category == submenu {
                         let nexturl = nextURL[0].nextURL
                         UserDefaults.standard.set(nexturl, forKey: "submenuURL")
@@ -373,10 +377,13 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
                     }
                 }
                 else{
+                    isAPICalled = true
                     activityIndicator.stopAnimating()
+                
                 }
             case .Failure(let errorMsg) :
                 print(errorMsg)
+            }
             }
         }
     }

@@ -75,7 +75,7 @@ class NewsDetailVC: UIViewController {
     var currentEntity = ""
     var imgArray = [UIImage]()
     var MediaData = [Media]()
-   // let imageView = UIImageView()
+  
     override func viewDidLoad() {
         super.viewDidLoad()
          imgNews.isHidden = true
@@ -537,7 +537,6 @@ class NewsDetailVC: UIViewController {
             case .Failure(let errorMsg) :
                 print(errorMsg)
             }
-           
          
             if currentArticle.imageURL != ""{
                
@@ -545,22 +544,22 @@ class NewsDetailVC: UIViewController {
                                      //imgArray.count {
                
                     let imageView = UIImageView()
-                    imageView.contentMode = .scaleAspectFit
-                let xPosition = imgScrollView.frame.width * CGFloat(img)
-                    imageView.frame = CGRect(x:xPosition, y: 0, width: avPlayerView.frame.width, height: avPlayerView.frame.height)
-                    
-                if img == 0 {
-                    imageView.sd_setImage(with: URL(string: currentArticle.imageURL!), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
+                    if img == 0 {
+                        imageView.sd_setImage(with: URL(string: currentArticle.imageURL!), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
+                    }
+                    else if img > 0{
+                        if MediaData[img - 1].videoURL == nil{
+                            imageView.sd_setImage(with: URL(string: MediaData[img - 1].imageURL!), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
+                        }else{
+                            imageView.sd_setImage(with: URL(string: MediaData[img - 1].videoURL!), placeholderImage: nil, options: SDWebImageOptions.refreshCached)//imgArray[img]
+                        }
+              
                 }
-                else if img > 0{
-                    if MediaData[img - 1].videoURL == nil{
-                       imageView.sd_setImage(with: URL(string: MediaData[img - 1].imageURL!), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
-                 }else{
-                       imageView.sd_setImage(with: URL(string: MediaData[img - 1].videoURL!), placeholderImage: nil, options: SDWebImageOptions.refreshCached)//imgArray[img]
-                }
-                }
-                   imgScrollView.contentSize.width = imgScrollView.frame.width * CGFloat(img + 2)
-                 //  imgScrollView.contentSize.height  = avPlayerView.frame.height
+                    let xPosition = imgScrollView.frame.width *  CGFloat(img)
+                    imageView.frame = CGRect(x:xPosition, y: 0, width: self.imgScrollView.frame.width, height: avPlayerView.frame.height)
+                     imageView.contentMode = .scaleAspectFit
+                   imgScrollView.contentSize.width = imgScrollView.frame.width * CGFloat(img + 1)
+                     imgScrollView.contentSize.height  = avPlayerView.frame.height
                     imgScrollView.addSubview(imageView)
             }
             }
