@@ -718,13 +718,13 @@
                                 <rect key="frame" x="0.0" y="74" width="375" height="468"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xNY-Lb-fnP">
-                                        <rect key="frame" x="0.0" y="0.0" width="375" height="367"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="375" height="468"/>
                                         <subviews>
                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" alignment="center" spacing="7" translatesAutoresizingMaskIntoConstraints="NO" id="1ZS-5R-Axf">
-                                                <rect key="frame" x="0.0" y="20" width="375" height="178"/>
+                                                <rect key="frame" x="0.0" y="20" width="375" height="259"/>
                                                 <subviews>
                                                     <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="v7P-i3-PBO" customClass="SkyFloatingLabelTextField" customModule="SkyFloatingLabelTextField">
-                                                        <rect key="frame" x="56.5" y="0.0" width="262.5" height="30"/>
+                                                        <rect key="frame" x="56.5" y="0.0" width="262.5" height="46.5"/>
                                                         <nil key="textColor"/>
                                                         <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="20"/>
                                                         <textInputTraits key="textInputTraits"/>
@@ -748,7 +748,7 @@
                                                         </connections>
                                                     </textField>
                                                     <textField opaque="NO" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="XiE-2m-uWJ" customClass="SkyFloatingLabelTextField" customModule="SkyFloatingLabelTextField">
-                                                        <rect key="frame" x="56.5" y="37" width="262.5" height="30"/>
+                                                        <rect key="frame" x="56.5" y="53.5" width="262.5" height="46"/>
                                                         <nil key="textColor"/>
                                                         <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="20"/>
                                                         <textInputTraits key="textInputTraits"/>
@@ -772,7 +772,7 @@
                                                         </connections>
                                                     </textField>
                                                     <textField opaque="NO" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="6V2-WP-iQ7" customClass="SkyFloatingLabelTextField" customModule="SkyFloatingLabelTextField">
-                                                        <rect key="frame" x="56.5" y="74" width="262.5" height="30"/>
+                                                        <rect key="frame" x="56.5" y="106.5" width="262.5" height="46"/>
                                                         <nil key="textColor"/>
                                                         <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="20"/>
                                                         <textInputTraits key="textInputTraits"/>
@@ -796,7 +796,7 @@
                                                         </connections>
                                                     </textField>
                                                     <textField opaque="NO" tag="3" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="HwO-68-0dF" customClass="SkyFloatingLabelTextField" customModule="SkyFloatingLabelTextField">
-                                                        <rect key="frame" x="56.5" y="111" width="262.5" height="30"/>
+                                                        <rect key="frame" x="56.5" y="159.5" width="262.5" height="46"/>
                                                         <nil key="textColor"/>
                                                         <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="20"/>
                                                         <textInputTraits key="textInputTraits" secureTextEntry="YES" textContentType="password"/>
@@ -820,7 +820,7 @@
                                                         </connections>
                                                     </textField>
                                                     <textField opaque="NO" tag="4" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="dCB-Ga-GDY" customClass="SkyFloatingLabelTextField" customModule="SkyFloatingLabelTextField">
-                                                        <rect key="frame" x="56.5" y="148" width="262.5" height="30"/>
+                                                        <rect key="frame" x="56.5" y="212.5" width="262.5" height="46.5"/>
                                                         <nil key="textColor"/>
                                                         <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="20"/>
                                                         <textInputTraits key="textInputTraits" secureTextEntry="YES" textContentType="password"/>
@@ -852,7 +852,7 @@
                                                 </constraints>
                                             </stackView>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="s37-jO-1S1">
-                                                <rect key="frame" x="135" y="218" width="105" height="44"/>
+                                                <rect key="frame" x="135" y="299" width="105" height="43.5"/>
                                                 <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <state key="normal" title="Sign Up">
                                                     <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -862,7 +862,7 @@
                                                 </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ged-Ue-hb8">
-                                                <rect key="frame" x="88" y="272" width="199" height="45"/>
+                                                <rect key="frame" x="88" y="352.5" width="199" height="45"/>
                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="45" id="l8L-hW-UKC">
@@ -1787,7 +1787,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Enter Email" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="D2r-fh-K4O" customClass="SkyFloatingLabelTextField" customModule="SkyFloatingLabelTextField">
-                                <rect key="frame" x="65.5" y="237.5" width="244" height="24"/>
+                                <rect key="frame" x="65.5" y="215.5" width="244" height="46"/>
                                 <nil key="textColor"/>
                                 <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="29"/>
                                 <textInputTraits key="textInputTraits"/>
@@ -1914,7 +1914,7 @@
                                             <constraint firstItem="pm3-HD-Vbj" firstAttribute="leading" secondItem="1dH-wX-DEd" secondAttribute="leading" id="Plq-rw-BN0"/>
                                         </constraints>
                                     </scrollView>
-                                    <view contentMode="scaleAspectFill" translatesAutoresizingMaskIntoConstraints="NO" id="NRh-4q-HXp" customClass="AVPlayerView" customModule="NewsApp" customModuleProvider="target">
+                                    <view contentMode="scaleAspectFill" translatesAutoresizingMaskIntoConstraints="NO" id="NRh-4q-HXp">
                                         <rect key="frame" x="0.0" y="0.0" width="375" height="249.5"/>
                                         <color key="backgroundColor" white="0.91300223209999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <color key="tintColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
@@ -2328,12 +2328,12 @@
                     <connections>
                         <outlet property="ViewWebContainer" destination="d60-rI-rFg" id="04P-6G-QjK"/>
                         <outlet property="WKWebView" destination="scR-xK-5Ou" id="XCH-ru-Gus"/>
-                        <outlet property="avPlayerView" destination="NRh-4q-HXp" id="lnc-zd-zvP"/>
                         <outlet property="btnBookamark" destination="22D-cz-AGN" id="Ed9-V6-yMT"/>
                         <outlet property="btnDislike" destination="wVK-oY-EQo" id="Qew-Xp-Nfl"/>
                         <outlet property="btnLike" destination="mNk-M4-IU3" id="4ho-LT-J3C"/>
                         <outlet property="btnPlayVideo" destination="has-VQ-hNu" id="dxJ-K2-9Ne"/>
                         <outlet property="btnShare" destination="2Y2-a1-Kyv" id="Lad-Fm-kYS"/>
+                        <outlet property="hideView" destination="NRh-4q-HXp" id="8WB-H9-LVC"/>
                         <outlet property="imgNews" destination="pm3-HD-Vbj" id="pa4-Ce-kcT"/>
                         <outlet property="imgScrollView" destination="1dH-wX-DEd" id="Coa-4q-xaL"/>
                         <outlet property="lblNewsHeading" destination="nZz-U0-3iL" id="5PO-Xe-GeW"/>
@@ -2899,6 +2899,9 @@
                                             <constraint firstAttribute="height" constant="50" id="NOk-ve-qyY"/>
                                         </constraints>
                                         <state key="normal" image="play"/>
+                                        <connections>
+                                            <action selector="btnPlayVideo:" destination="jdL-nB-vG0" eventType="touchUpInside" id="uYc-Kw-gM1"/>
+                                        </connections>
                                     </button>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="XRa-B7-Nb3">
                                         <rect key="frame" x="0.0" y="249.5" width="375" height="269.5"/>
@@ -3295,6 +3298,7 @@
                         <outlet property="btnBookamark" destination="poJ-Nu-mjr" id="kTu-cl-zRd"/>
                         <outlet property="btnDislike" destination="paO-bE-xe6" id="6ZZ-a4-xMO"/>
                         <outlet property="btnLike" destination="CTE-Gg-hci" id="NOt-I5-C55"/>
+                        <outlet property="btnPlayVideo" destination="8ow-5W-dUq" id="PPu-Eu-lea"/>
                         <outlet property="btnShare" destination="U6A-Lw-m7y" id="6ZS-sC-SPr"/>
                         <outlet property="imgNews" destination="jNu-nG-Mh9" id="gfZ-HV-pf8"/>
                         <outlet property="lblNewsHeading" destination="Zyg-1A-L2f" id="fMr-w5-h7C"/>

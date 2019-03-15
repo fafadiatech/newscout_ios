@@ -44,10 +44,12 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
     @IBOutlet weak var lblSourceBottomConstraint: NSLayoutConstraint!
     @IBOutlet weak var lblTimeAgoBottomConstraint: NSLayoutConstraint!
     @IBOutlet weak var viewLikeDislikeBottom: NSLayoutConstraint!
-    @IBOutlet weak var avPlayerView: AVPlayerView!
+    
     @IBOutlet weak var viewBack: UIView!
     @IBOutlet weak var imgScrollView: UIScrollView!
     
+    @IBOutlet weak var hideView: AVPlayerView!
+    var btnPlay = UIButton(type: .custom)
     let imageCache = NSCache<NSString, UIImage>()
     var playbackSlider = UISlider()
     var RecomArticleData = [ArticleStatus]()
@@ -82,11 +84,11 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        hideView.isHidden = true
          imgNews.isHidden = true
        btnPlayVideo.isHidden = true
-       avPlayerView.isHidden = true
+      // avPlayerView.isHidden = true
         imgScrollView.delegate = self
-        btnPlayVideo.isHidden = true
         imgArray = [#imageLiteral(resourceName: "f3"),#imageLiteral(resourceName: "f1") ,#imageLiteral(resourceName: "f2")]
         activityIndicator.cycleColors = [.blue]
         activityIndicator.frame = CGRect(x: view.frame.width/2, y: view.frame.height/2 - 100, width: 40, height: 40)
@@ -149,9 +151,7 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
         viewNewsArea.addGestureRecognizer(tapRecognizer)
         tapRecognizer.delegate = self as UIGestureRecognizerDelegate
         
-        let PlayerTapRecognizer = UITapGestureRecognizer(target: self, action: #selector(PlayerViewtapped(gestureRecognizer:)))
-        avPlayerView.addGestureRecognizer(PlayerTapRecognizer)
-        PlayerTapRecognizer.delegate = self as UIGestureRecognizerDelegate
+      
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -387,6 +387,12 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
         else{
             btnPlayVideo.isHidden = true
         }
+//        if btnPlay.isHidden == true{
+//            btnPlay.isHidden = false
+//        }
+//        else{
+//            btnPlay.isHidden = true
+//        }
     }
     
     @objc func tapped(gestureRecognizer: UITapGestureRecognizer) {
@@ -521,7 +527,11 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
             btnPlayVideo.setImage(UIImage(named: AssetConstants.play), for: .normal)
         }
     }
-    
+    @objc func ShowPlayPausebtn() {
+        if (btnPlay.currentImage?.isEqual(UIImage(named: AssetConstants.pause)))! {
+            btnPlay.isHidden = true
+        }
+    }
     @objc func ShowPausebtn() {
         if (btnPlayVideo.currentImage?.isEqual(UIImage(named: AssetConstants.pause)))! {
             btnPlayVideo.isHidden = true
@@ -531,7 +541,8 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
     @objc func playbackSliderValueChanged(_ playbackSlider:UISlider){
         let seconds : Int64 = Int64(playbackSlider.value)
         let targetTime:CMTime = CMTimeMake(seconds, 1)
-        btnPlayVideo.isHidden = false
+       // btnPlayVideo.isHidden = false
+        btnPlay.isHidden = false
         player!.seek(to: targetTime)
         
         if player!.rate == 0{
@@ -542,6 +553,18 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
         }
     }
     
+    @objc func buttonTapped(sender : UIButton) {
+        if player?.rate == 0
+        {
+            player!.play()
+            btnPlay.setImage(UIImage(named: AssetConstants.pause), for: .normal)
+            btnPlay.isHidden = true
+            Timer.scheduledTimer(timeInterval: 5, target: self, selector: #selector(ShowPlayPausebtn), userInfo: nil, repeats: false)
+        } else {
+            player!.pause()
+            btnPlay.setImage(UIImage(named: AssetConstants.play), for: .normal)
+        }
+    }
     //func ShowNews(currentArticle: ArticleDict){ *for detail API pass articleDict
     func ShowNews(currentIndex: Int){
         MediaData.removeAll()
@@ -551,7 +574,7 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
         dateFormatter.timeZone = NSTimeZone.local
         playbackSlider.removeFromSuperview()
-        avPlayerView.isHidden = true
+       // avPlayerView.isHidden = true
       
         if ShowArticle.count != 0{
             currentEntity = "ShowArticle"
@@ -579,35 +602,56 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
                
                     let imageView = UIImageView()
                     let xPosition = imgScrollView.frame.width *  CGFloat(img)
-                    imageView.frame = CGRect(x:xPosition, y: 0, width: self.imgScrollView.frame.width, height: avPlayerView.frame.height)
+                    imageView.frame = CGRect(x:xPosition, y: 0, width: self.imgScrollView.frame.width, height: hideView.frame.height)
                      imageView.contentMode = .scaleAspectFit
                     if img == 0 {
                         imageView.sd_setImage(with: URL(string: currentArticle.imageURL!), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
+                           imgScrollView.addSubview(imageView)
                     }
                     else if img > 0{
                         if MediaData[img - 1].videoURL == nil{
-                            avPlayerView.isHidden = true
+                            //avPlayerView.isHidden = true
                             imageView.sd_setImage(with: URL(string: MediaData[img - 1].imageURL!), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
-                            self.btnPlayVideo.isHidden = true
+                        
+                               imgScrollView.addSubview(imageView)
                         }else{
-                            imageView.sd_setImage(with: URL(string: MediaData[img - 1].videoURL!), placeholderImage: nil, options: SDWebImageOptions.refreshCached)//imgArray[img]
+                           // imageView.sd_setImage(with: URL(string: MediaData[img - 1].videoURL!), placeholderImage: nil, options: SDWebImageOptions.refreshCached)//imgArray[img]
+                            btnPlayVideo.isHidden = false
+                            let avPlayerView = AVPlayerView()
+                            let PlayerTapRecognizer = UITapGestureRecognizer(target: self, action: #selector(PlayerViewtapped(gestureRecognizer:)))
+                            avPlayerView.addGestureRecognizer(PlayerTapRecognizer)
+                            PlayerTapRecognizer.delegate = self as UIGestureRecognizerDelegate
+                            avPlayerView.frame = CGRect(x:xPosition, y: 0, width: self.imgScrollView.frame.width, height: hideView.frame.height)
+                            imgScrollView.addSubview(avPlayerView)
+                            
+                             btnPlay.frame = CGRect(x: 150, y: 120, width: 50, height: 60)
+                            btnPlay.layer.cornerRadius = 0.5 * btnPlay.bounds.size.width
+                            btnPlay.clipsToBounds = true
+                            btnPlay.setImage(UIImage(named: AssetConstants.play), for: .normal)
+                        
+                             avPlayerView.addSubview(btnPlay)
+                            btnPlay.addTarget(self, action: #selector(self.buttonTapped), for: .touchUpInside)
+                          
+
+                            //
+                        
                             let url = URL(string: "https://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4")
                             let playerItem:AVPlayerItem = AVPlayerItem(url: url!)
                             self.player = AVPlayer(playerItem: playerItem)
                             
-                            self.avPlayerView.isHidden = false
+                           // self.avPlayerView.isHidden = false
                             imageView.isHidden = true
                             timer.invalidate()
                             let avPlayer = AVPlayerLayer(player: self.player!)
-                            let castedLayer = self.avPlayerView.layer as! AVPlayerLayer
+                            let castedLayer = avPlayerView.layer as! AVPlayerLayer
                             castedLayer.player = self.player
                             castedLayer.videoGravity = AVLayerVideoGravity.resizeAspect
-                            self.avPlayerView.layoutIfNeeded()
+                            avPlayerView.layoutIfNeeded()
                             if UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad{
-                                self.playbackSlider = UISlider(frame:CGRect(x:0, y: self.avPlayerView.bounds.size.height - 40, width:self.avPlayerView.bounds.size.width, height: 20))
+                                self.playbackSlider = UISlider(frame:CGRect(x:0, y: avPlayerView.bounds.size.height - 40, width:avPlayerView.bounds.size.width, height: 20))
                             }
                             else{
-                                self.playbackSlider = UISlider(frame:CGRect(x:0, y: self.avPlayerView.bounds.size.height - 100, width:self.avPlayerView.bounds.size.width, height: 20))
+                                self.playbackSlider = UISlider(frame:CGRect(x:0, y: avPlayerView.bounds.size.height - 100, width:avPlayerView.bounds.size.width, height: 20))
                             }
                             self.playbackSlider.minimumValue = 0
                             
@@ -618,23 +662,23 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
                             self.playbackSlider.maximumValue = Float(seconds)
                             self.playbackSlider.isContinuous = true
                             self.playbackSlider.tintColor = UIColor.green
-                            
+                           
                             self.playbackSlider.addTarget(self, action: #selector(NewsDetailVC.playbackSliderValueChanged(_:)), for: .valueChanged)
-                            self.avPlayerView.addSubview(self.playbackSlider)
-                            self.btnPlayVideo.isHidden = false
+                            avPlayerView.addSubview(self.playbackSlider)
+                                  player!.play()
                             
                         }
                         
                     }
                    //imgScrollView.contentSize.width = imgScrollView.frame.width * CGFloat(img + 1)
                     // imgScrollView.contentSize.height  = avPlayerView.frame.height
-                    imgScrollView.addSubview(imageView)
+                 
                   
             
             }
                 // y: imgScrollView.frame.origin.y + imgScrollView.frame.size.height
                   index = 0
-                customPagecontrol = TAPageControl(frame: CGRect(x : 0, y: 90, width: imgScrollView.frame.size.width, height : avPlayerView.frame.size.height))
+                customPagecontrol = TAPageControl(frame: CGRect(x : 0, y: 90, width: imgScrollView.frame.size.width, height : hideView.frame.size.height))
                 customPagecontrol.delegate = self
                 customPagecontrol.numberOfPages = MediaData.count
                 customPagecontrol.dotSize = CGSize(width: 20,height: 20)
@@ -644,10 +688,10 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
             }
             else{
                 let imageView = UIImageView()
-               imageView.frame = CGRect(x:0, y: 0, width: avPlayerView.frame.width, height: avPlayerView.frame.height)
+               imageView.frame = CGRect(x:0, y: 0, width: hideView.frame.width, height: hideView.frame.height)
                imageView.contentMode = .scaleAspectFit
-               imgScrollView.contentSize.width = avPlayerView.frame.width
-                imgScrollView.contentSize.height  = avPlayerView.frame.height
+               imgScrollView.contentSize.width = hideView.frame.width
+                imgScrollView.contentSize.height  = hideView.frame.height
                imageView.image = UIImage(named: AssetConstants.NoImage)
                 imgScrollView.addSubview(imageView)
             }
@@ -734,7 +778,7 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
                 ResetBookmarkImg()
             }
         }
-        else if SearchArticle.count != 0 {
+        else if SearchArticle.count != 0 {/*
             currentEntity = "SearchArticles"
             let currentArticle = SearchArticle[currentIndex]
             let newDate = dateFormatter.date(from: currentArticle.published_on!)
@@ -764,17 +808,17 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
                         let playerItem:AVPlayerItem = AVPlayerItem(url: url!)
                         self.player = AVPlayer(playerItem: playerItem)
                         
-                        self.avPlayerView.isHidden = false
+                       // self.avPlayerView.isHidden = false
                         let avPlayer = AVPlayerLayer(player: self.player!)
                         let castedLayer = self.avPlayerView.layer as! AVPlayerLayer
                         castedLayer.player = self.player
                         castedLayer.videoGravity = AVLayerVideoGravity.resizeAspect
                         self.avPlayerView.layoutIfNeeded()
                         if UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad{
-                            self.playbackSlider = UISlider(frame:CGRect(x:0, y: self.avPlayerView.bounds.size.height - 40, width:self.avPlayerView.bounds.size.width, height: 20))
+                            self.playbackSlider = UISlider(frame:CGRect(x:0, y: self.avPlayerView.bounds.size.height - 40, width:avPlayerView.bounds.size.width, height: 20))
                         }
                         else{
-                            self.playbackSlider = UISlider(frame:CGRect(x:0, y: self.avPlayerView.bounds.size.height - 100, width:self.avPlayerView.bounds.size.width, height: 20))
+                            self.playbackSlider = UISlider(frame:CGRect(x:0, y: self.avPlayerView.bounds.size.height - 100, width:avPlayerView.bounds.size.width, height: 20))
                         }
                         self.playbackSlider.minimumValue = 0
                         
@@ -798,7 +842,7 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
             }
             else{
                 self.btnPlayVideo.isHidden = true
-                self.avPlayerView.isHidden = true
+              //  self.avPlayerView.isHidden = true
                 self.imgNews.sd_setImage(with: URL(string: currentArticle.imageURL!), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
             }
             
@@ -824,7 +868,7 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
                 btnLike.setImage(UIImage(named: AssetConstants.thumb_up), for: .normal)
                 btnDislike.setImage(UIImage(named: AssetConstants.thumb_down), for: .normal)
                 ResetBookmarkImg()
-            }
+            }*/
         }
         if imgNews.image == nil{
             imgNews.image = UIImage(named: AssetConstants.NoImage)
