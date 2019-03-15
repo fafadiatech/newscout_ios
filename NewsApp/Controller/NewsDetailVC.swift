@@ -156,6 +156,7 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
     
     override func viewDidAppear(_ animated: Bool) {
         timer = Timer.scheduledTimer(timeInterval: 3, target: self, selector: #selector(runImages), userInfo: nil, repeats: true)
+       // runImages()
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -176,6 +177,7 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
         let pageindex = imgScrollView.contentOffset.x / imgScrollView.frame.size.width
         customPagecontrol.currentPage = Int(pageindex)
         index = Int(pageindex)
+       // runImages()
     }
     
     func taPageControl(_ pageControl: TAPageControl!, didSelectPageAt currentIndex: Int) {
@@ -543,6 +545,7 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
     //func ShowNews(currentArticle: ArticleDict){ *for detail API pass articleDict
     func ShowNews(currentIndex: Int){
         MediaData.removeAll()
+         btnPlayVideo.isHidden = true
        activityIndicator.startAnimating()
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
@@ -583,25 +586,61 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
                     }
                     else if img > 0{
                         if MediaData[img - 1].videoURL == nil{
+                            avPlayerView.isHidden = true
                             imageView.sd_setImage(with: URL(string: MediaData[img - 1].imageURL!), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
+                            self.btnPlayVideo.isHidden = true
                         }else{
                             imageView.sd_setImage(with: URL(string: MediaData[img - 1].videoURL!), placeholderImage: nil, options: SDWebImageOptions.refreshCached)//imgArray[img]
+                            let url = URL(string: "https://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4")
+                            let playerItem:AVPlayerItem = AVPlayerItem(url: url!)
+                            self.player = AVPlayer(playerItem: playerItem)
+                            
+                            self.avPlayerView.isHidden = false
+                            imageView.isHidden = true
+                            timer.invalidate()
+                            let avPlayer = AVPlayerLayer(player: self.player!)
+                            let castedLayer = self.avPlayerView.layer as! AVPlayerLayer
+                            castedLayer.player = self.player
+                            castedLayer.videoGravity = AVLayerVideoGravity.resizeAspect
+                            self.avPlayerView.layoutIfNeeded()
+                            if UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad{
+                                self.playbackSlider = UISlider(frame:CGRect(x:0, y: self.avPlayerView.bounds.size.height - 40, width:self.avPlayerView.bounds.size.width, height: 20))
+                            }
+                            else{
+                                self.playbackSlider = UISlider(frame:CGRect(x:0, y: self.avPlayerView.bounds.size.height - 100, width:self.avPlayerView.bounds.size.width, height: 20))
+                            }
+                            self.playbackSlider.minimumValue = 0
+                            
+                            
+                            let duration : CMTime = playerItem.asset.duration
+                            let seconds : Float64 = CMTimeGetSeconds(duration)
+                            
+                            self.playbackSlider.maximumValue = Float(seconds)
+                            self.playbackSlider.isContinuous = true
+                            self.playbackSlider.tintColor = UIColor.green
+                            
+                            self.playbackSlider.addTarget(self, action: #selector(NewsDetailVC.playbackSliderValueChanged(_:)), for: .valueChanged)
+                            self.avPlayerView.addSubview(self.playbackSlider)
+                            self.btnPlayVideo.isHidden = false
+                            
                         }
                         
                     }
                    //imgScrollView.contentSize.width = imgScrollView.frame.width * CGFloat(img + 1)
                     // imgScrollView.contentSize.height  = avPlayerView.frame.height
                     imgScrollView.addSubview(imageView)
-                    index = 0
+                  
             
             }
                 // y: imgScrollView.frame.origin.y + imgScrollView.frame.size.height
+                  index = 0
                 customPagecontrol = TAPageControl(frame: CGRect(x : 0, y: 90, width: imgScrollView.frame.size.width, height : avPlayerView.frame.size.height))
                 customPagecontrol.delegate = self
                 customPagecontrol.numberOfPages = MediaData.count
                 customPagecontrol.dotSize = CGSize(width: 20,height: 20)
                 imgScrollView.contentSize = CGSize(width: view.frame.size.width * CGFloat(MediaData.count), height: imgScrollView.frame.size.height)
-                self.viewContainer.addSubview(customPagecontrol)
+                self.imgScrollView.addSubview(customPagecontrol)
+               
             }
             else{
                 let imageView = UIImageView()

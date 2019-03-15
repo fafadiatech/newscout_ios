@@ -1898,11 +1898,6 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="RxT-xW-cwM">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="519"/>
                                 <subviews>
-                                    <view contentMode="scaleAspectFill" translatesAutoresizingMaskIntoConstraints="NO" id="NRh-4q-HXp" customClass="AVPlayerView" customModule="NewsApp" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="0.0" width="375" height="249.5"/>
-                                        <color key="backgroundColor" white="0.91300223209999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        <color key="tintColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
-                                    </view>
                                     <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" pagingEnabled="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1dH-wX-DEd">
                                         <rect key="frame" x="0.0" y="0.0" width="375" height="249.5"/>
                                         <subviews>
@@ -1919,6 +1914,11 @@
                                             <constraint firstItem="pm3-HD-Vbj" firstAttribute="leading" secondItem="1dH-wX-DEd" secondAttribute="leading" id="Plq-rw-BN0"/>
                                         </constraints>
                                     </scrollView>
+                                    <view contentMode="scaleAspectFill" translatesAutoresizingMaskIntoConstraints="NO" id="NRh-4q-HXp" customClass="AVPlayerView" customModule="NewsApp" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="0.0" width="375" height="249.5"/>
+                                        <color key="backgroundColor" white="0.91300223209999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <color key="tintColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                    </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="P2Z-xr-irS">
                                         <rect key="frame" x="0.0" y="0.0" width="375" height="51"/>
                                         <subviews>
@@ -1947,7 +1947,7 @@
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <state key="normal" image="play"/>
                                         <connections>
-                                            <action selector="btnPlayVideo:" destination="yxW-qj-gIF" eventType="touchUpInside" id="fsb-3j-own"/>
+                                            <action selector="btnPlayVideo:" destination="yxW-qj-gIF" eventType="touchUpInside" id="0gf-gm-RpY"/>
                                         </connections>
                                     </button>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="RN0-l8-Mx1">
@@ -2328,7 +2328,7 @@
                     <connections>
                         <outlet property="ViewWebContainer" destination="d60-rI-rFg" id="04P-6G-QjK"/>
                         <outlet property="WKWebView" destination="scR-xK-5Ou" id="XCH-ru-Gus"/>
-                        <outlet property="avPlayerView" destination="NRh-4q-HXp" id="Z0P-WI-CsS"/>
+                        <outlet property="avPlayerView" destination="NRh-4q-HXp" id="lnc-zd-zvP"/>
                         <outlet property="btnBookamark" destination="22D-cz-AGN" id="Ed9-V6-yMT"/>
                         <outlet property="btnDislike" destination="wVK-oY-EQo" id="Qew-Xp-Nfl"/>
                         <outlet property="btnLike" destination="mNk-M4-IU3" id="4ho-LT-J3C"/>
@@ -2899,9 +2899,6 @@
                                             <constraint firstAttribute="height" constant="50" id="NOk-ve-qyY"/>
                                         </constraints>
                                         <state key="normal" image="play"/>
-                                        <connections>
-                                            <action selector="btnPlayVideo:" destination="jdL-nB-vG0" eventType="touchUpInside" id="AGm-fg-Aqo"/>
-                                        </connections>
                                     </button>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="XRa-B7-Nb3">
                                         <rect key="frame" x="0.0" y="249.5" width="375" height="269.5"/>
@@ -3295,11 +3292,9 @@
                     <connections>
                         <outlet property="ViewWebContainer" destination="ntW-g1-ub9" id="V6I-TU-NNW"/>
                         <outlet property="WKWebView" destination="Qzf-yV-FHG" id="93g-jr-xZW"/>
-                        <outlet property="avPlayerView" destination="E4N-H9-oBm" id="tIL-N5-mSN"/>
                         <outlet property="btnBookamark" destination="poJ-Nu-mjr" id="kTu-cl-zRd"/>
                         <outlet property="btnDislike" destination="paO-bE-xe6" id="6ZZ-a4-xMO"/>
                         <outlet property="btnLike" destination="CTE-Gg-hci" id="NOt-I5-C55"/>
-                        <outlet property="btnPlayVideo" destination="8ow-5W-dUq" id="btZ-j3-j0R"/>
                         <outlet property="btnShare" destination="U6A-Lw-m7y" id="6ZS-sC-SPr"/>
                         <outlet property="imgNews" destination="jNu-nG-Mh9" id="gfZ-HV-pf8"/>
                         <outlet property="lblNewsHeading" destination="Zyg-1A-L2f" id="fMr-w5-h7C"/>
