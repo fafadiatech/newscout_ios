@@ -47,6 +47,8 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
     @IBOutlet weak var viewBack: UIView!
     @IBOutlet weak var imgScrollView: UIScrollView!
    
+    @IBOutlet weak var viewContainerTop: NSLayoutConstraint!
+    @IBOutlet weak var imgTop: NSLayoutConstraint!
     
     var btnPlay = UIButton(type: .custom)
     let imageCache = NSCache<NSString, UIImage>()
@@ -247,6 +249,18 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
                                                              constant: -10)
             NSLayoutConstraint.activate([lblTimeAgoBottomConstraint])
             NSLayoutConstraint.activate([lblSourceBottomConstraint])
+        }
+        
+        if imgTop != nil{
+            NSLayoutConstraint.deactivate([imgTop])
+            imgTop = NSLayoutConstraint (item:imgNews,
+                                         attribute: NSLayoutAttribute.top,
+                                         relatedBy: NSLayoutRelation.equal,
+                                         toItem: viewBack,
+                                         attribute: NSLayoutAttribute.bottom,
+                                         multiplier: 1,
+                                         constant: 0)
+            
         }
     }
     

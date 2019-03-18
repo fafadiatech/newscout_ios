@@ -161,7 +161,6 @@ class LoginVC: UIViewController, GIDSignInUIDelegate, FBSDKLoginButtonDelegate {
     
     @IBAction func btnLoginActn(_ sender: Any) {
     
-        var categories : [String] = []
         if txtUsername.text == "" || txtPassword.text == ""{
             self.view.makeToast("Please enter valid Email and Password..", duration: 1.0, position: .center)
         }
@@ -171,13 +170,6 @@ class LoginVC: UIViewController, GIDSignInUIDelegate, FBSDKLoginButtonDelegate {
             APICall().LoginAPI(param : param){(status,response) in
                 print("Login response:\(response)")
                 if response == "1"{
-                    if UserDefaults.standard.value(forKey: "token") != nil || UserDefaults.standard.value(forKey: "FBToken") != nil || UserDefaults.standard.value(forKey: "googleToken") != nil{
-                        categories = UserDefaults.standard.array(forKey: "categories") as! [String]
-                        if !categories.contains("For You"){
-                            categories.insert("For You", at: 0)
-                            UserDefaults.standard.setValue(categories, forKey: "categories")
-                        }
-                    }
                     let check = UserDefaults.standard.value(forKey: "isSettingsLogin") as! Bool
                     if check == true{
                     let storyboard = UIStoryboard(name: "Main", bundle: nil)

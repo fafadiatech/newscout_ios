@@ -186,7 +186,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1Nv-7G-jre">
-                                                    <rect key="frame" x="10" y="10" width="355" height="119"/>
+                                                    <rect key="frame" x="10" y="10" width="814" height="119"/>
                                                     <subviews>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Source" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WNE-8O-iT3">
                                                             <rect key="frame" x="16" y="93.5" width="45" height="16.5"/>
@@ -195,7 +195,7 @@
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="x2a-oq-Xmy">
-                                                            <rect key="frame" x="16" y="10" width="231" height="65.5"/>
+                                                            <rect key="frame" x="16" y="10" width="529" height="65.5"/>
                                                             <attributedString key="attributedText">
                                                                 <fragment content="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum">
                                                                     <attributes>
@@ -207,13 +207,13 @@
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="TimeAgo" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="soe-Oc-voS">
-                                                            <rect key="frame" x="278" y="82.5" width="57" height="27.5"/>
+                                                            <rect key="frame" x="677" y="82.5" width="57" height="27.5"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="NoImage" translatesAutoresizingMaskIntoConstraints="NO" id="2Fd-EF-bZo">
-                                                            <rect key="frame" x="257" y="10" width="78" height="71.5"/>
+                                                            <rect key="frame" x="555" y="10" width="179" height="71.5"/>
                                                         </imageView>
                                                     </subviews>
                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -552,7 +552,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="i36-W4-kyE">
-                                                    <rect key="frame" x="10" y="10" width="355" height="119"/>
+                                                    <rect key="frame" x="10" y="10" width="814" height="119"/>
                                                     <subviews>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Source" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="V3d-Fp-Io7">
                                                             <rect key="frame" x="16" y="83" width="55.5" height="20.5"/>
@@ -561,7 +561,7 @@
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="G1Y-nd-Bll">
-                                                            <rect key="frame" x="16" y="10" width="231" height="65.5"/>
+                                                            <rect key="frame" x="16" y="10" width="529" height="65.5"/>
                                                             <attributedString key="attributedText">
                                                                 <fragment content="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum">
                                                                     <attributes>
@@ -573,13 +573,13 @@
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="TimeAgo" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tdD-ob-0CR">
-                                                            <rect key="frame" x="278" y="86.5" width="57" height="17"/>
+                                                            <rect key="frame" x="677" y="86.5" width="57" height="17"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                             <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="749" image="NoImage" translatesAutoresizingMaskIntoConstraints="NO" id="4b7-Bc-2YW">
-                                                            <rect key="frame" x="257" y="10" width="78" height="75.5"/>
+                                                            <rect key="frame" x="555" y="10" width="179" height="75.5"/>
                                                         </imageView>
                                                     </subviews>
                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -958,7 +958,7 @@
                                 <rect key="frame" x="0.0" y="20" width="375" height="54.5"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Settings" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="m2b-Y8-PWH">
-                                        <rect key="frame" x="144.5" y="14.5" width="86.5" height="26"/>
+                                        <rect key="frame" x="144.5" y="14" width="86.5" height="26.5"/>
                                         <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="22"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
@@ -1575,7 +1575,7 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TPu-zW-AUG">
-                                                    <rect key="frame" x="303" y="23.5" width="42" height="20"/>
+                                                    <rect key="frame" x="762" y="23.5" width="42" height="20"/>
                                                     <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="17"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
@@ -1899,7 +1899,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="519"/>
                                 <subviews>
                                     <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" pagingEnabled="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1dH-wX-DEd">
-                                        <rect key="frame" x="0.0" y="0.0" width="375" height="249.5"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="834" height="481"/>
                                         <subviews>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="has-VQ-hNu">
                                                 <rect key="frame" x="155.5" y="99.5" width="64" height="50"/>
@@ -1947,7 +1947,7 @@
                                         <rect key="frame" x="0.0" y="249.5" width="375" height="269.5"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nZz-U0-3iL">
-                                                <rect key="frame" x="10" y="8" width="304" height="41"/>
+                                                <rect key="frame" x="10" y="8" width="304" height="51"/>
                                                 <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="17"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
@@ -1968,7 +1968,7 @@
                                                 </connections>
                                             </button>
                                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" scrollEnabled="NO" editable="NO" textAlignment="natural" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fW6-pK-tzj">
-                                                <rect key="frame" x="10" y="50" width="355" height="144.5"/>
+                                                <rect key="frame" x="10" y="60" width="355" height="145"/>
                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. </string>
                                                 <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -2023,10 +2023,8 @@
                                                 <variation key="heightClass=regular-widthClass=regular" constant="20"/>
                                             </constraint>
                                             <constraint firstItem="22D-cz-AGN" firstAttribute="leading" secondItem="nZz-U0-3iL" secondAttribute="trailing" constant="15" id="guJ-OL-BmC"/>
-                                            <constraint firstItem="fW6-pK-tzj" firstAttribute="top" secondItem="nZz-U0-3iL" secondAttribute="bottom" constant="1" id="hBd-hw-BQ0"/>
                                             <constraint firstItem="fW6-pK-tzj" firstAttribute="top" secondItem="nZz-U0-3iL" secondAttribute="bottom" constant="1" id="jBU-GM-dav"/>
                                             <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="6js-a1-NyN" secondAttribute="trailing" constant="20" symbolic="YES" id="pm4-zO-fFd"/>
-                                            <constraint firstItem="fW6-pK-tzj" firstAttribute="top" secondItem="nZz-U0-3iL" secondAttribute="bottom" constant="1" id="yCI-r0-y3h"/>
                                             <constraint firstItem="q3E-WQ-OR7" firstAttribute="leading" relation="lessThanOrEqual" secondItem="6js-a1-NyN" secondAttribute="trailing" constant="219.5" id="yEN-Ao-as1"/>
                                         </constraints>
                                         <variation key="default">
@@ -2049,7 +2047,7 @@
                                     <constraint firstAttribute="trailing" secondItem="RN0-l8-Mx1" secondAttribute="trailing" id="Ahl-iq-Dhe"/>
                                     <constraint firstItem="RN0-l8-Mx1" firstAttribute="height" secondItem="RxT-xW-cwM" secondAttribute="height" multiplier="0.4" id="Bkb-Su-I7N">
                                         <variation key="heightClass=regular-widthClass=compact" constant="62"/>
-                                        <variation key="heightClass=regular-widthClass=regular" constant="91"/>
+                                        <variation key="heightClass=regular-widthClass=regular" constant="42"/>
                                     </constraint>
                                     <constraint firstItem="has-VQ-hNu" firstAttribute="width" secondItem="P2Z-xr-irS" secondAttribute="width" multiplier="0.17" id="EEO-b3-SQm"/>
                                     <constraint firstAttribute="bottom" secondItem="RN0-l8-Mx1" secondAttribute="bottom" id="F8x-Oo-jsC">
@@ -2310,6 +2308,7 @@
                             <constraint firstItem="d60-rI-rFg" firstAttribute="trailing" secondItem="wzi-s7-o2w" secondAttribute="trailing" id="h2z-6d-jmv"/>
                             <constraint firstItem="Ume-RY-B4l" firstAttribute="bottom" secondItem="wzi-s7-o2w" secondAttribute="bottom" id="hl6-jQ-VW6"/>
                             <constraint firstItem="Ume-RY-B4l" firstAttribute="trailing" secondItem="wzi-s7-o2w" secondAttribute="trailing" id="juw-sr-kUf"/>
+                            <constraint firstItem="nZz-U0-3iL" firstAttribute="height" secondItem="ZdY-Zp-FHd" secondAttribute="height" id="kga-8P-l21"/>
                             <constraint firstItem="RxT-xW-cwM" firstAttribute="top" secondItem="ZoE-gQ-3zk" secondAttribute="top" id="npb-Q3-6Hf"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="wzi-s7-o2w"/>
@@ -2324,6 +2323,7 @@
                         <outlet property="btnShare" destination="2Y2-a1-Kyv" id="Lad-Fm-kYS"/>
                         <outlet property="imgNews" destination="pm3-HD-Vbj" id="pa4-Ce-kcT"/>
                         <outlet property="imgScrollView" destination="1dH-wX-DEd" id="Coa-4q-xaL"/>
+                        <outlet property="imgTop" destination="QKE-P8-qGe" id="lze-qB-sft"/>
                         <outlet property="lblNewsHeading" destination="nZz-U0-3iL" id="5PO-Xe-GeW"/>
                         <outlet property="lblSource" destination="6js-a1-NyN" id="5lE-4t-HfD"/>
                         <outlet property="lblSourceBottomConstraint" destination="HQc-OZ-ipk" id="GlB-Qs-3II"/>
@@ -2337,6 +2337,7 @@
                         <outlet property="txtViewNewsDesc" destination="fW6-pK-tzj" id="1cM-E5-5v8"/>
                         <outlet property="viewBack" destination="P2Z-xr-irS" id="HOd-E5-cHJ"/>
                         <outlet property="viewContainer" destination="RxT-xW-cwM" id="3M1-34-6ek"/>
+                        <outlet property="viewContainerTop" destination="npb-Q3-6Hf" id="wYp-Dv-ftt"/>
                         <outlet property="viewLikeDislike" destination="ZdY-Zp-FHd" id="7oP-Ti-XlK"/>
                         <outlet property="viewLikeDislikeBottom" destination="deT-px-iXe" id="7w0-u8-k2K"/>
                         <outlet property="viewLikeDislikeHeightConstraint" destination="7fS-A9-XSx" id="rxF-wJ-W6S"/>
@@ -2346,7 +2347,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="HEF-wc-mJk" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4786" y="60"/>
+            <point key="canvasLocation" x="4785.6115107913674" y="59.892086330935257"/>
         </scene>
         <!--SearchVC-->
         <scene sceneID="DKc-Hy-Vjp">
@@ -2441,7 +2442,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="nXP-sr-hvs">
-                                                    <rect key="frame" x="10" y="10" width="355" height="119"/>
+                                                    <rect key="frame" x="10" y="10" width="814" height="119"/>
                                                     <subviews>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Source" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iWH-Oh-AUP">
                                                             <rect key="frame" x="16" y="83" width="55.5" height="20.5"/>
@@ -2450,7 +2451,7 @@
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="L8r-ry-Yg0">
-                                                            <rect key="frame" x="16" y="10" width="231" height="65.5"/>
+                                                            <rect key="frame" x="16" y="10" width="529" height="65.5"/>
                                                             <attributedString key="attributedText">
                                                                 <fragment content="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum">
                                                                     <attributes>
@@ -2462,13 +2463,13 @@
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="TimeAgo" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VH3-w4-EFj">
-                                                            <rect key="frame" x="278" y="86.5" width="57" height="17"/>
+                                                            <rect key="frame" x="677" y="86.5" width="57" height="17"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                             <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="749" image="NoImage" translatesAutoresizingMaskIntoConstraints="NO" id="95G-me-9y5">
-                                                            <rect key="frame" x="257" y="10" width="78" height="75.5"/>
+                                                            <rect key="frame" x="555" y="10" width="179" height="75.5"/>
                                                         </imageView>
                                                     </subviews>
                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
