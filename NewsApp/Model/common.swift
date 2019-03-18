@@ -131,7 +131,7 @@ struct APPURL {
         static let SignUp = Domains.version + "signup/"
         static let Logout = Domains.version + "logout/"
         static let Categories = Domains.version + "categories"
-        static let Search = Domains.version + "search/?q="
+        static let Search = Domains.version + "article/search/?q="
         static let recommendation = Domains.version + "articles/" // + "\(articleId)" + "/recommendations/"
         static let bookmark = Domains.version + "articles/bookmark/"
         static let likeDislike =  Domains.version + "articles/vote/"

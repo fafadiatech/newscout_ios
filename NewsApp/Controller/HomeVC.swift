@@ -362,6 +362,7 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         if indexPath.row == tableView.numberOfRows(inSection: indexPath.section) - 1 {
             var submenu = UserDefaults.standard.value(forKey: "submenu") as! String
+            if ShowArticle.count >= 20{
             if isAPICalled == false{
             let result =  DBManager().FetchNextURL(category: submenu)
             switch result {
@@ -379,12 +380,12 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
                 else{
                     isAPICalled = true
                     activityIndicator.stopAnimating()
-                
                 }
             case .Failure(let errorMsg) :
                 print(errorMsg)
             }
             }
+        }
         }
     }
     

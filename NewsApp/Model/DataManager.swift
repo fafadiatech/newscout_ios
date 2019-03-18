@@ -74,7 +74,7 @@ class DBManager{
                             newArticle.category = news.category
                             newArticle.current_page = Int64(self.ArticleData[0].body!.current_page)
                             newArticle.total_pages = Int64(self.ArticleData[0].body!.total_pages)
-                            if news.article_media!.count > 0 {
+                           /* if news.article_media!.count > 0 {
                                 for media in news.article_media!{
                                     if self.someEntityExists(id: media.media_id, entity: "Media", keyword: "") == false {
                                         let newMedia =  Media(context: managedContext!)
@@ -86,7 +86,7 @@ class DBManager{
                                     }
                                     
                                 }
-                            }
+                            }*/
                             if news.hash_tags.count > 0 {
                                 for tag in news.hash_tags {
                                     let newTag = HashTag(context: managedContext!)

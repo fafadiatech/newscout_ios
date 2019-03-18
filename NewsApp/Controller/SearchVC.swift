@@ -196,6 +196,9 @@ extension SearchVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDele
         if Searchresults.count > 0{
             let currentArticle = Searchresults[indexPath.row]
             cell.lblSource.text =  currentArticle.source
+            if !(currentArticle.published_on?.contains("Z"))!{
+                currentArticle.published_on?.append("Z")
+            }
             let newDate = dateFormatter.date(from: currentArticle.published_on!)
             let agoDate = Helper().timeAgoSinceDate(newDate!)
             cell.lbltimeAgo.text = agoDate

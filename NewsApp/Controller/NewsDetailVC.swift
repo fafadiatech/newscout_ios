@@ -18,7 +18,7 @@ import CoreData
 import MaterialComponents.MaterialActivityIndicator
 import TAPageControl
 
-class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegate {
+class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegate, WKNavigationDelegate {
     @IBOutlet weak var viewContainer: UIView!
     @IBOutlet weak var imgNews: UIImageView!
     @IBOutlet var newsView: UIView!
@@ -44,16 +44,16 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
     @IBOutlet weak var lblSourceBottomConstraint: NSLayoutConstraint!
     @IBOutlet weak var lblTimeAgoBottomConstraint: NSLayoutConstraint!
     @IBOutlet weak var viewLikeDislikeBottom: NSLayoutConstraint!
-    
     @IBOutlet weak var viewBack: UIView!
     @IBOutlet weak var imgScrollView: UIScrollView!
+   
     
-    @IBOutlet weak var hideView: AVPlayerView!
     var btnPlay = UIButton(type: .custom)
     let imageCache = NSCache<NSString, UIImage>()
     var playbackSlider = UISlider()
     var RecomArticleData = [ArticleStatus]()
     var ArticleData = [ArticleStatus]()
+    var RecomData = [NewsArticle]()
     var bookmarkedArticle = [BookmarkArticles]()
     var ShowArticle = [NewsArticle]()
     var SearchArticle = [SearchArticles]()
@@ -74,6 +74,7 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
     var playerViewWidth = CGFloat()
     var playerViewHeight = CGFloat()
     let activityIndicator = MDCActivityIndicator()
+     let activity = MDCActivityIndicator()
     var indexCount = 0
     var currentEntity = ""
     var imgArray = [UIImage]()
@@ -84,10 +85,9 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        hideView.isHidden = true
-         imgNews.isHidden = true
+        WKWebView.navigationDelegate = self
+        filterRecommendation()
        btnPlayVideo.isHidden = true
-      // avPlayerView.isHidden = true
         imgScrollView.delegate = self
         imgArray = [#imageLiteral(resourceName: "f3"),#imageLiteral(resourceName: "f1") ,#imageLiteral(resourceName: "f2")]
         activityIndicator.cycleColors = [.blue]
@@ -178,6 +178,14 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
         customPagecontrol.currentPage = Int(pageindex)
         index = Int(pageindex)
        // runImages()
+    }
+    
+    func filterRecommendation(){
+        for news in ShowArticle{
+            if news.article_id != articleId{
+            RecomData.append(news)
+            }
+        }
     }
     
     func taPageControl(_ pageControl: TAPageControl!, didSelectPageAt currentIndex: Int) {
@@ -387,12 +395,6 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
         else{
             btnPlayVideo.isHidden = true
         }
-//        if btnPlay.isHidden == true{
-//            btnPlay.isHidden = false
-//        }
-//        else{
-//            btnPlay.isHidden = true
-//        }
     }
     
     @objc func tapped(gestureRecognizer: UITapGestureRecognizer) {
@@ -483,6 +485,7 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
                     self.view.makeToast("No more news to show", duration: 1.0, position: .center)
                 }
             case UISwipeGestureRecognizerDirection.left:
+                WKWebView.addSubview(activityIndicator)
                 ViewWebContainer.isHidden = false
                 viewLikeDislike.isHidden = true
                 viewBack.isHidden = true
@@ -515,7 +518,19 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
             }
         }
     }
+    func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
+        activityIndicator.startAnimating()
+    }
+    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+        activityIndicator.stopAnimating()
+    }
     
+    func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
+        activityIndicator.stopAnimating()
+    }
+    func webViewDidFinishLoad(_ : WKWebView) {
+        activityIndicator.stopAnimating()
+    }
     @IBAction func btnPlayVideo(_ sender: Any) {
         if player?.rate == 0
         {
@@ -528,11 +543,14 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
             btnPlayVideo.setImage(UIImage(named: AssetConstants.play), for: .normal)
         }
     }
+    
+    //for play button created programmatically
     @objc func ShowPlayPausebtn() {
         if (btnPlay.currentImage?.isEqual(UIImage(named: AssetConstants.pause)))! {
             btnPlay.isHidden = true
         }
     }
+    
     @objc func ShowPausebtn() {
         if (btnPlayVideo.currentImage?.isEqual(UIImage(named: AssetConstants.pause)))! {
             btnPlayVideo.isHidden = true
@@ -542,8 +560,6 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
     @objc func playbackSliderValueChanged(_ playbackSlider:UISlider){
         let seconds : Int64 = Int64(playbackSlider.value)
         let targetTime:CMTime = CMTimeMake(seconds, 1)
-       // btnPlayVideo.isHidden = false
-        btnPlay.isHidden = false
         player!.seek(to: targetTime)
         
         if player!.rate == 0{
@@ -554,6 +570,7 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
         }
     }
     
+    //for play button created programmatically
     @objc func buttonTapped(sender : UIButton) {
         if player?.rate == 0
         {
@@ -569,7 +586,6 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
     //func ShowNews(currentArticle: ArticleDict){ *for detail API pass articleDict
     func ShowNews(currentIndex: Int){
         MediaData.removeAll()
-         btnPlayVideo.isHidden = true
        activityIndicator.startAnimating()
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
@@ -588,8 +604,13 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
             lblSource.text = currentArticle.source
             lblTimeAgo.text = agoDate
             sourceURL = currentArticle.source_url!
-            
-            let result = DBManager().fetchArticleMedia(articleId: Int(ShowArticle[currentIndex].article_id))
+            if currentArticle.imageURL != ""{
+                imgNews.sd_setImage(with: URL(string: currentArticle.imageURL!), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
+            }
+            else{
+                imgNews.image = UIImage(named: AssetConstants.NoImage)
+            }
+           /* let result = DBManager().fetchArticleMedia(articleId: Int(ShowArticle[currentIndex].article_id))
             switch result {
             case .Success(let DBData) :
                 MediaData = DBData
@@ -696,7 +717,7 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
                imageView.image = UIImage(named: AssetConstants.NoImage)
                 imgScrollView.addSubview(imageView)
             }
-           
+           */
           
            /* var checkImg = false
             let imageFormats = ["jpg", "jpeg", "png", "gif"]
@@ -874,6 +895,7 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
         if imgNews.image == nil{
             imgNews.image = UIImage(named: AssetConstants.NoImage)
         }
+        activityIndicator.stopAnimating()
     }
     
     @IBAction func btnLikeActn(_ sender: Any) {
@@ -1118,13 +1140,13 @@ extension NewsDetailVC:UICollectionViewDelegate, UICollectionViewDataSource, UIC
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
        // return (self.RecomArticleData.count != 0) ? self.RecomArticleData[0].body!.articles.count + 1 : 0
-        if ShowArticle.count == 0{
+        if RecomData.count == 0{
             return 0
         }
-        else if ShowArticle.count >= 5{
+        else if RecomData.count >= 5{
             return 6
         }else{
-            return ShowArticle.count + 1
+            return RecomData.count + 1
         }
        // return ShowArticle.count != 0 ? ShowArticle.count : 0
     }
@@ -1144,7 +1166,7 @@ extension NewsDetailVC:UICollectionViewDelegate, UICollectionViewDataSource, UIC
             cell.imgNews.isHidden = false
             cell.lblTitle.isHidden = false
             cell.lblMoreStories.isHidden = true
-            let currentArticle =  ShowArticle[indexPath.row - 1] //RecomArticleData[0].body!.articles[indexPath.row - 1]
+            let currentArticle =  RecomData[indexPath.row - 1] //RecomArticleData[0].body!.articles[indexPath.row - 1]
             cell.lblTitle.text = currentArticle.title
             if currentArticle.imageURL != nil{
                 
@@ -1197,8 +1219,8 @@ extension NewsDetailVC:UICollectionViewDelegate, UICollectionViewDataSource, UIC
                 UserDefaults.standard.set("recommend", forKey: "isSearch")
             }
             newsDetailvc.newsCurrentIndex = indexPath.row - 1
-            newsDetailvc.ShowArticle =  ShowArticle //RecomArticleData[0].body!.articles
-            newsDetailvc.articleId = Int(ShowArticle[indexPath.row].article_id)  //RecomArticleData[0].body!.articles[indexPath.row - 1].article_id!
+            newsDetailvc.ShowArticle =  RecomData //RecomArticleData[0].body!.articles
+            newsDetailvc.articleId = Int(RecomData[indexPath.row].article_id)  //RecomArticleData[0].body!.articles[indexPath.row - 1].article_id!
             present(newsDetailvc, animated: true, completion: nil)
         }
     }
