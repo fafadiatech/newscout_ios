@@ -26,7 +26,7 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
     var subMenuRow = 0
     var tagArr : [String] = []
     var submenuIndexArr = [[String]]()
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         settings.style.buttonBarItemsShouldFillAvailiableWidth = false

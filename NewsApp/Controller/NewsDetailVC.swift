@@ -135,9 +135,9 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
         swipeUp.direction = UISwipeGestureRecognizerDirection.up
         self.viewNewsArea.addGestureRecognizer(swipeUp)
         
-//        let swipeLeft = UISwipeGestureRecognizer(target: self, action: #selector(self.respondToSwipeGesture))
-//        swipeLeft.direction = UISwipeGestureRecognizerDirection.left
-//        self.newsView.addGestureRecognizer(swipeLeft)
+        let swipeLeft = UISwipeGestureRecognizer(target: self, action: #selector(self.respondToSwipeGesture))
+        swipeLeft.direction = UISwipeGestureRecognizerDirection.left
+        self.newsView.addGestureRecognizer(swipeLeft)
         
         let swipeRight = UISwipeGestureRecognizer(target: self, action: #selector(self.respondToSwipeGesture))
         swipeRight.direction = UISwipeGestureRecognizerDirection.right
@@ -487,6 +487,7 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
                 viewLikeDislike.isHidden = true
                 viewBack.isHidden = true
                 let url = URL(string: sourceURL)
+                print(sourceURL)
                 let domain = url?.host
                 lblWebSource.text = "\(domain!)"
                 transition.type = kCATransitionPush
@@ -1117,7 +1118,15 @@ extension NewsDetailVC:UICollectionViewDelegate, UICollectionViewDataSource, UIC
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
        // return (self.RecomArticleData.count != 0) ? self.RecomArticleData[0].body!.articles.count + 1 : 0
-        return ShowArticle.count != 0 ? ShowArticle.count : 0
+        if ShowArticle.count == 0{
+            return 0
+        }
+        else if ShowArticle.count >= 5{
+            return 6
+        }else{
+            return ShowArticle.count + 1
+        }
+       // return ShowArticle.count != 0 ? ShowArticle.count : 0
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {

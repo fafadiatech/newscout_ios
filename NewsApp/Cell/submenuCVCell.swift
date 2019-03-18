@@ -12,6 +12,7 @@ class submenuCVCell: UICollectionViewCell {
     var shouldTintBackgroundWhenSelected = true // You can change default value
 
     @IBOutlet weak var lblMenu: UILabel!
+
     override var isHighlighted: Bool {
         willSet {
             onSelected(newValue)
@@ -28,6 +29,7 @@ class submenuCVCell: UICollectionViewCell {
             lblMenu.textColor = newValue ? colorConstants.redColor : UIColor.black
         }
     }
+
     
-    
+
 }
