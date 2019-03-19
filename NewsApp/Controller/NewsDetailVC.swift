@@ -46,9 +46,11 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
     @IBOutlet weak var viewLikeDislikeBottom: NSLayoutConstraint!
     @IBOutlet weak var viewBack: UIView!
     @IBOutlet weak var imgScrollView: UIScrollView!
-   
+
+    @IBOutlet weak var viewImgContainerTop: NSLayoutConstraint!
+    @IBOutlet weak var viewImgContainer: UIView!
     @IBOutlet weak var viewContainerTop: NSLayoutConstraint!
-    @IBOutlet weak var imgTop: NSLayoutConstraint!
+  
     
     var btnPlay = UIButton(type: .custom)
     let imageCache = NSCache<NSString, UIImage>()
@@ -250,18 +252,6 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
             NSLayoutConstraint.activate([lblTimeAgoBottomConstraint])
             NSLayoutConstraint.activate([lblSourceBottomConstraint])
         }
-        
-        if imgTop != nil{
-            NSLayoutConstraint.deactivate([imgTop])
-            imgTop = NSLayoutConstraint (item:imgNews,
-                                         attribute: NSLayoutAttribute.top,
-                                         relatedBy: NSLayoutRelation.equal,
-                                         toItem: viewBack,
-                                         attribute: NSLayoutAttribute.bottom,
-                                         multiplier: 1,
-                                         constant: 0)
-            
-        }
     }
     
     func addPotraitConstraint(){
@@ -278,6 +268,19 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
         }
         newsAreaHeightConstraint.constant = 100
         viewLikeDislikeHeightConstraint.constant = -26.5
+        
+        if viewImgContainerTop != nil{
+            NSLayoutConstraint.deactivate([viewImgContainerTop])
+            viewImgContainerTop = NSLayoutConstraint (item:viewImgContainer,
+                                                      attribute: NSLayoutAttribute.top,
+                                                      relatedBy: NSLayoutRelation.equal,
+                                                      toItem: viewContainer,
+                                                      attribute: NSLayoutAttribute.top,
+                                                      multiplier: 1,
+                                                      constant: 0)
+            NSLayoutConstraint.activate([viewImgContainerTop])
+            
+        }
     }
     
     func addLandscapeConstraints(){
@@ -313,6 +316,7 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
             
             NSLayoutConstraint.activate([viewLikeDislikeBottom])
         }
+        
         if viewLikeDislikeHeightConstraint != nil{
             NSLayoutConstraint.deactivate([viewLikeDislikeHeightConstraint])
             viewLikeDislikeHeightConstraint.constant = -8.5
