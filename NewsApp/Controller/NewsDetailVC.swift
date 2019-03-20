@@ -189,7 +189,7 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
     
     func filterRecommendation(){
         RecomData.removeAll()
-        searchRecomData.removeAll() 
+        searchRecomData.removeAll()
         if ShowArticle.count != 0{
             articleId = Int(ShowArticle[newsCurrentIndex].article_id)
         for news in ShowArticle{
@@ -612,8 +612,7 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
     
     //for play button created programmatically
     @objc func buttonTapped(sender : UIButton) {
-        if player?.rate == 0
-        {
+        if player?.rate == 0{
             player!.play()
             btnPlay.setImage(UIImage(named: AssetConstants.pause), for: .normal)
             btnPlay.isHidden = true
@@ -623,6 +622,29 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
             btnPlay.setImage(UIImage(named: AssetConstants.play), for: .normal)
         }
     }
+    
+    func fetchSearchBookmarkDataFromDB(){
+        let result = DBManager().FetchSearchLikeBookmarkFromDB()
+        switch result {
+        case .Success(let DBData) :
+            if DBData.count == 0{
+              activityIndicator.stopAnimating()
+            }
+        case .Failure( _) : break
+        }
+    }
+    
+    func fetchBookmarkDataFromDB(){
+        let result = DBManager().FetchLikeBookmarkFromDB()
+        switch result {
+        case .Success(let DBData) :
+            if DBData.count == 0{
+                activityIndicator.stopAnimating()
+            }
+        case .Failure(let errorMsg) : break
+        }
+    }
+    
     //func ShowNews(currentArticle: ArticleDict){ *for detail API pass articleDict
     func ShowNews(currentIndex: Int){
         MediaData.removeAll()
@@ -634,6 +656,7 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
        // avPlayerView.isHidden = true
       
         if ShowArticle.count != 0{
+             fetchBookmarkDataFromDB()
             currentEntity = "ShowArticle"
             let currentArticle = ShowArticle[currentIndex]
             let newDate = dateFormatter.date(from: currentArticle.published_on!)
@@ -842,6 +865,7 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
         }
         else if SearchArticle.count != 0 {
             currentEntity = "SearchArticles"
+            fetchSearchBookmarkDataFromDB()
             let currentArticle = SearchArticle[currentIndex]
             let newDate = dateFormatter.date(from: currentArticle.published_on!)
             let agoDate = Helper().timeAgoSinceDate(newDate!)
@@ -961,8 +985,8 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
                             
                         }
                           self.view.makeToast(response, duration: 1.0, position: .center)
-                        self.ShowArticle[self.newsCurrentIndex].likeDislike?.isLike = 0
                         DBManager().addLikedArticle(tempentity: self.currentEntity, id: self.articleId, status: 0)
+                         //self.ShowArticle[self.newsCurrentIndex].likeDislike?.isLike = 0
                     }
                 }
             }
@@ -979,7 +1003,7 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
                             response in
                             if response == true{
                                 self.btnLike.setImage(UIImage(named: AssetConstants.thumb_up), for: .normal)
-                                self.ShowArticle[self.newsCurrentIndex].likeDislike?.isLike = 2
+                                //self.ShowArticle[self.newsCurrentIndex].likeDislike?.isLike = 2
                             }
                         }
                     }
@@ -1008,7 +1032,7 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
                         }
                        self.view.makeToast(response, duration: 1.0, position: .center)
                         DBManager().addLikedArticle(tempentity:self.currentEntity, id: self.articleId, status: 1)
-                         self.ShowArticle[self.newsCurrentIndex].likeDislike?.isLike = 1
+                         //self.ShowArticle[self.newsCurrentIndex].likeDislike?.isLike = 1
                         
                     }
                 }
@@ -1025,7 +1049,7 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
                         DBManager().deleteLikedDislikedArticle(id: self.articleId){ response in
                             if response == true{
                                 self.btnDislike.setImage(UIImage(named: AssetConstants.thumb_down), for: .normal)
-                                self.ShowArticle[self.newsCurrentIndex].likeDislike?.isLike = 2
+                               // self.ShowArticle[self.newsCurrentIndex].likeDislike?.isLike = 2
                             }
                         }
                     }
@@ -1048,7 +1072,6 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
                     }
                     else{
                         self.setBookmarkImg()
-                        
                         DBManager().addBookmarkedArticles(currentEntity: self.currentEntity, id: self.articleId)
                         self.view.makeToast(response, duration: 1.0, position: .center)
                     }

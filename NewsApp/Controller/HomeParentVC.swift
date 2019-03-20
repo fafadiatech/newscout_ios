@@ -29,6 +29,9 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
     var headingImg = [AssetConstants.sector, AssetConstants.regional, AssetConstants.finance, AssetConstants.economy, AssetConstants.search]
     override func viewDidLoad() {
         super.viewDidLoad()
+        if UserDefaults.standard.value(forKey: "deviceToken") == nil{
+            UserDefaults.standard.set("41ea0aaa15323ae5012992392e4edd6b8a6ee4547a8dc6fd1f3b31aab9839208", forKey: "deviceToken")
+        }
         if UserDefaults.standard.value(forKey: "daily") == nil{
             UserDefaults.standard.set(false, forKey: "daily")
         }
