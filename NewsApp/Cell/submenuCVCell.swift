@@ -7,12 +7,18 @@
 //
 
 import UIKit
-
+extension UIImageView {
+    func setImageColor(color: UIColor) {
+        let templateImage = self.image?.withRenderingMode(UIImage.RenderingMode.alwaysTemplate)
+        self.image = templateImage
+        self.tintColor = color
+    }
+}
 class submenuCVCell: UICollectionViewCell {
     var shouldTintBackgroundWhenSelected = true // You can change default value
 
     @IBOutlet weak var lblMenu: UILabel!
-
+    @IBOutlet weak var imgMenu: UIImageView!
     override var isHighlighted: Bool {
         willSet {
             onSelected(newValue)
@@ -27,6 +33,8 @@ class submenuCVCell: UICollectionViewCell {
         guard selectedBackgroundView == nil else { return }
         if shouldTintBackgroundWhenSelected {
             lblMenu.textColor = newValue ? colorConstants.redColor : UIColor.black
+            imgMenu.setImageColor(color: newValue ? colorConstants.redColor : UIColor.black)
+
         }
     }
 

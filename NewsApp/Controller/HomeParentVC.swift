@@ -26,7 +26,7 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
     var subMenuRow = 0
     var tagArr : [String] = []
     var submenuIndexArr = [[String]]()
-
+    var headingImg = [AssetConstants.sector, AssetConstants.regional, AssetConstants.finance, AssetConstants.economy, AssetConstants.search]
     override func viewDidLoad() {
         super.viewDidLoad()
         if UserDefaults.standard.value(forKey: "daily") == nil{
@@ -181,29 +181,7 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
             print(error)
         }
     }
-    func loadJson(filename fileName: String) -> [Result]?
-    {
-        if let url = Bundle.main.url(forResource: fileName, withExtension: "json") {
-            do {
-                let data = try Data(contentsOf: url)
-                let decoder = JSONDecoder()
-                let jsonData = try decoder.decode(Menu.self, from: data)
-                for res in jsonData.body.results{
-                    headingArr.append(res.heading.headingName)
-                    submenu.removeAll()
-                    for i in res.heading.submenu{
-                        submenu.append(i.name)
-                    }
-                    subMenuArr.append(submenu)
-                }
-                return jsonData.body.results
-            } catch {
-                print("error:\(error)")
-            }
-        }
-        return nil
-    }
-    
+   
     deinit {
         NotificationCenter.default.removeObserver(self, name: .darkModeEnabled, object: nil)
         NotificationCenter.default.removeObserver(self, name: .darkModeDisabled, object: nil)
@@ -289,6 +267,7 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
         if collectionView ==  menuCV {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "subMenuID", for: indexPath) as! submenuCVCell
             cell.lblMenu.text = headingArr[indexPath.row].localizedCapitalized
+            cell.imgMenu.image =  UIImage(named: headingImg[indexPath.row])
             return cell
         }
          else   {

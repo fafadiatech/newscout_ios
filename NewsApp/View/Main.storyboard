@@ -46,21 +46,24 @@
                                     </constraint>
                                 </constraints>
                                 <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="10" minimumInteritemSpacing="10" id="SId-wL-Nnd">
-                                    <size key="itemSize" width="220" height="50"/>
+                                    <size key="itemSize" width="280" height="42.5"/>
                                     <size key="headerReferenceSize" width="0.0" height="0.0"/>
                                     <size key="footerReferenceSize" width="0.0" height="0.0"/>
                                     <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 </collectionViewFlowLayout>
                                 <cells>
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="subMenuID" id="NVK-EG-q4K" customClass="submenuCVCell" customModule="NewsApp" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="-5" width="220" height="50"/>
+                                        <rect key="frame" x="0.0" y="-1.5" width="280" height="42.5"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
-                                            <rect key="frame" x="0.0" y="0.0" width="220" height="50"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="280" height="42.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="     Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sNU-r8-6pL">
-                                                    <rect key="frame" x="0.0" y="0.0" width="215" height="50"/>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="search" translatesAutoresizingMaskIntoConstraints="NO" id="pbd-uV-HkE">
+                                                    <rect key="frame" x="4" y="10.5" width="42" height="21.5"/>
+                                                </imageView>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="     Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sNU-r8-6pL">
+                                                    <rect key="frame" x="53" y="0.0" width="226" height="42.5"/>
                                                     <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="20"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
@@ -71,12 +74,17 @@
                                             </subviews>
                                         </view>
                                         <constraints>
-                                            <constraint firstAttribute="trailing" secondItem="sNU-r8-6pL" secondAttribute="trailing" id="BsG-tf-K1Y"/>
-                                            <constraint firstItem="sNU-r8-6pL" firstAttribute="leading" secondItem="NVK-EG-q4K" secondAttribute="leading" constant="5" id="fVA-vV-WyW"/>
+                                            <constraint firstItem="pbd-uV-HkE" firstAttribute="height" secondItem="NVK-EG-q4K" secondAttribute="height" multiplier="0.5" id="3uK-D9-Q2r"/>
+                                            <constraint firstItem="sNU-r8-6pL" firstAttribute="leading" secondItem="pbd-uV-HkE" secondAttribute="trailing" constant="7" id="82b-rT-OGe"/>
+                                            <constraint firstItem="pbd-uV-HkE" firstAttribute="leading" secondItem="NVK-EG-q4K" secondAttribute="leading" constant="4" id="8dP-fT-Tfh"/>
+                                            <constraint firstAttribute="trailing" secondItem="sNU-r8-6pL" secondAttribute="trailing" constant="1" id="BsG-tf-K1Y"/>
                                             <constraint firstAttribute="bottom" secondItem="sNU-r8-6pL" secondAttribute="bottom" id="kJK-kG-F5K"/>
                                             <constraint firstItem="sNU-r8-6pL" firstAttribute="top" secondItem="NVK-EG-q4K" secondAttribute="top" id="rd8-Dp-qwF"/>
+                                            <constraint firstItem="pbd-uV-HkE" firstAttribute="centerY" secondItem="sNU-r8-6pL" secondAttribute="centerY" id="tG3-mK-jHS"/>
+                                            <constraint firstItem="pbd-uV-HkE" firstAttribute="width" secondItem="NVK-EG-q4K" secondAttribute="width" multiplier="0.15" id="vy2-PR-2mq"/>
                                         </constraints>
                                         <connections>
+                                            <outlet property="imgMenu" destination="pbd-uV-HkE" id="jeh-ra-J2c"/>
                                             <outlet property="lblMenu" destination="sNU-r8-6pL" id="qsN-v3-zjQ"/>
                                         </connections>
                                     </collectionViewCell>
@@ -718,13 +726,13 @@
                                 <rect key="frame" x="0.0" y="74" width="375" height="468"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xNY-Lb-fnP">
-                                        <rect key="frame" x="0.0" y="0.0" width="375" height="468"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="375" height="367"/>
                                         <subviews>
                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" alignment="center" spacing="7" translatesAutoresizingMaskIntoConstraints="NO" id="1ZS-5R-Axf">
-                                                <rect key="frame" x="0.0" y="20" width="375" height="259"/>
+                                                <rect key="frame" x="0.0" y="20" width="375" height="178"/>
                                                 <subviews>
                                                     <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="v7P-i3-PBO" customClass="SkyFloatingLabelTextField" customModule="SkyFloatingLabelTextField">
-                                                        <rect key="frame" x="56.5" y="0.0" width="262.5" height="46.5"/>
+                                                        <rect key="frame" x="56.5" y="0.0" width="262.5" height="30"/>
                                                         <nil key="textColor"/>
                                                         <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="20"/>
                                                         <textInputTraits key="textInputTraits"/>
@@ -748,7 +756,7 @@
                                                         </connections>
                                                     </textField>
                                                     <textField opaque="NO" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="XiE-2m-uWJ" customClass="SkyFloatingLabelTextField" customModule="SkyFloatingLabelTextField">
-                                                        <rect key="frame" x="56.5" y="53.5" width="262.5" height="46"/>
+                                                        <rect key="frame" x="56.5" y="37" width="262.5" height="30"/>
                                                         <nil key="textColor"/>
                                                         <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="20"/>
                                                         <textInputTraits key="textInputTraits"/>
@@ -772,7 +780,7 @@
                                                         </connections>
                                                     </textField>
                                                     <textField opaque="NO" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="6V2-WP-iQ7" customClass="SkyFloatingLabelTextField" customModule="SkyFloatingLabelTextField">
-                                                        <rect key="frame" x="56.5" y="106.5" width="262.5" height="46"/>
+                                                        <rect key="frame" x="56.5" y="74" width="262.5" height="30"/>
                                                         <nil key="textColor"/>
                                                         <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="20"/>
                                                         <textInputTraits key="textInputTraits"/>
@@ -796,7 +804,7 @@
                                                         </connections>
                                                     </textField>
                                                     <textField opaque="NO" tag="3" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="HwO-68-0dF" customClass="SkyFloatingLabelTextField" customModule="SkyFloatingLabelTextField">
-                                                        <rect key="frame" x="56.5" y="159.5" width="262.5" height="46"/>
+                                                        <rect key="frame" x="56.5" y="111" width="262.5" height="30"/>
                                                         <nil key="textColor"/>
                                                         <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="20"/>
                                                         <textInputTraits key="textInputTraits" secureTextEntry="YES" textContentType="password"/>
@@ -820,7 +828,7 @@
                                                         </connections>
                                                     </textField>
                                                     <textField opaque="NO" tag="4" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="dCB-Ga-GDY" customClass="SkyFloatingLabelTextField" customModule="SkyFloatingLabelTextField">
-                                                        <rect key="frame" x="56.5" y="212.5" width="262.5" height="46.5"/>
+                                                        <rect key="frame" x="56.5" y="148" width="262.5" height="30"/>
                                                         <nil key="textColor"/>
                                                         <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="20"/>
                                                         <textInputTraits key="textInputTraits" secureTextEntry="YES" textContentType="password"/>
@@ -852,7 +860,7 @@
                                                 </constraints>
                                             </stackView>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="s37-jO-1S1">
-                                                <rect key="frame" x="135" y="299" width="105" height="43.5"/>
+                                                <rect key="frame" x="135" y="218" width="105" height="44"/>
                                                 <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <state key="normal" title="Sign Up">
                                                     <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -862,7 +870,7 @@
                                                 </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ged-Ue-hb8">
-                                                <rect key="frame" x="88" y="352.5" width="199" height="45"/>
+                                                <rect key="frame" x="88" y="272" width="199" height="45"/>
                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="45" id="l8L-hW-UKC">
@@ -2658,10 +2666,10 @@
                                 </constraints>
                             </view>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="6" translatesAutoresizingMaskIntoConstraints="NO" id="GB5-jB-3xm">
-                                <rect key="frame" x="56.5" y="110.5" width="262.5" height="98.5"/>
+                                <rect key="frame" x="56.5" y="147" width="262.5" height="62"/>
                                 <subviews>
                                     <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="line" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="WNS-Ff-LIs" customClass="SkyFloatingLabelTextField" customModule="SkyFloatingLabelTextField">
-                                        <rect key="frame" x="0.0" y="0.0" width="262.5" height="46"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="262.5" height="28"/>
                                         <nil key="textColor"/>
                                         <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="30"/>
                                         <textInputTraits key="textInputTraits"/>
@@ -2688,7 +2696,7 @@
                                         </connections>
                                     </textField>
                                     <textField opaque="NO" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="line" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="dQv-vb-8U3" customClass="SkyFloatingLabelTextField" customModule="SkyFloatingLabelTextField">
-                                        <rect key="frame" x="0.0" y="52" width="262.5" height="46.5"/>
+                                        <rect key="frame" x="0.0" y="34" width="262.5" height="28"/>
                                         <nil key="textColor"/>
                                         <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="30"/>
                                         <textInputTraits key="textInputTraits" secureTextEntry="YES" textContentType="password"/>
@@ -3344,6 +3352,7 @@
         <image name="logo" width="512" height="512"/>
         <image name="newsearch" width="512" height="512"/>
         <image name="play" width="256" height="256"/>
+        <image name="search" width="37.5" height="37.5"/>
         <image name="share" width="512" height="512"/>
     </resources>
 </document>

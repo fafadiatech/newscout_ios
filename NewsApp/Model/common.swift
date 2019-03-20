@@ -101,8 +101,11 @@ struct AssetConstants{
     static let glogo = "glogo"
     static let flogo = "flogo"
     static let menu = "menu"
-    
-}
+    static let sector = "sector_update"
+    static let regional = "regional_update_1"
+    static let economy = "economy"
+    static let finance = "finance"
+ }
 
 struct AppFontName {
     static let regular = "HelveticaNeue-Light"
