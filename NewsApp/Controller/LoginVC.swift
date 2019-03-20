@@ -165,8 +165,11 @@ class LoginVC: UIViewController, GIDSignInUIDelegate, FBSDKLoginButtonDelegate {
             self.view.makeToast("Please enter valid Email and Password..", duration: 1.0, position: .center)
         }
         else{
+            let id = UserDefaults.standard.value(forKey: "deviceToken") as! String
             let param = ["email" : txtUsername.text!,
-                         "password" : txtPassword.text!]
+                         "password" : txtPassword.text!,
+                         "device_id" : id,
+                         "device_name": "ios"]
             APICall().LoginAPI(param : param){(status,response) in
                 print("Login response:\(response)")
                 if response == "1"{

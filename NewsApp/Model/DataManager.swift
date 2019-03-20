@@ -885,7 +885,8 @@ class DBManager{
         let managedContext =
             appDelegate?.persistentContainer.viewContext
         let subMenufetchRequest = NSFetchRequest<HeadingSubMenu>(entityName: "HeadingSubMenu")
-        
+        let sortDescriptor = NSSortDescriptor(key: "subMenuId", ascending: true)
+        subMenufetchRequest.sortDescriptors = [sortDescriptor]
         do {
             subMenufetchRequest.predicate = NSPredicate(format: "headingId = %d",headingId)
             subMenuData = try (managedContext?.fetch(subMenufetchRequest))!

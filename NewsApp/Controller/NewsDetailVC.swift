@@ -109,12 +109,14 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
         else if UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad && statusBarOrientation.isLandscape {
             viewLikeDislike.isHidden = true
             viewBack.isHidden = true
+            addImageConstaints()
             addLandscapeConstraints()
         }
         else{
             viewLikeDislike.isHidden = true
             viewBack.isHidden = true
             addPotraitConstraint()
+            addImageConstaints()
         }
         viewLikeDislike.backgroundColor = colorConstants.redColor
         viewBack.backgroundColor = colorConstants.redColor
@@ -269,6 +271,9 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
         newsAreaHeightConstraint.constant = 100
         viewLikeDislikeHeightConstraint.constant = -26.5
         
+    }
+    
+    func addImageConstaints(){
         if viewImgContainerTop != nil{
             NSLayoutConstraint.deactivate([viewImgContainerTop])
             viewImgContainerTop = NSLayoutConstraint (item:viewImgContainer,
@@ -933,6 +938,7 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
                             
                         }
                           self.view.makeToast(response, duration: 1.0, position: .center)
+                        self.ShowArticle[self.newsCurrentIndex].likeDislike?.isLike = 0
                         DBManager().addLikedArticle(tempentity: self.currentEntity, id: self.articleId, status: 0)
                     }
                 }
@@ -950,6 +956,7 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
                             response in
                             if response == true{
                                 self.btnLike.setImage(UIImage(named: AssetConstants.thumb_up), for: .normal)
+                                self.ShowArticle[self.newsCurrentIndex].likeDislike?.isLike = 2
                             }
                         }
                     }
@@ -978,6 +985,8 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
                         }
                        self.view.makeToast(response, duration: 1.0, position: .center)
                         DBManager().addLikedArticle(tempentity:self.currentEntity, id: self.articleId, status: 1)
+                         self.ShowArticle[self.newsCurrentIndex].likeDislike?.isLike = 1
+                        
                     }
                 }
             }
@@ -993,6 +1002,7 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
                         DBManager().deleteLikedDislikedArticle(id: self.articleId){ response in
                             if response == true{
                                 self.btnDislike.setImage(UIImage(named: AssetConstants.thumb_down), for: .normal)
+                                self.ShowArticle[self.newsCurrentIndex].likeDislike?.isLike = 2
                             }
                         }
                     }

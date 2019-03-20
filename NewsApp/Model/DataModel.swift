@@ -190,6 +190,9 @@ struct User : Decodable{
     let first_name : String?
     let last_name : String?
     let passion: [Passion]?
+    let breaking_news : Bool
+    let daily_edition : Bool
+    let personalized : Bool
     
     enum CodingKeys: String, CodingKey{
         case user_id = "id"
@@ -197,6 +200,9 @@ struct User : Decodable{
         case first_name = "first_name"
         case last_name = "last_name"
         case passion = "passion"
+        case breaking_news
+        case daily_edition
+        case personalized
     }
 }
 

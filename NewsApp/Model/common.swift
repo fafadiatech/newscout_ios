@@ -145,6 +145,8 @@ struct APPURL {
         static let ArticlesBytags = Domains.version + "article/search?"
         static let ArtilceByTags2 = Domains.version + "articles/?"
         static let menu = Domains.version + "menus"
+        static let deviceDetails = Domains.version + "device/"
+        static let NotificationDetails = Domains.version + "notification/"
     }
     
     static let ArticlesURL = Domains.Local + Routes.Articles
@@ -168,6 +170,8 @@ struct APPURL {
     static let ArticlesByTagsURL = Domains.Local + Routes.ArticlesBytags
     static let ArticlesByTagsURL2 = Domains.Local + Routes.ArtilceByTags2
     static let getMenus = Domains.Local + Routes.menu
+    static let sendDeviceDetailsURL = Domains.Local + Routes.deviceDetails
+    static let sendNotificationDetails = Domains.Local + Routes.NotificationDetails
 }
 
 

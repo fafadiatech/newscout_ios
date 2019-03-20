@@ -190,6 +190,65 @@ class APICall{
         }
     }
     
+    //send notification updates
+    func notificationAPI(param : Dictionary<String, String>,_ completion : @escaping (Int , String) ->()) {
+        let url = APPURL.sendNotificationDetails
+        Alamofire.request(url,method: .post, parameters: param).responseString{
+            response in
+            if(response.result.isSuccess){
+                if let data = response.data {
+                    let jsonDecoder = JSONDecoder()
+                    do {
+                        let jsonData = try jsonDecoder.decode(MainModel.self, from: data)
+                        if jsonData.header.status == "0"{
+                            completion(0, (jsonData.errors?.Msg)!)
+                        }
+                        else{
+                            completion(1, (jsonData.body?.Msg)!)
+                        }
+                    }
+                    catch {
+                        completion(0,error.localizedDescription)
+                    }
+                }
+            }
+            else{
+                if let err = response.result.error as? URLError, err.code == .notConnectedToInternet {
+                    completion(0,Constants.InternetErrorMsg)
+                }
+            }
+        }
+    }
+    
+    //send device details
+    func deviceAPI(param : Dictionary<String, String>,_ completion : @escaping (Int , String) ->()) {
+        let url = APPURL.sendDeviceDetailsURL
+        Alamofire.request(url,method: .post, parameters: param).responseString{
+            response in
+            if(response.result.isSuccess){
+                if let data = response.data {
+                    let jsonDecoder = JSONDecoder()
+                    do {
+                        let jsonData = try jsonDecoder.decode(MainModel.self, from: data)
+                        if jsonData.header.status == "0"{
+                            completion(0, (jsonData.errors?.Msg)!)
+                        }
+                        else{
+                            completion(1, (jsonData.body?.Msg)!)
+                        }
+                    }
+                    catch {
+                        completion(0,error.localizedDescription)
+                    }
+                }
+            }
+            else{
+                if let err = response.result.error as? URLError, err.code == .notConnectedToInternet {
+                    completion(0,Constants.InternetErrorMsg)
+                }
+            }
+        }
+    }
     //Login API
     func LoginAPI(param : Dictionary<String, String>,_ completion : @escaping (Int , String) ->()) {
         let url = APPURL.LoginURL
@@ -214,6 +273,9 @@ class APICall{
                             UserDefaults.standard.set(jsonData.body!.user!.last_name, forKey: "last_name")
                             UserDefaults.standard.set(jsonData.body!.user!.user_id, forKey: "user_id")
                             UserDefaults.standard.set(param["email"], forKey: "email")
+                            UserDefaults.standard.set(jsonData.body?.user?.breaking_news, forKey: "breaking")
+                            UserDefaults.standard.set(jsonData.body?.user?.breaking_news, forKey: "daily")
+                            UserDefaults.standard.set(jsonData.body?.user?.breaking_news, forKey: "personalised")
                             completion((response.response?.statusCode)!, jsonData.header.status)
                         }
                     }

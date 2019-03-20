@@ -29,6 +29,16 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        if UserDefaults.standard.value(forKey: "daily") == nil{
+            UserDefaults.standard.set(false, forKey: "daily")
+        }
+        if UserDefaults.standard.value(forKey: "breaking") == nil{
+            UserDefaults.standard.set(false, forKey: "breaking")
+        }
+        if UserDefaults.standard.value(forKey: "personalised") == nil{
+             UserDefaults.standard.set(false, forKey: "personalised")
+        }
+        sendDeviceDetails()
         settings.style.buttonBarItemsShouldFillAvailiableWidth = false
         saveFetchMenu()
         NotificationCenter.default.addObserver(self, selector: #selector(darkModeEnabled(_:)), name: .darkModeEnabled, object: nil)
@@ -99,6 +109,17 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
             }
         }
       
+    }
+    
+    func sendDeviceDetails(){
+        if UserDefaults.standard.value(forKey: "deviceToken") != nil{
+            let id = UserDefaults.standard.value(forKey: "deviceToken") as! String
+            let param = ["device_id" : id,
+                         "device_name": "ios"]
+            APICall().deviceAPI(param : param){(status,response) in
+                print(status,response)
+            }
+        }
     }
     
     func saveFetchMenu(){

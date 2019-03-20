@@ -1278,6 +1278,9 @@
                                                         <constraint firstAttribute="width" constant="49" id="l25-hr-ZlD"/>
                                                     </constraints>
                                                     <color key="onTintColor" red="0.92941176470588238" green="0.10980392156862745" blue="0.14117647058823529" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <connections>
+                                                        <action selector="switchBreakingNewsActn:" destination="P8d-DS-r26" eventType="valueChanged" id="Yu2-F9-Nnw"/>
+                                                    </connections>
                                                 </switch>
                                             </subviews>
                                             <constraints>
@@ -1308,6 +1311,9 @@
                                                 <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="PRv-Ky-Rug">
                                                     <rect key="frame" x="316" y="6.5" width="51" height="31"/>
                                                     <color key="onTintColor" red="0.92941176470588238" green="0.10980392156862745" blue="0.14117647058823529" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <connections>
+                                                        <action selector="switchDailyNewsActn:" destination="P8d-DS-r26" eventType="valueChanged" id="jpo-vR-UYd"/>
+                                                    </connections>
                                                 </switch>
                                             </subviews>
                                             <constraints>
@@ -1338,6 +1344,9 @@
                                                 <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rA9-ug-uMR">
                                                     <rect key="frame" x="316" y="6.5" width="51" height="31"/>
                                                     <color key="onTintColor" red="0.92941176470588238" green="0.10980392156862745" blue="0.14117647058823529" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <connections>
+                                                        <action selector="switchPersonalisedActn:" destination="P8d-DS-r26" eventType="valueChanged" id="Nrw-Xy-X8P"/>
+                                                    </connections>
                                                 </switch>
                                             </subviews>
                                             <constraints>
@@ -1542,7 +1551,10 @@
                         <outlet property="lblProfile" destination="bUt-BB-oZI" id="swz-FJ-aWE"/>
                         <outlet property="segmentTextSize" destination="Xbu-UW-0Xd" id="7Jf-yu-kRn"/>
                         <outlet property="settingsTV" destination="DJu-WY-kei" id="sfg-VK-Cd6"/>
+                        <outlet property="switchBreaking" destination="QSu-hk-8CE" id="GE6-VT-M8f"/>
+                        <outlet property="switchDaily" destination="PRv-Ky-Rug" id="L5S-hA-0dh"/>
                         <outlet property="switchNightMode" destination="5gk-a4-FhI" id="Q7C-mZ-wH0"/>
+                        <outlet property="switchPersonalised" destination="rA9-ug-uMR" id="Olr-FP-7BN"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="mPr-b7-zuf" userLabel="First Responder" sceneMemberID="firstResponder"/>
