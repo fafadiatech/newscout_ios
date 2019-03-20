@@ -58,6 +58,7 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
     var RecomArticleData = [ArticleStatus]()
     var ArticleData = [ArticleStatus]()
     var RecomData = [NewsArticle]()
+    var searchRecomData = [SearchArticles]()
     var bookmarkedArticle = [BookmarkArticles]()
     var ShowArticle = [NewsArticle]()
     var SearchArticle = [SearchArticles]()
@@ -187,11 +188,24 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
     }
     
     func filterRecommendation(){
+        RecomData.removeAll()
+        searchRecomData.removeAll() 
+        if ShowArticle.count != 0{
+            articleId = Int(ShowArticle[newsCurrentIndex].article_id)
         for news in ShowArticle{
             if news.article_id != articleId{
             RecomData.append(news)
             }
         }
+        }else{
+            for news in SearchArticle{
+                articleId  = Int(SearchArticle[newsCurrentIndex].article_id)
+                if news.article_id != articleId{
+                    searchRecomData.append(news)
+                }
+        }
+    }
+      suggestedCV.reloadData()
     }
     
     func taPageControl(_ pageControl: TAPageControl!, didSelectPageAt currentIndex: Int) {
@@ -409,6 +423,7 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
         txtViewNewsDesc.textColor = colorConstants.whiteColor
         viewWebTitle.backgroundColor = colorConstants.grayBackground3
         lblWebSource.textColor = .white
+        imgNews.backgroundColor = colorConstants.txtlightGrayColor
     }
     
     @objc func PlayerViewtapped(gestureRecognizer: UITapGestureRecognizer) {
@@ -500,6 +515,7 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
                 {
                     newsCurrentIndex = newsCurrentIndex - 1
                     ShowNews(currentIndex : newsCurrentIndex)
+                    filterRecommendation()
                     transition.type = kCATransitionPush
                     transition.subtype = kCATransitionFromBottom
                     view.window!.layer.add(transition, forKey: kCATransition)
@@ -529,6 +545,7 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
                 {
                     newsCurrentIndex = newsCurrentIndex + 1
                     ShowNews(currentIndex : newsCurrentIndex)
+                    filterRecommendation()
                     transition.type = kCATransitionPush
                     transition.subtype = kCATransitionFromTop
                     view.window!.layer.add(transition, forKey: kCATransition)
@@ -823,7 +840,7 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
                 ResetBookmarkImg()
             }
         }
-        else if SearchArticle.count != 0 {/*
+        else if SearchArticle.count != 0 {
             currentEntity = "SearchArticles"
             let currentArticle = SearchArticle[currentIndex]
             let newDate = dateFormatter.date(from: currentArticle.published_on!)
@@ -834,7 +851,13 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
             lblSource.text = currentArticle.source
             lblTimeAgo.text = agoDate
             sourceURL = currentArticle.source_url!
-            
+            if currentArticle.imageURL != ""{
+                imgNews.sd_setImage(with: URL(string: currentArticle.imageURL!), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
+            }
+            else{
+                imgNews.image = UIImage(named: AssetConstants.NoImage)
+            }/*
+           
             var checkImg = false
             let imageFormats = ["jpg", "jpeg", "png", "gif"]
             for ext in imageFormats{
@@ -889,7 +912,7 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
                 self.btnPlayVideo.isHidden = true
               //  self.avPlayerView.isHidden = true
                 self.imgNews.sd_setImage(with: URL(string: currentArticle.imageURL!), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
-            }
+            }*/
             
             if UserDefaults.standard.value(forKey: "token") != nil{
                 if currentArticle.likeDislike?.isLike == 0 {
@@ -913,7 +936,7 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
                 btnLike.setImage(UIImage(named: AssetConstants.thumb_up), for: .normal)
                 btnDislike.setImage(UIImage(named: AssetConstants.thumb_down), for: .normal)
                 ResetBookmarkImg()
-            }*/
+            }
         }
         if imgNews.image == nil{
             imgNews.image = UIImage(named: AssetConstants.NoImage)
@@ -1168,13 +1191,17 @@ extension NewsDetailVC:UICollectionViewDelegate, UICollectionViewDataSource, UIC
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
        // return (self.RecomArticleData.count != 0) ? self.RecomArticleData[0].body!.articles.count + 1 : 0
-        if RecomData.count == 0{
+        if RecomData.count == 0 && searchRecomData.count == 0{
             return 0
         }
-        else if RecomData.count >= 5{
+        else if RecomData.count >= 5 || searchRecomData.count >= 5{
             return 6
         }else{
+            if RecomData.count != 0{
             return RecomData.count + 1
+            }else{
+                return searchRecomData.count + 1
+            }
         }
        // return ShowArticle.count != 0 ? ShowArticle.count : 0
     }
@@ -1183,6 +1210,7 @@ extension NewsDetailVC:UICollectionViewDelegate, UICollectionViewDataSource, UIC
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "SuggestedNewsID", for: indexPath) as! SuggestedNewsCVCell
         cell.lblTitle.font = FontConstants.NormalFontContent
         cell.lblMoreStories.font = FontConstants.LargeFontContentBold
+        cell.btnCellPlayVIdeo.isHidden = true
         if indexPath.row == 0
         {
             cell.lblMoreStories.isHidden = false
@@ -1194,29 +1222,20 @@ extension NewsDetailVC:UICollectionViewDelegate, UICollectionViewDataSource, UIC
             cell.imgNews.isHidden = false
             cell.lblTitle.isHidden = false
             cell.lblMoreStories.isHidden = true
-            let currentArticle =  RecomData[indexPath.row - 1] //RecomArticleData[0].body!.articles[indexPath.row - 1]
-            cell.lblTitle.text = currentArticle.title
-            if currentArticle.imageURL != nil{
-                
-                var checkImg = false
-                let imageFormats = ["jpg", "jpeg", "png", "gif"]
-                for ext in imageFormats{
-                    if currentArticle.imageURL!.contains(ext){
-                        checkImg = true
-                        break
-                    }
+            if currentEntity == "SearchArticles"{
+                let currentArticle =  searchRecomData[indexPath.row - 1] //RecomArticleData[0].body!.articles[indexPath.row - 1]
+                cell.lblTitle.text = currentArticle.title
+                if currentArticle.imageURL != nil{
+                    cell.imgNews.sd_setImage(with: URL(string: currentArticle.imageURL!), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
                 }
-                if checkImg == false{
-                    cell.btnCellPlayVIdeo.isHidden = false
-                    if let thumbnail = createThumbnailOfVideoFromRemoteUrl(url: "https://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4"){
-                        cell.imgNews.image = thumbnail
-                    }
-                }
-                else{
-                    cell.btnCellPlayVIdeo.isHidden = true
+            }else{
+                let currentArticle =  RecomData[indexPath.row - 1] //RecomArticleData[0].body!.articles[indexPath.row - 1]
+                cell.lblTitle.text = currentArticle.title
+                if currentArticle.imageURL != nil{
                     cell.imgNews.sd_setImage(with: URL(string: currentArticle.imageURL!), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
                 }
             }
+           
             if cell.imgNews.image == nil{
                 cell.imgNews.image = UIImage(named: AssetConstants.NoImage)
             }
@@ -1247,8 +1266,13 @@ extension NewsDetailVC:UICollectionViewDelegate, UICollectionViewDataSource, UIC
                 UserDefaults.standard.set("recommend", forKey: "isSearch")
             }
             newsDetailvc.newsCurrentIndex = indexPath.row - 1
+            if ShowArticle.count != 0{
             newsDetailvc.ShowArticle =  RecomData //RecomArticleData[0].body!.articles
             newsDetailvc.articleId = Int(RecomData[indexPath.row].article_id)  //RecomArticleData[0].body!.articles[indexPath.row - 1].article_id!
+            }else{
+                newsDetailvc.SearchArticle = searchRecomData
+                newsDetailvc.articleId = Int(searchRecomData[indexPath.row].article_id)
+            }
             present(newsDetailvc, animated: true, completion: nil)
         }
     }
