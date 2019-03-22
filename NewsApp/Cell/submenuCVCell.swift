@@ -38,6 +38,12 @@ class submenuCVCell: UICollectionViewCell {
         }
     }
 
-    
+//    override var isSelected: Bool {
+//        didSet {
+//            //self.contentView.backgroundColor = isSelected ? UIColor.blue : UIColor.yellow
+//            //self.imgMenu.alpha = isSelected ? 0.75 : 1.0
+//             lblMenu.textColor = isSelected ? colorConstants.redColor : UIColor.black
+//        }
+//    }
 
 }

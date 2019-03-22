@@ -201,8 +201,10 @@ extension SearchVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDele
                 currentArticle.published_on?.append("Z")
             }
             let newDate = dateFormatter.date(from: currentArticle.published_on!)
-            let agoDate = Helper().timeAgoSinceDate(newDate!)
-            cell.lbltimeAgo.text = agoDate
+            if newDate != nil{
+                let agoDate = Helper().timeAgoSinceDate(newDate!)
+                cell.lbltimeAgo.text = agoDate
+            }
             cell.lblNewsDescription.text = currentArticle.title
             cell.imgNews.sd_setImage(with: URL(string: currentArticle.imageURL!), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
         }

@@ -29,6 +29,7 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
     var headingImg = [AssetConstants.sector, AssetConstants.regional, AssetConstants.finance, AssetConstants.economy, AssetConstants.search]
     override func viewDidLoad() {
         super.viewDidLoad()
+        menuCV.allowsSelection = false
         if UserDefaults.standard.value(forKey: "deviceToken") == nil{
             UserDefaults.standard.set("41ea0aaa15323ae5012992392e4edd6b8a6ee4547a8dc6fd1f3b31aab9839208", forKey: "deviceToken")
         }
@@ -254,7 +255,31 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
         }
         
         }
-
+//    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+//        let cell = ScenarioCollectionView.dequeueReusableCell(withReuseIdentifier: "ReuseScenarioCollectionViewCell", for: indexPath as IndexPath) as! ScenarioCollectionViewCell
+//
+//        if (indexPath.row == 0){
+//            collectionView.selectItem(at: indexPath, animated: true, scrollPosition: UICollectionViewScrollPosition.centeredHorizontally)
+//            cell.layer.borderColor=UIColor.gray.cgColor
+//        }else{
+//            cell.layer.borderColor=UIColor.white.cgColor
+//        }
+//        return cell
+//    }
+//
+//
+//    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+//        let cell = collectionView.cellForItem(at: indexPath)
+//        cell?.layer.borderColor = UIColor.gray.cgColor
+//    }
+//
+//    func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
+//        let cell = collectionView.cellForItem(at: indexPath as IndexPath)
+//        cell?.layer.borderColor = UIColor.white.cgColor
+//        collectionView.deselectItem(at: indexPath, animated: true)
+//    }
+//
+ 
 
   override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if (collectionView == buttonBarView) {
@@ -269,6 +294,7 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         if collectionView ==  menuCV {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "subMenuID", for: indexPath) as! submenuCVCell
+         
             cell.lblMenu.text = headingArr[indexPath.row].localizedCapitalized
             cell.imgMenu.image =  UIImage(named: headingImg[indexPath.row])
             return cell
@@ -304,6 +330,7 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
 //        }
 //        print("url to get tag is: \(url)")
 //        UserDefaults.standard.set(url, forKey: "submenuURL")
+    
         reloadPagerTabStripView()
     }
     }

@@ -660,12 +660,15 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
             currentEntity = "ShowArticle"
             let currentArticle = ShowArticle[currentIndex]
             let newDate = dateFormatter.date(from: currentArticle.published_on!)
+            if newDate != nil{
             let agoDate = Helper().timeAgoSinceDate(newDate!)
+                lblTimeAgo.text = agoDate
+            }
             articleId = Int(currentArticle.article_id)
             lblNewsHeading.text = currentArticle.title
             txtViewNewsDesc.text = currentArticle.blurb
             lblSource.text = currentArticle.source
-            lblTimeAgo.text = agoDate
+            
             sourceURL = currentArticle.source_url!
             if currentArticle.imageURL != ""{
                 imgNews.sd_setImage(with: URL(string: currentArticle.imageURL!), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
@@ -1196,6 +1199,7 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
 }
 
 extension NewsDetailVC:UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout{
+    
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize{
         var width = 1.0
         if indexPath.row == 0{
@@ -1209,7 +1213,7 @@ extension NewsDetailVC:UICollectionViewDelegate, UICollectionViewDataSource, UIC
         else{
             width = 170.0
         }
-        return CGSize(width: width, height: 145.0)
+        return CGSize(width: width, height: Double(suggestedView.frame.size.height))
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
