@@ -34,7 +34,6 @@ class submenuCVCell: UICollectionViewCell {
         if shouldTintBackgroundWhenSelected {
             lblMenu.textColor = newValue ? colorConstants.redColor : UIColor.black
             imgMenu.setImageColor(color: newValue ? colorConstants.redColor : UIColor.black)
-
         }
     }
 

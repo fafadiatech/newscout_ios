@@ -1125,10 +1125,12 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
     }
     
     @IBAction func btnShareActn(_ sender: Any) {
-        let text = ShowArticle[newsCurrentIndex].title
-        let webURL = "Sent via NewsCout : (www.newscout.in)"
+        var text = ""
+        let webURL = "Sent via NewsCout"
         var shareAll : [Any]
         var sourceURL : URL!
+        if currentEntity == "ShowArticle"{
+            text = ShowArticle[newsCurrentIndex].title!
         if ShowArticle[newsCurrentIndex].imageURL != nil{
             let url = URL(string:ShowArticle[newsCurrentIndex].imageURL!)
             let image1 = UIImage(named: "\(url)")
@@ -1138,20 +1140,46 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
                 image = UIImage(data: data)!
             }
             if ShowArticle[newsCurrentIndex].source_url != nil{
-                sourceURL = URL(string: "\(ShowArticle[newsCurrentIndex].source_url)")
+                sourceURL = URL(string: ShowArticle[newsCurrentIndex].source_url!)
             }
             shareAll = [ text , image1, image,  sourceURL , webURL ] as [Any]
         }
         else{
             if ShowArticle[newsCurrentIndex].source_url != nil{
-                sourceURL = URL(string: "\(ShowArticle[newsCurrentIndex].source_url)")
+                sourceURL = URL(string: ShowArticle[newsCurrentIndex].source_url!)
             }
             shareAll = [ text , sourceURL , webURL ] as [Any]
+            }
         }
+        else{
+              if SearchArticle[newsCurrentIndex].imageURL != nil{
+                text = SearchArticle[newsCurrentIndex].title!
+                    let url = URL(string:SearchArticle[newsCurrentIndex].imageURL!)
+                    let image1 = UIImage(named: "\(url)")
+                    var image = UIImage()
+                    if let data = try? Data(contentsOf: url!)
+                    {
+                        image = UIImage(data: data)!
+                    }
+                    if SearchArticle[newsCurrentIndex].source_url != nil{
+                        sourceURL = URL(string: SearchArticle[newsCurrentIndex].source_url!)
+                    }
+                    shareAll = [ text , image1, image,  sourceURL , webURL ] as [Any]
+                }
+                else{
+                    if SearchArticle[newsCurrentIndex].source_url != nil{
+                        sourceURL = URL(string: SearchArticle[newsCurrentIndex].source_url!)
+                    }
+                    shareAll = [ text , sourceURL , webURL ] as [Any]
+                }
+        
+        }
+    
         
         let activityViewController = UIActivityViewController(activityItems: shareAll, applicationActivities: nil)
         activityViewController.popoverPresentationController?.sourceView = sender as! UIView
         self.present(activityViewController, animated: true, completion: nil)
+    
     }
     
     @IBAction func btnBackAction(_ sender: Any) {
@@ -1196,6 +1224,7 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
+
 }
 
 extension NewsDetailVC:UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout{

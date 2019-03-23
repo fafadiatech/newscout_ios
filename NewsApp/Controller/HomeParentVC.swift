@@ -27,9 +27,10 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
     var tagArr : [String] = []
     var submenuIndexArr = [[String]]()
     var headingImg = [AssetConstants.sector, AssetConstants.regional, AssetConstants.finance, AssetConstants.economy, AssetConstants.search]
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        menuCV.allowsSelection = false
+        menuCV.allowsMultipleSelection = false
         if UserDefaults.standard.value(forKey: "deviceToken") == nil{
             UserDefaults.standard.set("41ea0aaa15323ae5012992392e4edd6b8a6ee4547a8dc6fd1f3b31aab9839208", forKey: "deviceToken")
         }
@@ -294,7 +295,6 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         if collectionView ==  menuCV {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "subMenuID", for: indexPath) as! submenuCVCell
-         
             cell.lblMenu.text = headingArr[indexPath.row].localizedCapitalized
             cell.imgMenu.image =  UIImage(named: headingImg[indexPath.row])
             return cell
@@ -332,6 +332,7 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
 //        UserDefaults.standard.set(url, forKey: "submenuURL")
     
         reloadPagerTabStripView()
+       
     }
     }
 }
