@@ -1267,6 +1267,20 @@ extension NewsDetailVC:UICollectionViewDelegate, UICollectionViewDataSource, UIC
         cell.lblTitle.font = FontConstants.NormalFontContent
         cell.lblMoreStories.font = FontConstants.LargeFontContentBold
         cell.btnCellPlayVIdeo.isHidden = true
+        let textSizeSelected = UserDefaults.standard.value(forKey: "textSize") as! Int
+        
+        if textSizeSelected == 0{
+             cell.lblMoreStories.font = FontConstants.smallRecommFont
+            cell.lblTitle.font = FontConstants.smallRecommFont
+        }
+        else if textSizeSelected == 2{
+            cell.lblMoreStories.font = FontConstants.largeRecommFont
+            cell.lblTitle.font = FontConstants.largeRecommFont
+        }
+        else{
+            cell.lblMoreStories.font = FontConstants.normalRecommFont
+            cell.lblTitle.font = FontConstants.normalRecommFont
+        }
         if indexPath.row == 0
         {
             cell.lblMoreStories.isHidden = false

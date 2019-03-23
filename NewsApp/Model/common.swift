@@ -73,6 +73,9 @@ struct FontConstants{
     //for settings tableview header
     static let settingsTVHeader = UIFont(name: AppFontName.medium, size: FontConstants.fontSettingsTVHeader)
     static let appFont = UIFont(name: AppFontName.bold, size: FontConstants.fontAppTitle)
+    static let smallRecommFont = UIFont(name: AppFontName.regular, size: FontConstants.fontxSmall)
+     static let largeRecommFont = UIFont(name: AppFontName.regular, size: FontConstants.fontxLarge)
+     static let normalRecommFont = UIFont(name: AppFontName.regular, size: FontConstants.fontxNormal)
 }
 
 struct Constants{
