@@ -140,7 +140,7 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
        // MediaData = DBManager().fetchArticleMedia(articleId: Int(ShowArticle[newsCurrentIndex].article_id))
         let swipeUp = UISwipeGestureRecognizer(target: self, action: #selector(self.respondToSwipeGesture))
         swipeUp.direction = UISwipeGestureRecognizerDirection.up
-        self.viewNewsArea.addGestureRecognizer(swipeUp)
+        self.newsView.addGestureRecognizer(swipeUp)
         
         let swipeLeft = UISwipeGestureRecognizer(target: self, action: #selector(self.respondToSwipeGesture))
         swipeLeft.direction = UISwipeGestureRecognizerDirection.left
@@ -152,7 +152,7 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
         
         let swipeDown = UISwipeGestureRecognizer(target: self, action: #selector(self.respondToSwipeGesture))
         swipeDown.direction = UISwipeGestureRecognizerDirection.down
-        self.viewNewsArea.addGestureRecognizer(swipeDown)
+        self.newsView.addGestureRecognizer(swipeDown)
         
         let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapped(gestureRecognizer:)))
         viewNewsArea.addGestureRecognizer(tapRecognizer)
@@ -1270,15 +1270,15 @@ extension NewsDetailVC:UICollectionViewDelegate, UICollectionViewDataSource, UIC
         let textSizeSelected = UserDefaults.standard.value(forKey: "textSize") as! Int
         
         if textSizeSelected == 0{
-             cell.lblMoreStories.font = FontConstants.smallRecommFont
+             cell.lblMoreStories.font = FontConstants.smallRecommTitleFont
             cell.lblTitle.font = FontConstants.smallRecommFont
         }
         else if textSizeSelected == 2{
-            cell.lblMoreStories.font = FontConstants.largeRecommFont
+            cell.lblMoreStories.font = FontConstants.largeRecommTitleFont
             cell.lblTitle.font = FontConstants.largeRecommFont
         }
         else{
-            cell.lblMoreStories.font = FontConstants.normalRecommFont
+            cell.lblMoreStories.font = FontConstants.normalRecommTitleFont
             cell.lblTitle.font = FontConstants.normalRecommFont
         }
         if indexPath.row == 0

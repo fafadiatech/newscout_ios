@@ -37,7 +37,6 @@ class LoginVC: UIViewController, GIDSignInUIDelegate, FBSDKLoginButtonDelegate {
         txtUsername.autocorrectionType = .no
         txtPassword.autocorrectionType = .no
         viewGmailSignIn.layer.borderWidth = 1
-        
         viewGmailSignIn.layer.borderColor = UIColor(red:222/255, green:225/255, blue:227/255, alpha: 1).cgColor
         btnLogin.layer.cornerRadius = 15
         btnLogin.layer.borderWidth = 0

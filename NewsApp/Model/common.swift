@@ -76,6 +76,9 @@ struct FontConstants{
     static let smallRecommFont = UIFont(name: AppFontName.regular, size: FontConstants.fontxSmall)
      static let largeRecommFont = UIFont(name: AppFontName.regular, size: FontConstants.fontxLarge)
      static let normalRecommFont = UIFont(name: AppFontName.regular, size: FontConstants.fontxNormal)
+    static let smallRecommTitleFont = UIFont(name: AppFontName.bold, size: FontConstants.fontxSmall)
+    static let largeRecommTitleFont = UIFont(name: AppFontName.bold, size: FontConstants.fontxLarge)
+    static let normalRecommTitleFont = UIFont(name: AppFontName.bold, size: FontConstants.fontxNormal)
 }
 
 struct Constants{
