@@ -269,10 +269,6 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "HomeNewsTVCellID", for:indexPath) as! HomeNewsTVCell
-        let borderColor: UIColor = UIColor.lightGray
-        cell.ViewCellBackground.layer.borderColor = borderColor.cgColor
-        cell.ViewCellBackground.layer.borderWidth = 1
-        cell.ViewCellBackground.layer.cornerRadius = 10.0
         cell.imgNews.layer.cornerRadius = 10.0
         cell.imgNews.clipsToBounds = true
         
