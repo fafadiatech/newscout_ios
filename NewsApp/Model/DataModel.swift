@@ -17,10 +17,13 @@ struct ArticleStatus : Decodable{
 
 struct articleBody : Decodable{
     let count :  Int?
+    let current_page : Int
+    let total_pages : Int
     let next : String?
     let previous : String?
     var articles : [Article]
     var categoryDetail : CategoryDetails?
+    var filters : ArticleFilter?
     
     enum CodingKeys: String, CodingKey{
         case articles = "results"
@@ -28,7 +31,28 @@ struct articleBody : Decodable{
         case next
         case previous
         case categoryDetail = "category"
+        case current_page
+        case total_pages
+        case filters
     }
+}
+
+struct ArticleFilter : Decodable{
+    let category : [FilterCategory]
+    let source : [FilterCategory]
+    let hash_tags : [FilterCategory]
+}
+struct FilterCategory : Decodable{
+    let key : String
+    let doc_count : Int
+}
+struct sourceCat : Decodable{
+    let key : String
+    let doc_count : Int
+}
+struct tagCat : Decodable{
+    let key : String
+    let doc_count : Int
 }
 
 struct Article: Decodable{
@@ -40,6 +64,8 @@ struct Article: Decodable{
     var url : String?
     var published_on : String?
     var blurb : String?
+    var hash_tags : [String]
+    var article_media : [ArticleMedia]?
     
     enum CodingKeys: String, CodingKey{
         case article_id = "id"
@@ -50,6 +76,8 @@ struct Article: Decodable{
         case title
         case published_on
         case blurb
+        case hash_tags
+        case article_media
     }
 }
 
@@ -89,8 +117,14 @@ struct ArticleDict: Decodable{
     }
 }
 
+struct Menu : Decodable {
+    let header : Header
+    let body : MenuBody
+}
+
 struct CategoryList: Decodable{
-    let categories : [CategoryDetails]
+    let header : Header
+    let body :  Body
 }
 
 struct CategoryDetails : Decodable{
@@ -100,6 +134,32 @@ struct CategoryDetails : Decodable{
     enum CodingKeys: String, CodingKey{
         case cat_id = "id"
         case title = "name"
+    }
+}
+
+struct Tag: Decodable{
+    let name : String
+    let id : Int
+    let count : String
+}
+
+struct ArticleMedia: Decodable{
+    let media_id : Int
+    let category : String
+    let img_url : String
+    let video_url : String?
+    let article_id : Int
+    let created_at : String
+    let modified_at: String
+    
+    enum CodingKeys: String, CodingKey{
+        case media_id = "id"
+        case article_id = "article"
+        case category
+        case video_url
+        case img_url = "url"
+        case created_at
+        case modified_at
     }
 }
 
@@ -130,6 +190,9 @@ struct User : Decodable{
     let first_name : String?
     let last_name : String?
     let passion: [Passion]?
+    let breaking_news : Bool
+    let daily_edition : Bool
+    let personalized : Bool
     
     enum CodingKeys: String, CodingKey{
         case user_id = "id"
@@ -137,6 +200,9 @@ struct User : Decodable{
         case first_name = "first_name"
         case last_name = "last_name"
         case passion = "passion"
+        case breaking_news
+        case daily_edition
+        case personalized
     }
 }
 
@@ -149,12 +215,56 @@ struct Body : Decodable{
     let Msg : String?
     let user: User?
     let listResult: [LikeBookmarkList]?
+    let categories : [CategoryDetails]?
     
     enum CodingKeys: String, CodingKey{
         case Msg = "Msg"
         case user =  "user"
         case listResult = "results"
+        case categories = "categories"
     }
+}
+
+struct MenuBody : Decodable{
+    let results : [Result]
+}
+
+struct Result : Decodable{
+    let heading : Heading
+}
+
+struct Heading : Decodable{
+    let headingId : Int
+    let headingName : String
+    let submenu : [SubMenu]
+    
+    enum CodingKeys: String, CodingKey{
+        case headingId = "id"
+        case headingName = "name"
+        case submenu = "submenu"
+    }
+}
+
+struct SubMenu : Decodable{
+    let id : Int
+    let name : String
+    let hash_tags : [TagList]
+}
+
+struct TagList : Decodable{
+    let id : Int
+    let name : String
+    let count : Int
+}
+
+struct DailyTags : Decodable{
+    let header : Header
+    let body : DailyTagBody
+}
+
+struct DailyTagBody: Decodable {
+    let results : [TagList]
+    let count : Int
 }
 
 struct GetLikeBookmarkList: Decodable{
@@ -196,6 +306,11 @@ enum ArticleDBfetchResult {
     case Failure(String)
 }
 
+enum DailyTagAPIResult {
+    case Success([DailyTags])
+    case Failure(String)
+}
+
 enum BookmarkArticleDBfetchResult {
     case Success([BookmarkArticles])
     case Failure(String)
@@ -220,12 +335,43 @@ enum LikeBookmarkListAPIResult {
     case Success(GetLikeBookmarkList)
     case Failure(String)
 }
+
 enum SearchDBfetchResult {
     case Success([SearchArticles])
     case Failure(String)
 }
+
 enum NextURLDBfetchResult {
     case Success([NewsURL])
     case Failure(String)
 }
 
+enum PeriodicTagDBfetchResult {
+    case Success([PeriodicTags])
+    case Failure(String)
+}
+
+enum MenuAPIResult {
+    case Success([Menu])
+    case Failure(String)
+}
+
+enum HeadingsDBFetchResult {
+    case Success([MenuHeadings])
+    case Failure(String)
+}
+
+enum SubMenuDBFetchResult {
+    case Success([HeadingSubMenu])
+    case Failure(String)
+}
+
+enum MenuHashTagDBFetchResult {
+    case Success([MenuHashTag])
+    case Failure(String)
+}
+
+enum MediaDBFetchResult {
+    case Success([Media])
+    case Failure(String)
+}

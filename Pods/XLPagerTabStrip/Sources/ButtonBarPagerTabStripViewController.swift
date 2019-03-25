@@ -180,6 +180,19 @@ open class ButtonBarPagerTabStripViewController: PagerTabStripViewController, Pa
         buttonBarView.layoutIfNeeded()
     }
     
+   func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        print("scrollViewDidEndDecelerating")
+        shouldUpdateButtonBarView = true
+        reloadPagerTabStripView()
+        
+    }
+    
+    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        print("scrollViewDidEndDragging")
+        shouldUpdateButtonBarView = true
+        reloadPagerTabStripView()
+    }
+    
     open override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
@@ -211,7 +224,9 @@ open class ButtonBarPagerTabStripViewController: PagerTabStripViewController, Pa
         guard isViewLoaded else { return }
         buttonBarView.reloadData()
         cachedCellWidths = calculateWidths()
-        buttonBarView.moveTo(index: currentIndex, animated: false, swipeDirection: .none, pagerScroll: .yes)
+        //if UICollectionView.self == ButtonBarView.self{
+        buttonBarView.moveTo(index: currentIndex, animated: true, swipeDirection: .none, pagerScroll: .yes)
+        //}
     }
     
     open func calculateStretchedCellWidths(_ minimumCellWidths: [CGFloat], suggestedStretchedCellWidth: CGFloat, previousNumberOfLargeCells: Int) -> CGFloat {
@@ -238,6 +253,7 @@ open class ButtonBarPagerTabStripViewController: PagerTabStripViewController, Pa
     
     open func updateIndicator(for viewController: PagerTabStripViewController, fromIndex: Int, toIndex: Int) {
         guard shouldUpdateButtonBarView else { return }
+  //  if UICollectionView.self == ButtonBarView.self{
         buttonBarView.moveTo(index: toIndex, animated: false, swipeDirection: toIndex < fromIndex ? .right : .left, pagerScroll: .yes)
         
         if let changeCurrentIndex = changeCurrentIndex {
@@ -247,11 +263,13 @@ open class ButtonBarPagerTabStripViewController: PagerTabStripViewController, Pa
             let cells = cellForItems(at: [oldIndexPath, newIndexPath], reloadIfNotVisible: collectionViewDidLoad)
             changeCurrentIndex(cells.first!, cells.last!, true)
             print(changeCurrentIndex)
+      //  }
         }
     }
     
     open func updateIndicator(for viewController: PagerTabStripViewController, fromIndex: Int, toIndex: Int, withProgressPercentage progressPercentage: CGFloat, indexWasChanged: Bool) {
         guard shouldUpdateButtonBarView else { return }
+        if UICollectionView.self == ButtonBarView.self{
         buttonBarView.move(fromIndex: fromIndex, toIndex: toIndex, progressPercentage: progressPercentage, pagerScroll: .yes)
         if let changeCurrentIndexProgressive = changeCurrentIndexProgressive {
             let oldIndexPath = IndexPath(item: currentIndex != fromIndex ? fromIndex : toIndex, section: 0)
@@ -259,6 +277,7 @@ open class ButtonBarPagerTabStripViewController: PagerTabStripViewController, Pa
             
             let cells = cellForItems(at: [oldIndexPath, newIndexPath], reloadIfNotVisible: collectionViewDidLoad)
             changeCurrentIndexProgressive(cells.first!, cells.last!, progressPercentage, indexWasChanged, true)
+        }
         }
     }
     
@@ -294,7 +313,7 @@ open class ButtonBarPagerTabStripViewController: PagerTabStripViewController, Pa
     
     open func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         guard indexPath.item != currentIndex else { return }
-        
+        if collectionView == buttonBarView {
         buttonBarView.moveTo(index: indexPath.item, animated: true, swipeDirection: .none, pagerScroll: .yes)
         shouldUpdateButtonBarView = false
         
@@ -313,12 +332,13 @@ open class ButtonBarPagerTabStripViewController: PagerTabStripViewController, Pa
             }
         }
         moveToViewController(at: indexPath.item)
-        
+        }
     }
     
     // MARK: - UICollectionViewDataSource
     
     open func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        
         return viewControllers.count
     }
     
@@ -334,10 +354,10 @@ open class ButtonBarPagerTabStripViewController: PagerTabStripViewController, Pa
         print(cell.label.text)
         cell.accessibilityLabel = indicatorInfo.accessibilityLabel
         if (UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.phone){
-            cell.label.font = UIFont(name:"HelveticaNeue-Light", size: 22.0)
+            cell.label.font = UIFont(name:"HelveticaNeue-Light", size: 20.0)
         }
         else{
-            cell.label.font = UIFont(name:"HelveticaNeue-Light", size: 28.0)
+            cell.label.font = UIFont(name:"HelveticaNeue-Light", size: 26.0)
         }
         cell.contentView.backgroundColor = settings.style.buttonBarItemBackgroundColor ?? cell.contentView.backgroundColor
        let darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool

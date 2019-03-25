@@ -110,7 +110,9 @@ class SignUpVC: UIViewController {
                             self.present(vc, animated: true, completion: nil)
                         }
                         else{
+                            if response == "User with this email already exist"{
                             self.view.makeToast(response, duration: 1.0, position: .center)
+                            }
                         }
                     }
                 }

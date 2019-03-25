@@ -16,8 +16,9 @@ import AVKit
 import SwiftDevice
 import CoreData
 import MaterialComponents.MaterialActivityIndicator
+import TAPageControl
 
-class NewsDetailVC: UIViewController {
+class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegate, WKNavigationDelegate {
     @IBOutlet weak var viewContainer: UIView!
     @IBOutlet weak var imgNews: UIImageView!
     @IBOutlet var newsView: UIView!
@@ -43,11 +44,21 @@ class NewsDetailVC: UIViewController {
     @IBOutlet weak var lblSourceBottomConstraint: NSLayoutConstraint!
     @IBOutlet weak var lblTimeAgoBottomConstraint: NSLayoutConstraint!
     @IBOutlet weak var viewLikeDislikeBottom: NSLayoutConstraint!
-    @IBOutlet weak var avPlayerView: AVPlayerView!
+    @IBOutlet weak var viewBack: UIView!
+    @IBOutlet weak var imgScrollView: UIScrollView!
+    
+    @IBOutlet weak var viewImgContainerTop: NSLayoutConstraint!
+    @IBOutlet weak var viewImgContainer: UIView!
+    @IBOutlet weak var viewContainerTop: NSLayoutConstraint!
+    
+    
+    var btnPlay = UIButton(type: .custom)
     let imageCache = NSCache<NSString, UIImage>()
     var playbackSlider = UISlider()
     var RecomArticleData = [ArticleStatus]()
     var ArticleData = [ArticleStatus]()
+    var RecomData = [NewsArticle]()
+    var searchRecomData = [SearchArticles]()
     var bookmarkedArticle = [BookmarkArticles]()
     var ShowArticle = [NewsArticle]()
     var SearchArticle = [SearchArticles]()
@@ -68,10 +79,22 @@ class NewsDetailVC: UIViewController {
     var playerViewWidth = CGFloat()
     var playerViewHeight = CGFloat()
     let activityIndicator = MDCActivityIndicator()
+    let activity = MDCActivityIndicator()
     var indexCount = 0
     var currentEntity = ""
+    var imgArray = [UIImage]()
+    var MediaData = [Media]()
+    var index = 0
+    var timer = Timer()
+    var customPagecontrol = TAPageControl()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        WKWebView.navigationDelegate = self
+        filterRecommendation()
+        btnPlayVideo.isHidden = true
+        imgScrollView.delegate = self
+        imgArray = [#imageLiteral(resourceName: "f3"),#imageLiteral(resourceName: "f1") ,#imageLiteral(resourceName: "f2")]
         activityIndicator.cycleColors = [.blue]
         activityIndicator.frame = CGRect(x: view.frame.width/2, y: view.frame.height/2 - 100, width: 40, height: 40)
         activityIndicator.sizeToFit()
@@ -81,17 +104,23 @@ class NewsDetailVC: UIViewController {
         txtViewNewsDesc.textContainer.lineBreakMode = NSLineBreakMode.byTruncatingTail
         if UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad && statusBarOrientation.isPortrait{
             viewLikeDislike.isHidden = false
+            viewBack.isHidden = false
             addsourceConstraint()
         }
         else if UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad && statusBarOrientation.isLandscape {
             viewLikeDislike.isHidden = true
+            viewBack.isHidden = true
+            addImageConstaints()
             addLandscapeConstraints()
         }
         else{
             viewLikeDislike.isHidden = true
+            viewBack.isHidden = true
             addPotraitConstraint()
+            addImageConstaints()
         }
         viewLikeDislike.backgroundColor = colorConstants.redColor
+        viewBack.backgroundColor = colorConstants.redColor
         ViewWebContainer.isHidden = true
         if ShowArticle.count != 0 {
             indexCount = ShowArticle.count
@@ -106,7 +135,9 @@ class NewsDetailVC: UIViewController {
             changeTheme()
         }
         //newsDetailAPICall(currentIndex: articleId)
+        
         ShowNews(currentIndex: newsCurrentIndex)
+        // MediaData = DBManager().fetchArticleMedia(articleId: Int(ShowArticle[newsCurrentIndex].article_id))
         let swipeUp = UISwipeGestureRecognizer(target: self, action: #selector(self.respondToSwipeGesture))
         swipeUp.direction = UISwipeGestureRecognizerDirection.up
         self.newsView.addGestureRecognizer(swipeUp)
@@ -127,11 +158,60 @@ class NewsDetailVC: UIViewController {
         viewNewsArea.addGestureRecognizer(tapRecognizer)
         tapRecognizer.delegate = self as UIGestureRecognizerDelegate
         
-        let PlayerTapRecognizer = UITapGestureRecognizer(target: self, action: #selector(PlayerViewtapped(gestureRecognizer:)))
-        avPlayerView.addGestureRecognizer(PlayerTapRecognizer)
-        PlayerTapRecognizer.delegate = self as UIGestureRecognizerDelegate
+        
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        timer = Timer.scheduledTimer(timeInterval: 3, target: self, selector: #selector(runImages), userInfo: nil, repeats: true)
+        // runImages()
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        timer.invalidate()
+    }
+    
+    @objc func runImages(){
+        customPagecontrol.currentPage = index
+        if index == MediaData.count - 1{
+            index = 0
+        }else{
+            index = index + 1
+        }
+        self.taPageControl(customPagecontrol, didSelectPageAt: index)
+    }
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let pageindex = imgScrollView.contentOffset.x / imgScrollView.frame.size.width
+        customPagecontrol.currentPage = Int(pageindex)
+        index = Int(pageindex)
+        // runImages()
+    }
+    
+    func filterRecommendation(){
+        RecomData.removeAll()
+        searchRecomData.removeAll()
+        if ShowArticle.count != 0{
+            articleId = Int(ShowArticle[newsCurrentIndex].article_id)
+            for news in ShowArticle{
+                if news.article_id != articleId{
+                    RecomData.append(news)
+                }
+            }
+        }else{
+            for news in SearchArticle{
+                articleId  = Int(SearchArticle[newsCurrentIndex].article_id)
+                if news.article_id != articleId{
+                    searchRecomData.append(news)
+                }
+            }
+        }
+        suggestedCV.reloadData()
+    }
+    
+    func taPageControl(_ pageControl: TAPageControl!, didSelectPageAt currentIndex: Int) {
+        index =  currentIndex
+        imgScrollView.scrollRectToVisible(CGRect(x: view.frame.size.width * CGFloat(currentIndex), y:0, width: view.frame.width, height: imgScrollView.frame.height), animated: true)
+    }
     func RecommendationAPICall(){
         APICall().loadRecommendationNewsAPI(articleId: articleId){ (status,response) in
             switch response {
@@ -204,6 +284,22 @@ class NewsDetailVC: UIViewController {
         }
         newsAreaHeightConstraint.constant = 100
         viewLikeDislikeHeightConstraint.constant = -26.5
+        
+    }
+    
+    func addImageConstaints(){
+        if viewImgContainerTop != nil{
+            NSLayoutConstraint.deactivate([viewImgContainerTop])
+            viewImgContainerTop = NSLayoutConstraint (item:viewImgContainer,
+                                                      attribute: NSLayoutAttribute.top,
+                                                      relatedBy: NSLayoutRelation.equal,
+                                                      toItem: viewContainer,
+                                                      attribute: NSLayoutAttribute.top,
+                                                      multiplier: 1,
+                                                      constant: 0)
+            NSLayoutConstraint.activate([viewImgContainerTop])
+            
+        }
     }
     
     func addLandscapeConstraints(){
@@ -239,6 +335,7 @@ class NewsDetailVC: UIViewController {
             
             NSLayoutConstraint.activate([viewLikeDislikeBottom])
         }
+        
         if viewLikeDislikeHeightConstraint != nil{
             NSLayoutConstraint.deactivate([viewLikeDislikeHeightConstraint])
             viewLikeDislikeHeightConstraint.constant = -8.5
@@ -253,12 +350,14 @@ class NewsDetailVC: UIViewController {
         if UIDevice.current.orientation.isLandscape {
             print(UIDevice.current.orientation)
             viewLikeDislike.isHidden = true
+            viewBack.isHidden = true
             print("landscape")
             addLandscapeConstraints()
         } else {
             print(UIDevice.current.orientation)
             print("potrait")
             viewLikeDislike.isHidden = false
+            viewBack.isHidden = false
             if UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad{
                 addipadPotraitConstraint()
             }
@@ -324,6 +423,7 @@ class NewsDetailVC: UIViewController {
         txtViewNewsDesc.textColor = colorConstants.whiteColor
         viewWebTitle.backgroundColor = colorConstants.grayBackground3
         lblWebSource.textColor = .white
+        imgNews.backgroundColor = colorConstants.txtlightGrayColor
     }
     
     @objc func PlayerViewtapped(gestureRecognizer: UITapGestureRecognizer) {
@@ -339,21 +439,26 @@ class NewsDetailVC: UIViewController {
         if UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.phone {
             if viewLikeDislike.isHidden == true{
                 viewLikeDislike.isHidden = false
+                viewBack.isHidden = false
             }
             else{
                 viewLikeDislike.isHidden = true
+                viewBack.isHidden = true
             }
         }
         if UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad{
             if statusBarOrientation.isPortrait {
                 viewLikeDislike.isHidden = false
+                viewBack.isHidden = false
             }
             else{
                 if viewLikeDislike.isHidden == true{
                     viewLikeDislike.isHidden = false
+                    viewBack.isHidden = false
                 }
                 else{
                     viewLikeDislike.isHidden = true
+                    viewBack.isHidden = true
                 }
             }
         }
@@ -403,12 +508,14 @@ class NewsDetailVC: UIViewController {
             case UISwipeGestureRecognizerDirection.right:
                 ViewWebContainer.isHidden = true
                 viewLikeDislike.isHidden = false
+                viewBack.isHidden = false
                 
             case UISwipeGestureRecognizerDirection.down:
                 if newsCurrentIndex > 0
                 {
                     newsCurrentIndex = newsCurrentIndex - 1
                     ShowNews(currentIndex : newsCurrentIndex)
+                    filterRecommendation()
                     transition.type = kCATransitionPush
                     transition.subtype = kCATransitionFromBottom
                     view.window!.layer.add(transition, forKey: kCATransition)
@@ -417,9 +524,12 @@ class NewsDetailVC: UIViewController {
                     self.view.makeToast("No more news to show", duration: 1.0, position: .center)
                 }
             case UISwipeGestureRecognizerDirection.left:
+                WKWebView.addSubview(activityIndicator)
                 ViewWebContainer.isHidden = false
                 viewLikeDislike.isHidden = true
+                viewBack.isHidden = true
                 let url = URL(string: sourceURL)
+                print(sourceURL)
                 let domain = url?.host
                 lblWebSource.text = "\(domain!)"
                 transition.type = kCATransitionPush
@@ -435,6 +545,7 @@ class NewsDetailVC: UIViewController {
                 {
                     newsCurrentIndex = newsCurrentIndex + 1
                     ShowNews(currentIndex : newsCurrentIndex)
+                    filterRecommendation()
                     transition.type = kCATransitionPush
                     transition.subtype = kCATransitionFromTop
                     view.window!.layer.add(transition, forKey: kCATransition)
@@ -447,7 +558,19 @@ class NewsDetailVC: UIViewController {
             }
         }
     }
+    func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
+        activityIndicator.startAnimating()
+    }
+    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+        activityIndicator.stopAnimating()
+    }
     
+    func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
+        activityIndicator.stopAnimating()
+    }
+    func webViewDidFinishLoad(_ : WKWebView) {
+        activityIndicator.stopAnimating()
+    }
     @IBAction func btnPlayVideo(_ sender: Any) {
         if player?.rate == 0
         {
@@ -461,6 +584,13 @@ class NewsDetailVC: UIViewController {
         }
     }
     
+    //for play button created programmatically
+    @objc func ShowPlayPausebtn() {
+        if (btnPlay.currentImage?.isEqual(UIImage(named: AssetConstants.pause)))! {
+            btnPlay.isHidden = true
+        }
+    }
+    
     @objc func ShowPausebtn() {
         if (btnPlayVideo.currentImage?.isEqual(UIImage(named: AssetConstants.pause)))! {
             btnPlayVideo.isHidden = true
@@ -470,7 +600,6 @@ class NewsDetailVC: UIViewController {
     @objc func playbackSliderValueChanged(_ playbackSlider:UISlider){
         let seconds : Int64 = Int64(playbackSlider.value)
         let targetTime:CMTime = CMTimeMake(seconds, 1)
-        btnPlayVideo.isHidden = false
         player!.seek(to: targetTime)
         
         if player!.rate == 0{
@@ -481,81 +610,237 @@ class NewsDetailVC: UIViewController {
         }
     }
     
+    //for play button created programmatically
+    @objc func buttonTapped(sender : UIButton) {
+        if player?.rate == 0{
+            player!.play()
+            btnPlay.setImage(UIImage(named: AssetConstants.pause), for: .normal)
+            btnPlay.isHidden = true
+            Timer.scheduledTimer(timeInterval: 5, target: self, selector: #selector(ShowPlayPausebtn), userInfo: nil, repeats: false)
+        } else {
+            player!.pause()
+            btnPlay.setImage(UIImage(named: AssetConstants.play), for: .normal)
+        }
+    }
+    
+    func fetchSearchBookmarkDataFromDB(){
+        let result = DBManager().FetchSearchLikeBookmarkFromDB()
+        switch result {
+        case .Success(let DBData) :
+            if DBData.count == 0{
+                activityIndicator.stopAnimating()
+            }
+        case .Failure( _) : break
+        }
+    }
+    
+    func fetchBookmarkDataFromDB(){
+        let result = DBManager().FetchLikeBookmarkFromDB()
+        switch result {
+        case .Success(let DBData) :
+            if DBData.count == 0{
+                activityIndicator.stopAnimating()
+            }
+        case .Failure(let errorMsg) : break
+        }
+    }
+    
     //func ShowNews(currentArticle: ArticleDict){ *for detail API pass articleDict
     func ShowNews(currentIndex: Int){
+        MediaData.removeAll()
+        activityIndicator.startAnimating()
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
         dateFormatter.timeZone = NSTimeZone.local
         playbackSlider.removeFromSuperview()
-        avPlayerView.isHidden = true
+        // avPlayerView.isHidden = true
+        
         if ShowArticle.count != 0{
+            fetchBookmarkDataFromDB()
             currentEntity = "ShowArticle"
             let currentArticle = ShowArticle[currentIndex]
             let newDate = dateFormatter.date(from: currentArticle.published_on!)
-            let agoDate = Helper().timeAgoSinceDate(newDate!)
+            if newDate != nil{
+                let agoDate = Helper().timeAgoSinceDate(newDate!)
+                lblTimeAgo.text = agoDate
+            }
             articleId = Int(currentArticle.article_id)
             lblNewsHeading.text = currentArticle.title
             txtViewNewsDesc.text = currentArticle.blurb
             lblSource.text = currentArticle.source
-            lblTimeAgo.text = agoDate
+            
             sourceURL = currentArticle.source_url!
-            
-            var checkImg = false
-            let imageFormats = ["jpg", "jpeg", "png", "gif"]
-            for ext in imageFormats{
-                if currentArticle.imageURL!.contains(ext){
-                    checkImg = true
-                    break
-                }
+            if currentArticle.imageURL != ""{
+                imgNews.sd_setImage(with: URL(string: currentArticle.imageURL!), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
             }
-            
-            if checkImg == false{
-                DispatchQueue.global(qos: .userInitiated).async {
-                    self.activityIndicator.startAnimating()
-                    let newURL = NSURL(string: currentArticle.imageURL!)
-                    if let thumbnail = self.createThumbnailOfVideoFromRemoteUrl(url: "https://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4"){
-                        self.imgNews.image = thumbnail
-                        let url = URL(string: "https://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4")
-                        let playerItem:AVPlayerItem = AVPlayerItem(url: url!)
-                        self.player = AVPlayer(playerItem: playerItem)
-                        
-                        self.avPlayerView.isHidden = false
-                        let avPlayer = AVPlayerLayer(player: self.player!)
-                        let castedLayer = self.avPlayerView.layer as! AVPlayerLayer
-                        castedLayer.player = self.player
-                        castedLayer.videoGravity = AVLayerVideoGravity.resizeAspect
-                        self.avPlayerView.layoutIfNeeded()
-                        if UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad{
-                            self.playbackSlider = UISlider(frame:CGRect(x:0, y: self.avPlayerView.bounds.size.height - 40, width:self.avPlayerView.bounds.size.width, height: 20))
-                        }
-                        else{
-                            self.playbackSlider = UISlider(frame:CGRect(x:0, y: self.avPlayerView.bounds.size.height - 100, width:self.avPlayerView.bounds.size.width, height: 20))
-                        }
-                        self.playbackSlider.minimumValue = 0
-                        
-                        
-                        let duration : CMTime = playerItem.asset.duration
-                        let seconds : Float64 = CMTimeGetSeconds(duration)
-                        
-                        self.playbackSlider.maximumValue = Float(seconds)
-                        self.playbackSlider.isContinuous = true
-                        self.playbackSlider.tintColor = UIColor.green
-                        
-                        self.playbackSlider.addTarget(self, action: #selector(NewsDetailVC.playbackSliderValueChanged(_:)), for: .valueChanged)
-                        self.avPlayerView.addSubview(self.playbackSlider)
-                        self.btnPlayVideo.isHidden = false
-                    }
-                    DispatchQueue.main.async {
-                        self.activityIndicator.stopAnimating()
-                    }
-                }
-            }
-                
             else{
-                self.btnPlayVideo.isHidden = true
-                self.avPlayerView.isHidden = true
-                self.imgNews.sd_setImage(with: URL(string: currentArticle.imageURL!), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
+                imgNews.image = UIImage(named: AssetConstants.NoImage)
             }
+            /* let result = DBManager().fetchArticleMedia(articleId: Int(ShowArticle[currentIndex].article_id))
+             switch result {
+             case .Success(let DBData) :
+             MediaData = DBData
+             case .Failure(let errorMsg) :
+             print(errorMsg)
+             }
+             
+             if currentArticle.imageURL != ""{
+             
+             for img in 0..<MediaData.count + 1 {
+             
+             let imageView = UIImageView()
+             let xPosition = imgScrollView.frame.width *  CGFloat(img)
+             imageView.frame = CGRect(x:xPosition, y: 0, width: self.imgScrollView.frame.width, height: hideView.frame.height)
+             imageView.contentMode = .scaleAspectFit
+             if img == 0 {
+             imageView.sd_setImage(with: URL(string: currentArticle.imageURL!), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
+             imgScrollView.addSubview(imageView)
+             }
+             else if img > 0{
+             if MediaData[img - 1].videoURL == nil{
+             //avPlayerView.isHidden = true
+             imageView.sd_setImage(with: URL(string: MediaData[img - 1].imageURL!), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
+             
+             imgScrollView.addSubview(imageView)
+             }else{
+             // imageView.sd_setImage(with: URL(string: MediaData[img - 1].videoURL!), placeholderImage: nil, options: SDWebImageOptions.refreshCached)//imgArray[img]
+             btnPlayVideo.isHidden = false
+             let avPlayerView = AVPlayerView()
+             let PlayerTapRecognizer = UITapGestureRecognizer(target: self, action: #selector(PlayerViewtapped(gestureRecognizer:)))
+             avPlayerView.addGestureRecognizer(PlayerTapRecognizer)
+             PlayerTapRecognizer.delegate = self as UIGestureRecognizerDelegate
+             avPlayerView.frame = CGRect(x:xPosition, y: 0, width: self.imgScrollView.frame.width, height: hideView.frame.height)
+             imgScrollView.addSubview(avPlayerView)
+             
+             btnPlay.frame = CGRect(x: 150, y: 120, width: 50, height: 60)
+             btnPlay.layer.cornerRadius = 0.5 * btnPlay.bounds.size.width
+             btnPlay.clipsToBounds = true
+             btnPlay.setImage(UIImage(named: AssetConstants.play), for: .normal)
+             
+             avPlayerView.addSubview(btnPlay)
+             btnPlay.addTarget(self, action: #selector(self.buttonTapped), for: .touchUpInside)
+             
+             
+             //
+             
+             let url = URL(string: "https://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4")
+             let playerItem:AVPlayerItem = AVPlayerItem(url: url!)
+             self.player = AVPlayer(playerItem: playerItem)
+             
+             // self.avPlayerView.isHidden = false
+             imageView.isHidden = true
+             timer.invalidate()
+             let avPlayer = AVPlayerLayer(player: self.player!)
+             let castedLayer = avPlayerView.layer as! AVPlayerLayer
+             castedLayer.player = self.player
+             castedLayer.videoGravity = AVLayerVideoGravity.resizeAspect
+             avPlayerView.layoutIfNeeded()
+             if UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad{
+             self.playbackSlider = UISlider(frame:CGRect(x:0, y: avPlayerView.bounds.size.height - 40, width:avPlayerView.bounds.size.width, height: 20))
+             }
+             else{
+             self.playbackSlider = UISlider(frame:CGRect(x:0, y: avPlayerView.bounds.size.height - 100, width:avPlayerView.bounds.size.width, height: 20))
+             }
+             self.playbackSlider.minimumValue = 0
+             
+             
+             let duration : CMTime = playerItem.asset.duration
+             let seconds : Float64 = CMTimeGetSeconds(duration)
+             
+             self.playbackSlider.maximumValue = Float(seconds)
+             self.playbackSlider.isContinuous = true
+             self.playbackSlider.tintColor = UIColor.green
+             
+             self.playbackSlider.addTarget(self, action: #selector(NewsDetailVC.playbackSliderValueChanged(_:)), for: .valueChanged)
+             avPlayerView.addSubview(self.playbackSlider)
+             player!.play()
+             
+             }
+             
+             }
+             //imgScrollView.contentSize.width = imgScrollView.frame.width * CGFloat(img + 1)
+             // imgScrollView.contentSize.height  = avPlayerView.frame.height
+             
+             
+             
+             }
+             // y: imgScrollView.frame.origin.y + imgScrollView.frame.size.height
+             index = 0
+             customPagecontrol = TAPageControl(frame: CGRect(x : 0, y: 90, width: imgScrollView.frame.size.width, height : hideView.frame.size.height))
+             customPagecontrol.delegate = self
+             customPagecontrol.numberOfPages = MediaData.count
+             customPagecontrol.dotSize = CGSize(width: 20,height: 20)
+             imgScrollView.contentSize = CGSize(width: view.frame.size.width * CGFloat(MediaData.count), height: imgScrollView.frame.size.height)
+             self.imgScrollView.addSubview(customPagecontrol)
+             
+             }
+             else{
+             let imageView = UIImageView()
+             imageView.frame = CGRect(x:0, y: 0, width: hideView.frame.width, height: hideView.frame.height)
+             imageView.contentMode = .scaleAspectFit
+             imgScrollView.contentSize.width = hideView.frame.width
+             imgScrollView.contentSize.height  = hideView.frame.height
+             imageView.image = UIImage(named: AssetConstants.NoImage)
+             imgScrollView.addSubview(imageView)
+             }
+             */
+            
+            /* var checkImg = false
+             let imageFormats = ["jpg", "jpeg", "png", "gif"]
+             for ext in imageFormats{
+             if currentArticle.imageURL!.contains(ext){
+             checkImg = true
+             break
+             }
+             }
+             
+             if checkImg == false{
+             DispatchQueue.global(qos: .userInitiated).async {
+             self.activityIndicator.startAnimating()
+             let newURL = NSURL(string: currentArticle.imageURL!)
+             if let thumbnail = self.createThumbnailOfVideoFromRemoteUrl(url: "https://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4"){
+             self.imgNews.image = thumbnail
+             let url = URL(string: "https://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4")
+             let playerItem:AVPlayerItem = AVPlayerItem(url: url!)
+             self.player = AVPlayer(playerItem: playerItem)
+             
+             self.avPlayerView.isHidden = false
+             let avPlayer = AVPlayerLayer(player: self.player!)
+             let castedLayer = self.avPlayerView.layer as! AVPlayerLayer
+             castedLayer.player = self.player
+             castedLayer.videoGravity = AVLayerVideoGravity.resizeAspect
+             self.avPlayerView.layoutIfNeeded()
+             if UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad{
+             self.playbackSlider = UISlider(frame:CGRect(x:0, y: self.avPlayerView.bounds.size.height - 40, width:self.avPlayerView.bounds.size.width, height: 20))
+             }
+             else{
+             self.playbackSlider = UISlider(frame:CGRect(x:0, y: self.avPlayerView.bounds.size.height - 100, width:self.avPlayerView.bounds.size.width, height: 20))
+             }
+             self.playbackSlider.minimumValue = 0
+             
+             
+             let duration : CMTime = playerItem.asset.duration
+             let seconds : Float64 = CMTimeGetSeconds(duration)
+             
+             self.playbackSlider.maximumValue = Float(seconds)
+             self.playbackSlider.isContinuous = true
+             self.playbackSlider.tintColor = UIColor.green
+             
+             self.playbackSlider.addTarget(self, action: #selector(NewsDetailVC.playbackSliderValueChanged(_:)), for: .valueChanged)
+             self.avPlayerView.addSubview(self.playbackSlider)
+             self.btnPlayVideo.isHidden = false
+             }
+             DispatchQueue.main.async {
+             self.activityIndicator.stopAnimating()
+             }
+             }
+             }
+             
+             else{
+             self.btnPlayVideo.isHidden = true
+             self.avPlayerView.isHidden = true
+             self.imgNews.sd_setImage(with: URL(string: currentArticle.imageURL!), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
+             }*/
             
             if UserDefaults.standard.value(forKey: "token") != nil{
                 if currentArticle.likeDislike?.isLike == 0 {
@@ -583,6 +868,7 @@ class NewsDetailVC: UIViewController {
         }
         else if SearchArticle.count != 0 {
             currentEntity = "SearchArticles"
+            fetchSearchBookmarkDataFromDB()
             let currentArticle = SearchArticle[currentIndex]
             let newDate = dateFormatter.date(from: currentArticle.published_on!)
             let agoDate = Helper().timeAgoSinceDate(newDate!)
@@ -592,62 +878,68 @@ class NewsDetailVC: UIViewController {
             lblSource.text = currentArticle.source
             lblTimeAgo.text = agoDate
             sourceURL = currentArticle.source_url!
-            
-            var checkImg = false
-            let imageFormats = ["jpg", "jpeg", "png", "gif"]
-            for ext in imageFormats{
-                if currentArticle.imageURL!.contains(ext){
-                    checkImg = true
-                    break
-                }
-            }
-            if checkImg == false{
-                DispatchQueue.global(qos: .userInitiated).async {
-                    self.activityIndicator.startAnimating()
-                    let newURL = NSURL(string: currentArticle.imageURL!)
-                    if let thumbnail = self.createThumbnailOfVideoFromRemoteUrl(url: "https://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4"){
-                        self.imgNews.image = thumbnail
-                        let url = URL(string: "https://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4")
-                        let playerItem:AVPlayerItem = AVPlayerItem(url: url!)
-                        self.player = AVPlayer(playerItem: playerItem)
-                        
-                        self.avPlayerView.isHidden = false
-                        let avPlayer = AVPlayerLayer(player: self.player!)
-                        let castedLayer = self.avPlayerView.layer as! AVPlayerLayer
-                        castedLayer.player = self.player
-                        castedLayer.videoGravity = AVLayerVideoGravity.resizeAspect
-                        self.avPlayerView.layoutIfNeeded()
-                        if UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad{
-                            self.playbackSlider = UISlider(frame:CGRect(x:0, y: self.avPlayerView.bounds.size.height - 40, width:self.avPlayerView.bounds.size.width, height: 20))
-                        }
-                        else{
-                            self.playbackSlider = UISlider(frame:CGRect(x:0, y: self.avPlayerView.bounds.size.height - 100, width:self.avPlayerView.bounds.size.width, height: 20))
-                        }
-                        self.playbackSlider.minimumValue = 0
-                        
-                        
-                        let duration : CMTime = playerItem.asset.duration
-                        let seconds : Float64 = CMTimeGetSeconds(duration)
-                        
-                        self.playbackSlider.maximumValue = Float(seconds)
-                        self.playbackSlider.isContinuous = true
-                        self.playbackSlider.tintColor = UIColor.green
-                        
-                        self.playbackSlider.addTarget(self, action: #selector(NewsDetailVC.playbackSliderValueChanged(_:)), for: .valueChanged)
-                        self.avPlayerView.addSubview(self.playbackSlider)
-                        self.btnPlayVideo.isHidden = false
-                    }
-                    DispatchQueue.main.async {
-                        self.activityIndicator.stopAnimating()
-                    }
-                }
-                
+            if currentArticle.imageURL != ""{
+                imgNews.sd_setImage(with: URL(string: currentArticle.imageURL!), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
             }
             else{
-                self.btnPlayVideo.isHidden = true
-                self.avPlayerView.isHidden = true
-                self.imgNews.sd_setImage(with: URL(string: currentArticle.imageURL!), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
-            }
+                imgNews.image = UIImage(named: AssetConstants.NoImage)
+            }/*
+             
+             var checkImg = false
+             let imageFormats = ["jpg", "jpeg", "png", "gif"]
+             for ext in imageFormats{
+             if currentArticle.imageURL!.contains(ext){
+             checkImg = true
+             break
+             }
+             }
+             if checkImg == false{
+             DispatchQueue.global(qos: .userInitiated).async {
+             self.activityIndicator.startAnimating()
+             let newURL = NSURL(string: currentArticle.imageURL!)
+             if let thumbnail = self.createThumbnailOfVideoFromRemoteUrl(url: "https://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4"){
+             self.imgNews.image = thumbnail
+             let url = URL(string: "https://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4")
+             let playerItem:AVPlayerItem = AVPlayerItem(url: url!)
+             self.player = AVPlayer(playerItem: playerItem)
+             
+             // self.avPlayerView.isHidden = false
+             let avPlayer = AVPlayerLayer(player: self.player!)
+             let castedLayer = self.avPlayerView.layer as! AVPlayerLayer
+             castedLayer.player = self.player
+             castedLayer.videoGravity = AVLayerVideoGravity.resizeAspect
+             self.avPlayerView.layoutIfNeeded()
+             if UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad{
+             self.playbackSlider = UISlider(frame:CGRect(x:0, y: self.avPlayerView.bounds.size.height - 40, width:avPlayerView.bounds.size.width, height: 20))
+             }
+             else{
+             self.playbackSlider = UISlider(frame:CGRect(x:0, y: self.avPlayerView.bounds.size.height - 100, width:avPlayerView.bounds.size.width, height: 20))
+             }
+             self.playbackSlider.minimumValue = 0
+             
+             
+             let duration : CMTime = playerItem.asset.duration
+             let seconds : Float64 = CMTimeGetSeconds(duration)
+             
+             self.playbackSlider.maximumValue = Float(seconds)
+             self.playbackSlider.isContinuous = true
+             self.playbackSlider.tintColor = UIColor.green
+             
+             self.playbackSlider.addTarget(self, action: #selector(NewsDetailVC.playbackSliderValueChanged(_:)), for: .valueChanged)
+             self.avPlayerView.addSubview(self.playbackSlider)
+             self.btnPlayVideo.isHidden = false
+             }
+             DispatchQueue.main.async {
+             self.activityIndicator.stopAnimating()
+             }
+             }
+             
+             }
+             else{
+             self.btnPlayVideo.isHidden = true
+             //  self.avPlayerView.isHidden = true
+             self.imgNews.sd_setImage(with: URL(string: currentArticle.imageURL!), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
+             }*/
             
             if UserDefaults.standard.value(forKey: "token") != nil{
                 if currentArticle.likeDislike?.isLike == 0 {
@@ -676,6 +968,7 @@ class NewsDetailVC: UIViewController {
         if imgNews.image == nil{
             imgNews.image = UIImage(named: AssetConstants.NoImage)
         }
+        activityIndicator.stopAnimating()
     }
     
     @IBAction func btnLikeActn(_ sender: Any) {
@@ -694,7 +987,7 @@ class NewsDetailVC: UIViewController {
                             self.btnDislike.setImage(UIImage(named: AssetConstants.thumb_down), for: .normal)
                             
                         }
-                          self.view.makeToast(response, duration: 1.0, position: .center)
+                        self.view.makeToast(response, duration: 1.0, position: .center)
                         DBManager().addLikedArticle(tempentity: self.currentEntity, id: self.articleId, status: 0)
                     }
                 }
@@ -738,7 +1031,7 @@ class NewsDetailVC: UIViewController {
                         if (self.btnLike.currentImage?.isEqual(UIImage(named: AssetConstants.thumb_up_filled)))! {
                             self.btnLike.setImage(UIImage(named: AssetConstants.thumb_up), for: .normal)
                         }
-                       self.view.makeToast(response, duration: 1.0, position: .center)
+                        self.view.makeToast(response, duration: 1.0, position: .center)
                         DBManager().addLikedArticle(tempentity:self.currentEntity, id: self.articleId, status: 1)
                     }
                 }
@@ -777,7 +1070,6 @@ class NewsDetailVC: UIViewController {
                     }
                     else{
                         self.setBookmarkImg()
-                        
                         DBManager().addBookmarkedArticles(currentEntity: self.currentEntity, id: self.articleId)
                         self.view.makeToast(response, duration: 1.0, position: .center)
                     }
@@ -828,33 +1120,61 @@ class NewsDetailVC: UIViewController {
     }
     
     @IBAction func btnShareActn(_ sender: Any) {
-        let text = ShowArticle[newsCurrentIndex].title
-        let webURL = "Sent via NewsCout : (www.newscout.in)"
+        var text = ""
+        let webURL = "Sent via NewsCout"
         var shareAll : [Any]
         var sourceURL : URL!
-        if ShowArticle[newsCurrentIndex].imageURL != nil{
-            let url = URL(string:ShowArticle[newsCurrentIndex].imageURL!)
-            let image1 = UIImage(named: "\(url)")
-            var image = UIImage()
-            if let data = try? Data(contentsOf: url!)
-            {
-                image = UIImage(data: data)!
+        if currentEntity == "ShowArticle"{
+            text = ShowArticle[newsCurrentIndex].title!
+            if ShowArticle[newsCurrentIndex].imageURL != nil{
+                let url = URL(string:ShowArticle[newsCurrentIndex].imageURL!)
+                let image1 = UIImage(named: "\(url)")
+                var image = UIImage()
+                if let data = try? Data(contentsOf: url!)
+                {
+                    image = UIImage(data: data)!
+                }
+                if ShowArticle[newsCurrentIndex].source_url != nil{
+                    sourceURL = URL(string: ShowArticle[newsCurrentIndex].source_url!)
+                }
+                shareAll = [ text , image1, image,  sourceURL , webURL ] as [Any]
             }
-            if ShowArticle[newsCurrentIndex].source_url != nil{
-                sourceURL = URL(string: "\(ShowArticle[newsCurrentIndex].source_url)")
+            else{
+                if ShowArticle[newsCurrentIndex].source_url != nil{
+                    sourceURL = URL(string: ShowArticle[newsCurrentIndex].source_url!)
+                }
+                shareAll = [ text , sourceURL , webURL ] as [Any]
             }
-            shareAll = [ text , image1, image,  sourceURL , webURL ] as [Any]
         }
         else{
-            if ShowArticle[newsCurrentIndex].source_url != nil{
-                sourceURL = URL(string: "\(ShowArticle[newsCurrentIndex].source_url)")
+            if SearchArticle[newsCurrentIndex].imageURL != nil{
+                text = SearchArticle[newsCurrentIndex].title!
+                let url = URL(string:SearchArticle[newsCurrentIndex].imageURL!)
+                let image1 = UIImage(named: "\(url)")
+                var image = UIImage()
+                if let data = try? Data(contentsOf: url!)
+                {
+                    image = UIImage(data: data)!
+                }
+                if SearchArticle[newsCurrentIndex].source_url != nil{
+                    sourceURL = URL(string: SearchArticle[newsCurrentIndex].source_url!)
+                }
+                shareAll = [ text , image1, image,  sourceURL , webURL ] as [Any]
             }
-            shareAll = [ text , sourceURL , webURL ] as [Any]
+            else{
+                if SearchArticle[newsCurrentIndex].source_url != nil{
+                    sourceURL = URL(string: SearchArticle[newsCurrentIndex].source_url!)
+                }
+                shareAll = [ text , sourceURL , webURL ] as [Any]
+            }
+            
         }
+        
         
         let activityViewController = UIActivityViewController(activityItems: shareAll, applicationActivities: nil)
         activityViewController.popoverPresentationController?.sourceView = sender as! UIView
         self.present(activityViewController, animated: true, completion: nil)
+        
     }
     
     @IBAction func btnBackAction(_ sender: Any) {
@@ -885,6 +1205,7 @@ class NewsDetailVC: UIViewController {
     @IBAction func btnWebBackAction(_ sender: Any) {
         ViewWebContainer.isHidden = true
         viewLikeDislike.isHidden = false
+        viewBack.isHidden = false
     }
     
     //btn Back Action
@@ -898,9 +1219,11 @@ class NewsDetailVC: UIViewController {
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
+    
 }
 
 extension NewsDetailVC:UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout{
+    
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize{
         var width = 1.0
         if indexPath.row == 0{
@@ -914,17 +1237,45 @@ extension NewsDetailVC:UICollectionViewDelegate, UICollectionViewDataSource, UIC
         else{
             width = 170.0
         }
-        return CGSize(width: width, height: 145.0)
+        return CGSize(width: width, height: Double(suggestedView.frame.size.height))
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return (self.RecomArticleData.count != 0) ? self.RecomArticleData[0].body!.articles.count + 1 : 0
+        // return (self.RecomArticleData.count != 0) ? self.RecomArticleData[0].body!.articles.count + 1 : 0
+        if RecomData.count == 0 && searchRecomData.count == 0{
+            return 0
+        }
+        else if RecomData.count >= 5 || searchRecomData.count >= 5{
+            return 6
+        }else{
+            if RecomData.count != 0{
+                return RecomData.count + 1
+            }else{
+                return searchRecomData.count + 1
+            }
+        }
+        // return ShowArticle.count != 0 ? ShowArticle.count : 0
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "SuggestedNewsID", for: indexPath) as! SuggestedNewsCVCell
         cell.lblTitle.font = FontConstants.NormalFontContent
         cell.lblMoreStories.font = FontConstants.LargeFontContentBold
+        cell.btnCellPlayVIdeo.isHidden = true
+        let textSizeSelected = UserDefaults.standard.value(forKey: "textSize") as! Int
+        
+        if textSizeSelected == 0{
+            cell.lblMoreStories.font = FontConstants.smallRecommTitleFont
+            cell.lblTitle.font = FontConstants.smallRecommFont
+        }
+        else if textSizeSelected == 2{
+            cell.lblMoreStories.font = FontConstants.largeRecommTitleFont
+            cell.lblTitle.font = FontConstants.largeRecommFont
+        }
+        else{
+            cell.lblMoreStories.font = FontConstants.normalRecommTitleFont
+            cell.lblTitle.font = FontConstants.normalRecommFont
+        }
         if indexPath.row == 0
         {
             cell.lblMoreStories.isHidden = false
@@ -936,29 +1287,20 @@ extension NewsDetailVC:UICollectionViewDelegate, UICollectionViewDataSource, UIC
             cell.imgNews.isHidden = false
             cell.lblTitle.isHidden = false
             cell.lblMoreStories.isHidden = true
-            let currentArticle =  RecomArticleData[0].body!.articles[indexPath.row - 1]
-            cell.lblTitle.text = currentArticle.title
-            if currentArticle.imageURL != nil{
-                
-                var checkImg = false
-                let imageFormats = ["jpg", "jpeg", "png", "gif"]
-                for ext in imageFormats{
-                    if currentArticle.imageURL!.contains(ext){
-                        checkImg = true
-                        break
-                    }
+            if currentEntity == "SearchArticles"{
+                let currentArticle =  searchRecomData[indexPath.row - 1] //RecomArticleData[0].body!.articles[indexPath.row - 1]
+                cell.lblTitle.text = currentArticle.title
+                if currentArticle.imageURL != nil{
+                    cell.imgNews.sd_setImage(with: URL(string: currentArticle.imageURL!), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
                 }
-                if checkImg == false{
-                    cell.btnCellPlayVIdeo.isHidden = false
-                    if let thumbnail = createThumbnailOfVideoFromRemoteUrl(url: "https://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4"){
-                        cell.imgNews.image = thumbnail
-                    }
-                }
-                else{
-                    cell.btnCellPlayVIdeo.isHidden = true
+            }else{
+                let currentArticle =  RecomData[indexPath.row - 1] //RecomArticleData[0].body!.articles[indexPath.row - 1]
+                cell.lblTitle.text = currentArticle.title
+                if currentArticle.imageURL != nil{
                     cell.imgNews.sd_setImage(with: URL(string: currentArticle.imageURL!), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
                 }
             }
+            
             if cell.imgNews.image == nil{
                 cell.imgNews.image = UIImage(named: AssetConstants.NoImage)
             }
@@ -989,8 +1331,13 @@ extension NewsDetailVC:UICollectionViewDelegate, UICollectionViewDataSource, UIC
                 UserDefaults.standard.set("recommend", forKey: "isSearch")
             }
             newsDetailvc.newsCurrentIndex = indexPath.row - 1
-            newsDetailvc.articleArr = RecomArticleData[0].body!.articles
-            newsDetailvc.articleId = RecomArticleData[0].body!.articles[indexPath.row - 1].article_id!
+            if ShowArticle.count != 0{
+                newsDetailvc.ShowArticle =  RecomData //RecomArticleData[0].body!.articles
+                newsDetailvc.articleId = Int(RecomData[indexPath.row].article_id)  //RecomArticleData[0].body!.articles[indexPath.row - 1].article_id!
+            }else{
+                newsDetailvc.SearchArticle = searchRecomData
+                newsDetailvc.articleId = Int(searchRecomData[indexPath.row].article_id)
+            }
             present(newsDetailvc, animated: true, completion: nil)
         }
     }

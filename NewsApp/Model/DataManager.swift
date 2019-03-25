@@ -14,7 +14,7 @@ class DBManager{
     let appDelegate = UIApplication.shared.delegate as? AppDelegate
     var ArticleData = [ArticleStatus]()
     var CategoryData = [CategoryList]()
-    
+    var tagType = ""
     //save articles in DB
     func SaveDataDB(nextUrl:String,_ completion : @escaping (Bool) -> ())
     {
@@ -30,19 +30,21 @@ class DBManager{
             case .Change(let code):
                 print(code)
             }
+            
             if self.ArticleData.count != 0{
+                
                 if self.ArticleData[0].header.status == "1" {
                     if self.ArticleData[0].body?.next != nil{
-                        if self.someEntityExists(id: (self.ArticleData[0].body!.categoryDetail?.cat_id)!, entity: "NewsURL", keyword: "") == false{
+                        var submenu = UserDefaults.standard.value(forKey: "submenu") as! String
+                        if self.someEntityExists(id: 0, entity: "NewsURL", keyword: submenu) == false {
                             let newUrl = NewsURL(context: managedContext!)
-                            newUrl.cat_id = Int16((self.ArticleData[0].body?.categoryDetail?.cat_id)!)
-                            newUrl.category = self.ArticleData[0].body?.categoryDetail?.title
+                            newUrl.category = submenu
                             newUrl.nextURL = self.ArticleData[0].body?.next
                         }
                         else{
                             let fetchRequest =
                                 NSFetchRequest<NSManagedObject>(entityName: "NewsURL")
-                            fetchRequest.predicate = NSPredicate(format: "cat_id  = %d", (self.ArticleData[0].body!.categoryDetail?.cat_id)!)
+                            fetchRequest.predicate = NSPredicate(format: "category contains[c] %@", submenu)
                             
                             do {
                                 URLData = try managedContext?.fetch(fetchRequest) as! [NewsURL]
@@ -50,13 +52,14 @@ class DBManager{
                                 print("Could not fetch. \(error), \(error.userInfo)")
                             }
                             for url in URLData{
-                                if url.cat_id == Int16((self.ArticleData[0].body?.categoryDetail?.cat_id)!){
+                                if url.category == submenu {
                                     url.nextURL = self.ArticleData[0].body?.next
                                 }
                             }
                         }
                         self.saveBlock()
                     }
+                    
                     for news in self.ArticleData[0].body!.articles{
                         if  self.someEntityExists(id: Int(news.article_id!), entity: "NewsArticle", keyword: "") == false
                         {
@@ -68,8 +71,32 @@ class DBManager{
                             newArticle.source_url = news.url
                             newArticle.published_on = news.published_on
                             newArticle.blurb = news.blurb
-                            newArticle.category = (self.ArticleData[0].body?.categoryDetail?.title)!
-                            newArticle.category_id = Int16((self.ArticleData[0].body?.categoryDetail?.cat_id)!)
+                            newArticle.category = news.category
+                            newArticle.current_page = Int64(self.ArticleData[0].body!.current_page)
+                            newArticle.total_pages = Int64(self.ArticleData[0].body!.total_pages)
+                           /* if news.article_media!.count > 0 {
+                                for media in news.article_media!{
+                                    if self.someEntityExists(id: media.media_id, entity: "Media", keyword: "") == false {
+                                        let newMedia =  Media(context: managedContext!)
+                                        newMedia.articleId = Int64(news.article_id)
+                                        newMedia.imageURL =   media.img_url
+                                        newMedia.videoURL = media.video_url
+                                        newMedia.type = media.category
+                                        newMedia.mediaId =  Int64(media.media_id)
+                                    }
+                                    
+                                }
+                            }*/
+                            if news.hash_tags.count > 0 {
+                                for tag in news.hash_tags {
+                                    let newTag = HashTag(context: managedContext!)
+                                    newTag.articleId = Int64(news.article_id!)
+                                    newTag.name = tag
+                                    newTag.addToArticleTags(newArticle)
+                                    //newArticle.addToHashTags(newTag)
+                                }
+                                
+                            }
                             self.saveBlock()
                         }
                     }
@@ -84,17 +111,88 @@ class DBManager{
         }
     }
     
+    //fetch article media
+    func fetchArticleMedia(articleId : Int) -> MediaDBFetchResult{
+        var  mediaData = [Media]()
+        let managedContext =
+            appDelegate?.persistentContainer.viewContext
+        let mediaRequest =  NSFetchRequest<Media>(entityName: "Media")
+        mediaRequest.predicate = NSPredicate(format: "articleId = %d", articleId)
+        do {
+            mediaData = try (managedContext?.fetch(mediaRequest))!
+        }catch let error as NSError {
+            return MediaDBFetchResult.Failure(error.localizedDescription)
+        }
+        return MediaDBFetchResult.Success(mediaData)
+    }
+    
+    //fetch newsArticle heading->submenu->tags
+    func ArticlesfetchByTags() -> ArticleDBfetchResult{
+        var ShowArticle = [NewsArticle]()
+        var tagData = [HashTag]()
+        let managedContext =
+            appDelegate?.persistentContainer.viewContext
+        let fetchRequest =
+            NSFetchRequest<NewsArticle>(entityName: "NewsArticle")
+        if UserDefaults.standard.value(forKey: "subMenuTags") != nil{
+            let tagArr =  UserDefaults.standard.value(forKey: "subMenuTags") as! [String]
+            let tagRequest =  NSFetchRequest<HashTag>(entityName: "HashTag")
+            for tag in tagArr{
+                tagRequest.predicate = NSPredicate(format: "name contains[c] %@", tag)
+                do {
+                    tagData =  try (managedContext?.fetch(tagRequest))!
+                    for tag in tagData{
+                        fetchRequest.predicate = NSPredicate(format: "article_id = %d ",tag.articleId )
+                        do {
+                            var article =  try (managedContext?.fetch(fetchRequest))!
+                            if article.count > 0{
+                                if !ShowArticle.contains(article[0]){
+                                    ShowArticle.append(article[0])
+                                }
+                            }
+                        }catch let error as NSError {
+                            return ArticleDBfetchResult.Failure(error.localizedDescription)
+                        }
+                    }
+                }catch let error as NSError {
+                    print("Could not fetch. \(error), \(error.userInfo)")
+                }
+            }
+        }
+        return ArticleDBfetchResult.Success(ShowArticle)
+    }
     //check for existing entry in DB
     func someEntityExists(id: Int, entity : String, keyword: String) -> Bool {
         let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: entity)
         if entity == "NewsArticle" || entity == "BookmarkArticles" || entity == "LikeDislike" || entity == "SearchArticles" {
             fetchRequest.predicate = NSPredicate(format: "article_id == \(id)")
         }
-        else if entity == "NewsURL" || entity == "Category"{
-            fetchRequest.predicate = NSPredicate(format: "cat_id == \(id)")
+        else if entity == "NewsURL" || entity == "Category" || entity == "Media" || entity == "MenuHeadings" || entity == "HeadingSubMenu" || entity == "MenuHashTag"{
+            if entity == "Media"{
+                fetchRequest.predicate = NSPredicate(format: "mediaId == \(id)")
+            }else if entity == "MenuHeadings"{
+                fetchRequest.predicate = NSPredicate(format: "headingId == \(id)")
+            }
+            else if entity == "HeadingSubMenu"{
+                fetchRequest.predicate = NSPredicate(format: "subMenuId == \(id)")
+            }
+            else if entity == "MenuHashTag"{
+                fetchRequest.predicate =  NSPredicate(format: "hashTagId == \(id)")
+            }
+            else{
+                fetchRequest.predicate = NSPredicate(format: "cat_id == \(id)")
+            }
         }
+        
         if keyword != ""{
-            fetchRequest.predicate = NSPredicate(format: "category contains[c] %@",keyword)
+            if entity == "HashTag"{
+                fetchRequest.predicate = NSPredicate(format: "name contains[c] %@", keyword)
+            }else if entity == "PeriodicTags"{
+                fetchRequest.predicate = NSPredicate(format: "tagName contains[c] %@ AND type contains[c] %@", keyword, tagType)
+            }
+            else{
+                fetchRequest.predicate = NSPredicate(format: "category contains[c] %@",keyword)
+            }
         }
         let managedContext =
             appDelegate?.persistentContainer.viewContext
@@ -125,9 +223,10 @@ class DBManager{
         do {
             let ShowArticle = try (managedContext?.fetch(fetchRequest))!
             return ArticleDBfetchResult.Success(ShowArticle as! [NewsArticle])
+            
         } catch let error as NSError {
             print("Could not fetch. \(error), \(error.userInfo)")
-            return ArticleDBfetchResult.Failure(error as! String)
+            return ArticleDBfetchResult.Failure(error.localizedDescription)
         }
     }
     
@@ -178,6 +277,16 @@ class DBManager{
             }
             recordCount = records.count
         }
+        else if entity == "MenuHeadings"{
+            var records = [MenuHeadings]()
+            do {
+                records = (try managedContext?.fetch(fetchRequest)) as! [MenuHeadings]
+            }
+            catch {
+                print("error executing fetch request: \(error)")
+            }
+            recordCount = records.count
+        }
         return recordCount
     }
     
@@ -195,55 +304,6 @@ class DBManager{
             print("error executing fetch request: \(error)")
         }
         return records.count
-    }
-    
-    //save categories in DB
-    func SaveCategoryDB(_ completion : @escaping (Bool) -> ())
-    {
-        let managedContext =
-            appDelegate?.persistentContainer.viewContext
-        APICall().loadCategoriesAPI{
-            (status,response) in
-            switch response {
-            case .Success(let data) :
-                self.CategoryData = data
-            case .Failure(let errormessage) :
-                print(errormessage)
-            }
-            
-            if self.CategoryData.count != 0{
-                for cat in self.CategoryData[0].categories{
-                    if  self.someEntityExists(id: Int(cat.cat_id), entity: "Category", keyword: "") == false
-                    {
-                        let newCategory = Category(context: managedContext!)
-                        newCategory.cat_id = Int16(cat.cat_id)
-                        newCategory.title = cat.title
-                        self.saveBlock()
-                    }
-                }
-                completion(true)
-            }
-            else{
-                completion(false)
-            }
-        }
-    }
-    
-    //fetch categories from DB
-    func FetchCategoryFromDB() -> CategoryDBfetchResult
-    {
-        let managedContext =
-            appDelegate?.persistentContainer.viewContext
-        let fetchRequest =
-            NSFetchRequest<Category>(entityName: "Category")
-        do {
-            let ShowCategory = try (managedContext?.fetch(fetchRequest))!
-            return CategoryDBfetchResult.Success(ShowCategory)
-            
-        } catch let error as NSError {
-            print("Could not fetch. \(error), \(error.userInfo)")
-            return CategoryDBfetchResult.Failure(error as! String)
-        }
     }
     
     //fetch bookmarked articles
@@ -284,7 +344,7 @@ class DBManager{
                 
             } catch let error as NSError {
                 print("Could not fetch. \(error), \(error.userInfo)")
-                return ArticleDBfetchResult.Failure(error as! String)
+                return ArticleDBfetchResult.Failure(error.localizedDescription)
             }
         }
         for like in LikeArticle{
@@ -298,7 +358,7 @@ class DBManager{
                 
             } catch let error as NSError {
                 print("Could not fetch. \(error), \(error.userInfo)")
-                return ArticleDBfetchResult.Failure(error as! String)
+                return ArticleDBfetchResult.Failure(error.localizedDescription)
             }
         }
         return ArticleDBfetchResult.Success(ShowArticle)
@@ -546,7 +606,6 @@ class DBManager{
                     if self.ArticleData[0].body?.next != nil{
                         if self.someEntityExists(id: 0, entity: "NewsURL", keyword: search) == false{
                             let newUrl = NewsURL(context: managedContext!)
-                            newUrl.cat_id = 0
                             newUrl.category = search
                             newUrl.nextURL = self.ArticleData[0].body?.next
                         }
@@ -688,7 +747,8 @@ class DBManager{
         let result = try? managedContext?.fetch(deleteFetch)
         let resultData = result as! [NewsURL]
         let lastRecord = resultData.last
-        if lastRecord?.cat_id == 0{
+        var search = UserDefaults.standard.value(forKey: "searchTxt") as! String
+        if lastRecord?.category == search {
             managedContext!.delete(lastRecord!)
         }
         saveBlock()
@@ -704,8 +764,149 @@ class DBManager{
             let NewsURL = try (managedContext?.fetch(fetchRequest))!
             return NextURLDBfetchResult.Success(NewsURL)
         } catch let error as NSError {
-            print("Could not fetch. \(error), \(error.userInfo)")
             return NextURLDBfetchResult.Failure(error as! String)
+        }
+    }
+    
+    func saveTags() {
+        let managedContext =
+            appDelegate?.persistentContainer.viewContext
+        var tagsData = [DailyTags]()
+        let types = ["daily", "weekly", "monthly"]
+        for type in types{
+            APICall().getTags(url:APPURL.getTagsURL, type: type){
+                (response)  in
+                switch response {
+                case .Success(let data) :
+                    tagsData  = data
+                    if tagsData[0].header.status == "1" {
+                        if tagsData[0].body.count > 0{
+                            for tag in tagsData[0].body.results{
+                                self.tagType = type
+                                if self.someEntityExists(id: 0, entity: "PeriodicTags", keyword: tag.name) == false{
+                                    let newTag = PeriodicTags(context: managedContext!)
+                                    newTag.tagName =  tag.name
+                                    newTag.count = Int64(tag.count)
+                                    newTag.type = type
+                                    self.saveBlock()
+                                }
+                            }
+                        }
+                    }
+                case .Failure(let errormessage) :
+                    print(errormessage)
+                }
+            }
+        }
+    }
+    
+    func fetchTags(type : String) -> PeriodicTagDBfetchResult {
+        let managedContext =
+            appDelegate?.persistentContainer.viewContext
+        let fetchRequest =
+            NSFetchRequest<PeriodicTags>(entityName: "PeriodicTags")
+        fetchRequest.predicate = NSPredicate(format: "type contains[c] %@",type)
+        do {
+            let tagsData = try (managedContext?.fetch(fetchRequest))!
+            return PeriodicTagDBfetchResult.Success(tagsData)
+        } catch let error as NSError {
+            return PeriodicTagDBfetchResult.Failure(error as! String)
+        }
+    }
+    
+    func saveMenu(_ completion : @escaping (Bool) -> ()){
+        var menuData =  [Menu]()
+        let managedContext =
+            appDelegate?.persistentContainer.viewContext
+        APICall().getMenu{
+            response  in
+            switch response {
+            case .Success(let data) :
+                menuData = data
+                if  menuData[0].header.status == "1"{
+                    for res in menuData[0].body.results{
+                        if self.someEntityExists(id: res.heading.headingId, entity: "MenuHeadings", keyword: "") == false{
+                            let newheading = MenuHeadings(context: managedContext!)
+                            newheading.headingName =  res.heading.headingName
+                            newheading.headingId = Int64(res.heading.headingId)
+                        }
+                        for sub in res.heading.submenu{
+                            if self.someEntityExists(id: sub.id, entity: "HeadingSubMenu", keyword: "") == false{
+                                let newsubMenu = HeadingSubMenu(context: managedContext!)
+                                newsubMenu.subMenuName = sub.name
+                                newsubMenu.subMenuId = Int64(sub.id)
+                                newsubMenu.headingId = Int64(res.heading.headingId)
+                                
+                                for tag in sub.hash_tags{
+                                    if self.someEntityExists(id: tag.id, entity: "MenuHashTag", keyword: "") == false{
+                                        let newTag = MenuHashTag(context: managedContext!)
+                                        newTag.hashTagId = Int64(tag.id)
+                                        newTag.hashTagName = tag.name
+                                        newTag.subMenuId = Int64(sub.id)
+                                        newTag.subMenuName = sub.name
+                                        newsubMenu.addToTags(newTag)
+                                    }
+                                }
+                            }
+                            
+                        }
+                        self.saveBlock()
+                    }
+                }
+                completion(true)
+                
+            case .Failure(let errormessage) :
+                completion(false)
+                
+            }
+        }
+    }
+    
+    func fetchMenu() -> HeadingsDBFetchResult{
+        var headingsData = [MenuHeadings]()
+        let managedContext =
+            appDelegate?.persistentContainer.viewContext
+        let headingfetchRequest =
+            NSFetchRequest<MenuHeadings>(entityName: "MenuHeadings")
+        
+        do {
+            headingsData = try (managedContext?.fetch(headingfetchRequest))!
+            return HeadingsDBFetchResult.Success(headingsData)
+        } catch let error as NSError {
+            return HeadingsDBFetchResult.Failure(error as! String)
+        }
+    }
+    
+    
+    
+    func fetchSubMenu(headingId : Int) -> SubMenuDBFetchResult{
+        var subMenuData = [HeadingSubMenu]()
+        var subMenuArr = [[String]]()
+        let managedContext =
+            appDelegate?.persistentContainer.viewContext
+        let subMenufetchRequest = NSFetchRequest<HeadingSubMenu>(entityName: "HeadingSubMenu")
+        let sortDescriptor = NSSortDescriptor(key: "subMenuId", ascending: true)
+        subMenufetchRequest.sortDescriptors = [sortDescriptor]
+        do {
+            subMenufetchRequest.predicate = NSPredicate(format: "headingId = %d",headingId)
+            subMenuData = try (managedContext?.fetch(subMenufetchRequest))!
+        } catch let error as NSError {
+            return SubMenuDBFetchResult.Failure(error as! String)
+        }
+        return SubMenuDBFetchResult.Success(subMenuData)
+    }
+    
+    func fetchMenuTags(subMenuName : String) -> MenuHashTagDBFetchResult{
+        let managedContext =
+            appDelegate?.persistentContainer.viewContext
+        let tagfetchRequest = NSFetchRequest<MenuHashTag>(entityName:"MenuHashTag")
+        
+        do {
+            tagfetchRequest.predicate = NSPredicate(format: "subMenuName == '\(subMenuName)'")
+            let tagsData = try (managedContext?.fetch(tagfetchRequest))!
+            return MenuHashTagDBFetchResult.Success(tagsData)
+        } catch let error as NSError {
+            return MenuHashTagDBFetchResult.Failure(error as! String)
         }
     }
 }

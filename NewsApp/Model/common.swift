@@ -73,6 +73,12 @@ struct FontConstants{
     //for settings tableview header
     static let settingsTVHeader = UIFont(name: AppFontName.medium, size: FontConstants.fontSettingsTVHeader)
     static let appFont = UIFont(name: AppFontName.bold, size: FontConstants.fontAppTitle)
+    static let smallRecommFont = UIFont(name: AppFontName.regular, size: FontConstants.fontxSmall)
+     static let largeRecommFont = UIFont(name: AppFontName.regular, size: FontConstants.fontxLarge)
+     static let normalRecommFont = UIFont(name: AppFontName.regular, size: FontConstants.fontxNormal)
+    static let smallRecommTitleFont = UIFont(name: AppFontName.bold, size: FontConstants.fontxSmall)
+    static let largeRecommTitleFont = UIFont(name: AppFontName.bold, size: FontConstants.fontxLarge)
+    static let normalRecommTitleFont = UIFont(name: AppFontName.bold, size: FontConstants.fontxNormal)
 }
 
 struct Constants{
@@ -100,9 +106,12 @@ struct AssetConstants{
     static let appLogo = "Logo"
     static let glogo = "glogo"
     static let flogo = "flogo"
-    
-    
-}
+    static let menu = "menu"
+    static let sector = "sector_update"
+    static let regional = "regional_update_1"
+    static let economy = "economy"
+    static let finance = "finance"
+ }
 
 struct AppFontName {
     static let regular = "HelveticaNeue-Light"
@@ -117,20 +126,21 @@ struct themeColor{
 
 struct APPURL {
     private struct Domains {
-        static let Local = "http://192.168.2.204" //"http://192.168.2.151:8000"//
+        static let Local = "http://www.newscout.in" // " // "http://192.168.2.204" //"http://192.168.2.151:8000"//
+        static let searchServer = "http://www.newscout.in"
         static let Server = ""
         static let version = "/api/v1/"
     }
     
     private  struct Routes {
         static let Articles = Domains.version + "articles/?page="
-        static let ArticlesByCategory = Domains.version + "articles/?categories="
+        static let ArticlesByCategory = Domains.version + "articles/?category="
         static let ArticleDetail = Domains.version + "articles/"
         static let Login = Domains.version + "login/"
         static let SignUp = Domains.version + "signup/"
         static let Logout = Domains.version + "logout/"
         static let Categories = Domains.version + "categories"
-        static let Search = Domains.version + "search/?q="
+        static let Search = Domains.version + "article/search/?q="
         static let recommendation = Domains.version + "articles/" // + "\(articleId)" + "/recommendations/"
         static let bookmark = Domains.version + "articles/bookmark/"
         static let likeDislike =  Domains.version + "articles/vote/"
@@ -140,6 +150,12 @@ struct APPURL {
         static let saveRemoveCategory = Domains.version + "categories/save-remove/"
         static let getLikeList = Domains.version + "articles/like-news-list/"
         static let getBookmarkList = Domains.version + "bookmark-articles/bookmark-news-list/"
+        static let getTags = Domains.version + "tags/"
+        static let ArticlesBytags = Domains.version + "article/search?"
+        static let ArtilceByTags2 = Domains.version + "articles/?"
+        static let menu = Domains.version + "menus"
+        static let deviceDetails = Domains.version + "device/"
+        static let NotificationDetails = Domains.version + "notification/"
     }
     
     static let ArticlesURL = Domains.Local + Routes.Articles
@@ -159,6 +175,12 @@ struct APPURL {
     static let saveRemoveCategoryURL = Domains.Local + Routes.saveRemoveCategory
     static let getLikeListURL = Domains.Local + Routes.getLikeList
     static let getBookmarkListURL = Domains.Local + Routes.getBookmarkList
+    static let getTagsURL = Domains.Local + Routes.getTags
+    static let ArticlesByTagsURL = Domains.Local + Routes.ArticlesBytags
+    static let ArticlesByTagsURL2 = Domains.Local + Routes.ArtilceByTags2
+    static let getMenus = Domains.Local + Routes.menu
+    static let sendDeviceDetailsURL = Domains.Local + Routes.deviceDetails
+    static let sendNotificationDetails = Domains.Local + Routes.NotificationDetails
 }
 
 

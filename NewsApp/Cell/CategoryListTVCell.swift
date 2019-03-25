@@ -11,7 +11,7 @@ import UIKit
 class CategoryListTVCell: UITableViewCell {
     
     @IBOutlet weak var lblCategoryName: UILabel!
-    @IBOutlet weak var imgDelete: UIImageView!
+    @IBOutlet weak var lblCount: UILabel!
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code

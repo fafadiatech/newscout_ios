@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import Floaty
 import XLPagerTabStrip
 import Alamofire
 import CoreData
@@ -26,12 +25,13 @@ class HomeVC: UIViewController{
     var pageNum = 0
     var coredataRecordCount = 0
     var currentCategory = "All News"
-    var selectedCategory = ""
     var nextURL = ""
     var lastContentOffset: CGFloat = 0
     var articlesArr = [Article]()
-    var categories = [String]()
-    
+    var selectedCategory = ""
+    var tagArr : [String] = []
+    var sortedData = [NewsArticle]()
+    var isAPICalled = false
     override func viewDidLoad(){
         super.viewDidLoad()
         self.activityIndicator.startAnimating()
@@ -44,7 +44,6 @@ class HomeVC: UIViewController{
         activityIndicator.indicatorMode = .indeterminate
         activityIndicator.progress = 2.0
         view.addSubview(activityIndicator)
-        categories = UserDefaults.standard.array(forKey: "categories") as! [String]
         var paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
         print("path is :\(paths[0])")
         let refreshControl = UIRefreshControl()
@@ -57,8 +56,20 @@ class HomeVC: UIViewController{
         else {
             HomeNewsTV.rowHeight = 129;
         }
-        //save and fetch data from DB
-        selectedCategory = tabBarTitle
+        
+        //change data on swipe
+        fetchsubMenuTags(submenu: tabBarTitle)
+        var url = APPURL.ArticlesByTagsURL
+        for tag in tagArr {
+            url = url + "&tag=" + tag
+        }
+        if tagArr.count > 0{
+            UserDefaults.standard.set(url, forKey: "submenuURL")
+        }else{
+            UserDefaults.standard.set("", forKey: "submenuURL")
+        }
+        
+        //save and fetch like and bookmark data from DB
         if UserDefaults.standard.value(forKey: "token") != nil{
             if Reachability.isConnectedToNetwork(){
                 saveBookmarkDataInDB(url : APPURL.bookmarkedArticlesURL)
@@ -71,68 +82,64 @@ class HomeVC: UIViewController{
                     fetchBookmarkDataFromDB()
                 }
             }
-            
         }
-        if Reachability.isConnectedToNetwork(){
-            activityIndicator.startAnimating()
-            let url = APPURL.ArticlesByCategoryURL + "\(self.selectedCategory)"
-            self.saveArticlesInDB(url : url)
-        }else{
-            coredataRecordCount = DBManager().IsCoreDataEmpty(entity: "NewsArticle")
-            if self.coredataRecordCount != 0 {
-                self.fetchArticlesFromDB()
-            }
-            else{
+        coredataRecordCount = DBManager().IsCoreDataEmpty(entity: "NewsArticle")
+        if self.coredataRecordCount != 0 {
+            self.fetchArticlesFromDB()
+        }
+        else{
+            if Reachability.isConnectedToNetwork(){
+                activityIndicator.startAnimating()
+                if UserDefaults.standard.value(forKey: "submenuURL") != nil{
+                    self.saveArticlesInDB()
+                }
+            }else{
                 activityIndicator.stopAnimating()
                 lblNonews.isHidden = true
             }
         }
-        saveCategoryInDB()
     }
     
-    func saveCategoryInDB(){
-        DBManager().SaveCategoryDB{response in
-            if response == true{
-                print(response)
+    func fetchsubMenuTags(submenu : String){
+        let tagresult = DBManager().fetchMenuTags(subMenuName: submenu)
+        switch tagresult{
+        case .Success(let tagData) :
+            tagArr.removeAll()
+            for tag in tagData{
+                tagArr.append(tag.hashTagName!)
             }
+            UserDefaults.standard.setValue(tagArr, forKey: "subMenuTags")
+        case .Failure(let error):
+            print(error)
         }
     }
     
     func fetchArticlesFromDB(){
-        let result = DBManager().FetchDataFromDB(entity: "NewsArticle")
+        let result = DBManager().ArticlesfetchByTags()
         switch result {
         case .Success(let DBData) :
-            let articles = DBData
-            if articles.count != 0{
-                if selectedCategory == "" || selectedCategory == "For You" || selectedCategory == "All News"
-                {
-                    self.filterNews(selectedCat: "All News" )
-                }else{
-                    self.filterNews(selectedCat: selectedCategory )
-                    
-                }
+            ShowArticle = DBData
+            if ShowArticle.count != 0{
+                lblNonews.isHidden = true
                 self.HomeNewsTV.reloadData()
             }
-            
+            else{
+                self.HomeNewsTV.reloadData()
+                lblNonews.isHidden =  false
+                activityIndicator.stopAnimating()
+            }
         case .Failure(let errorMsg) :
             print(errorMsg)
         }
-        if ShowArticle.count == 0{
-            self.activityIndicator.stopAnimating()
-            lblNonews.isHidden = false
-        }
-        
     }
     
-    func saveArticlesInDB(url: String){
-        DBManager().SaveDataDB(nextUrl: url){response in
-            if response == true{
-                self.fetchArticlesFromDB()
-            }
-            else{
-                self.activityIndicator.stopAnimating()
-                self.lblNonews.isHidden = false
-            }
+    func saveArticlesInDB(){
+        var subMenuURL = ""
+        if UserDefaults.standard.value(forKey: "submenuURL") != nil{
+            subMenuURL =  UserDefaults.standard.value(forKey: "submenuURL") as! String
+        }
+        DBManager().SaveDataDB(nextUrl: subMenuURL ){response in
+            self.fetchArticlesFromDB()
         }
     }
     
@@ -178,36 +185,43 @@ class HomeVC: UIViewController{
     }
     
     @objc func refreshNews(refreshControl: UIRefreshControl) {
-        FetchArticlesAPICall()
+        saveArticlesInDB()
         refreshControl.endRefreshing()
     }
     
-    func filterNews(selectedCat : String){
-    let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "NewsArticle")
-    fetchRequest.predicate = NSPredicate(format: "category CONTAINS[c] %@", selectedCat)
-    let managedContext =
-        self.appDelegate?.persistentContainer.viewContext
-    do {
-        self.ShowArticle = (try managedContext?.fetch(fetchRequest))! as! [NewsArticle]
+    func filterNews(selectedTag : String){
+        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "NewsArticle")
+        let managedContext =
+            self.appDelegate?.persistentContainer.viewContext
+        do {
+            self.ShowArticle = (try managedContext?.fetch(fetchRequest))! as! [NewsArticle]
+        }
+        catch {
+            print("error executing fetch request: \(error)")
+        }
     }
-    catch {
-        print("error executing fetch request: \(error)")
-    }
-}
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
-        if tabBarTitle == "For You"{
-            selectedCategory = "All News"
-        }
-        else{
-            selectedCategory = tabBarTitle
+        if Reachability.isConnectedToNetwork(){
+            activityIndicator.startAnimating()
+            if UserDefaults.standard.value(forKey: "submenuURL") != nil{
+                self.saveArticlesInDB()
+                fetchArticlesFromDB()
+            }
+        }else{
+            coredataRecordCount = DBManager().IsCoreDataEmpty(entity: "NewsArticle")
+            if self.coredataRecordCount != 0 {
+                self.fetchArticlesFromDB()
+            }
+            else{
+                activityIndicator.stopAnimating()
+            }
         }
     }
     
     func FetchArticlesAPICall(){
-        saveArticlesInDB(url:  APPURL.ArticlesByCategoryURL + "\(selectedCategory)" )
+        saveArticlesInDB()
     }
     
     func showMsg(title: String, msg : String){
@@ -246,8 +260,8 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let newsDetailvc:NewsDetailVC = storyboard.instantiateViewController(withIdentifier: "NewsDetailID") as! NewsDetailVC
         newsDetailvc.newsCurrentIndex = indexPath.row
-        newsDetailvc.ShowArticle = ShowArticle as! [NewsArticle]
-        newsDetailvc.articleId = Int(ShowArticle[indexPath.row].article_id)
+        newsDetailvc.ShowArticle = sortedData as! [NewsArticle]
+        newsDetailvc.articleId = Int(sortedData[indexPath.row].article_id)
         UserDefaults.standard.set("home", forKey: "isSearch")
         present(newsDetailvc, animated: true, completion: nil)
     }
@@ -269,13 +283,24 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
         cell.lblSource.textColor = colorConstants.txtDarkGrayColor
         cell.lblTimesAgo.textColor = colorConstants.txtDarkGrayColor
         //display data from DB
+        sortedData = ShowArticle.sorted{ $0.published_on! > $1.published_on! }
+        
         if ShowArticle.count != 0{
-            let currentArticle = ShowArticle[indexPath.row]
+            let currentArticle = sortedData[indexPath.row]
             cell.lblNewsHeading.text = currentArticle.title
             cell.lblSource.text = currentArticle.source
+            
+            if ((currentArticle.published_on?.count)!) <= 20{
+                if !(currentArticle.published_on?.contains("Z"))!{
+                    currentArticle.published_on?.append("Z")
+                }
+            }
             let newDate = dateFormatter.date(from: currentArticle.published_on!)
-            let agoDate = Helper().timeAgoSinceDate(newDate!)
-            cell.lblTimesAgo.text = agoDate
+            if newDate != nil{
+                let agoDate = try Helper().timeAgoSinceDate(newDate!)
+                cell.lblTimesAgo.text = agoDate
+            }
+            
             cell.imgNews.sd_setImage(with: URL(string: currentArticle.imageURL!), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
         }
         let textSizeSelected = UserDefaults.standard.value(forKey: "textSize") as! Int
@@ -322,21 +347,30 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         if indexPath.row == tableView.numberOfRows(inSection: indexPath.section) - 1 {
-            let result =  DBManager().FetchNextURL(category: selectedCategory)
-            switch result {
-            case .Success(let DBData) :
-                let nextURL = DBData
-                if nextURL.count != 0{
-                    if nextURL[0].category == selectedCategory{
-                        let nexturl = nextURL[0].nextURL
-                        self.saveArticlesInDB(url : nexturl!)
+            var submenu = UserDefaults.standard.value(forKey: "submenu") as! String
+            if ShowArticle.count >= 20{
+                if isAPICalled == false{
+                    let result =  DBManager().FetchNextURL(category: submenu)
+                    switch result {
+                    case .Success(let DBData) :
+                        let nextURL = DBData
+                        
+                        if nextURL.count != 0{
+                            isAPICalled = false
+                            if nextURL[0].category == submenu {
+                                let nexturl = nextURL[0].nextURL
+                                UserDefaults.standard.set(nexturl, forKey: "submenuURL")
+                                self.saveArticlesInDB()
+                            }
+                        }
+                        else{
+                            isAPICalled = true
+                            activityIndicator.stopAnimating()
+                        }
+                    case .Failure(let errorMsg) :
+                        print(errorMsg)
                     }
                 }
-                else{
-                    activityIndicator.stopAnimating()
-                }
-            case .Failure(let errorMsg) :
-                print(errorMsg)
             }
         }
     }
@@ -348,6 +382,3 @@ extension HomeVC: IndicatorInfoProvider{
         return IndicatorInfo(title: tabBarTitle)
     }
 }
-
-
-

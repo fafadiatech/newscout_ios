@@ -37,7 +37,6 @@ class LoginVC: UIViewController, GIDSignInUIDelegate, FBSDKLoginButtonDelegate {
         txtUsername.autocorrectionType = .no
         txtPassword.autocorrectionType = .no
         viewGmailSignIn.layer.borderWidth = 1
-        
         viewGmailSignIn.layer.borderColor = UIColor(red:222/255, green:225/255, blue:227/255, alpha: 1).cgColor
         btnLogin.layer.cornerRadius = 15
         btnLogin.layer.borderWidth = 0
@@ -160,32 +159,27 @@ class LoginVC: UIViewController, GIDSignInUIDelegate, FBSDKLoginButtonDelegate {
     }
     
     @IBAction func btnLoginActn(_ sender: Any) {
-    
-        var categories : [String] = []
+        
         if txtUsername.text == "" || txtPassword.text == ""{
             self.view.makeToast("Please enter valid Email and Password..", duration: 1.0, position: .center)
         }
         else{
+            let id = UserDefaults.standard.value(forKey: "deviceToken") as! String
             let param = ["email" : txtUsername.text!,
-                         "password" : txtPassword.text!]
+                         "password" : txtPassword.text!,
+                         "device_id" : id,
+                         "device_name": "ios"]
             APICall().LoginAPI(param : param){(status,response) in
                 print("Login response:\(response)")
                 if response == "1"{
-                    if UserDefaults.standard.value(forKey: "token") != nil || UserDefaults.standard.value(forKey: "FBToken") != nil || UserDefaults.standard.value(forKey: "googleToken") != nil{
-                        categories = UserDefaults.standard.array(forKey: "categories") as! [String]
-                        if !categories.contains("For You"){
-                            categories.insert("For You", at: 0)
-                            UserDefaults.standard.setValue(categories, forKey: "categories")
-                        }
-                    }
                     let check = UserDefaults.standard.value(forKey: "isSettingsLogin") as! Bool
                     if check == true{
-                    let storyboard = UIStoryboard(name: "Main", bundle: nil)
-                    let HomeVc:HomeParentVC = storyboard.instantiateViewController(withIdentifier: "HomeParentID") as! HomeParentVC
-                    self.present(HomeVc, animated: true, completion: nil)
+                        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+                        let HomeVc:HomeParentVC = storyboard.instantiateViewController(withIdentifier: "HomeParentID") as! HomeParentVC
+                        self.present(HomeVc, animated: true, completion: nil)
                     }
                     else{
-                         self.dismiss(animated: false)
+                        self.dismiss(animated: false)
                     }
                 }
                 else{

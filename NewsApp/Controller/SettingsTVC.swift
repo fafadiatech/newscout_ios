@@ -21,9 +21,12 @@ class SettingsTVC: UITableViewController, GIDSignInUIDelegate {
     @IBOutlet var settingsTV: UITableView!
     @IBOutlet weak var segmentTextSize: UISegmentedControl!
     @IBOutlet weak var lblLogin: UILabel!
-    @IBOutlet weak var lblLogout: UILabel!
     @IBOutlet weak var btnLogout: UIButton!
     @IBOutlet weak var switchNightMode: UISwitch!
+    @IBOutlet weak var switchBreaking: UISwitch!
+    @IBOutlet weak var switchDaily: UISwitch!
+    @IBOutlet weak var switchPersonalised: UISwitch!
+    
     var textSizeSelected = 1
     
     override func viewDidLoad() {
@@ -35,6 +38,27 @@ class SettingsTVC: UITableViewController, GIDSignInUIDelegate {
         }
         else{
             switchNightMode.isOn = false
+        }
+        let dailyStatus = UserDefaults.standard.value(forKey: "daily") as! Bool
+        if dailyStatus == true{
+            switchDaily.isOn = true
+        }
+        else{
+            switchDaily.isOn = false
+        }
+        let breakingStatus = UserDefaults.standard.value(forKey: "breaking") as! Bool
+        if breakingStatus == true{
+            switchBreaking.isOn = true
+        }
+        else{
+            switchBreaking.isOn = false
+        }
+        let personalisedStatus = UserDefaults.standard.value(forKey: "personalised") as! Bool
+        if personalisedStatus == true{
+            switchPersonalised.isOn = true
+        }
+        else{
+            switchPersonalised.isOn = false
         }
         btnLogout.isHidden = true
         isLoggedIn()
@@ -163,17 +187,7 @@ class SettingsTVC: UITableViewController, GIDSignInUIDelegate {
                     
                     self.btnLogout.isHidden = true
                     self.lblLogin.text = "Login"
-                    var categories : [String] = []
                     
-                    categories = UserDefaults.standard.array(forKey: "categories") as! [String]
-                    if categories.contains("For You"){
-                        categories.remove(at: 0)
-                        UserDefaults.standard.setValue(categories, forKey: "categories")
-                    }
-                    if categories.contains("Top Stories"){
-                        categories = categories.filter{$0 != "Top Stories"}
-                        UserDefaults.standard.setValue(categories, forKey: "categories")
-                    }
                 }
                 else{
                     self.view.makeToast(response, duration: 1.0, position: .center)
@@ -265,6 +279,25 @@ class SettingsTVC: UITableViewController, GIDSignInUIDelegate {
         return indexPath
     }
     
+    func sendNotificationDetails(){
+        let id = UserDefaults.standard.value(forKey: "deviceToken") as! String
+        var status = Bool()
+        status = UserDefaults.standard.value(forKey: "breaking") as! Bool
+        var notifyBreaking =  String(status).capitalized
+        status = UserDefaults.standard.value(forKey: "daily") as! Bool
+        var notifyDaily = String(status).capitalized
+        status = UserDefaults.standard.value(forKey: "personalised") as! Bool
+        var notifyPersonalised = String(status).capitalized
+        let param = ["device_id" : id,
+                     "device_name": "ios",
+                     "breaking_news" : notifyBreaking,
+                     "daily_edition": notifyDaily,
+                     "personalized" : notifyPersonalised]
+        APICall().notificationAPI(param : param){(status,response) in
+            print(status,response)
+        }
+        
+    }
     @IBAction func switchNightModeActn(_ sender: Any) {
         if switchNightMode.isOn == true {
             UserDefaults.standard.setValue(true, forKey: "darkModeEnabled")
@@ -273,6 +306,39 @@ class SettingsTVC: UITableViewController, GIDSignInUIDelegate {
         else {
             UserDefaults.standard.setValue(false, forKey: "darkModeEnabled")
             NotificationCenter.default.post(name: .darkModeDisabled, object: nil)
+        }
+    }
+    
+    @IBAction func switchBreakingNewsActn(_ sender: Any) {
+        if switchBreaking.isOn == true {
+            UserDefaults.standard.set(true, forKey: "breaking")
+            sendNotificationDetails()
+        }
+        else{
+            UserDefaults.standard.set(false, forKey: "breaking")
+            sendNotificationDetails()
+        }
+    }
+    
+    @IBAction func switchDailyNewsActn(_ sender: Any) {
+        if switchDaily.isOn == true {
+            UserDefaults.standard.set(true, forKey: "daily")
+            sendNotificationDetails()
+        }
+        else{
+            UserDefaults.standard.set(false, forKey: "daily")
+            sendNotificationDetails()
+        }
+    }
+    
+    @IBAction func switchPersonalisedActn(_ sender: Any) {
+        if switchPersonalised.isOn == true {
+            UserDefaults.standard.set(true, forKey: "personalised")
+            sendNotificationDetails()
+        }
+        else{
+            UserDefaults.standard.set(false, forKey: "personalised")
+            sendNotificationDetails()
         }
     }
     

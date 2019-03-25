@@ -22,6 +22,7 @@ target 'NewsApp' do
     pod 'Fabric'
     pod 'Crashlytics'
     pod 'Sentry'
+    pod 'TAPageControl'
     target 'NewsAppTests' do
         inherit! :search_paths
         # Pods for testing

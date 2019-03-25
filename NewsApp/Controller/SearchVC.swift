@@ -71,14 +71,12 @@ class SearchVC: UIViewController {
         NotificationCenter.default.removeObserver(self, name: .darkModeDisabled, object: nil)
     }
     
-    func showMsg(title: String, msg : String)
-    {
+    func showMsg(title: String, msg : String){
         let alertController = UIAlertController(title: title, message: msg, preferredStyle: .alert)
         if UI_USER_INTERFACE_IDIOM() == .pad
         {
             alertController.popoverPresentationController?.sourceView = self.view
             alertController.popoverPresentationController?.sourceRect = CGRect(x: self.view.bounds.midX, y: self.view.bounds.midY, width: 0, height: 0)
-            
         }
         let action1 = UIAlertAction(title: "OK", style: .default) { (action:UIAlertAction) in
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
@@ -104,8 +102,7 @@ class SearchVC: UIViewController {
         return true
     }
     
-    func changeFont()
-    {
+    func changeFont(){
         if textSizeSelected == 0{
             lblTitle.font = FontConstants.NormalFontTitleMedium
             txtSearch.font = FontConstants.NormalFontTitleMedium
@@ -160,7 +157,6 @@ class SearchVC: UIViewController {
             }
         }
     }
-    
 }
 
 extension SearchVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelegate {
@@ -176,6 +172,7 @@ extension SearchVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDele
         newsDetailvc.articleId = Int(Searchresults[indexPath.row].article_id)
         UserDefaults.standard.set("search", forKey: "isSearch")
         present(newsDetailvc, animated: true, completion: nil)
+        searchResultTV.deselectRow(at: indexPath, animated: true)
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -196,9 +193,14 @@ extension SearchVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDele
         if Searchresults.count > 0{
             let currentArticle = Searchresults[indexPath.row]
             cell.lblSource.text =  currentArticle.source
+            if !(currentArticle.published_on?.contains("Z"))!{
+                currentArticle.published_on?.append("Z")
+            }
             let newDate = dateFormatter.date(from: currentArticle.published_on!)
-            let agoDate = Helper().timeAgoSinceDate(newDate!)
-            cell.lbltimeAgo.text = agoDate
+            if newDate != nil{
+                let agoDate = Helper().timeAgoSinceDate(newDate!)
+                cell.lbltimeAgo.text = agoDate
+            }
             cell.lblNewsDescription.text = currentArticle.title
             cell.imgNews.sd_setImage(with: URL(string: currentArticle.imageURL!), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
         }
@@ -251,7 +253,6 @@ extension SearchVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDele
                     }
                 }
                 else{
-                    //lblNonews.isHidden = false
                     activityIndicator.stopAnimating()
                 }
             case .Failure(let errorMsg) :
@@ -266,7 +267,7 @@ extension SearchVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDele
         let distanceFromBottom = scrollView.contentSize.height - contentYoffset
         if distanceFromBottom < height {
             if recordCount > 0 {
-            activityIndicator.startAnimating()
+                activityIndicator.startAnimating()
             }
         }
     }

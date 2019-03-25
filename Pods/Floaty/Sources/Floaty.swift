@@ -101,7 +101,7 @@ open class Floaty: UIView {
      Background overlaying color.
      */
     @IBInspectable
-    @objc open var overlayColor: UIColor = UIColor.white.withAlphaComponent(0.1)
+    @objc open var overlayColor: UIColor = UIColor.white.withAlphaComponent(0.4)
     
     /**
      The space between the item and item.
