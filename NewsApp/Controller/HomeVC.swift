@@ -98,24 +98,6 @@ class HomeVC: UIViewController{
                 lblNonews.isHidden = true
             }
         }
-        
-        //        if Reachability.isConnectedToNetwork(){
-        //            activityIndicator.startAnimating()
-        //            if UserDefaults.standard.value(forKey: "submenuURL") != nil{
-        //                self.saveArticlesInDB()
-        //                fetchArticlesFromDB()
-        //            }
-        //        }else{
-        //            coredataRecordCount = DBManager().IsCoreDataEmpty(entity: "NewsArticle")
-        //            if self.coredataRecordCount != 0 {
-        //                self.fetchArticlesFromDB()
-        //            }
-        //            else{
-        //                activityIndicator.stopAnimating()
-        //                lblNonews.isHidden = true
-        //            }
-        //        }
-        
     }
     
     func fetchsubMenuTags(submenu : String){
@@ -145,7 +127,6 @@ class HomeVC: UIViewController{
                 self.HomeNewsTV.reloadData()
                 lblNonews.isHidden =  false
                 activityIndicator.stopAnimating()
-                
             }
         case .Failure(let errorMsg) :
             print(errorMsg)
@@ -235,7 +216,6 @@ class HomeVC: UIViewController{
             }
             else{
                 activityIndicator.stopAnimating()
-                //lblNonews.isHidden = true
             }
         }
     }
@@ -315,11 +295,11 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
                     currentArticle.published_on?.append("Z")
                 }
             }
-                let newDate = dateFormatter.date(from: currentArticle.published_on!)
-                if newDate != nil{
+            let newDate = dateFormatter.date(from: currentArticle.published_on!)
+            if newDate != nil{
                 let agoDate = try Helper().timeAgoSinceDate(newDate!)
-                    cell.lblTimesAgo.text = agoDate
-                }
+                cell.lblTimesAgo.text = agoDate
+            }
             
             cell.imgNews.sd_setImage(with: URL(string: currentArticle.imageURL!), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
         }

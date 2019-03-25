@@ -71,14 +71,12 @@ class SearchVC: UIViewController {
         NotificationCenter.default.removeObserver(self, name: .darkModeDisabled, object: nil)
     }
     
-    func showMsg(title: String, msg : String)
-    {
+    func showMsg(title: String, msg : String){
         let alertController = UIAlertController(title: title, message: msg, preferredStyle: .alert)
         if UI_USER_INTERFACE_IDIOM() == .pad
         {
             alertController.popoverPresentationController?.sourceView = self.view
             alertController.popoverPresentationController?.sourceRect = CGRect(x: self.view.bounds.midX, y: self.view.bounds.midY, width: 0, height: 0)
-            
         }
         let action1 = UIAlertAction(title: "OK", style: .default) { (action:UIAlertAction) in
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
@@ -104,8 +102,7 @@ class SearchVC: UIViewController {
         return true
     }
     
-    func changeFont()
-    {
+    func changeFont(){
         if textSizeSelected == 0{
             lblTitle.font = FontConstants.NormalFontTitleMedium
             txtSearch.font = FontConstants.NormalFontTitleMedium
@@ -160,7 +157,6 @@ class SearchVC: UIViewController {
             }
         }
     }
-    
 }
 
 extension SearchVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelegate {
@@ -257,7 +253,6 @@ extension SearchVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDele
                     }
                 }
                 else{
-                    //lblNonews.isHidden = false
                     activityIndicator.stopAnimating()
                 }
             case .Failure(let errorMsg) :
@@ -272,7 +267,7 @@ extension SearchVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDele
         let distanceFromBottom = scrollView.contentSize.height - contentYoffset
         if distanceFromBottom < height {
             if recordCount > 0 {
-            activityIndicator.startAnimating()
+                activityIndicator.startAnimating()
             }
         }
     }

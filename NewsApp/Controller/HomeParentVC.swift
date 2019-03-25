@@ -41,7 +41,7 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
             UserDefaults.standard.set(false, forKey: "breaking")
         }
         if UserDefaults.standard.value(forKey: "personalised") == nil{
-             UserDefaults.standard.set(false, forKey: "personalised")
+            UserDefaults.standard.set(false, forKey: "personalised")
         }
         sendDeviceDetails()
         settings.style.buttonBarItemsShouldFillAvailiableWidth = false
@@ -113,7 +113,7 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
                 newCell?.backgroundColor = colorConstants.whiteColor
             }
         }
-      
+        
     }
     
     func sendDeviceDetails(){
@@ -130,14 +130,14 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
     func saveFetchMenu(){
         var coredataRecordCount = DBManager().IsCoreDataEmpty(entity: "MenuHeadings")
         if coredataRecordCount != 0 {
-           fetchMenuFromDB()
+            fetchMenuFromDB()
         }
         else{
-        DBManager().saveMenu(){response in
-            if response == true{
-                self.fetchMenuFromDB()
+            DBManager().saveMenu(){response in
+                if response == true{
+                    self.fetchMenuFromDB()
+                }
             }
-        }
         }
     }
     
@@ -160,7 +160,7 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
                     }
                     self.subMenuArr.append(self.submenu)
                     self.fetchsubMenuTags(submenu: self.subMenuArr[self.HeadingRow][self.subMenuRow])
-                      UserDefaults.standard.set(self.subMenuArr[self.HeadingRow][self.subMenuRow], forKey: "submenu")
+                    UserDefaults.standard.set(self.subMenuArr[self.HeadingRow][self.subMenuRow], forKey: "submenu")
                     self.reloadPagerTabStripView()
                     
                 case .Failure(let error):
@@ -181,12 +181,12 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
             for tag in tagData{
                 tagArr.append(tag.hashTagName!)
             }
-             UserDefaults.standard.setValue(tagArr, forKey: "subMenuTags")
+            UserDefaults.standard.setValue(tagArr, forKey: "subMenuTags")
         case .Failure(let error):
             print(error)
         }
     }
-   
+    
     deinit {
         NotificationCenter.default.removeObserver(self, name: .darkModeEnabled, object: nil)
         NotificationCenter.default.removeObserver(self, name: .darkModeDisabled, object: nil)
@@ -208,14 +208,14 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
         return true
     }
     
-  
+    
     override func viewWillAppear(_ animated: Bool) {
-         super.viewWillAppear(animated)
+        super.viewWillAppear(animated)
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-       
+        
     }
     
     override func viewControllers(for pagerTabStripController: PagerTabStripViewController) -> [UIViewController] {
@@ -223,13 +223,13 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
         //Clear children viewcontrollers
         childrenVC.removeAll()
         if headingArr.count > 0{
-        for cat in subMenuArr[HeadingRow]
-        {
-            let childVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "HomeVC") as! HomeVC
-            childVC.tabBarTitle = cat
-            
-            childrenVC.append(childVC)
-        }
+            for cat in subMenuArr[HeadingRow]
+            {
+                let childVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "HomeVC") as! HomeVC
+                childVC.tabBarTitle = cat
+                
+                childrenVC.append(childVC)
+            }
         }
         else{
             let childVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "HomeVC") as! HomeVC
@@ -239,59 +239,33 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
         }
         return childrenVC
     }
-  
+    
     override func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: IndexPath) -> CGSize {
-           if (collectionView == buttonBarView) {
+        if (collectionView == buttonBarView) {
             return super.collectionView(collectionView,layout: UICollectionViewLayout.init(), sizeForItemAtIndexPath : indexPath)
         }
-           else{
-         let size: CGSize = headingArr[indexPath.row].size(withAttributes: nil)
-           // return CGSize(width:menuCV.frame.size.width/2, height: menuCV.frame.size.height)
+        else{
+            let size: CGSize = headingArr[indexPath.row].size(withAttributes: nil)
+            // return CGSize(width:menuCV.frame.size.width/2, height: menuCV.frame.size.height)
             if (UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad){
-                 return CGSize(width: size.width + 180.0, height: menuCV.bounds.size.height)
+                return CGSize(width: size.width + 180.0, height: menuCV.bounds.size.height)
             }else{
-           
-            return CGSize(width: size.width + 100.0, height: menuCV.bounds.size.height)
+                
+                return CGSize(width: size.width + 100.0, height: menuCV.bounds.size.height)
             }
         }
         
-        }
-//    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-//        let cell = ScenarioCollectionView.dequeueReusableCell(withReuseIdentifier: "ReuseScenarioCollectionViewCell", for: indexPath as IndexPath) as! ScenarioCollectionViewCell
-//
-//        if (indexPath.row == 0){
-//            collectionView.selectItem(at: indexPath, animated: true, scrollPosition: UICollectionViewScrollPosition.centeredHorizontally)
-//            cell.layer.borderColor=UIColor.gray.cgColor
-//        }else{
-//            cell.layer.borderColor=UIColor.white.cgColor
-//        }
-//        return cell
-//    }
-//
-//
-//    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-//        let cell = collectionView.cellForItem(at: indexPath)
-//        cell?.layer.borderColor = UIColor.gray.cgColor
-//    }
-//
-//    func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
-//        let cell = collectionView.cellForItem(at: indexPath as IndexPath)
-//        cell?.layer.borderColor = UIColor.white.cgColor
-//        collectionView.deselectItem(at: indexPath, animated: true)
-//    }
-//
- 
-
-  override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    }
+    
+    override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if (collectionView == buttonBarView) {
             return super.collectionView(collectionView, numberOfItemsInSection: section)
         }
         else{
-            
-            return headingArr.count != 0 ? headingArr.count  : 0
-           }
+            return headingArr.count
         }
-   
+    }
+    
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         if collectionView ==  menuCV {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "subMenuID", for: indexPath) as! submenuCVCell
@@ -299,41 +273,33 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
             cell.imgMenu.image =  UIImage(named: headingImg[indexPath.row])
             return cell
         }
-         else   {
+        else   {
             return super.collectionView(collectionView, cellForItemAt: indexPath)
         }
     }
-  override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-    if (collectionView == buttonBarView) {
-        subMenuRow = indexPath.row
-        UserDefaults.standard.set(subMenuArr[HeadingRow][indexPath.row], forKey: "submenu")
-        fetchsubMenuTags(submenu: subMenuArr[HeadingRow][indexPath.row])
-        var url = APPURL.ArticlesByTagsURL
-        for tag in tagArr {
-            url = url + "&tag=" + tag
-        }
-        if tagArr.count > 0{
-        UserDefaults.standard.set(url, forKey: "submenuURL")
+    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        if (collectionView == buttonBarView) {
+            subMenuRow = indexPath.row
+            UserDefaults.standard.set(subMenuArr[HeadingRow][indexPath.row], forKey: "submenu")
+            fetchsubMenuTags(submenu: subMenuArr[HeadingRow][indexPath.row])
+            var url = APPURL.ArticlesByTagsURL
+            for tag in tagArr {
+                url = url + "&tag=" + tag
+            }
+            if tagArr.count > 0{
+                UserDefaults.standard.set(url, forKey: "submenuURL")
+            }
+            else{
+                UserDefaults.standard.set("", forKey: "submenuURL")
+            }
+            return super.collectionView(collectionView,didSelectItemAt: indexPath)
+            
         }
         else{
-            UserDefaults.standard.set("", forKey: "submenuURL")
+            HeadingRow = indexPath.row
+            reloadPagerTabStripView()
+            
         }
-        return super.collectionView(collectionView,didSelectItemAt: indexPath)
-        
-    }
-    else{
-          HeadingRow = indexPath.row
-//         fetchsubMenuTags(submenu: subMenuArr[HeadingRow][0])
-//        var url = APPURL.ArticlesByTagsURL
-//        for tag in tagArr {
-//            url = url + "&tag=" + tag
-//        }
-//        print("url to get tag is: \(url)")
-//        UserDefaults.standard.set(url, forKey: "submenuURL")
-    
-        reloadPagerTabStripView()
-       
-    }
     }
 }
 
