@@ -29,8 +29,6 @@ class SettingsVC: UIViewController {
     }
     
     @IBAction func btnBackAction(_ sender: Any) {
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        let vc:HomeParentVC = storyboard.instantiateViewController(withIdentifier: "HomeParentID") as! HomeParentVC
-        present(vc, animated: true, completion: nil)
+     self.dismiss(animated: false)
     }
 }

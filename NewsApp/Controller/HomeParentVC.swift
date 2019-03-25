@@ -8,11 +8,12 @@
 
 import UIKit
 import XLPagerTabStrip
-import Floaty
 import NightNight
 
-class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
-    
+class HomeParentVC: ButtonBarPagerTabStripViewController{
+    @IBOutlet weak var btnSearch: UIButton!
+    @IBOutlet weak var viewOptions: UIView!
+    @IBOutlet weak var btnSettings: UIButton!
     @IBOutlet weak var menuCV: UICollectionView!
     @IBOutlet weak var viewAppTitle: UIView!
     @IBOutlet weak var lblAppName: UILabel!
@@ -30,9 +31,12 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        viewOptions.isHidden = true
         menuCV.allowsMultipleSelection = false
+        viewOptions.layer.borderWidth = 0.5
+        viewOptions.layer.borderColor =  UIColor.darkGray.cgColor
         if UserDefaults.standard.value(forKey: "deviceToken") == nil{
-            UserDefaults.standard.set("41ea0aaa15323ae5012992392e4edd6b8a6ee4547a8dc6fd1f3b31aab9839208", forKey: "deviceToken")
+  UserDefaults.standard.set("41ea0aaa15323ae5012992392e4edd6b8a6ee4547a8dc6fd1f3b31aab9839208", forKey: "deviceToken")
         }
         if UserDefaults.standard.value(forKey: "daily") == nil{
             UserDefaults.standard.set(false, forKey: "daily")
@@ -67,32 +71,6 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
             buttonBarView.selectedBar.backgroundColor = .red
         }
         lblAppName.text = Constants.AppName
-        let floaty = Floaty()
-        floaty.itemButtonColor = colorConstants.redColor
-        floaty.buttonColor = colorConstants.redColor
-        floaty.plusColor = .black
-        
-        floaty.addItem("  Search  ", icon: UIImage(named: AssetConstants.search)!) { item in
-            floaty.autoCloseOnTap = true
-            let storyboard = UIStoryboard(name: "Main", bundle: nil)
-            let searchvc:SearchVC = storyboard.instantiateViewController(withIdentifier: "SearchID") as! SearchVC
-            self.present(searchvc, animated: true, completion: nil)
-        }
-        
-        floaty.addItem("  Settings  ", icon: UIImage(named: AssetConstants.settings)!) { item in
-            floaty.autoCloseOnTap = true
-            let storyboard = UIStoryboard(name: "Main", bundle: nil)
-            let settingvc:SettingsVC = storyboard.instantiateViewController(withIdentifier: "SettingsID") as! SettingsVC
-            self.present(settingvc, animated: true, completion: nil)
-        }
-        
-        floaty.addItem("  Bookmark  ", icon: UIImage(named: AssetConstants.bookmark)!) { item in
-            floaty.autoCloseOnTap = true
-            let storyboard = UIStoryboard(name: "Main", bundle: nil)
-            let bookmarkvc:BookmarkVC = storyboard.instantiateViewController(withIdentifier: "BookmarkID") as! BookmarkVC
-            self.present(bookmarkvc, animated: true, completion: nil)
-        }
-        self.view.addSubview(floaty)
         changeCurrentIndexProgressive = {[weak self](oldCell:ButtonBarViewCell?, newCell: ButtonBarViewCell?, progressPercentage:CGFloat, changeCurrentIndex:Bool, animated:Bool)-> Void in
             guard changeCurrentIndex == true else {return}
             let darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
@@ -300,6 +278,30 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
             reloadPagerTabStripView()
             
         }
+    }
+    
+    @IBAction func btnSettingsOptions(_ sender: Any) {
+        if viewOptions.isHidden == true{
+            viewOptions.isHidden = false
+        }else{
+            viewOptions.isHidden = true
+        }
+    }
+    @IBAction func btnSettingsActn(_ sender: Any) {
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let settingvc:SettingsVC = storyboard.instantiateViewController(withIdentifier: "SettingsID") as! SettingsVC
+        self.present(settingvc, animated: true, completion: nil)
+    }
+    
+    @IBAction func btnBookmarkActn(_ sender: Any) {
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let bookmarkvc:BookmarkVC = storyboard.instantiateViewController(withIdentifier: "BookmarkID") as! BookmarkVC
+        self.present(bookmarkvc, animated: true, completion: nil)
+    }
+    @IBAction func btnSeachActn(_ sender: Any) {
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let searchvc:SearchVC = storyboard.instantiateViewController(withIdentifier: "SearchID") as! SearchVC
+        self.present(searchvc, animated: true, completion: nil)
     }
 }
 
