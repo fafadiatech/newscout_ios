@@ -228,11 +228,13 @@ class HomeParentVC: ButtonBarPagerTabStripViewController{
             if (UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad){
                 return CGSize(width: size.width + 180.0, height: menuCV.bounds.size.height)
             }else{
-                
-                return CGSize(width: size.width + 100.0, height: menuCV.bounds.size.height)
-            }
-        }
-        
+                let label = UILabel(frame: CGRect.zero)
+                label.text = headingArr[indexPath.item]
+                label.sizeToFit()
+                 return CGSize(width: label.frame.size.width + 100.0, height: menuCV.bounds.size.height)
+               // return CGSize(width: size.width + 100.0, height: menuCV.bounds.size.height)
+    }
+    }
     }
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
