@@ -1220,8 +1220,9 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
     
     @IBAction func btnSourceActn(_ sender: Any) {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        let bookmarkvc:BookmarkVC = storyboard.instantiateViewController(withIdentifier: "BookmarkID") as! BookmarkVC
-        self.present(bookmarkvc, animated: true, completion: nil)
+        let sourcevc:SourceVC = storyboard.instantiateViewController(withIdentifier: "SourceID") as! SourceVC
+        sourcevc.url = APPURL.SourceURL + btnSource.titleLabel
+        self.present(sourcevc, animated: true, completion: nil)
     }
     
     override func didReceiveMemoryWarning() {

@@ -141,6 +141,7 @@ struct APPURL {
         static let Logout = Domains.version + "logout/"
         static let Categories = Domains.version + "categories"
         static let Search = Domains.version + "article/search/?q="
+        static let Source = Domains.version + "article/search/?source="
         static let recommendation = Domains.version + "articles/" // + "\(articleId)" + "/recommendations/"
         static let bookmark = Domains.version + "articles/bookmark/"
         static let likeDislike =  Domains.version + "articles/vote/"
@@ -166,6 +167,7 @@ struct APPURL {
     static let LogoutURL =  Domains.Local + Routes.Logout
     static let CategoriesURL =  Domains.Local + Routes.Categories
     static let SearchURL =  Domains.Local + Routes.Search
+    static let SourceURL = Domains.Local + Routes.Source
     static let recommendationURL = Domains.Local + Routes.recommendation
     static let bookmarkURL = Domains.Local + Routes.bookmark
     static let likeDislikeURL = Domains.Local + Routes.likeDislike
