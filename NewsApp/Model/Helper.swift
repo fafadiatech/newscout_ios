@@ -20,10 +20,10 @@ func timeAgoSinceDate(_ date:Date, numericDates:Bool = false) -> String {
     let components = calendar.dateComponents(unitFlags, from: earliest,  to: latest)
     
     if (components.year! >= 2) {
-        return "\(components.year!) years ago"
+        return "almost \(components.year!) years ago"
     } else if (components.year! >= 1){
         if (numericDates){
-            return "1yr ago"
+            return "1 year ago"
         } else {
             return "over a year ago"
         }
@@ -31,7 +31,7 @@ func timeAgoSinceDate(_ date:Date, numericDates:Bool = false) -> String {
         return "\(components.month!) months ago"
     } else if (components.month! >= 1){
         if (numericDates){
-            return "1mo ago"
+            return "1 month ago"
         } else {
             return "about a month ago"
         }
@@ -39,38 +39,38 @@ func timeAgoSinceDate(_ date:Date, numericDates:Bool = false) -> String {
         return "\(components.weekOfYear!) weeks ago"
     } else if (components.weekOfYear! >= 1){
         if (numericDates){
-            return "1w ago"
+            return "1 week ago"
         } else {
-            return "Last week"
+            return "a week ago"
         }
     } else if (components.day! >= 2) {
-        return "\(components.day!)days ago"
+        return "\(components.day!) days ago"
     } else if (components.day! >= 1){
         if (numericDates){
-            return "1d ago"
+            return "1 day ago"
         } else {
-            return "Yesterday"
+            return "yesterday"
         }
     } else if (components.hour! >= 2) {
         return "\(components.hour!) hours ago"
     } else if (components.hour! >= 1){
         if (numericDates){
-            return "1hour ago"
+            return "1 hour ago"
         } else {
-            return "An hour ago"
+            return "about an hour ago"
         }
     } else if (components.minute! >= 2) {
         return "\(components.minute!) minutes ago"
     } else if (components.minute! >= 1){
         if (numericDates){
-            return "1min ago"
+            return "one minute ago"
         } else {
-            return "A min ago"
+            return "one minute ago"
         }
     } else if (components.second! >= 3) {
-        return "\(components.second!) sec ago"
+        return "\(components.second!) seconds ago"
     } else {
-        return "Just now"
+        return "just now"
     }
 }
 
