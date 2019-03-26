@@ -34,6 +34,7 @@ class HomeVC: UIViewController{
     var isAPICalled = false
     override func viewDidLoad(){
         super.viewDidLoad()
+        HomeNewsTV.tableFooterView = UIView(frame: .zero)
         self.activityIndicator.startAnimating()
         lblNonews.isHidden = true
         NotificationCenter.default.addObserver(self, selector: #selector(darkModeEnabled(_:)), name: .darkModeEnabled, object: nil)
@@ -253,7 +254,7 @@ class HomeVC: UIViewController{
 
 extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelegate{
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return (ShowArticle.count != 0) ? self.ShowArticle.count : 0
+        return (ShowArticle.count > 0) ? self.ShowArticle.count : 0
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

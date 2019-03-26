@@ -46,11 +46,11 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
     @IBOutlet weak var viewLikeDislikeBottom: NSLayoutConstraint!
     @IBOutlet weak var viewBack: UIView!
     @IBOutlet weak var imgScrollView: UIScrollView!
-    
     @IBOutlet weak var viewImgContainerTop: NSLayoutConstraint!
     @IBOutlet weak var viewImgContainer: UIView!
     @IBOutlet weak var viewContainerTop: NSLayoutConstraint!
-    
+    @IBOutlet weak var btnSource: UIButton!
+    @IBOutlet weak var btnSourceBottomConstraint: NSLayoutConstraint!
     
     var btnPlay = UIButton(type: .custom)
     let imageCache = NSCache<NSString, UIImage>()
@@ -90,6 +90,7 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        lblSource.isHidden = true
         WKWebView.navigationDelegate = self
         filterRecommendation()
         btnPlayVideo.isHidden = true
@@ -157,8 +158,6 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
         let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapped(gestureRecognizer:)))
         viewNewsArea.addGestureRecognizer(tapRecognizer)
         tapRecognizer.delegate = self as UIGestureRecognizerDelegate
-        
-        
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -248,10 +247,10 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
     }
     
     func addsourceConstraint(){
-        if lblSourceBottomConstraint != nil && lblTimeAgoBottomConstraint != nil {
-            NSLayoutConstraint.deactivate([lblSourceBottomConstraint])
+        if btnSourceBottomConstraint != nil && lblTimeAgoBottomConstraint != nil {
+            NSLayoutConstraint.deactivate([btnSourceBottomConstraint])
             NSLayoutConstraint.deactivate([lblTimeAgoBottomConstraint])
-            lblSourceBottomConstraint = NSLayoutConstraint (item: lblSource,
+            btnSourceBottomConstraint = NSLayoutConstraint (item: btnSource,
                                                             attribute: NSLayoutAttribute.bottom,
                                                             relatedBy: NSLayoutRelation.equal,
                                                             toItem: viewLikeDislike,
@@ -266,7 +265,7 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
                                                              multiplier: 1,
                                                              constant: -10)
             NSLayoutConstraint.activate([lblTimeAgoBottomConstraint])
-            NSLayoutConstraint.activate([lblSourceBottomConstraint])
+            NSLayoutConstraint.activate([btnSourceBottomConstraint])
         }
     }
     
@@ -303,10 +302,10 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
     }
     
     func addLandscapeConstraints(){
-        if lblSourceBottomConstraint != nil && lblTimeAgoBottomConstraint != nil {
-            NSLayoutConstraint.deactivate([lblSourceBottomConstraint])
+        if btnSourceBottomConstraint != nil && lblTimeAgoBottomConstraint != nil {
+            NSLayoutConstraint.deactivate([btnSourceBottomConstraint])
             NSLayoutConstraint.deactivate([lblTimeAgoBottomConstraint])
-            lblSourceBottomConstraint = NSLayoutConstraint(item:lblSource,
+            btnSourceBottomConstraint = NSLayoutConstraint(item:btnSource,
                                                            attribute: NSLayoutAttribute.bottom,
                                                            relatedBy: NSLayoutRelation.equal,
                                                            toItem: suggestedView,
@@ -321,7 +320,7 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
                                                              multiplier: 1,
                                                              constant: -10)
             NSLayoutConstraint.activate([lblTimeAgoBottomConstraint])
-            NSLayoutConstraint.activate([lblSourceBottomConstraint])
+            NSLayoutConstraint.activate([btnSourceBottomConstraint])
         }
         if viewLikeDislikeBottom != nil{
             NSLayoutConstraint.deactivate([viewLikeDislikeBottom])
@@ -479,18 +478,21 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
         if textSizeSelected == 0{
             lblNewsHeading.font = FontConstants.smallFontHeadingBold
             lblSource.font = FontConstants.smallFontContentMedium
+            btnSource.titleLabel?.font =  FontConstants.smallFontContentMedium
             lblTimeAgo.font = FontConstants.smallFontContentMedium
             txtViewNewsDesc.font = FontConstants.smallFontTitle
         }
         else if textSizeSelected == 2{
             lblNewsHeading.font = FontConstants.LargeFontHeadingBold
             lblSource.font = FontConstants.LargeFontContentMedium
+            btnSource.titleLabel?.font =  FontConstants.LargeFontContentMedium
             lblTimeAgo.font = FontConstants.LargeFontContentMedium
             txtViewNewsDesc.font = FontConstants.LargeFontTitle
         }
         else{
             lblNewsHeading.font = FontConstants.NormalFontHeadingBold
-            lblSource.font = FontConstants.NormalFontContentMedium 
+            lblSource.font = FontConstants.NormalFontContentMedium
+            btnSource.titleLabel?.font =  FontConstants.NormalFontContentMedium
             lblTimeAgo.font = FontConstants.NormalFontContentMedium
             txtViewNewsDesc.font = FontConstants.NormalFontTitle
         }
@@ -667,8 +669,8 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
             articleId = Int(currentArticle.article_id)
             lblNewsHeading.text = currentArticle.title
             txtViewNewsDesc.text = currentArticle.blurb
-            lblSource.text = currentArticle.source
-            
+          //  lblSource.text = currentArticle.source
+            btnSource.setTitle(currentArticle.source, for: .normal)
             sourceURL = currentArticle.source_url!
             if currentArticle.imageURL != ""{
                 imgNews.sd_setImage(with: URL(string: currentArticle.imageURL!), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
@@ -1214,6 +1216,12 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
     }
     
     @IBAction func PlayButtonTapped() -> Void {
+    }
+    
+    @IBAction func btnSourceActn(_ sender: Any) {
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let bookmarkvc:BookmarkVC = storyboard.instantiateViewController(withIdentifier: "BookmarkID") as! BookmarkVC
+        self.present(bookmarkvc, animated: true, completion: nil)
     }
     
     override func didReceiveMemoryWarning() {
