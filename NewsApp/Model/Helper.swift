@@ -25,7 +25,7 @@ func timeAgoSinceDate(_ date:Date, numericDates:Bool = false) -> String {
         if (numericDates){
             return "1yr ago"
         } else {
-            return "Last year"
+            return "over a year ago"
         }
     } else if (components.month! >= 2) {
         return "\(components.month!) months ago"
@@ -33,7 +33,7 @@ func timeAgoSinceDate(_ date:Date, numericDates:Bool = false) -> String {
         if (numericDates){
             return "1mo ago"
         } else {
-            return "Last month"
+            return "about a month ago"
         }
     } else if (components.weekOfYear! >= 2) {
         return "\(components.weekOfYear!) weeks ago"
@@ -44,7 +44,7 @@ func timeAgoSinceDate(_ date:Date, numericDates:Bool = false) -> String {
             return "Last week"
         }
     } else if (components.day! >= 2) {
-        return "\(components.day!)d ago"
+        return "\(components.day!)days ago"
     } else if (components.day! >= 1){
         if (numericDates){
             return "1d ago"

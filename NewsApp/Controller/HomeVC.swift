@@ -285,17 +285,31 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
             let currentArticle = sortedData[indexPath.row]
             cell.lblNewsHeading.text = currentArticle.title
             cell.lblSource.text = currentArticle.source
-            
+            var dateSubString = ""
             if ((currentArticle.published_on?.count)!) <= 20{
                 if !(currentArticle.published_on?.contains("Z"))!{
                     currentArticle.published_on?.append("Z")
                 }
+                let newDate = dateFormatter.date(from: currentArticle.published_on!)
+                if newDate != nil{
+                    let agoDate = try Helper().timeAgoSinceDate(newDate!)
+                    cell.lblTimesAgo.text = agoDate
+                }
             }
-            let newDate = dateFormatter.date(from: currentArticle.published_on!)
-            if newDate != nil{
-                let agoDate = try Helper().timeAgoSinceDate(newDate!)
-                cell.lblTimesAgo.text = agoDate
+            else{
+                dateSubString = String(currentArticle.published_on!.prefix(19))
+                if !(dateSubString.contains("Z")){
+                    dateSubString.append("Z")
+                }
+                let newDate = dateFormatter.date(from: dateSubString
+                )
+                if newDate != nil{
+                    let agoDate = try Helper().timeAgoSinceDate(newDate!)
+                    cell.lblTimesAgo.text = agoDate
+                }
             }
+            
+           
             
             cell.imgNews.sd_setImage(with: URL(string: currentArticle.imageURL!), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
         }

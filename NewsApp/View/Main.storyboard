@@ -292,13 +292,13 @@
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="soe-Oc-voS">
-                                                            <rect key="frame" x="359" y="126.5" width="0.0" height="0.0"/>
+                                                            <rect key="frame" x="260" y="126.5" width="0.0" height="0.0"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
-                                                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="NoImage" translatesAutoresizingMaskIntoConstraints="NO" id="2Fd-EF-bZo">
-                                                            <rect key="frame" x="276.5" y="10" width="82.5" height="82"/>
+                                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="NoImage" translatesAutoresizingMaskIntoConstraints="NO" id="2Fd-EF-bZo">
+                                                            <rect key="frame" x="276.5" y="10" width="82.5" height="116.5"/>
                                                         </imageView>
                                                     </subviews>
                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -307,6 +307,7 @@
                                                             <variation key="heightClass=regular-widthClass=regular" constant="4"/>
                                                         </constraint>
                                                         <constraint firstItem="WNE-8O-iT3" firstAttribute="bottom" secondItem="soe-Oc-voS" secondAttribute="bottom" id="4fp-sj-1Lh"/>
+                                                        <constraint firstItem="2Fd-EF-bZo" firstAttribute="bottom" secondItem="soe-Oc-voS" secondAttribute="top" id="5oR-oC-beb"/>
                                                         <constraint firstItem="x2a-oq-Xmy" firstAttribute="width" secondItem="1Nv-7G-jre" secondAttribute="width" multiplier="0.75" id="Eem-aX-dqN">
                                                             <variation key="heightClass=regular-widthClass=compact" constant="-2"/>
                                                             <variation key="heightClass=regular-widthClass=regular" constant="0.0"/>
@@ -316,7 +317,7 @@
                                                         <constraint firstItem="soe-Oc-voS" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="WNE-8O-iT3" secondAttribute="trailing" constant="8" symbolic="YES" id="Quu-R0-6tX"/>
                                                         <constraint firstItem="x2a-oq-Xmy" firstAttribute="top" secondItem="1Nv-7G-jre" secondAttribute="top" constant="10" id="SxB-2y-UeI"/>
                                                         <constraint firstAttribute="bottom" secondItem="soe-Oc-voS" secondAttribute="bottom" constant="10" id="Utr-j1-g4o"/>
-                                                        <constraint firstItem="soe-Oc-voS" firstAttribute="trailing" secondItem="2Fd-EF-bZo" secondAttribute="trailing" id="afu-Dq-o4O">
+                                                        <constraint firstItem="soe-Oc-voS" firstAttribute="trailing" secondItem="x2a-oq-Xmy" secondAttribute="trailing" id="afu-Dq-o4O">
                                                             <variation key="heightClass=regular-widthClass=regular" constant="0.0"/>
                                                         </constraint>
                                                         <constraint firstItem="2Fd-EF-bZo" firstAttribute="width" secondItem="1Nv-7G-jre" secondAttribute="width" multiplier="0.22" id="h4X-vy-T7S">
@@ -334,6 +335,7 @@
                                                     <variation key="default">
                                                         <mask key="constraints">
                                                             <exclude reference="K6V-1I-GAz"/>
+                                                            <exclude reference="15F-Iz-IrN"/>
                                                         </mask>
                                                     </variation>
                                                     <variation key="widthClass=compact">
