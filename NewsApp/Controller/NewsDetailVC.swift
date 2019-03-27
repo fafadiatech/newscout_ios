@@ -1221,7 +1221,8 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
     @IBAction func btnSourceActn(_ sender: Any) {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let sourcevc:SourceVC = storyboard.instantiateViewController(withIdentifier: "SourceID") as! SourceVC
-        sourcevc.url = APPURL.SourceURL + btnSource.titleLabel
+        sourcevc.url = APPURL.SourceURL + btnSource.currentTitle!
+        sourcevc.source = btnSource.currentTitle!
         self.present(sourcevc, animated: true, completion: nil)
     }
     
