@@ -51,6 +51,10 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
     @IBOutlet weak var viewContainerTop: NSLayoutConstraint!
     @IBOutlet weak var btnSource: UIButton!
     @IBOutlet weak var btnSourceBottomConstraint: NSLayoutConstraint!
+    @IBOutlet weak var viewReadMore: UIView!
+    @IBOutlet weak var btnShuffle: UIButton!
+    @IBOutlet weak var btnReadMore: UIButton!
+    @IBOutlet weak var btnMoreStories: UIButton!
     
     var btnPlay = UIButton(type: .custom)
     let imageCache = NSCache<NSString, UIImage>()
@@ -90,8 +94,13 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        lblSource.isHidden = true
+        btnReadMore.setTitleColor(.black, for: UIControlState.normal)
+        suggestedView.isHidden = true
         WKWebView.navigationDelegate = self
+        btnReadMore.backgroundColor = .clear
+        btnReadMore.layer.cornerRadius = 5
+        btnReadMore.layer.borderWidth = 1
+        btnReadMore.layer.borderColor = UIColor.gray.cgColor
         filterRecommendation()
         btnPlayVideo.isHidden = true
         imgScrollView.delegate = self
@@ -103,23 +112,23 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
         activityIndicator.progress = 2.0
         imgNews.addSubview(activityIndicator)
         txtViewNewsDesc.textContainer.lineBreakMode = NSLineBreakMode.byTruncatingTail
-        if UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad && statusBarOrientation.isPortrait{
+       /* if UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad && statusBarOrientation.isPortrait{
             viewLikeDislike.isHidden = false
             viewBack.isHidden = false
-            addsourceConstraint()
+            //addsourceConstraint()
         }
         else if UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad && statusBarOrientation.isLandscape {
             viewLikeDislike.isHidden = true
             viewBack.isHidden = true
-            addImageConstaints()
-            addLandscapeConstraints()
+            //addImageConstaints()
+            //addLandscapeConstraints()
         }
         else{
             viewLikeDislike.isHidden = true
             viewBack.isHidden = true
-            addPotraitConstraint()
-            addImageConstaints()
-        }
+            //addPotraitConstraint()
+            //addImageConstaints()
+        }*/
         viewLikeDislike.backgroundColor = colorConstants.redColor
         viewBack.backgroundColor = colorConstants.redColor
         ViewWebContainer.isHidden = true
@@ -142,10 +151,6 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
         let swipeUp = UISwipeGestureRecognizer(target: self, action: #selector(self.respondToSwipeGesture))
         swipeUp.direction = UISwipeGestureRecognizerDirection.up
         self.newsView.addGestureRecognizer(swipeUp)
-        
-        let swipeLeft = UISwipeGestureRecognizer(target: self, action: #selector(self.respondToSwipeGesture))
-        swipeLeft.direction = UISwipeGestureRecognizerDirection.left
-        self.newsView.addGestureRecognizer(swipeLeft)
         
         let swipeRight = UISwipeGestureRecognizer(target: self, action: #selector(self.respondToSwipeGesture))
         swipeRight.direction = UISwipeGestureRecognizerDirection.right
@@ -346,7 +351,7 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
         
         super.viewWillTransition(to: size, with: coordinator)
         
-        if UIDevice.current.orientation.isLandscape {
+       /* if UIDevice.current.orientation.isLandscape {
             print(UIDevice.current.orientation)
             viewLikeDislike.isHidden = true
             viewBack.isHidden = true
@@ -363,7 +368,7 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
             else{
                 addPotraitConstraint()
             }
-        }
+        }*/
     }
     
     @objc private func darkModeEnabled(_ notification: Notification){
@@ -417,8 +422,6 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
         viewNewsArea.backgroundColor = colorConstants.grayBackground1
         txtViewNewsDesc.backgroundColor = colorConstants.grayBackground1
         lblNewsHeading.textColor = colorConstants.whiteColor
-        lblSource.textColor = colorConstants.whiteColor
-        lblTimeAgo.textColor = colorConstants.whiteColor
         txtViewNewsDesc.textColor = colorConstants.whiteColor
         viewWebTitle.backgroundColor = colorConstants.grayBackground3
         lblWebSource.textColor = .white
@@ -435,7 +438,7 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
     }
     
     @objc func tapped(gestureRecognizer: UITapGestureRecognizer) {
-        if UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.phone {
+        /*if UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.phone {
             if viewLikeDislike.isHidden == true{
                 viewLikeDislike.isHidden = false
                 viewBack.isHidden = false
@@ -460,7 +463,7 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
                     viewBack.isHidden = true
                 }
             }
-        }
+        }*/
     }
     
     override var prefersStatusBarHidden: Bool {
@@ -477,23 +480,17 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
         
         if textSizeSelected == 0{
             lblNewsHeading.font = FontConstants.smallFontHeadingBold
-            lblSource.font = FontConstants.smallFontContentMedium
             btnSource.titleLabel?.font =  FontConstants.smallFontContentMedium
-            lblTimeAgo.font = FontConstants.smallFontContentMedium
             txtViewNewsDesc.font = FontConstants.smallFontTitle
         }
         else if textSizeSelected == 2{
             lblNewsHeading.font = FontConstants.LargeFontHeadingBold
-            lblSource.font = FontConstants.LargeFontContentMedium
             btnSource.titleLabel?.font =  FontConstants.LargeFontContentMedium
-            lblTimeAgo.font = FontConstants.LargeFontContentMedium
             txtViewNewsDesc.font = FontConstants.LargeFontTitle
         }
         else{
             lblNewsHeading.font = FontConstants.NormalFontHeadingBold
-            lblSource.font = FontConstants.NormalFontContentMedium
             btnSource.titleLabel?.font =  FontConstants.NormalFontContentMedium
-            lblTimeAgo.font = FontConstants.NormalFontContentMedium
             txtViewNewsDesc.font = FontConstants.NormalFontTitle
         }
     }
@@ -509,12 +506,13 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
             switch swipeGesture.direction {
             case UISwipeGestureRecognizerDirection.right:
                 ViewWebContainer.isHidden = true
-                viewLikeDislike.isHidden = false
-                viewBack.isHidden = false
+//                viewLikeDislike.isHidden = false
+//                viewBack.isHidden = false
                 
             case UISwipeGestureRecognizerDirection.down:
                 if newsCurrentIndex > 0
                 {
+                    suggestedView.isHidden = true
                     newsCurrentIndex = newsCurrentIndex - 1
                     ShowNews(currentIndex : newsCurrentIndex)
                     filterRecommendation()
@@ -525,27 +523,12 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
                 else{
                     self.view.makeToast("No more news to show", duration: 1.0, position: .center)
                 }
-            case UISwipeGestureRecognizerDirection.left:
-                WKWebView.addSubview(activityIndicator)
-                ViewWebContainer.isHidden = false
-                viewLikeDislike.isHidden = true
-                viewBack.isHidden = true
-                let url = URL(string: sourceURL)
-                print(sourceURL)
-                let domain = url?.host
-                lblWebSource.text = "\(domain!)"
-                transition.type = kCATransitionPush
-                transition.subtype = kCATransitionFromRight
-                view.window!.layer.add(transition, forKey: kCATransition)
-                let myURL = URL(string: sourceURL)!
-                let myRequest = URLRequest(url: myURL)
-                
-                WKWebView.load(myRequest)
-                
+               
             case UISwipeGestureRecognizerDirection.up:
                 if newsCurrentIndex < indexCount - 1
                 {
                     newsCurrentIndex = newsCurrentIndex + 1
+                    suggestedView.isHidden = true
                     ShowNews(currentIndex : newsCurrentIndex)
                     filterRecommendation()
                     transition.type = kCATransitionPush
@@ -662,15 +645,14 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
             currentEntity = "ShowArticle"
             let currentArticle = ShowArticle[currentIndex]
             let newDate = dateFormatter.date(from: currentArticle.published_on!)
+            var agoDate = ""
             if newDate != nil{
-                let agoDate = Helper().timeAgoSinceDate(newDate!)
-                lblTimeAgo.text = agoDate
+                 agoDate = Helper().timeAgoSinceDate(newDate!)
             }
             articleId = Int(currentArticle.article_id)
             lblNewsHeading.text = currentArticle.title
             txtViewNewsDesc.text = currentArticle.blurb
-          //  lblSource.text = currentArticle.source
-            btnSource.setTitle(currentArticle.source, for: .normal)
+            btnSource.setTitle("\(agoDate)" + " via " + currentArticle.source!, for: .normal)
             sourceURL = currentArticle.source_url!
             if currentArticle.imageURL != ""{
                 imgNews.sd_setImage(with: URL(string: currentArticle.imageURL!), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
@@ -877,8 +859,7 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
             articleId = Int(currentArticle.article_id)
             lblNewsHeading.text = currentArticle.title
             txtViewNewsDesc.text = currentArticle.blurb
-            lblSource.text = currentArticle.source
-            lblTimeAgo.text = agoDate
+            btnSource.setTitle(currentArticle.source! + agoDate, for: .normal)
             sourceURL = currentArticle.source_url!
             if currentArticle.imageURL != ""{
                 imgNews.sd_setImage(with: URL(string: currentArticle.imageURL!), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
@@ -1185,7 +1166,8 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
             self.dismiss(animated: false)
         }
         else if isSearch == "recommend" {
-            self.view.window!.rootViewController?.dismiss(animated: false, completion: nil)
+            //self.view.window!.rootViewController?.dismiss(animated: false, completion: nil)
+            self.dismiss(animated: false)
         }
         else if isSearch == "bookmark"{
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
@@ -1206,8 +1188,8 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
     
     @IBAction func btnWebBackAction(_ sender: Any) {
         ViewWebContainer.isHidden = true
-        viewLikeDislike.isHidden = false
-        viewBack.isHidden = false
+//        viewLikeDislike.isHidden = false
+//        viewBack.isHidden = false
     }
     
     //btn Back Action
@@ -1221,11 +1203,53 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
     @IBAction func btnSourceActn(_ sender: Any) {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let sourcevc:SourceVC = storyboard.instantiateViewController(withIdentifier: "SourceID") as! SourceVC
-        sourcevc.url = APPURL.SourceURL + btnSource.currentTitle!
-        sourcevc.source = btnSource.currentTitle!
+        sourcevc.url = APPURL.SourceURL + ShowArticle[newsCurrentIndex].source!
+        sourcevc.source = ShowArticle[newsCurrentIndex].source!
         self.present(sourcevc, animated: true, completion: nil)
     }
     
+    @IBAction func btnReadMoreActn(_ sender: Any) {
+        WKWebView.addSubview(activityIndicator)
+        ViewWebContainer.isHidden = false
+        let url = URL(string: sourceURL)
+        print(sourceURL)
+        let domain = url?.host
+        lblWebSource.text = "\(domain!)"
+        let myURL = URL(string: sourceURL)!
+        let myRequest = URLRequest(url: myURL)
+        WKWebView.load(myRequest)
+    }
+    
+    @IBAction func btnShuffleActn(_ sender: Any) {
+//            let result = DBManager().FetchDataFromDB(entity: "NewsArticle")
+//            switch result {
+//            case .Success(let DBData) :
+//                if DBData.count == 0{
+//                    let randomInt = Int.random(in: 0..<DBData.count)
+//                    activityIndicator.stopAnimating()
+//                    ShowNews(currentIndex: randomInt)
+//                }
+//            case .Failure(let errorMsg) : break
+//            }
+//
+        if newsCurrentIndex < ShowArticle.count - 2{
+            newsCurrentIndex = newsCurrentIndex + 2
+        ShowNews(currentIndex: newsCurrentIndex)
+        }else{
+            newsCurrentIndex = newsCurrentIndex - 2
+            ShowNews(currentIndex: newsCurrentIndex)
+        }
+    }
+    
+    @IBAction func btnMoreStoriesActn(_ sender: Any) {
+        if suggestedView.isHidden == true{
+        suggestedView.isHidden = false
+            btnMoreStories.setTitleColor(.white, for: .normal)
+        }else{
+            btnMoreStories.setTitleColor(.black, for: .normal)
+           suggestedView.isHidden = true
+        }
+    }
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }

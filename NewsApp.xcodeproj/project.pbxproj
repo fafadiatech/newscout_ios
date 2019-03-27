@@ -39,6 +39,7 @@
 		265E218621649ACE0053E5A0 /* SettingsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 265E218521649ACE0053E5A0 /* SettingsVC.swift */; };
 		2663DE27224A416A005DCFB5 /* SourceVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2663DE26224A416A005DCFB5 /* SourceVC.swift */; };
 		2663DE29224B4131005DCFB5 /* sourceTVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2663DE28224B4131005DCFB5 /* sourceTVCell.swift */; };
+		2663DE2B224B9A3B005DCFB5 /* ShuffleDetailVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2663DE2A224B9A3B005DCFB5 /* ShuffleDetailVC.swift */; };
 		266C6B302158C2B6009A0A9D /* SearchResultTVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 266C6B2F2158C2B6009A0A9D /* SearchResultTVCell.swift */; };
 		26718D0F21CD0117009CC66E /* HomeUITest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26718D0E21CD0117009CC66E /* HomeUITest.swift */; };
 		26718D1121CD01A0009CC66E /* SignUpUITest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26718D1021CD01A0009CC66E /* SignUpUITest.swift */; };
@@ -150,6 +151,7 @@
 		265E218521649ACE0053E5A0 /* SettingsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsVC.swift; sourceTree = "<group>"; };
 		2663DE26224A416A005DCFB5 /* SourceVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourceVC.swift; sourceTree = "<group>"; };
 		2663DE28224B4131005DCFB5 /* sourceTVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = sourceTVCell.swift; sourceTree = "<group>"; };
+		2663DE2A224B9A3B005DCFB5 /* ShuffleDetailVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShuffleDetailVC.swift; sourceTree = "<group>"; };
 		266C6B2F2158C2B6009A0A9D /* SearchResultTVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultTVCell.swift; sourceTree = "<group>"; };
 		26718D0E21CD0117009CC66E /* HomeUITest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeUITest.swift; sourceTree = "<group>"; };
 		26718D1021CD01A0009CC66E /* SignUpUITest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpUITest.swift; sourceTree = "<group>"; };
@@ -388,6 +390,7 @@
 		421ADFEA2156553500C00F6F /* Controller */ = {
 			isa = PBXGroup;
 			children = (
+				2663DE2A224B9A3B005DCFB5 /* ShuffleDetailVC.swift */,
 				2663DE26224A416A005DCFB5 /* SourceVC.swift */,
 				269A53D522016D6B0031DD78 /* BookmarkDetailVC.swift */,
 				4266D16221EEF4DA00CBD61A /* AboutUsVC.swift */,
@@ -807,6 +810,7 @@
 				260FB9CD2221656F008B0291 /* Media+CoreDataClass.swift in Sources */,
 				423F0A502170CF19001D52B5 /* ChangePasswordVC.swift in Sources */,
 				7E1D1399216CC79000FE342A /* HomeParentVC.swift in Sources */,
+				2663DE2B224B9A3B005DCFB5 /* ShuffleDetailVC.swift in Sources */,
 				268C112321E4C0F300C76B9C /* BookmarkVC.swift in Sources */,
 				26C24723219DA6C200A87A3B /* ForgotPasswordVC.swift in Sources */,
 				421ADFEE2156575300C00F6F /* HomeNewsTVCell.swift in Sources */,
