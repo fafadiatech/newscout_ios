@@ -299,7 +299,21 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
         if ShowArticle.count != 0{
             let currentArticle = sortedData[indexPath.row]
             cell.lblNewsHeading.text = currentArticle.title
-            
+            var sourceColor = UIColor()
+          
+            let darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
+            if  darkModeStatus == true{
+                cell.ViewCellBackground.backgroundColor = colorConstants.grayBackground2
+                cell.lblSource.textColor = colorConstants.nightModeText
+                cell.lblNewsHeading.textColor = colorConstants.nightModeText
+                NightNight.theme =  .night
+            }
+            else{
+                cell.ViewCellBackground.backgroundColor = .white
+                 cell.lblSource.textColor = colorConstants.blackColor
+                cell.lblNewsHeading.textColor = colorConstants.blackColor
+                NightNight.theme =  .normal
+            }
             var dateSubString = ""
             var agoDate = ""
             if ((currentArticle.published_on?.count)!) <= 20{
@@ -310,7 +324,6 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
                 if newDate != nil{
                      agoDate = try Helper().timeAgoSinceDate(newDate!)
                    var fullTxt = "\(agoDate)" + " via " + currentArticle.source!
-                   // cell.lblSource.text = "\(agoDate)" + " via " + currentArticle.source!
                     let attributedWithTextColor: NSAttributedString = fullTxt.attributedStringWithColor([currentArticle.source!], color: UIColor.red)
                     
                     cell.lblSource.attributedText = attributedWithTextColor
@@ -328,7 +341,6 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
                      agoDate = try Helper().timeAgoSinceDate(newDate!)
                    
                     var fullTxt = "\(agoDate)" + " via " + currentArticle.source!
-                    // cell.lblSource.text = "\(agoDate)" + " via " + currentArticle.source!
                     let attributedWithTextColor: NSAttributedString = fullTxt.attributedStringWithColor([currentArticle.source!], color: UIColor.red)
                     
                     cell.lblSource.attributedText = attributedWithTextColor
@@ -351,19 +363,6 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
             cell.lblNewsHeading.font = FontConstants.NormalFontHeadingBold
         }
         
-        let darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
-        if  darkModeStatus == true{
-            cell.ViewCellBackground.backgroundColor = colorConstants.grayBackground2
-            cell.lblSource.textColor = colorConstants.nightModeText
-            cell.lblNewsHeading.textColor = colorConstants.nightModeText
-            NightNight.theme =  .night
-        }
-        else{
-            cell.ViewCellBackground.backgroundColor = .white
-           // cell.lblSource.textColor = colorConstants.blackColor
-            cell.lblNewsHeading.textColor = colorConstants.blackColor
-            NightNight.theme =  .normal
-        }
         if cell.imgNews.image == nil
         {
             cell.imgNews.image = UIImage(named: AssetConstants.NoImage)

@@ -417,7 +417,7 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
     
     func changeTheme(){
         suggestedCV.backgroundColor = colorConstants.txtlightGrayColor
-        btnSource.setTitleColor(.white, for: UIControlState.normal)
+         btnSource.setTitleColor(.white, for: UIControlState.normal)
         btnMoreStories.setTitleColor(.white, for: UIControlState.normal)
         viewReadMore.backgroundColor = colorConstants.txtlightGrayColor
         btnReadMore.setTitleColor(.white, for: UIControlState.normal)
@@ -657,7 +657,10 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
             articleId = Int(currentArticle.article_id)
             lblNewsHeading.text = currentArticle.title
             txtViewNewsDesc.text = currentArticle.blurb
-            btnSource.setTitle("\(agoDate)" + " via " + currentArticle.source!, for: .normal)
+            var fullTxt = "\(agoDate)" + " via " + currentArticle.source!
+            let attributedWithTextColor: NSAttributedString = fullTxt.attributedStringWithColor([currentArticle.source!], color: UIColor.red)
+            
+            btnSource.setAttributedTitle(attributedWithTextColor, for: .normal)
             sourceURL = currentArticle.source_url!
             if currentArticle.imageURL != ""{
                 imgNews.sd_setImage(with: URL(string: currentArticle.imageURL!), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
