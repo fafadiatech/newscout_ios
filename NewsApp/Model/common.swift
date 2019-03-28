@@ -19,6 +19,9 @@ struct colorConstants{
     static let grayBackground3 = UIColor(hexFromString: "C0C0C0")
     static let txtlightGrayColor = UIColor(hexFromString: "9B9B9B")
     static let txtDarkGrayColor = UIColor(hexFromString: "424242")
+    static let TVgrayBackground = UIColor(hexFromString: "FAF9F8")
+    static let subTVgrayBackground = UIColor(hexFromString: "A6ACAF") //A6ACAF
+    static let MenugrayBackground = UIColor(hexFromString: "F3EFED")
 }
 
 struct FontConstants{

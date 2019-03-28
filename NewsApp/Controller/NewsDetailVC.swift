@@ -417,6 +417,11 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
     
     func changeTheme(){
         suggestedCV.backgroundColor = colorConstants.txtlightGrayColor
+        btnSource.setTitleColor(.white, for: UIControlState.normal)
+        btnMoreStories.setTitleColor(.white, for: UIControlState.normal)
+        viewReadMore.backgroundColor = colorConstants.txtlightGrayColor
+        btnReadMore.setTitleColor(.white, for: UIControlState.normal)
+        btnReadMore.backgroundColor = colorConstants.txtlightGrayColor
         newsView.backgroundColor = colorConstants.grayBackground1
         viewContainer.backgroundColor = colorConstants.grayBackground1
         viewNewsArea.backgroundColor = colorConstants.grayBackground1

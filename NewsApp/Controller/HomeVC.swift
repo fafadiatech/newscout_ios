@@ -14,6 +14,21 @@ import MaterialComponents.MaterialActivityIndicator
 import SDWebImage
 import NightNight
 
+extension String {
+    func attributedStringWithColor(_ strings: [String], color: UIColor, characterSpacing: UInt? = nil) -> NSAttributedString {
+        let attributedString = NSMutableAttributedString(string: self)
+        for string in strings {
+            let range = (self as NSString).range(of: string)
+            attributedString.addAttribute(NSAttributedString.Key.foregroundColor, value: color, range: range)
+        }
+        
+        guard let characterSpacing = characterSpacing else {return attributedString}
+        
+        attributedString.addAttribute(NSAttributedString.Key.kern, value: characterSpacing, range: NSRange(location: 0, length: attributedString.length))
+        
+        return attributedString
+    }
+}
 class HomeVC: UIViewController{
     
     @IBOutlet weak var HomeNewsTV: UITableView!
@@ -35,7 +50,6 @@ class HomeVC: UIViewController{
     override func viewDidLoad(){
         super.viewDidLoad()
         HomeNewsTV.tableFooterView = UIView(frame: .zero)
-        self.activityIndicator.startAnimating()
         lblNonews.isHidden = true
         NotificationCenter.default.addObserver(self, selector: #selector(darkModeEnabled(_:)), name: .darkModeEnabled, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(darkModeDisabled(_:)), name: .darkModeDisabled, object: nil)
@@ -45,6 +59,7 @@ class HomeVC: UIViewController{
         activityIndicator.indicatorMode = .indeterminate
         activityIndicator.progress = 2.0
         view.addSubview(activityIndicator)
+        self.activityIndicator.startAnimating()
         var paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
         print("path is :\(paths[0])")
         let refreshControl = UIRefreshControl()
@@ -173,7 +188,7 @@ class HomeVC: UIViewController{
     
     @objc private func darkModeEnabled(_ notification: Notification) {
         NightNight.theme = .night
-        HomeNewsTV.backgroundColor = colorConstants.grayBackground3
+        HomeNewsTV.backgroundColor = colorConstants.backgroundGray
     }
     
     @objc private func darkModeDisabled(_ notification: Notification){
@@ -277,24 +292,29 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
         dateFormatter.timeZone = NSTimeZone.local
-        cell.lblSource.textColor = colorConstants.txtDarkGrayColor
-        cell.lblTimesAgo.textColor = colorConstants.txtDarkGrayColor
+       // cell.lblSource.textColor = colorConstants.txtDarkGrayColor
         //display data from DB
         sortedData = ShowArticle.sorted{ $0.published_on! > $1.published_on! }
         
         if ShowArticle.count != 0{
             let currentArticle = sortedData[indexPath.row]
             cell.lblNewsHeading.text = currentArticle.title
-            cell.lblSource.text = currentArticle.source
+            
             var dateSubString = ""
+            var agoDate = ""
             if ((currentArticle.published_on?.count)!) <= 20{
                 if !(currentArticle.published_on?.contains("Z"))!{
                     currentArticle.published_on?.append("Z")
                 }
                 let newDate = dateFormatter.date(from: currentArticle.published_on!)
                 if newDate != nil{
-                    let agoDate = try Helper().timeAgoSinceDate(newDate!)
-                    cell.lblTimesAgo.text = agoDate
+                     agoDate = try Helper().timeAgoSinceDate(newDate!)
+                   var fullTxt = "\(agoDate)" + " via " + currentArticle.source!
+                   // cell.lblSource.text = "\(agoDate)" + " via " + currentArticle.source!
+                    let attributedWithTextColor: NSAttributedString = fullTxt.attributedStringWithColor([currentArticle.source!], color: UIColor.red)
+                    
+                    cell.lblSource.attributedText = attributedWithTextColor
+                    
                 }
             }
             else{
@@ -305,29 +325,29 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
                 let newDate = dateFormatter.date(from: dateSubString
                 )
                 if newDate != nil{
-                    let agoDate = try Helper().timeAgoSinceDate(newDate!)
-                    cell.lblTimesAgo.text = agoDate
+                     agoDate = try Helper().timeAgoSinceDate(newDate!)
+                   
+                    var fullTxt = "\(agoDate)" + " via " + currentArticle.source!
+                    // cell.lblSource.text = "\(agoDate)" + " via " + currentArticle.source!
+                    let attributedWithTextColor: NSAttributedString = fullTxt.attributedStringWithColor([currentArticle.source!], color: UIColor.red)
+                    
+                    cell.lblSource.attributedText = attributedWithTextColor
                 }
             }
-            
-           
             
             cell.imgNews.sd_setImage(with: URL(string: currentArticle.imageURL!), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
         }
         let textSizeSelected = UserDefaults.standard.value(forKey: "textSize") as! Int
         if textSizeSelected == 0{
             cell.lblSource.font = FontConstants.smallFontContent
-            cell.lblTimesAgo.font = FontConstants.smallFontContent
             cell.lblNewsHeading.font = FontConstants.smallFontHeadingBold
         }
         else if textSizeSelected == 2{
             cell.lblSource.font = FontConstants.LargeFontContent
-            cell.lblTimesAgo.font = FontConstants.LargeFontContent
             cell.lblNewsHeading.font = FontConstants.LargeFontHeadingBold
         }
         else{
             cell.lblSource.font =  FontConstants.NormalFontContent
-            cell.lblTimesAgo.font = FontConstants.NormalFontContent
             cell.lblNewsHeading.font = FontConstants.NormalFontHeadingBold
         }
         
@@ -335,14 +355,12 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
         if  darkModeStatus == true{
             cell.ViewCellBackground.backgroundColor = colorConstants.grayBackground2
             cell.lblSource.textColor = colorConstants.nightModeText
-            cell.lblTimesAgo.textColor = colorConstants.nightModeText
             cell.lblNewsHeading.textColor = colorConstants.nightModeText
             NightNight.theme =  .night
         }
         else{
             cell.ViewCellBackground.backgroundColor = .white
-            cell.lblSource.textColor = colorConstants.blackColor
-            cell.lblTimesAgo.textColor = colorConstants.blackColor
+           // cell.lblSource.textColor = colorConstants.blackColor
             cell.lblNewsHeading.textColor = colorConstants.blackColor
             NightNight.theme =  .normal
         }

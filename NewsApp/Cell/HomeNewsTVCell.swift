@@ -13,7 +13,6 @@ class HomeNewsTVCell: UITableViewCell {
     @IBOutlet weak var ViewCellBackground: UIView!
     @IBOutlet weak var lblSource: UILabel!
     @IBOutlet weak var lblNewsHeading: UILabel!
-    @IBOutlet weak var lblTimesAgo: UILabel!
     @IBOutlet weak var imgNews: UIImageView!
     
     override func awakeFromNib() {
