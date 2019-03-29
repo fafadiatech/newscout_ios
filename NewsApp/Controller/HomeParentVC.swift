@@ -10,7 +10,19 @@ import UIKit
 import XLPagerTabStrip
 import NightNight
 import MaterialComponents.MaterialActivityIndicator
-
+extension UISwitch {
+    
+    func set(width: CGFloat, height: CGFloat) {
+        
+        let standardHeight: CGFloat = 31
+        let standardWidth: CGFloat = 51
+        
+        let heightRatio = height / standardHeight
+        let widthRatio = width / standardWidth
+        
+        transform = CGAffineTransform(scaleX: widthRatio, y: heightRatio)
+    }
+}
 class HomeParentVC: ButtonBarPagerTabStripViewController{
     
     @IBOutlet weak var btnSettingsNav: UIButton!
@@ -39,6 +51,7 @@ class HomeParentVC: ButtonBarPagerTabStripViewController{
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        switchNightMode.set(width: 41, height: 21)
         viewOptions.isHidden = true
         menuCV.allowsMultipleSelection = false
         viewOptions.layer.borderWidth = 0.5
