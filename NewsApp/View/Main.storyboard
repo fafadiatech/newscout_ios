@@ -397,6 +397,98 @@
                                             <outlet property="lblSource" destination="WNE-8O-iT3" id="8CP-sU-ZOT"/>
                                         </connections>
                                     </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="HomeImgTVCellID" id="DIJ-7X-upd" customClass="HomeImgTVCell" customModule="NewsApp" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="165" width="375" height="137"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="DIJ-7X-upd" id="GBF-wf-mzi">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="136.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Efl-Ny-Idf">
+                                                    <rect key="frame" x="0.0" y="0.0" width="375" height="136.5"/>
+                                                    <subviews>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aXH-Yn-Uby">
+                                                            <rect key="frame" x="124.5" y="110" width="45" height="16.5"/>
+                                                            <attributedString key="attributedText">
+                                                                <fragment content="Source">
+                                                                    <attributes>
+                                                                        <color key="NSColor" white="0.33000000000000002" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                        <font key="NSFont" size="14" name="HelveticaNeue"/>
+                                                                    </attributes>
+                                                                </fragment>
+                                                            </attributedString>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lsT-J7-hHd">
+                                                            <rect key="frame" x="124.5" y="10" width="243.5" height="75"/>
+                                                            <attributedString key="attributedText">
+                                                                <fragment content="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum">
+                                                                    <attributes>
+                                                                        <font key="NSFont" size="14" name="HelveticaNeue-Light"/>
+                                                                        <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" lineSpacing="4" tighteningFactorForTruncation="0.0"/>
+                                                                    </attributes>
+                                                                </fragment>
+                                                            </attributedString>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
+                                                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="NoImage" translatesAutoresizingMaskIntoConstraints="NO" id="ctk-tj-Tvp">
+                                                            <rect key="frame" x="16" y="16" width="91.5" height="104.5"/>
+                                                        </imageView>
+                                                    </subviews>
+                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <constraints>
+                                                        <constraint firstItem="ctk-tj-Tvp" firstAttribute="top" secondItem="Efl-Ny-Idf" secondAttribute="top" constant="16" id="1BC-zq-Bog">
+                                                            <variation key="heightClass=regular-widthClass=regular" constant="14"/>
+                                                        </constraint>
+                                                        <constraint firstItem="ctk-tj-Tvp" firstAttribute="width" secondItem="Efl-Ny-Idf" secondAttribute="width" multiplier="0.22" constant="9" id="2Xc-Ha-LM8">
+                                                            <variation key="heightClass=regular-widthClass=regular" constant="-25"/>
+                                                        </constraint>
+                                                        <constraint firstItem="lsT-J7-hHd" firstAttribute="height" secondItem="Efl-Ny-Idf" secondAttribute="height" multiplier="0.55" id="9q6-Nq-5kw"/>
+                                                        <constraint firstAttribute="bottom" secondItem="aXH-Yn-Uby" secondAttribute="bottom" constant="10" id="DY4-T3-tLP"/>
+                                                        <constraint firstItem="lsT-J7-hHd" firstAttribute="width" secondItem="Efl-Ny-Idf" secondAttribute="width" multiplier="0.65" id="SfL-I7-CWB"/>
+                                                        <constraint firstItem="lsT-J7-hHd" firstAttribute="top" secondItem="Efl-Ny-Idf" secondAttribute="top" constant="10" id="Tsm-ap-6cU"/>
+                                                        <constraint firstAttribute="trailing" secondItem="lsT-J7-hHd" secondAttribute="trailing" constant="7" id="Tt3-ZP-wAO"/>
+                                                        <constraint firstItem="lsT-J7-hHd" firstAttribute="width" secondItem="Efl-Ny-Idf" secondAttribute="width" multiplier="0.75" id="UgJ-sq-wBi">
+                                                            <variation key="heightClass=regular-widthClass=compact" constant="-2"/>
+                                                            <variation key="heightClass=regular-widthClass=regular" constant="0.0"/>
+                                                        </constraint>
+                                                        <constraint firstItem="aXH-Yn-Uby" firstAttribute="leading" secondItem="lsT-J7-hHd" secondAttribute="leading" id="cM5-jN-fVA"/>
+                                                        <constraint firstItem="ctk-tj-Tvp" firstAttribute="leading" secondItem="Efl-Ny-Idf" secondAttribute="leading" constant="16" id="nmS-Pn-zu0"/>
+                                                        <constraint firstItem="ctk-tj-Tvp" firstAttribute="height" secondItem="Efl-Ny-Idf" secondAttribute="height" multiplier="0.6" id="qvH-3c-nPA">
+                                                            <variation key="heightClass=regular-widthClass=regular" constant="4"/>
+                                                        </constraint>
+                                                        <constraint firstItem="ctk-tj-Tvp" firstAttribute="bottom" secondItem="Efl-Ny-Idf" secondAttribute="bottom" constant="-16" id="uJz-T9-geZ"/>
+                                                    </constraints>
+                                                    <variation key="default">
+                                                        <mask key="constraints">
+                                                            <exclude reference="qvH-3c-nPA"/>
+                                                            <exclude reference="SfL-I7-CWB"/>
+                                                        </mask>
+                                                    </variation>
+                                                    <variation key="widthClass=compact">
+                                                        <mask key="constraints">
+                                                            <include reference="SfL-I7-CWB"/>
+                                                            <exclude reference="UgJ-sq-wBi"/>
+                                                        </mask>
+                                                    </variation>
+                                                </view>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstAttribute="bottom" secondItem="Efl-Ny-Idf" secondAttribute="bottom" id="NJf-oF-dF3"/>
+                                                <constraint firstAttribute="trailing" secondItem="Efl-Ny-Idf" secondAttribute="trailing" id="Zfx-f4-srV"/>
+                                                <constraint firstItem="Efl-Ny-Idf" firstAttribute="leading" secondItem="GBF-wf-mzi" secondAttribute="leading" id="wfW-TO-yKA"/>
+                                                <constraint firstItem="Efl-Ny-Idf" firstAttribute="top" secondItem="GBF-wf-mzi" secondAttribute="top" id="xog-9H-Rgs"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <color key="backgroundColor" red="0.90196079019999997" green="0.90196079019999997" blue="0.90196079019999997" alpha="1" colorSpace="calibratedRGB"/>
+                                        <inset key="separatorInset" minX="10" minY="0.0" maxX="10" maxY="0.0"/>
+                                        <connections>
+                                            <outlet property="ViewCellBackground" destination="Efl-Ny-Idf" id="dTx-nF-tRh"/>
+                                            <outlet property="imgNews" destination="ctk-tj-Tvp" id="EBS-ha-Z2y"/>
+                                            <outlet property="lblNewsHeading" destination="lsT-J7-hHd" id="zbd-jN-rpP"/>
+                                            <outlet property="lblSource" destination="aXH-Yn-Uby" id="6qA-5j-f7I"/>
+                                        </connections>
+                                    </tableViewCell>
                                 </prototypes>
                                 <connections>
                                     <outlet property="dataSource" destination="BYZ-38-t0r" id="Od6-P3-YIe"/>
@@ -433,7 +525,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4138.125" y="-663.38028169014081"/>
+            <point key="canvasLocation" x="4182" y="-953"/>
         </scene>
         <!--Change PasswordVC-->
         <scene sceneID="nIk-Zg-xN0">
@@ -1418,7 +1510,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="oHs-in-UWQ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2832.8000000000002" y="91.304347826086968"/>
+            <point key="canvasLocation" x="2623" y="11"/>
         </scene>
         <!--SettingsTVC-->
         <scene sceneID="BST-1o-Suh">

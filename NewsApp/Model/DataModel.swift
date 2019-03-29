@@ -239,14 +239,14 @@ struct Heading : Decodable{
     let submenu : [SubMenu]
     
     enum CodingKeys: String, CodingKey{
-        case headingId = "id"
+        case headingId = "category_id"
         case headingName = "name"
         case submenu = "submenu"
     }
 }
 
 struct SubMenu : Decodable{
-    let id : Int
+    let category_id : Int
     let name : String
     let hash_tags : [TagList]
 }

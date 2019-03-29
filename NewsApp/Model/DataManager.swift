@@ -831,10 +831,10 @@ class DBManager{
                             newheading.headingId = Int64(res.heading.headingId)
                         }
                         for sub in res.heading.submenu{
-                            if self.someEntityExists(id: sub.id, entity: "HeadingSubMenu", keyword: "") == false{
+                            if self.someEntityExists(id: sub.category_id, entity: "HeadingSubMenu", keyword: "") == false{
                                 let newsubMenu = HeadingSubMenu(context: managedContext!)
                                 newsubMenu.subMenuName = sub.name
-                                newsubMenu.subMenuId = Int64(sub.id)
+                                newsubMenu.subMenuId = Int64(sub.category_id)
                                 newsubMenu.headingId = Int64(res.heading.headingId)
                                 
                                 for tag in sub.hash_tags{
@@ -842,7 +842,7 @@ class DBManager{
                                         let newTag = MenuHashTag(context: managedContext!)
                                         newTag.hashTagId = Int64(tag.id)
                                         newTag.hashTagName = tag.name
-                                        newTag.subMenuId = Int64(sub.id)
+                                        newTag.subMenuId = Int64(sub.category_id)
                                         newTag.subMenuName = sub.name
                                         newsubMenu.addToTags(newTag)
                                     }
