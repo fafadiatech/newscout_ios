@@ -19,7 +19,7 @@ import Sentry
 class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
     
     var window: UIWindow?
-   
+    
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         GIDSignIn.sharedInstance().clientID = "424337192018-pnik0j5sm85mjg48uf0u02ucrb64e6lc.apps.googleusercontent.com"
         GIDSignIn.sharedInstance().delegate = self as! GIDSignInDelegate
@@ -27,13 +27,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
         if UserDefaults.standard.value(forKey: "darkModeEnabled") == nil{
             UserDefaults.standard.set(false, forKey: "darkModeEnabled")
         }
-       
+        
         if UserDefaults.standard.value(forKey: "darkModeEnabled") == nil{
             UserDefaults.standard.setValue(false, forKey: "darkModeEnabled")
         }
+        
         if UserDefaults.standard.value(forKey: "searchTxt") != nil{
             UserDefaults.standard.set("", forKey: "searchTxt")
         }
+        
         let notificationTypes: UIUserNotificationType = [UIUserNotificationType.alert, UIUserNotificationType.badge, UIUserNotificationType.sound]
         let pushNotificationSettings = UIUserNotificationSettings(types: notificationTypes, categories: nil)
         application.registerUserNotificationSettings(pushNotificationSettings)
@@ -46,9 +48,24 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
         } catch let error {
             print("\(error)")
         }
+        self.window = UIWindow(frame: UIScreen.main.bounds)
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        if UserDefaults.standard.value(forKey: "isWalkthroughShown") == nil{
+            UserDefaults.standard.set(false, forKey: "isWalkthroughShown")
+        }
+        let isWalkthroughShown = UserDefaults.standard.value(forKey: "isWalkthroughShown") as! Bool
+        var initialViewController = UIViewController()
+        if isWalkthroughShown == true{
+            initialViewController = storyboard.instantiateViewController(withIdentifier: "HomeParentID")
+        }else{
+            initialViewController = storyboard.instantiateViewController(withIdentifier: "PageID")
+        }
+        
+        self.window?.rootViewController = initialViewController
+        self.window?.makeKeyAndVisible()
         return true
     }
-
+    
     func application(_ app: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey : Any] = [:]) -> Bool {
         
         

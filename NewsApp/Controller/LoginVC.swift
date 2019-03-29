@@ -172,6 +172,7 @@ class LoginVC: UIViewController, GIDSignInUIDelegate, FBSDKLoginButtonDelegate {
             APICall().LoginAPI(param : param){(status,response) in
                 print("Login response:\(response)")
                 if response == "1"{
+                    UserDefaults.standard.set(true, forKey: "isWalkthroughShown")
                     let check = UserDefaults.standard.value(forKey: "isSettingsLogin") as! Bool
                     if check == true{
                         let storyboard = UIStoryboard(name: "Main", bundle: nil)

@@ -1333,25 +1333,26 @@
         <!--Page ControlVC-->
         <scene sceneID="w8W-Yq-IWW">
             <objects>
-                <viewController id="l0h-UV-BX0" customClass="PageControlVC" customModule="NewsApp" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="PageID" id="l0h-UV-BX0" customClass="PageControlVC" customModule="NewsApp" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="VQv-sG-Wh3">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="S5g-WO-r1K">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="507.5"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="527.5"/>
                                 <subviews>
-                                    <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="EGJ-b3-bCs">
-                                        <rect key="frame" x="0.0" y="20" width="375" height="394.5"/>
+                                    <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="EGJ-b3-bCs">
+                                        <rect key="frame" x="0.0" y="0.0" width="375" height="527.5"/>
                                     </scrollView>
                                     <pageControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" numberOfPages="3" translatesAutoresizingMaskIntoConstraints="NO" id="JhI-iN-awz">
-                                        <rect key="frame" x="0.0" y="470.5" width="375" height="37"/>
+                                        <rect key="frame" x="0.0" y="490.5" width="375" height="37"/>
                                         <color key="backgroundColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     </pageControl>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstItem="JhI-iN-awz" firstAttribute="leading" secondItem="S5g-WO-r1K" secondAttribute="leading" id="2iK-Iz-g2B"/>
+                                    <constraint firstAttribute="bottom" secondItem="EGJ-b3-bCs" secondAttribute="bottom" id="8Oi-g5-477"/>
                                     <constraint firstAttribute="trailing" secondItem="JhI-iN-awz" secondAttribute="trailing" id="9Z9-P4-81s"/>
                                     <constraint firstItem="EGJ-b3-bCs" firstAttribute="top" secondItem="S5g-WO-r1K" secondAttribute="top" id="MXL-4O-rCs"/>
                                     <constraint firstAttribute="bottom" secondItem="JhI-iN-awz" secondAttribute="bottom" id="R0u-0O-V6l"/>
@@ -1360,23 +1361,25 @@
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tED-nP-Yof">
-                                <rect key="frame" x="64" y="507.5" width="247" height="128.5"/>
+                                <rect key="frame" x="64" y="527.5" width="247" height="139.5"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0za-6j-9eB">
-                                        <rect key="frame" x="73.5" y="20" width="100" height="30"/>
-                                        <color key="backgroundColor" red="0.93725490570000003" green="0.93725490570000003" blue="0.95686274770000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <rect key="frame" x="23.5" y="22" width="200" height="35"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
-                                            <constraint firstAttribute="width" constant="100" id="ENF-g1-GSA"/>
+                                            <constraint firstAttribute="width" constant="200" id="ENF-g1-GSA"/>
                                         </constraints>
+                                        <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="19"/>
                                         <state key="normal" title="Get Started">
-                                            <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                            <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         </state>
                                         <connections>
                                             <action selector="btnGetStartedActn:" destination="l0h-UV-BX0" eventType="touchUpInside" id="Mik-SH-92J"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Amv-UW-HdC">
-                                        <rect key="frame" x="8" y="80" width="231" height="30"/>
+                                        <rect key="frame" x="-6.5" y="69" width="260" height="32"/>
+                                        <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="17"/>
                                         <state key="normal" title="Already have an account? SIgn In "/>
                                         <connections>
                                             <action selector="btnSignInActn:" destination="l0h-UV-BX0" eventType="touchUpInside" id="3OZ-dn-Hvi"/>
@@ -1387,25 +1390,26 @@
                                 <constraints>
                                     <constraint firstItem="0za-6j-9eB" firstAttribute="centerX" secondItem="tED-nP-Yof" secondAttribute="centerX" id="33Q-vM-PuU"/>
                                     <constraint firstItem="Amv-UW-HdC" firstAttribute="centerX" secondItem="tED-nP-Yof" secondAttribute="centerX" id="7Qf-Bf-bs0"/>
-                                    <constraint firstItem="Amv-UW-HdC" firstAttribute="top" secondItem="0za-6j-9eB" secondAttribute="bottom" multiplier="1.4" constant="10" id="LU8-yD-00M"/>
-                                    <constraint firstAttribute="height" constant="128.5" id="Pbj-8d-DKV"/>
-                                    <constraint firstItem="0za-6j-9eB" firstAttribute="top" secondItem="tED-nP-Yof" secondAttribute="top" constant="20" id="kv8-RS-aD8"/>
+                                    <constraint firstItem="Amv-UW-HdC" firstAttribute="top" secondItem="0za-6j-9eB" secondAttribute="bottom" constant="12" id="LU8-yD-00M"/>
+                                    <constraint firstAttribute="height" constant="139.5" id="Pbj-8d-DKV"/>
+                                    <constraint firstItem="0za-6j-9eB" firstAttribute="top" secondItem="tED-nP-Yof" secondAttribute="top" constant="22" id="kv8-RS-aD8"/>
                                 </constraints>
                             </view>
                         </subviews>
-                        <color key="backgroundColor" white="0.91300223209999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="S5g-WO-r1K" firstAttribute="leading" secondItem="VQv-sG-Wh3" secondAttribute="leading" id="F6Y-Ff-qAQ"/>
                             <constraint firstItem="S5g-WO-r1K" firstAttribute="bottom" secondItem="tED-nP-Yof" secondAttribute="top" id="Rmb-yX-EYn"/>
                             <constraint firstItem="tED-nP-Yof" firstAttribute="leading" secondItem="j9b-B6-1rv" secondAttribute="leading" constant="64" id="XBa-1O-UEM"/>
                             <constraint firstItem="S5g-WO-r1K" firstAttribute="top" secondItem="VQv-sG-Wh3" secondAttribute="top" id="kon-mF-iZy"/>
                             <constraint firstAttribute="trailing" secondItem="S5g-WO-r1K" secondAttribute="trailing" id="qt0-Ed-KTg"/>
-                            <constraint firstItem="j9b-B6-1rv" firstAttribute="bottom" secondItem="tED-nP-Yof" secondAttribute="bottom" constant="31" id="s3V-gU-gN0"/>
+                            <constraint firstItem="j9b-B6-1rv" firstAttribute="bottom" secondItem="tED-nP-Yof" secondAttribute="bottom" id="s3V-gU-gN0"/>
                             <constraint firstItem="tED-nP-Yof" firstAttribute="centerX" secondItem="j9b-B6-1rv" secondAttribute="centerX" id="vXc-kr-oKW"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="j9b-B6-1rv"/>
                     </view>
                     <connections>
+                        <outlet property="btnGetStarted" destination="0za-6j-9eB" id="WAL-QG-pfG"/>
                         <outlet property="pageControl" destination="JhI-iN-awz" id="PHv-aA-cQa"/>
                         <outlet property="pageView" destination="S5g-WO-r1K" id="3kJ-XV-HI0"/>
                         <outlet property="scrollView" destination="EGJ-b3-bCs" id="tIu-YB-diC"/>
