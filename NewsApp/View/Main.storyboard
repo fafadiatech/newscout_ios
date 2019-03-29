@@ -435,6 +435,14 @@
             </objects>
             <point key="canvasLocation" x="4138.125" y="-663.38028169014081"/>
         </scene>
+        <!--Page View Controller-->
+        <scene sceneID="Xtn-uY-6Qh">
+            <objects>
+                <pageViewController autoresizesArchivedViewToFullSize="NO" transitionStyle="pageCurl" navigationOrientation="horizontal" spineLocation="min" id="fhK-R8-sXZ" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="YDu-Pp-1hA" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="241" y="-534"/>
+        </scene>
         <!--Change PasswordVC-->
         <scene sceneID="nIk-Zg-xN0">
             <objects>
@@ -2241,7 +2249,7 @@
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ume-RY-B4l">
-                                <rect key="frame" x="0.0" y="469" width="375" height="140"/>
+                                <rect key="frame" x="0.0" y="473" width="375" height="140"/>
                                 <subviews>
                                     <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="jGY-TI-WKc">
                                         <rect key="frame" x="0.0" y="0.0" width="375" height="140"/>
@@ -2491,7 +2499,7 @@
                             <constraint firstItem="ZdY-Zp-FHd" firstAttribute="bottom" secondItem="maQ-Zd-Ky8" secondAttribute="bottom" id="deT-px-iXe"/>
                             <constraint firstItem="d60-rI-rFg" firstAttribute="top" secondItem="ZoE-gQ-3zk" secondAttribute="top" id="fq7-Cs-Pgp"/>
                             <constraint firstItem="d60-rI-rFg" firstAttribute="trailing" secondItem="maQ-Zd-Ky8" secondAttribute="trailing" id="h2z-6d-jmv"/>
-                            <constraint firstItem="Ume-RY-B4l" firstAttribute="bottom" secondItem="bUb-P9-PTd" secondAttribute="bottom" constant="-4" id="hl6-jQ-VW6"/>
+                            <constraint firstItem="Ume-RY-B4l" firstAttribute="bottom" secondItem="bUb-P9-PTd" secondAttribute="bottom" id="hl6-jQ-VW6"/>
                             <constraint firstItem="Ume-RY-B4l" firstAttribute="trailing" secondItem="maQ-Zd-Ky8" secondAttribute="trailing" id="juw-sr-kUf"/>
                             <constraint firstItem="nZz-U0-3iL" firstAttribute="height" secondItem="ZdY-Zp-FHd" secondAttribute="height" id="kga-8P-l21">
                                 <variation key="heightClass=regular-widthClass=compact" constant="6"/>
