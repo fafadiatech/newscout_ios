@@ -90,6 +90,9 @@ struct Constants{
 }
 
 struct AssetConstants{
+    static let f1 = "f1"
+    static let f2 = "f2"
+    static let f3 = "f3"
     static let backArrow = "back1"
     static let cross = "cross"
     static let bookmark = "bookmark"
