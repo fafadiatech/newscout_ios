@@ -36,6 +36,7 @@ class HomeParentVC: ButtonBarPagerTabStripViewController{
     @IBOutlet weak var viewAppTitle: UIView!
     @IBOutlet weak var lblAppName: UILabel!
     @IBOutlet weak var btnNightMode: UIButton!
+   
     let activityIndicator = MDCActivityIndicator()
     var childrenVC = [UIViewController]()
     var jsonData : [Result] = []
@@ -47,7 +48,7 @@ class HomeParentVC: ButtonBarPagerTabStripViewController{
     var subMenuRow = 0
     var tagArr : [String] = []
     var submenuIndexArr = [[String]]()
-    var headingImg = [AssetConstants.sector, AssetConstants.regional, AssetConstants.finance, AssetConstants.economy, AssetConstants.search]
+    var headingImg = [AssetConstants.sector, AssetConstants.regional, AssetConstants.finance, AssetConstants.economy, AssetConstants.misc]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -126,7 +127,16 @@ class HomeParentVC: ButtonBarPagerTabStripViewController{
             }
         }
         
+        let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapped(gestureRecognizer:)))
+        viewAppTitle.addGestureRecognizer(tapRecognizer)
+        tapRecognizer.delegate = self as UIGestureRecognizerDelegate
     }
+      @objc func tapped(gestureRecognizer: UITapGestureRecognizer) {
+        if viewOptions.isHidden == false{
+            viewOptions.isHidden = true
+        }
+    }
+    
     func changeTheme(){
         viewNightMode.backgroundColor = colorConstants.grayBackground1
         btnBookmark.setTitleColor(.white, for: UIControlState.normal)
@@ -398,5 +408,12 @@ class HomeParentVC: ButtonBarPagerTabStripViewController{
     }
 }
 
-
+extension HomeParentVC : UIGestureRecognizerDelegate {
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
+        if touch.view!.superview!.superclass! .isSubclass(of: UIButton.self) {
+            return false
+        }
+        return true
+    }
+}
 
