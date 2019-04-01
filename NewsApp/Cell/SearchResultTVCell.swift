@@ -12,7 +12,6 @@ class SearchResultTVCell: UITableViewCell {
     
     @IBOutlet weak var lblSource: UILabel!
     @IBOutlet weak var lblNewsDescription: UILabel!
-    @IBOutlet weak var lbltimeAgo: UILabel!
     @IBOutlet weak var imgNews: UIImageView!
     @IBOutlet weak var ViewCellBackground: UIView!
     override func awakeFromNib() {

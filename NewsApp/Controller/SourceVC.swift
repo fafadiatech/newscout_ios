@@ -26,6 +26,7 @@ class SourceVC: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        sourceTV.tableFooterView = UIView(frame: .zero)
         lblSource.text = source
         titleView.backgroundColor = colorConstants.redColor
         NotificationCenter.default.addObserver(self, selector: #selector(darkModeEnabled(_:)), name: .darkModeEnabled, object: nil)
@@ -98,7 +99,6 @@ extension SourceVC: UITableViewDelegate, UITableViewDataSource{
         cell.imgNews.layer.cornerRadius = 10.0
         cell.imgNews.clipsToBounds = true
         cell.lblSource.textColor = colorConstants.txtDarkGrayColor
-        cell.lbltimeAgo.textColor = colorConstants.txtDarkGrayColor
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
         dateFormatter.timeZone = NSTimeZone.local
@@ -112,7 +112,6 @@ extension SourceVC: UITableViewDelegate, UITableViewDataSource{
             let newDate = dateFormatter.date(from: currentArticle!.published_on!)
             if newDate != nil{
                 let agoDate = try Helper().timeAgoSinceDate(newDate!)
-                cell.lbltimeAgo.text = agoDate
             }
         }
         else{
@@ -124,7 +123,6 @@ extension SourceVC: UITableViewDelegate, UITableViewDataSource{
             )
             if newDate != nil{
                 let agoDate = try Helper().timeAgoSinceDate(newDate!)
-                cell.lbltimeAgo.text = agoDate
             }
         }
         cell.lblSource.text = currentArticle?.source
@@ -134,25 +132,21 @@ extension SourceVC: UITableViewDelegate, UITableViewDataSource{
         
         if textSizeSelected == 0{
             cell.lblSource.font = FontConstants.smallFontContent
-            cell.lbltimeAgo.font = FontConstants.smallFontContent
             cell.lblNewsDescription.font = FontConstants.smallFontHeadingBold
             
         }
         else if textSizeSelected == 2{
             cell.lblSource.font = FontConstants.LargeFontContent
-            cell.lbltimeAgo.font = FontConstants.LargeFontContent
             cell.lblNewsDescription.font = FontConstants.LargeFontHeadingBold
         }
         else{
             cell.lblSource.font = FontConstants.NormalFontContent
-            cell.lbltimeAgo.font = FontConstants.NormalFontContent
             cell.lblNewsDescription.font = FontConstants.NormalFontHeadingBold
         }
         let darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
         if  darkModeStatus == true{
             cell.ViewCellBackground.backgroundColor = colorConstants.grayBackground2
             cell.lblSource.textColor = colorConstants.nightModeText
-            cell.lbltimeAgo.textColor = colorConstants.nightModeText
             cell.lblNewsDescription.textColor = colorConstants.nightModeText
             NightNight.theme =  .night
         }

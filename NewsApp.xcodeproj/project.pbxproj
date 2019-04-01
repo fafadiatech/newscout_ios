@@ -25,6 +25,9 @@
 		260FB9DA2221656F008B0291 /* NewsURL+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 260FB9CA2221656F008B0291 /* NewsURL+CoreDataProperties.swift */; };
 		261AA131217F40D20044585C /* APIManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 261AA130217F40D20044585C /* APIManager.swift */; };
 		261AA133217F40F20044585C /* DataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 261AA132217F40F20044585C /* DataManager.swift */; };
+		261ED08F22523FF20034AC75 /* sourceZigzagTVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 261ED08E22523FF20034AC75 /* sourceZigzagTVCell.swift */; };
+		261ED0912252400A0034AC75 /* BookmarkZigzagTVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 261ED0902252400A0034AC75 /* BookmarkZigzagTVCell.swift */; };
+		261ED093225241F00034AC75 /* searchZigzagTVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 261ED092225241F00034AC75 /* searchZigzagTVCell.swift */; };
 		263421EF216230F900C8510F /* SignUpVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 263421EE216230F900C8510F /* SignUpVC.swift */; };
 		263421F12162310D00C8510F /* LoginVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 263421F02162310D00C8510F /* LoginVC.swift */; };
 		263421F321624AD200C8510F /* SettingsTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 263421F221624AD200C8510F /* SettingsTVC.swift */; };
@@ -138,6 +141,9 @@
 		260FB9CA2221656F008B0291 /* NewsURL+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NewsURL+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		261AA130217F40D20044585C /* APIManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIManager.swift; sourceTree = "<group>"; };
 		261AA132217F40F20044585C /* DataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataManager.swift; sourceTree = "<group>"; };
+		261ED08E22523FF20034AC75 /* sourceZigzagTVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = sourceZigzagTVCell.swift; sourceTree = "<group>"; };
+		261ED0902252400A0034AC75 /* BookmarkZigzagTVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkZigzagTVCell.swift; sourceTree = "<group>"; };
+		261ED092225241F00034AC75 /* searchZigzagTVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = searchZigzagTVCell.swift; sourceTree = "<group>"; };
 		263421EE216230F900C8510F /* SignUpVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpVC.swift; sourceTree = "<group>"; };
 		263421F02162310D00C8510F /* LoginVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginVC.swift; sourceTree = "<group>"; };
 		263421F221624AD200C8510F /* SettingsTVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = SettingsTVC.swift; sourceTree = "<group>"; };
@@ -419,8 +425,11 @@
 		421ADFEB2156553500C00F6F /* Cell */ = {
 			isa = PBXGroup;
 			children = (
+				261ED092225241F00034AC75 /* searchZigzagTVCell.swift */,
 				42A1A808224E2EE400727882 /* HomeImgTVCell.swift */,
 				2663DE28224B4131005DCFB5 /* sourceTVCell.swift */,
+				261ED08E22523FF20034AC75 /* sourceZigzagTVCell.swift */,
+				261ED0902252400A0034AC75 /* BookmarkZigzagTVCell.swift */,
 				264E304A2229151E00F73147 /* submenuCVCell.swift */,
 				422B5C52222118A400091429 /* MenuTVCell.swift */,
 				268C112421E4C36E00C76B9C /* BookmarkTVCell.swift */,
@@ -775,6 +784,7 @@
 				26BEF80A222E77700002DEBD /* MenuHeadings+CoreDataClass.swift in Sources */,
 				260FB9CF2221656F008B0291 /* BookmarkArticles+CoreDataClass.swift in Sources */,
 				421ADFBB2156407400C00F6F /* HomeVC.swift in Sources */,
+				261ED0912252400A0034AC75 /* BookmarkZigzagTVCell.swift in Sources */,
 				264C5396219AAAD60050F79D /* Toast.swift in Sources */,
 				42A1A809224E2EE400727882 /* HomeImgTVCell.swift in Sources */,
 				263421F321624AD200C8510F /* SettingsTVC.swift in Sources */,
@@ -796,6 +806,7 @@
 				260FB9D02221656F008B0291 /* BookmarkArticles+CoreDataProperties.swift in Sources */,
 				26BEF80B222E77700002DEBD /* MenuHeadings+CoreDataProperties.swift in Sources */,
 				26ACEA96216738BB000EF3C7 /* CategoryListTVCell.swift in Sources */,
+				261ED08F22523FF20034AC75 /* sourceZigzagTVCell.swift in Sources */,
 				42D12BF2215A0AEB0085EF12 /* SearchVC.swift in Sources */,
 				260FB9D82221656F008B0291 /* Category+CoreDataProperties.swift in Sources */,
 				26BEF806222E77700002DEBD /* MenuHashTag+CoreDataClass.swift in Sources */,
@@ -821,6 +832,7 @@
 				2663DE2B224B9A3B005DCFB5 /* ShuffleDetailVC.swift in Sources */,
 				268C112321E4C0F300C76B9C /* BookmarkVC.swift in Sources */,
 				26C24723219DA6C200A87A3B /* ForgotPasswordVC.swift in Sources */,
+				261ED093225241F00034AC75 /* searchZigzagTVCell.swift in Sources */,
 				421ADFEE2156575300C00F6F /* HomeNewsTVCell.swift in Sources */,
 				421ADFF021566FE000C00F6F /* NewsDetailVC.swift in Sources */,
 				261AA133217F40F20044585C /* DataManager.swift in Sources */,

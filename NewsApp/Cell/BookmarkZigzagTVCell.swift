@@ -1,19 +1,18 @@
 //
-//  BookmarkTVCell.swift
+//  BookmarkZigzagTVCell.swift
 //  NewsApp
 //
-//  Created by Jayashree on 08/01/19.
+//  Created by Jayashree on 01/04/19.
 //  Copyright © 2019 Fafadia Tech. All rights reserved.
 //
 
 import UIKit
 
-class BookmarkTVCell: UITableViewCell {
+class BookmarkZigzagTVCell: UITableViewCell {
     @IBOutlet weak var lblSource: UILabel!
     @IBOutlet weak var lblNewsDescription: UILabel!
     @IBOutlet weak var imgNews: UIImageView!
     @IBOutlet weak var ViewCellBackground: UIView!
-    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
