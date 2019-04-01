@@ -181,16 +181,13 @@ open class ButtonBarPagerTabStripViewController: PagerTabStripViewController, Pa
     }
     
    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-        print("scrollViewDidEndDecelerating")
     if scrollView == containerView{
         shouldUpdateButtonBarView = true
         reloadPagerTabStripView()
     }
-        
     }
     
     func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
-        print("scrollViewDidEndDragging")
         if scrollView == containerView{
         shouldUpdateButtonBarView = true
         reloadPagerTabStripView()

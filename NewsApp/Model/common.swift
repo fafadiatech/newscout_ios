@@ -190,6 +190,8 @@ struct APPURL {
     static let getMenus = Domains.Local + Routes.menu
     static let sendDeviceDetailsURL = Domains.Local + Routes.deviceDetails
     static let sendNotificationDetails = Domains.Local + Routes.NotificationDetails
+    static let imageServer = "http://images.newscout.in/unsafe/"
+    
 }
 
 

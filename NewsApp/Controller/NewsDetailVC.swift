@@ -91,9 +91,12 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
     var index = 0
     var timer = Timer()
     var customPagecontrol = TAPageControl()
-    
+    var imgWidth = ""
+    var imgHeight = ""
     override func viewDidLoad() {
         super.viewDidLoad()
+        imgWidth = String(describing : Int(imgNews.frame.width))
+        imgHeight = String(describing : Int(imgNews.frame.height))
         btnReadMore.setTitleColor(.black, for: UIControlState.normal)
         suggestedView.isHidden = true
         WKWebView.navigationDelegate = self
@@ -112,23 +115,23 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
         activityIndicator.progress = 2.0
         imgNews.addSubview(activityIndicator)
         txtViewNewsDesc.textContainer.lineBreakMode = NSLineBreakMode.byTruncatingTail
-       /* if UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad && statusBarOrientation.isPortrait{
-            viewLikeDislike.isHidden = false
-            viewBack.isHidden = false
-            //addsourceConstraint()
-        }
-        else if UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad && statusBarOrientation.isLandscape {
-            viewLikeDislike.isHidden = true
-            viewBack.isHidden = true
-            //addImageConstaints()
-            //addLandscapeConstraints()
-        }
-        else{
-            viewLikeDislike.isHidden = true
-            viewBack.isHidden = true
-            //addPotraitConstraint()
-            //addImageConstaints()
-        }*/
+        /* if UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad && statusBarOrientation.isPortrait{
+         viewLikeDislike.isHidden = false
+         viewBack.isHidden = false
+         //addsourceConstraint()
+         }
+         else if UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad && statusBarOrientation.isLandscape {
+         viewLikeDislike.isHidden = true
+         viewBack.isHidden = true
+         //addImageConstaints()
+         //addLandscapeConstraints()
+         }
+         else{
+         viewLikeDislike.isHidden = true
+         viewBack.isHidden = true
+         //addPotraitConstraint()
+         //addImageConstaints()
+         }*/
         viewLikeDislike.backgroundColor = colorConstants.redColor
         viewBack.backgroundColor = colorConstants.redColor
         ViewWebContainer.isHidden = true
@@ -351,24 +354,24 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
         
         super.viewWillTransition(to: size, with: coordinator)
         
-       /* if UIDevice.current.orientation.isLandscape {
-            print(UIDevice.current.orientation)
-            viewLikeDislike.isHidden = true
-            viewBack.isHidden = true
-            print("landscape")
-            addLandscapeConstraints()
-        } else {
-            print(UIDevice.current.orientation)
-            print("potrait")
-            viewLikeDislike.isHidden = false
-            viewBack.isHidden = false
-            if UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad{
-                addipadPotraitConstraint()
-            }
-            else{
-                addPotraitConstraint()
-            }
-        }*/
+        /* if UIDevice.current.orientation.isLandscape {
+         print(UIDevice.current.orientation)
+         viewLikeDislike.isHidden = true
+         viewBack.isHidden = true
+         print("landscape")
+         addLandscapeConstraints()
+         } else {
+         print(UIDevice.current.orientation)
+         print("potrait")
+         viewLikeDislike.isHidden = false
+         viewBack.isHidden = false
+         if UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad{
+         addipadPotraitConstraint()
+         }
+         else{
+         addPotraitConstraint()
+         }
+         }*/
     }
     
     @objc private func darkModeEnabled(_ notification: Notification){
@@ -417,7 +420,7 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
     
     func changeTheme(){
         suggestedCV.backgroundColor = colorConstants.txtlightGrayColor
-         btnSource.setTitleColor(.white, for: UIControlState.normal)
+        btnSource.setTitleColor(.white, for: UIControlState.normal)
         btnMoreStories.setTitleColor(.white, for: UIControlState.normal)
         viewReadMore.backgroundColor = colorConstants.txtlightGrayColor
         btnReadMore.setTitleColor(.white, for: UIControlState.normal)
@@ -444,31 +447,31 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
     
     @objc func tapped(gestureRecognizer: UITapGestureRecognizer) {
         /*if UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.phone {
-            if viewLikeDislike.isHidden == true{
-                viewLikeDislike.isHidden = false
-                viewBack.isHidden = false
-            }
-            else{
-                viewLikeDislike.isHidden = true
-                viewBack.isHidden = true
-            }
-        }
-        if UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad{
-            if statusBarOrientation.isPortrait {
-                viewLikeDislike.isHidden = false
-                viewBack.isHidden = false
-            }
-            else{
-                if viewLikeDislike.isHidden == true{
-                    viewLikeDislike.isHidden = false
-                    viewBack.isHidden = false
-                }
-                else{
-                    viewLikeDislike.isHidden = true
-                    viewBack.isHidden = true
-                }
-            }
-        }*/
+         if viewLikeDislike.isHidden == true{
+         viewLikeDislike.isHidden = false
+         viewBack.isHidden = false
+         }
+         else{
+         viewLikeDislike.isHidden = true
+         viewBack.isHidden = true
+         }
+         }
+         if UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad{
+         if statusBarOrientation.isPortrait {
+         viewLikeDislike.isHidden = false
+         viewBack.isHidden = false
+         }
+         else{
+         if viewLikeDislike.isHidden == true{
+         viewLikeDislike.isHidden = false
+         viewBack.isHidden = false
+         }
+         else{
+         viewLikeDislike.isHidden = true
+         viewBack.isHidden = true
+         }
+         }
+         }*/
     }
     
     override var prefersStatusBarHidden: Bool {
@@ -511,8 +514,8 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
             switch swipeGesture.direction {
             case UISwipeGestureRecognizerDirection.right:
                 ViewWebContainer.isHidden = true
-//                viewLikeDislike.isHidden = false
-//                viewBack.isHidden = false
+                //                viewLikeDislike.isHidden = false
+                //                viewBack.isHidden = false
                 
             case UISwipeGestureRecognizerDirection.down:
                 if newsCurrentIndex > 0
@@ -528,7 +531,7 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
                 else{
                     self.view.makeToast("No more news to show", duration: 1.0, position: .center)
                 }
-               
+                
             case UISwipeGestureRecognizerDirection.up:
                 if newsCurrentIndex < indexCount - 1
                 {
@@ -652,7 +655,7 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
             let newDate = dateFormatter.date(from: currentArticle.published_on!)
             var agoDate = ""
             if newDate != nil{
-                 agoDate = Helper().timeAgoSinceDate(newDate!)
+                agoDate = Helper().timeAgoSinceDate(newDate!)
             }
             articleId = Int(currentArticle.article_id)
             lblNewsHeading.text = currentArticle.title
@@ -663,7 +666,10 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
             btnSource.setAttributedTitle(attributedWithTextColor, for: .normal)
             sourceURL = currentArticle.source_url!
             if currentArticle.imageURL != ""{
-                imgNews.sd_setImage(with: URL(string: currentArticle.imageURL!), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
+                
+                let imgURL = APPURL.imageServer + imgWidth + "x" + imgHeight + "/smart/" + currentArticle.imageURL!
+                print("newImage URL : \(imgURL)")
+                imgNews.sd_setImage(with: URL(string: imgURL), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
             }
             else{
                 imgNews.image = UIImage(named: AssetConstants.NoImage)
@@ -1196,8 +1202,8 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
     
     @IBAction func btnWebBackAction(_ sender: Any) {
         ViewWebContainer.isHidden = true
-//        viewLikeDislike.isHidden = false
-//        viewBack.isHidden = false
+        //        viewLikeDislike.isHidden = false
+        //        viewBack.isHidden = false
     }
     
     //btn Back Action
@@ -1229,20 +1235,20 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
     }
     
     @IBAction func btnShuffleActn(_ sender: Any) {
-//            let result = DBManager().FetchDataFromDB(entity: "NewsArticle")
-//            switch result {
-//            case .Success(let DBData) :
-//                if DBData.count == 0{
-//                    let randomInt = Int.random(in: 0..<DBData.count)
-//                    activityIndicator.stopAnimating()
-//                    ShowNews(currentIndex: randomInt)
-//                }
-//            case .Failure(let errorMsg) : break
-//            }
-//
+        //            let result = DBManager().FetchDataFromDB(entity: "NewsArticle")
+        //            switch result {
+        //            case .Success(let DBData) :
+        //                if DBData.count == 0{
+        //                    let randomInt = Int.random(in: 0..<DBData.count)
+        //                    activityIndicator.stopAnimating()
+        //                    ShowNews(currentIndex: randomInt)
+        //                }
+        //            case .Failure(let errorMsg) : break
+        //            }
+        //
         if newsCurrentIndex < ShowArticle.count - 2{
             newsCurrentIndex = newsCurrentIndex + 2
-        ShowNews(currentIndex: newsCurrentIndex)
+            ShowNews(currentIndex: newsCurrentIndex)
         }else{
             newsCurrentIndex = newsCurrentIndex - 2
             ShowNews(currentIndex: newsCurrentIndex)
@@ -1251,11 +1257,11 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
     
     @IBAction func btnMoreStoriesActn(_ sender: Any) {
         if suggestedView.isHidden == true{
-        suggestedView.isHidden = false
+            suggestedView.isHidden = false
             btnMoreStories.setTitleColor(.white, for: .normal)
         }else{
             btnMoreStories.setTitleColor(.black, for: .normal)
-           suggestedView.isHidden = true
+            suggestedView.isHidden = true
         }
     }
     override func didReceiveMemoryWarning() {

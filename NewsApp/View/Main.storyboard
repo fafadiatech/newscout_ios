@@ -39,10 +39,10 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sgS-XG-b68">
-                                        <rect key="frame" x="312" y="15" width="25" height="25"/>
+                                        <rect key="frame" x="306" y="13.5" width="28" height="28"/>
                                         <constraints>
-                                            <constraint firstAttribute="width" constant="25" id="YJf-5O-zNc"/>
-                                            <constraint firstAttribute="height" constant="25" id="vKa-6b-ec3"/>
+                                            <constraint firstAttribute="width" constant="28" id="YJf-5O-zNc"/>
+                                            <constraint firstAttribute="height" constant="28" id="vKa-6b-ec3"/>
                                         </constraints>
                                         <state key="normal" title="Button" image="newsearch"/>
                                         <connections>
@@ -60,7 +60,7 @@
                                     <constraint firstAttribute="trailing" secondItem="uzw-Xq-ysg" secondAttribute="trailing" constant="10" id="T3H-PF-jY5"/>
                                     <constraint firstItem="pzB-EX-EQD" firstAttribute="centerY" secondItem="ao8-14-oL8" secondAttribute="centerY" id="Tge-20-fax"/>
                                     <constraint firstItem="pzB-EX-EQD" firstAttribute="centerX" secondItem="ao8-14-oL8" secondAttribute="centerX" id="Zaa-Cg-Z4M"/>
-                                    <constraint firstItem="uzw-Xq-ysg" firstAttribute="leading" secondItem="sgS-XG-b68" secondAttribute="trailing" constant="5" id="k7a-Bo-EKr"/>
+                                    <constraint firstItem="uzw-Xq-ysg" firstAttribute="leading" secondItem="sgS-XG-b68" secondAttribute="trailing" constant="8" id="k7a-Bo-EKr"/>
                                 </constraints>
                             </view>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="vYM-Wx-vng">
@@ -2561,7 +2561,7 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NrP-Nm-nko">
-                                        <rect key="frame" x="289" y="11.5" width="28" height="28"/>
+                                        <rect key="frame" x="284" y="11.5" width="28" height="28"/>
                                         <state key="normal" backgroundImage="shuffled"/>
                                         <connections>
                                             <action selector="btnShuffleActn:" destination="yxW-qj-gIF" eventType="touchUpInside" id="OLp-c6-YMP"/>
@@ -2590,7 +2590,7 @@
                                     <constraint firstItem="NrP-Nm-nko" firstAttribute="height" secondItem="2Y2-a1-Kyv" secondAttribute="height" id="OlK-DZ-DnI"/>
                                     <constraint firstAttribute="bottom" secondItem="8NA-Au-5Gf" secondAttribute="bottom" id="SUP-RU-uJX"/>
                                     <constraint firstItem="wVK-oY-EQo" firstAttribute="centerY" secondItem="ZdY-Zp-FHd" secondAttribute="centerY" id="UXb-FZ-ec7"/>
-                                    <constraint firstItem="2Y2-a1-Kyv" firstAttribute="leading" secondItem="NrP-Nm-nko" secondAttribute="trailing" constant="10" id="Y8k-Fz-jeg"/>
+                                    <constraint firstItem="2Y2-a1-Kyv" firstAttribute="leading" secondItem="NrP-Nm-nko" secondAttribute="trailing" constant="15" id="Y8k-Fz-jeg"/>
                                     <constraint firstItem="NrP-Nm-nko" firstAttribute="centerY" secondItem="ZdY-Zp-FHd" secondAttribute="centerY" id="gql-Jw-fuV"/>
                                     <constraint firstItem="2Y2-a1-Kyv" firstAttribute="centerY" secondItem="ZdY-Zp-FHd" secondAttribute="centerY" id="lgA-lp-I81"/>
                                     <constraint firstItem="wVK-oY-EQo" firstAttribute="height" secondItem="mNk-M4-IU3" secondAttribute="height" id="mHg-wE-aNy"/>
