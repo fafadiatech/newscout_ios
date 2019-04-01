@@ -38,9 +38,9 @@ struct articleBody : Decodable{
 }
 
 struct ArticleFilter : Decodable{
-    let category : [FilterCategory]
-    let source : [FilterCategory]
-    let hash_tags : [FilterCategory]
+    let category : [FilterCategory]?
+    let source : [FilterCategory]?
+    let hash_tags : [FilterCategory]?
 }
 struct FilterCategory : Decodable{
     let key : String
