@@ -412,7 +412,6 @@ class DBManager{
                 
             case .Failure(let errormessage) :
                 print(errormessage)
-                
             }
             
             if LikeData.body?.listResult!.count != 0{

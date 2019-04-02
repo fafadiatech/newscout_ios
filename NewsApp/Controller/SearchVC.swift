@@ -431,8 +431,8 @@ extension String {
         return finalString
     }
 }
-extension SearchVC: UITextFieldDelegate
-{
+
+extension SearchVC: UITextFieldDelegate{
     func textFieldShouldReturn(_ textField: UITextField) -> Bool
     {
         txtSearch.resignFirstResponder()
@@ -513,11 +513,10 @@ extension SearchVC: UITextFieldDelegate
             Searchresults = (try managedContext?.fetch(fetchRequest))
                 as! [SearchArticles]
             recordCount = Searchresults.count
-            searchResultTV.reloadData()
-            
             if recordCount == 0 {
                 lblNoNews.isHidden = false
             }
+             searchResultTV.reloadData()
         }
         catch {
             self.searchResultTV.makeToast("Please try again later", duration: 2.0, position: .center)

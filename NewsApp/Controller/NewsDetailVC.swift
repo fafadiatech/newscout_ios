@@ -63,9 +63,11 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
     var ArticleData = [ArticleStatus]()
     var RecomData = [NewsArticle]()
     var searchRecomData = [SearchArticles]()
+    var sourceRecomData = [ArticleStatus]()
     var bookmarkedArticle = [BookmarkArticles]()
     var ShowArticle = [NewsArticle]()
     var SearchArticle = [SearchArticles]()
+    var sourceArticle = [ArticleStatus]()
     var ArticleDetail : ArticleDetails!
     var newsCurrentIndex = 0
     var articleId = 0
@@ -93,6 +95,7 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
     var customPagecontrol = TAPageControl()
     var imgWidth = ""
     var imgHeight = ""
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         imgWidth = String(describing : Int(imgNews.frame.width))
@@ -197,14 +200,22 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
     func filterRecommendation(){
         RecomData.removeAll()
         searchRecomData.removeAll()
-        if ShowArticle.count != 0{
+        if ShowArticle.count > 0{
             articleId = Int(ShowArticle[newsCurrentIndex].article_id)
             for news in ShowArticle{
                 if news.article_id != articleId{
                     RecomData.append(news)
                 }
             }
-        }else{
+        }else if sourceArticle.count > 0{
+            articleId = sourceArticle[0].body?.articles[newsCurrentIndex].article_id
+            for news in sourceArticle{
+                if news.article_id != articleId{
+                    RecomData.append(news)
+                }
+            }
+        }
+        else{
             for news in SearchArticle{
                 articleId  = Int(SearchArticle[newsCurrentIndex].article_id)
                 if news.article_id != articleId{
@@ -648,7 +659,7 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
         playbackSlider.removeFromSuperview()
         // avPlayerView.isHidden = true
         
-        if ShowArticle.count != 0{
+        if ShowArticle.count > 0{
             fetchBookmarkDataFromDB()
             currentEntity = "ShowArticle"
             let currentArticle = ShowArticle[currentIndex]
@@ -673,6 +684,29 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
             }
             else{
                 imgNews.image = UIImage(named: AssetConstants.NoImage)
+            }
+            if UserDefaults.standard.value(forKey: "token") != nil{
+                if currentArticle.likeDislike?.isLike == 0 {
+                    btnLike.setImage(UIImage(named: AssetConstants.thumb_up_filled), for: .normal)
+                    btnDislike.setImage(UIImage(named: AssetConstants.thumb_down), for: .normal)
+                }
+                else if currentArticle.likeDislike?.isLike == 1{
+                    btnLike.setImage(UIImage(named: AssetConstants.thumb_up), for: .normal)
+                    btnDislike.setImage(UIImage(named: AssetConstants.thumb_down_filled), for: .normal)
+                }
+                else{
+                    btnLike.setImage(UIImage(named: AssetConstants.thumb_up), for: .normal)
+                    btnDislike.setImage(UIImage(named: AssetConstants.thumb_down), for: .normal)
+                }
+                if currentArticle.bookmark?.isBookmark == 1 {
+                    setBookmarkImg()
+                }else{
+                    ResetBookmarkImg()
+                }
+            }else{
+                btnLike.setImage(UIImage(named: AssetConstants.thumb_up), for: .normal)
+                btnDislike.setImage(UIImage(named: AssetConstants.thumb_down), for: .normal)
+                ResetBookmarkImg()
             }
             /* let result = DBManager().fetchArticleMedia(articleId: Int(ShowArticle[currentIndex].article_id))
              switch result {
@@ -840,47 +874,34 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
              self.imgNews.sd_setImage(with: URL(string: currentArticle.imageURL!), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
              }*/
             
-            if UserDefaults.standard.value(forKey: "token") != nil{
-                if currentArticle.likeDislike?.isLike == 0 {
-                    btnLike.setImage(UIImage(named: AssetConstants.thumb_up_filled), for: .normal)
-                    btnDislike.setImage(UIImage(named: AssetConstants.thumb_down), for: .normal)
-                }
-                else if currentArticle.likeDislike?.isLike == 1{
-                    btnLike.setImage(UIImage(named: AssetConstants.thumb_up), for: .normal)
-                    btnDislike.setImage(UIImage(named: AssetConstants.thumb_down_filled), for: .normal)
-                }
-                else{
-                    btnLike.setImage(UIImage(named: AssetConstants.thumb_up), for: .normal)
-                    btnDislike.setImage(UIImage(named: AssetConstants.thumb_down), for: .normal)
-                }
-                if currentArticle.bookmark?.isBookmark == 1 {
-                    setBookmarkImg()
-                }else{
-                    ResetBookmarkImg()
-                }
-            }else{
-                btnLike.setImage(UIImage(named: AssetConstants.thumb_up), for: .normal)
-                btnDislike.setImage(UIImage(named: AssetConstants.thumb_down), for: .normal)
-                ResetBookmarkImg()
-            }
         }
-        else if SearchArticle.count != 0 {
+        else if SearchArticle.count > 0 {
             currentEntity = "SearchArticles"
             fetchSearchBookmarkDataFromDB()
             let currentArticle = SearchArticle[currentIndex]
             let newDate = dateFormatter.date(from: currentArticle.published_on!)
-            let agoDate = Helper().timeAgoSinceDate(newDate!)
+            var agoDate = ""
+            if newDate != nil{
+                agoDate = Helper().timeAgoSinceDate(newDate!)
+            }
             articleId = Int(currentArticle.article_id)
             lblNewsHeading.text = currentArticle.title
             txtViewNewsDesc.text = currentArticle.blurb
-            btnSource.setTitle(currentArticle.source! + agoDate, for: .normal)
+            var fullTxt = "\(agoDate)" + " via " + currentArticle.source!
+            let attributedWithTextColor: NSAttributedString = fullTxt.attributedStringWithColor([currentArticle.source!], color: UIColor.red)
+            
+            btnSource.setAttributedTitle(attributedWithTextColor, for: .normal)
             sourceURL = currentArticle.source_url!
             if currentArticle.imageURL != ""{
-                imgNews.sd_setImage(with: URL(string: currentArticle.imageURL!), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
+                
+                let imgURL = APPURL.imageServer + imgWidth + "x" + imgHeight + "/smart/" + currentArticle.imageURL!
+                print("newImage URL : \(imgURL)")
+                imgNews.sd_setImage(with: URL(string: imgURL), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
             }
             else{
                 imgNews.image = UIImage(named: AssetConstants.NoImage)
-            }/*
+            }
+            /*
              
              var checkImg = false
              let imageFormats = ["jpg", "jpeg", "png", "gif"]
@@ -961,6 +982,33 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
                 btnDislike.setImage(UIImage(named: AssetConstants.thumb_down), for: .normal)
                 ResetBookmarkImg()
             }
+        }
+        else if sourceArticle.count > 0{
+            currentEntity = "source"
+            let currentArticle = sourceArticle[0].body?.articles[currentIndex]
+            let newDate = dateFormatter.date(from: currentArticle!.published_on!)
+            var agoDate = ""
+            if newDate != nil{
+                agoDate = Helper().timeAgoSinceDate(newDate!)
+            }
+            articleId = Int(currentArticle!.article_id)
+            lblNewsHeading.text = currentArticle!.title
+            txtViewNewsDesc.text = currentArticle!.blurb
+            var fullTxt = "\(agoDate)" + " via " + currentArticle!.source!
+            let attributedWithTextColor: NSAttributedString = fullTxt.attributedStringWithColor([currentArticle!.source!], color: UIColor.red)
+            
+            btnSource.setAttributedTitle(attributedWithTextColor, for: .normal)
+            sourceURL = (currentArticle?.source!)!
+            if currentArticle!.imageURL != ""{
+                
+                let imgURL = APPURL.imageServer + imgWidth + "x" + imgHeight + "/smart/" + currentArticle!.imageURL!
+                print("newImage URL : \(imgURL)")
+                imgNews.sd_setImage(with: URL(string: imgURL), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
+            }
+            else{
+                imgNews.image = UIImage(named: AssetConstants.NoImage)
+            }
+          
         }
         if imgNews.image == nil{
             imgNews.image = UIImage(named: AssetConstants.NoImage)
@@ -1215,8 +1263,14 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
     @IBAction func btnSourceActn(_ sender: Any) {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let sourcevc:SourceVC = storyboard.instantiateViewController(withIdentifier: "SourceID") as! SourceVC
+        if currentEntity == "SearchArticles"{
+             sourcevc.url = APPURL.SourceURL + SearchArticle[newsCurrentIndex].source!
+            sourcevc.source = SearchArticle[newsCurrentIndex].source!
+        }else{
         sourcevc.url = APPURL.SourceURL + ShowArticle[newsCurrentIndex].source!
-        sourcevc.source = ShowArticle[newsCurrentIndex].source!
+            sourcevc.source = ShowArticle[newsCurrentIndex].source!
+        }
+        
         self.present(sourcevc, animated: true, completion: nil)
     }
     
@@ -1339,7 +1393,14 @@ extension NewsDetailVC:UICollectionViewDelegate, UICollectionViewDataSource, UIC
                 if currentArticle.imageURL != nil{
                     cell.imgNews.sd_setImage(with: URL(string: currentArticle.imageURL!), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
                 }
-            }else{
+            }else if currentEntity == "source"{
+                let currentArticle =  searchRecomData[indexPath.row - 1] //RecomArticleData[0].body!.articles[indexPath.row - 1]
+                cell.lblTitle.text = currentArticle.title
+                if currentArticle.imageURL != nil{
+                    cell.imgNews.sd_setImage(with: URL(string: currentArticle.imageURL!), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
+                }
+            }
+            else{
                 let currentArticle =  RecomData[indexPath.row - 1] //RecomArticleData[0].body!.articles[indexPath.row - 1]
                 cell.lblTitle.text = currentArticle.title
                 if currentArticle.imageURL != nil{

@@ -54,6 +54,11 @@ class SourceVC: UIViewController {
         NotificationCenter.default.removeObserver(self, name: .darkModeEnabled, object: nil)
         NotificationCenter.default.removeObserver(self, name: .darkModeDisabled, object: nil)
     }
+    
+    override var prefersStatusBarHidden: Bool {
+        return true
+    }
+    
     func loadSourceArticles(){
         APICall().loadSearchAPI(url : url){
             (status, response)  in
@@ -82,13 +87,16 @@ extension SourceVC: UITableViewDelegate, UITableViewDataSource{
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath){
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        let newsDetailvc:NewsDetailVC = storyboard.instantiateViewController(withIdentifier: "NewsDetailID") as! NewsDetailVC
-        //            newsDetailvc.newsCurrentIndex = indexPath.row
-        //            newsDetailvc.ShowArticle = ShowArticle
-        //            UserDefaults.standard.set("bookmark", forKey: "isSearch")
-        //            newsDetailvc.articleId = Int(ShowArticle[indexPath.row].article_id)
-        //            present(newsDetailvc, animated: true, completion: nil)
+        func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let newsDetailvc:NewsDetailVC = storyboard.instantiateViewController(withIdentifier: "NewsDetailID") as! NewsDetailVC
+            newsDetailvc.newsCurrentIndex = indexPath.row
+            newsDetailvc.sourceArticle = ShowArticle
+            newsDetailvc.articleId = (ShowArticle[0].body?.articles[indexPath.row].article_id)!
+            UserDefaults.standard.set("source", forKey: "isSearch")
+            present(newsDetailvc, animated: true, completion: nil)
+            sourceTV.deselectRow(at: indexPath, animated: true)
+        }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -247,7 +255,7 @@ extension SourceVC: UITableViewDelegate, UITableViewDataSource{
             //display data from DB
             var currentArticle = ShowArticle[0].body?.articles[indexPath.row]
             cellOdd.lblNewsDescription.text = currentArticle!.title
-            
+    
             if  darkModeStatus == true{
                 cellOdd.ViewCellBackground.backgroundColor = colorConstants.grayBackground2
                 cellOdd.lblSource.textColor = colorConstants.nightModeText
