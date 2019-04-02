@@ -63,11 +63,11 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
     var ArticleData = [ArticleStatus]()
     var RecomData = [NewsArticle]()
     var searchRecomData = [SearchArticles]()
-    var sourceRecomData = [ArticleStatus]()
+    var sourceRecomData = [Article]()
     var bookmarkedArticle = [BookmarkArticles]()
     var ShowArticle = [NewsArticle]()
     var SearchArticle = [SearchArticles]()
-    var sourceArticle = [ArticleStatus]()
+    var sourceArticle = [Article]()
     var ArticleDetail : ArticleDetails!
     var newsCurrentIndex = 0
     var articleId = 0
@@ -208,10 +208,10 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
                 }
             }
         }else if sourceArticle.count > 0{
-            articleId = sourceArticle[0].body?.articles[newsCurrentIndex].article_id
+            articleId = (sourceArticle[newsCurrentIndex].article_id)!
             for news in sourceArticle{
                 if news.article_id != articleId{
-                    RecomData.append(news)
+                    sourceRecomData.append(news)
                 }
             }
         }
@@ -985,23 +985,23 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
         }
         else if sourceArticle.count > 0{
             currentEntity = "source"
-            let currentArticle = sourceArticle[0].body?.articles[currentIndex]
-            let newDate = dateFormatter.date(from: currentArticle!.published_on!)
+            let currentArticle = sourceArticle[currentIndex]
+            let newDate = dateFormatter.date(from: currentArticle.published_on!)
             var agoDate = ""
             if newDate != nil{
                 agoDate = Helper().timeAgoSinceDate(newDate!)
             }
-            articleId = Int(currentArticle!.article_id)
-            lblNewsHeading.text = currentArticle!.title
-            txtViewNewsDesc.text = currentArticle!.blurb
-            var fullTxt = "\(agoDate)" + " via " + currentArticle!.source!
-            let attributedWithTextColor: NSAttributedString = fullTxt.attributedStringWithColor([currentArticle!.source!], color: UIColor.red)
+            articleId = Int(currentArticle.article_id)
+            lblNewsHeading.text = currentArticle.title
+            txtViewNewsDesc.text = currentArticle.blurb
+            var fullTxt = "\(agoDate)" + " via " + currentArticle.source!
+            let attributedWithTextColor: NSAttributedString = fullTxt.attributedStringWithColor([currentArticle.source!], color: UIColor.red)
             
             btnSource.setAttributedTitle(attributedWithTextColor, for: .normal)
-            sourceURL = (currentArticle?.source!)!
-            if currentArticle!.imageURL != ""{
+            sourceURL = (currentArticle.source!)
+            if currentArticle.imageURL != ""{
                 
-                let imgURL = APPURL.imageServer + imgWidth + "x" + imgHeight + "/smart/" + currentArticle!.imageURL!
+                let imgURL = APPURL.imageServer + imgWidth + "x" + imgHeight + "/smart/" + currentArticle.imageURL!
                 print("newImage URL : \(imgURL)")
                 imgNews.sd_setImage(with: URL(string: imgURL), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
             }
@@ -1191,6 +1191,28 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
                 shareAll = [ text , sourceURL , webURL ] as [Any]
             }
         }
+        else if currentEntity == "source"{
+            text = sourceArticle[newsCurrentIndex].title!
+            if sourceArticle[newsCurrentIndex].imageURL != nil{
+                let url = URL(string:sourceArticle[newsCurrentIndex].imageURL!)
+                let image1 = UIImage(named: "\(url)")
+                var image = UIImage()
+                if let data = try? Data(contentsOf: url!)
+                {
+                    image = UIImage(data: data)!
+                }
+                if sourceArticle[newsCurrentIndex].source != nil{
+                    sourceURL = URL(string: sourceArticle[newsCurrentIndex].source!)
+                }
+                shareAll = [ text , image1, image,  sourceURL , webURL ] as [Any]
+            }
+            else{
+                if sourceArticle[newsCurrentIndex].source! != nil{
+                    sourceURL = URL(string: sourceArticle[newsCurrentIndex].source!)
+                }
+                shareAll = [ text , sourceURL , webURL ] as [Any]
+            }
+        }
         else{
             if SearchArticle[newsCurrentIndex].imageURL != nil{
                 text = SearchArticle[newsCurrentIndex].title!
@@ -1227,6 +1249,9 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
         if isSearch == "search"{
             self.dismiss(animated: false)
         }
+        else if isSearch == "source"{
+            self.dismiss(animated: false)
+        }
         else if isSearch == "recommend" {
             //self.view.window!.rootViewController?.dismiss(animated: false, completion: nil)
             self.dismiss(animated: false)
@@ -1240,6 +1265,11 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             let searchvc:SearchVC = storyboard.instantiateViewController(withIdentifier: "SearchID") as! SearchVC
             self.present(searchvc, animated: true, completion: nil)
+        }
+        else if isSearch == "sourcerecommend"{
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let sourcevc:SourceVC = storyboard.instantiateViewController(withIdentifier: "SourceID") as! SourceVC
+            self.present(sourcevc, animated: true, completion: nil)
         }
         else if isSearch == "home"{
             self.dismiss(animated: false)
@@ -1266,7 +1296,11 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
         if currentEntity == "SearchArticles"{
              sourcevc.url = APPURL.SourceURL + SearchArticle[newsCurrentIndex].source!
             sourcevc.source = SearchArticle[newsCurrentIndex].source!
-        }else{
+        }else if currentEntity == "source"{
+            sourcevc.url = APPURL.SourceURL + sourceArticle[newsCurrentIndex].source!
+            sourcevc.source = sourceArticle[newsCurrentIndex].source!
+        }
+        else{
         sourcevc.url = APPURL.SourceURL + ShowArticle[newsCurrentIndex].source!
             sourcevc.source = ShowArticle[newsCurrentIndex].source!
         }
@@ -1411,7 +1445,6 @@ extension NewsDetailVC:UICollectionViewDelegate, UICollectionViewDataSource, UIC
             if cell.imgNews.image == nil{
                 cell.imgNews.image = UIImage(named: AssetConstants.NoImage)
             }
-            
         }
         
         if  darkModeStatus == true{
@@ -1434,14 +1467,21 @@ extension NewsDetailVC:UICollectionViewDelegate, UICollectionViewDataSource, UIC
             else if check == "search" {
                 UserDefaults.standard.set("searchrecommend", forKey: "isSearch")
             }
+            else if check == "source"{
+                UserDefaults.standard.set("sourcerecommend", forKey: "isSearch")
+            }
             else{
                 UserDefaults.standard.set("recommend", forKey: "isSearch")
             }
             newsDetailvc.newsCurrentIndex = indexPath.row - 1
-            if ShowArticle.count != 0{
+            if ShowArticle.count > 0{
                 newsDetailvc.ShowArticle =  RecomData //RecomArticleData[0].body!.articles
                 newsDetailvc.articleId = Int(RecomData[indexPath.row].article_id)  //RecomArticleData[0].body!.articles[indexPath.row - 1].article_id!
-            }else{
+            }else if sourceArticle.count > 0{
+                newsDetailvc.sourceArticle = sourceRecomData
+                newsDetailvc.articleId = Int(sourceRecomData[indexPath.row].article_id)
+            }
+            else{
                 newsDetailvc.SearchArticle = searchRecomData
                 newsDetailvc.articleId = Int(searchRecomData[indexPath.row].article_id)
             }

@@ -87,17 +87,16 @@ extension SourceVC: UITableViewDelegate, UITableViewDataSource{
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath){
-        func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             let newsDetailvc:NewsDetailVC = storyboard.instantiateViewController(withIdentifier: "NewsDetailID") as! NewsDetailVC
             newsDetailvc.newsCurrentIndex = indexPath.row
-            newsDetailvc.sourceArticle = ShowArticle
+            newsDetailvc.sourceArticle = (ShowArticle[0].body?.articles)!
             newsDetailvc.articleId = (ShowArticle[0].body?.articles[indexPath.row].article_id)!
             UserDefaults.standard.set("source", forKey: "isSearch")
             present(newsDetailvc, animated: true, completion: nil)
             sourceTV.deselectRow(at: indexPath, animated: true)
         }
-    }
+
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
