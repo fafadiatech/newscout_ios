@@ -1195,8 +1195,6 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
         }
         else if isSearch == "home"{
             self.dismiss(animated: false)
-            
-            
         }
     }
     

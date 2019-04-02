@@ -401,7 +401,6 @@ extension BookmarkVC: UITableViewDelegate, UITableViewDataSource{
             //lblNonews.isHidden = true
             return cellOdd
         }
-        return cell
     }
     
     //check whether tableview scrolled up or down

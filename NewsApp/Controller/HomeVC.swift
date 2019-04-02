@@ -14,6 +14,9 @@ import MaterialComponents.MaterialActivityIndicator
 import SDWebImage
 import NightNight
 
+protocol ScrollDelegate{
+    func isNavigate(status: Bool)
+}
 extension String {
     func attributedStringWithColor(_ strings: [String], color: UIColor, characterSpacing: UInt? = nil) -> NSAttributedString {
         let attributedString = NSMutableAttributedString(string: self)
@@ -33,6 +36,7 @@ class HomeVC: UIViewController{
     
     @IBOutlet weak var HomeNewsTV: UITableView!
     @IBOutlet weak var lblNonews: UILabel!
+    var protocolObj : ScrollDelegate?
     var tabBarTitle: String = ""
     var ShowArticle = [NewsArticle]()
     let appDelegate = UIApplication.shared.delegate as? AppDelegate
@@ -50,6 +54,7 @@ class HomeVC: UIViewController{
     override func viewDidLoad(){
         super.viewDidLoad()
         HomeNewsTV.tableFooterView = UIView(frame: .zero)
+        protocolObj?.isNavigate(status: true)
         lblNonews.isHidden = true
         NotificationCenter.default.addObserver(self, selector: #selector(darkModeEnabled(_:)), name: .darkModeEnabled, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(darkModeDisabled(_:)), name: .darkModeDisabled, object: nil)
@@ -437,7 +442,9 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
             return cellOdd
         }
     }
-    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+          protocolObj?.isNavigate(status: true)
+    }
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         if indexPath.row == tableView.numberOfRows(inSection: indexPath.section) - 1 {
             var submenu = UserDefaults.standard.value(forKey: "submenu") as! String

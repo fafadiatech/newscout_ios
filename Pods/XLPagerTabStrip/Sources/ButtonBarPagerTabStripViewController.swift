@@ -47,7 +47,6 @@ public struct ButtonBarPagerTabStripSettings {
         public var buttonBarMinimumLineSpacing: CGFloat?
         public var buttonBarLeftContentInset: CGFloat?
         public var buttonBarRightContentInset: CGFloat?
-        
         public var selectedBarBackgroundColor = UIColor.red
         public var selectedBarHeight: CGFloat = 3 // underline height
         public var selectedBarVerticalAlignment: SelectedBarVerticalAlignment = .bottom
@@ -73,7 +72,6 @@ public struct ButtonBarPagerTabStripSettings {
 }
 
 open class ButtonBarPagerTabStripViewController: PagerTabStripViewController, PagerTabStripDataSource, PagerTabStripIsProgressiveDelegate, UICollectionViewDelegate, UICollectionViewDataSource {
-    
     public var settings = ButtonBarPagerTabStripSettings()
     
     public var buttonBarItemSpec: ButtonBarItemSpec<ButtonBarViewCell>!
@@ -101,7 +99,6 @@ open class ButtonBarPagerTabStripViewController: PagerTabStripViewController, Pa
     
     open override func viewDidLoad() {
         super.viewDidLoad()
-        
         var bundle = Bundle(for: ButtonBarViewCell.self)
         if let resourcePath = bundle.path(forResource: "XLPagerTabStrip", ofType: "bundle") {
             if let resourcesBundle = Bundle(path: resourcePath) {

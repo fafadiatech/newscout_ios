@@ -274,6 +274,7 @@ class HomeParentVC: ButtonBarPagerTabStripViewController{
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        viewOptions.isHidden = true
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -292,6 +293,7 @@ class HomeParentVC: ButtonBarPagerTabStripViewController{
                 childVC.tabBarTitle = cat
                 
                 childrenVC.append(childVC)
+                childVC.protocolObj = self
             }
         }
         else{
@@ -344,6 +346,7 @@ class HomeParentVC: ButtonBarPagerTabStripViewController{
         }
     }
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        viewOptions.isHidden = true
         if (collectionView == buttonBarView) {
             subMenuRow = indexPath.row
             UserDefaults.standard.set(subMenuArr[HeadingRow][indexPath.row], forKey: "submenu")
@@ -414,6 +417,13 @@ extension HomeParentVC : UIGestureRecognizerDelegate {
             return false
         }
         return true
+    }
+}
+extension HomeParentVC: ScrollDelegate{
+    func isNavigate(status: Bool) {
+        if status == true{
+            viewOptions.isHidden = true
+        }
     }
 }
 
