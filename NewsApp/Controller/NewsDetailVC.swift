@@ -68,6 +68,7 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
     var ShowArticle = [NewsArticle]()
     var SearchArticle = [SearchArticles]()
     var sourceArticle = [Article]()
+    var shuffleData =  [NewsArticle]()
     var ArticleDetail : ArticleDetails!
     var newsCurrentIndex = 0
     var articleId = 0
@@ -140,7 +141,10 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
         ViewWebContainer.isHidden = true
         if ShowArticle.count != 0 {
             indexCount = ShowArticle.count
-        }else{
+        }else if sourceArticle.count > 0{
+            indexCount = sourceArticle.count
+        }
+        else{
             indexCount = SearchArticle.count
         }
         
@@ -199,6 +203,7 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
     
     func filterRecommendation(){
         RecomData.removeAll()
+        sourceRecomData.removeAll()
         searchRecomData.removeAll()
         if ShowArticle.count > 0{
             articleId = Int(ShowArticle[newsCurrentIndex].article_id)
@@ -996,9 +1001,8 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
             txtViewNewsDesc.text = currentArticle.blurb
             var fullTxt = "\(agoDate)" + " via " + currentArticle.source!
             let attributedWithTextColor: NSAttributedString = fullTxt.attributedStringWithColor([currentArticle.source!], color: UIColor.red)
-            
             btnSource.setAttributedTitle(attributedWithTextColor, for: .normal)
-            sourceURL = (currentArticle.source!)
+            sourceURL = (currentArticle.url!)
             if currentArticle.imageURL != ""{
                 
                 let imgURL = APPURL.imageServer + imgWidth + "x" + imgHeight + "/smart/" + currentArticle.imageURL!
@@ -1320,18 +1324,26 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
         WKWebView.load(myRequest)
     }
     
+    func getShuffleData(){
+        let result = DBManager().FetchDataFromDB(entity: "NewsArticle")
+        switch result {
+        case .Success(let DBData) :
+            if DBData.count > 0{
+                shuffleData = DBData
+                let randomInt = Int.random(in: 0..<DBData.count)
+                activityIndicator.stopAnimating()
+                ShowNews(currentIndex: randomInt)
+            }
+        case .Failure(let errorMsg) : break
+        }
+    }
+    
     @IBAction func btnShuffleActn(_ sender: Any) {
-        //            let result = DBManager().FetchDataFromDB(entity: "NewsArticle")
-        //            switch result {
-        //            case .Success(let DBData) :
-        //                if DBData.count == 0{
-        //                    let randomInt = Int.random(in: 0..<DBData.count)
-        //                    activityIndicator.stopAnimating()
-        //                    ShowNews(currentIndex: randomInt)
-        //                }
-        //            case .Failure(let errorMsg) : break
-        //            }
-        //
+//        if shuffleData.count > 0{
+//            let randomInt = Int.random(in: 0..<shuffleData.count)
+//            activityIndicator.stopAnimating()
+//            ShowNews(currentIndex: randomInt)
+//        }
         if newsCurrentIndex < ShowArticle.count - 2{
             newsCurrentIndex = newsCurrentIndex + 2
             ShowNews(currentIndex: newsCurrentIndex)
@@ -1376,16 +1388,18 @@ extension NewsDetailVC:UICollectionViewDelegate, UICollectionViewDataSource, UIC
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         // return (self.RecomArticleData.count != 0) ? self.RecomArticleData[0].body!.articles.count + 1 : 0
-        if RecomData.count == 0 && searchRecomData.count == 0{
+        if RecomData.count == 0 && searchRecomData.count == 0 && sourceRecomData.count == 0{
             return 0
         }
-        else if RecomData.count >= 5 || searchRecomData.count >= 5{
+        else if RecomData.count >= 5 || searchRecomData.count >= 5 || sourceRecomData.count >= 5{
             return 6
         }else{
-            if RecomData.count != 0{
+            if RecomData.count > 0{
                 return RecomData.count + 1
-            }else{
+            }else if searchRecomData.count > 0 {
                 return searchRecomData.count + 1
+            }else{
+                return sourceRecomData.count + 1
             }
         }
         // return ShowArticle.count != 0 ? ShowArticle.count : 0
@@ -1428,7 +1442,7 @@ extension NewsDetailVC:UICollectionViewDelegate, UICollectionViewDataSource, UIC
                     cell.imgNews.sd_setImage(with: URL(string: currentArticle.imageURL!), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
                 }
             }else if currentEntity == "source"{
-                let currentArticle =  searchRecomData[indexPath.row - 1] //RecomArticleData[0].body!.articles[indexPath.row - 1]
+                let currentArticle =  sourceRecomData[indexPath.row - 1] //RecomArticleData[0].body!.articles[indexPath.row - 1]
                 cell.lblTitle.text = currentArticle.title
                 if currentArticle.imageURL != nil{
                     cell.imgNews.sd_setImage(with: URL(string: currentArticle.imageURL!), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
