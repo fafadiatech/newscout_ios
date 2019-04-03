@@ -1175,7 +1175,7 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
         var sourceURL : URL!
         if currentEntity == "ShowArticle"{
             text = ShowArticle[newsCurrentIndex].title!
-            if ShowArticle[newsCurrentIndex].imageURL != nil{
+            if ShowArticle[newsCurrentIndex].imageURL != ""{
                 let url = URL(string:ShowArticle[newsCurrentIndex].imageURL!)
                 let image1 = UIImage(named: "\(url)")
                 var image = UIImage()
@@ -1183,13 +1183,13 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
                 {
                     image = UIImage(data: data)!
                 }
-                if ShowArticle[newsCurrentIndex].source_url != nil{
+                if ShowArticle[newsCurrentIndex].source_url != ""{
                     sourceURL = URL(string: ShowArticle[newsCurrentIndex].source_url!)
                 }
-                shareAll = [ text , image1, image,  sourceURL , webURL ] as [Any]
+                shareAll = [ text , image,  sourceURL , webURL ] as [Any]
             }
             else{
-                if ShowArticle[newsCurrentIndex].source_url != nil{
+                if ShowArticle[newsCurrentIndex].source_url != ""{
                     sourceURL = URL(string: ShowArticle[newsCurrentIndex].source_url!)
                 }
                 shareAll = [ text , sourceURL , webURL ] as [Any]
@@ -1197,7 +1197,7 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
         }
         else if currentEntity == "source"{
             text = sourceArticle[newsCurrentIndex].title!
-            if sourceArticle[newsCurrentIndex].imageURL != nil{
+            if sourceArticle[newsCurrentIndex].imageURL != ""{
                 let url = URL(string:sourceArticle[newsCurrentIndex].imageURL!)
                 let image1 = UIImage(named: "\(url)")
                 var image = UIImage()
@@ -1205,20 +1205,20 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
                 {
                     image = UIImage(data: data)!
                 }
-                if sourceArticle[newsCurrentIndex].source != nil{
+                if sourceArticle[newsCurrentIndex].source != ""{
                     sourceURL = URL(string: sourceArticle[newsCurrentIndex].source!)
                 }
-                shareAll = [ text , image1, image,  sourceURL , webURL ] as [Any]
+                shareAll = [ text , image,  sourceURL , webURL ] as [Any]
             }
             else{
-                if sourceArticle[newsCurrentIndex].source! != nil{
+                if sourceArticle[newsCurrentIndex].source! != ""{
                     sourceURL = URL(string: sourceArticle[newsCurrentIndex].source!)
                 }
                 shareAll = [ text , sourceURL , webURL ] as [Any]
             }
         }
         else{
-            if SearchArticle[newsCurrentIndex].imageURL != nil{
+            if SearchArticle[newsCurrentIndex].imageURL != ""{
                 text = SearchArticle[newsCurrentIndex].title!
                 let url = URL(string:SearchArticle[newsCurrentIndex].imageURL!)
                 let image1 = UIImage(named: "\(url)")
@@ -1227,22 +1227,20 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
                 {
                     image = UIImage(data: data)!
                 }
-                if SearchArticle[newsCurrentIndex].source_url != nil{
+                if SearchArticle[newsCurrentIndex].source_url != ""{
                     sourceURL = URL(string: SearchArticle[newsCurrentIndex].source_url!)
                 }
-                shareAll = [ text , image1, image,  sourceURL , webURL ] as [Any]
+                shareAll = [ text , image,  sourceURL , webURL ] as [Any]
             }
             else{
-                if SearchArticle[newsCurrentIndex].source_url != nil{
+                if SearchArticle[newsCurrentIndex].source_url != ""{
                     sourceURL = URL(string: SearchArticle[newsCurrentIndex].source_url!)
                 }
                 shareAll = [ text , sourceURL , webURL ] as [Any]
             }
-            
         }
-        
-        
         let activityViewController = UIActivityViewController(activityItems: shareAll, applicationActivities: nil)
+        activityViewController.excludedActivityTypes = [UIActivityType.airDrop]
         activityViewController.popoverPresentationController?.sourceView = sender as! UIView
         self.present(activityViewController, animated: true, completion: nil)
         

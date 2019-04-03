@@ -14,7 +14,6 @@ import NightNight
 
 class SettingsTVC: UITableViewController, GIDSignInUIDelegate {
     @IBOutlet weak var lblDailyEdition: UILabel!
-    @IBOutlet weak var lblNIghtMode: UILabel!
     @IBOutlet weak var lblProfile: UILabel!
     @IBOutlet weak var lblPersonlized: UILabel!
     @IBOutlet weak var lblBreakingNews: UILabel!
@@ -22,7 +21,6 @@ class SettingsTVC: UITableViewController, GIDSignInUIDelegate {
     @IBOutlet weak var segmentTextSize: UISegmentedControl!
     @IBOutlet weak var lblLogin: UILabel!
     @IBOutlet weak var btnLogout: UIButton!
-    @IBOutlet weak var switchNightMode: UISwitch!
     @IBOutlet weak var switchBreaking: UISwitch!
     @IBOutlet weak var switchDaily: UISwitch!
     @IBOutlet weak var switchPersonalised: UISwitch!
@@ -33,12 +31,6 @@ class SettingsTVC: UITableViewController, GIDSignInUIDelegate {
         super.viewDidLoad()
         
         let switchStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
-        if switchStatus == true{
-            switchNightMode.isOn = true
-        }
-        else{
-            switchNightMode.isOn = false
-        }
         let dailyStatus = UserDefaults.standard.value(forKey: "daily") as! Bool
         if dailyStatus == true{
             switchDaily.isOn = true
@@ -108,7 +100,6 @@ class SettingsTVC: UITableViewController, GIDSignInUIDelegate {
         lblLogin.textColor = .black
         btnLogout.titleLabel?.textColor = .black
         lblProfile.textColor = .black
-        lblNIghtMode.textColor = .black
         lblPersonlized.textColor = .black
         lblBreakingNews.textColor = .black
         lblDailyEdition.textColor = .black
@@ -251,7 +242,7 @@ class SettingsTVC: UITableViewController, GIDSignInUIDelegate {
                 self.view.makeToast("You need to login", duration: 1.0, position: .center)
             }
         }
-        else if indexPath.section == 3 && indexPath.row == 1{
+        else if indexPath.section == 3 && indexPath.row == 0{
             let text = "checkout newScout app. I found it best for reading news."
             let url = URL(string: "http://www.fafadiatech.com/")
             let shareAll = [ text, url] as [Any]
@@ -264,12 +255,12 @@ class SettingsTVC: UITableViewController, GIDSignInUIDelegate {
             self.present(activityViewController, animated: true, completion: nil)
         }
             //Replace url with itunes app url
-        else if indexPath.section == 3 && indexPath.row == 2{
+        else if indexPath.section == 3 && indexPath.row == 1{
             //  UIApplication.sharedApplication().openURL(NSURL(string : "itms-apps://itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?id=\(0)&onlyLatestVersion=true&pageNumber=0&sortOrdering=1)")!);
             let url = URL(string: "https://mail.google.com")!
             UIApplication.shared.openURL(url)
         }
-        else if indexPath.section == 3 && indexPath.row == 3{
+        else if indexPath.section == 3 && indexPath.row == 2{
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             let AboutUsvc:AboutUsVC
                 = storyboard.instantiateViewController(withIdentifier: "AboutUsID") as! AboutUsVC
@@ -298,17 +289,7 @@ class SettingsTVC: UITableViewController, GIDSignInUIDelegate {
         }
         
     }
-    @IBAction func switchNightModeActn(_ sender: Any) {
-        if switchNightMode.isOn == true {
-            UserDefaults.standard.setValue(true, forKey: "darkModeEnabled")
-            NotificationCenter.default.post(name: .darkModeEnabled, object: nil)
-        }
-        else {
-            UserDefaults.standard.setValue(false, forKey: "darkModeEnabled")
-            NotificationCenter.default.post(name: .darkModeDisabled, object: nil)
-        }
-    }
-    
+   
     @IBAction func switchBreakingNewsActn(_ sender: Any) {
         if switchBreaking.isOn == true {
             UserDefaults.standard.set(true, forKey: "breaking")
