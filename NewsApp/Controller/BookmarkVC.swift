@@ -23,6 +23,8 @@ class BookmarkVC: UIViewController {
     var nextURL = ""
     var ShowArticle = [NewsArticle]()
     var bookmarkArticles = [BookmarkArticles]()
+    var imgWidth = ""
+    var imgHeight = ""
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -251,6 +253,8 @@ extension BookmarkVC: UITableViewDelegate, UITableViewDataSource{
         }
         activityIndicator.stopAnimating()*/
         let cellOdd = tableView.dequeueReusableCell(withIdentifier: "bookmarkZigzagID", for:indexPath) as! BookmarkZigzagTVCell
+        imgWidth = String(describing : Int(cell.imgNews.frame.width))
+        imgHeight = String(describing : Int(cell.imgNews.frame.height))
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
         dateFormatter.timeZone = NSTimeZone.local
@@ -308,7 +312,8 @@ extension BookmarkVC: UITableViewDelegate, UITableViewDataSource{
                     cell.lblSource.attributedText = attributedWithTextColor
                 }
             }
-            cell.imgNews.sd_setImage(with: URL(string: currentArticle.imageURL!), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
+            let imgURL = APPURL.imageServer + imgWidth + "x" + imgHeight + "/smart/" + currentArticle.imageURL!
+            cell.imgNews.sd_setImage(with: URL(string: imgURL), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
             
             if textSizeSelected == 0{
                 cell.lblSource.font = FontConstants.smallFontContent
@@ -379,7 +384,8 @@ extension BookmarkVC: UITableViewDelegate, UITableViewDataSource{
                 }
             }
             
-            cellOdd.imgNews.sd_setImage(with: URL(string: currentArticle.imageURL!), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
+            let imgURL = APPURL.imageServer + imgWidth + "x" + imgHeight + "/smart/" + currentArticle.imageURL!
+            cellOdd.imgNews.sd_setImage(with: URL(string: imgURL), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
             if textSizeSelected == 0{
                 cellOdd.lblSource.font = FontConstants.smallFontContent
                 cellOdd.lblNewsDescription.font = FontConstants.smallFontHeadingBold

@@ -30,6 +30,8 @@ class SearchVC: UIViewController {
     var searchArticlesArr = [Article]()
     var recordCount = 0
     var coredataRecordCount = 0
+    var imgWidth = ""
+    var imgHeight = ""
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -234,6 +236,8 @@ extension SearchVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDele
         return cell*/
       let cell = tableView.dequeueReusableCell(withIdentifier: "search", for:indexPath) as! SearchResultTVCell
         let cellOdd = tableView.dequeueReusableCell(withIdentifier: "searchZigzagID", for:indexPath) as! searchZigzagTVCell
+        imgWidth = String(describing : Int(cell.imgNews.frame.width))
+        imgHeight = String(describing : Int(cell.imgNews.frame.height))
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
         dateFormatter.timeZone = NSTimeZone.local
@@ -291,7 +295,8 @@ extension SearchVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDele
                     cell.lblSource.attributedText = attributedWithTextColor
                 }
             }
-            cell.imgNews.sd_setImage(with: URL(string: currentArticle.imageURL!), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
+            let imgURL = APPURL.imageServer + imgWidth + "x" + imgHeight + "/smart/" + currentArticle.imageURL!
+            cell.imgNews.sd_setImage(with: URL(string: imgURL), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
             
             if textSizeSelected == 0{
                 cell.lblSource.font = FontConstants.smallFontContent
@@ -362,7 +367,8 @@ extension SearchVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDele
                 }
             }
             
-            cellOdd.imgNews.sd_setImage(with: URL(string: currentArticle.imageURL!), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
+            let imgURL = APPURL.imageServer + imgWidth + "x" + imgHeight + "/smart/" + currentArticle.imageURL!
+            cellOdd.imgNews.sd_setImage(with: URL(string: imgURL), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
             if textSizeSelected == 0{
                 cellOdd.lblSource.font = FontConstants.smallFontContent
                 cellOdd.lblNewsDescription.font = FontConstants.smallFontHeadingBold

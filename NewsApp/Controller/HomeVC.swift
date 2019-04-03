@@ -51,6 +51,9 @@ class HomeVC: UIViewController{
     var tagArr : [String] = []
     var sortedData = [NewsArticle]()
     var isAPICalled = false
+    var imgWidth = ""
+    var imgHeight = ""
+    
     override func viewDidLoad(){
         super.viewDidLoad()
         HomeNewsTV.tableFooterView = UIView(frame: .zero)
@@ -290,6 +293,8 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "HomeNewsTVCellID", for:indexPath) as! HomeNewsTVCell
         let cellOdd = tableView.dequeueReusableCell(withIdentifier: "HomeImgTVCellID", for:indexPath) as! HomeImgTVCell
+        imgWidth = String(describing : Int(cell.imgNews.frame.width))
+        imgHeight = String(describing : Int(cell.imgNews.frame.height))
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
         dateFormatter.timeZone = NSTimeZone.local
@@ -348,7 +353,8 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
                     cell.lblSource.attributedText = attributedWithTextColor
                 }
             }
-            cell.imgNews.sd_setImage(with: URL(string: currentArticle.imageURL!), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
+            let imgURL = APPURL.imageServer + imgWidth + "x" + imgHeight + "/smart/" + currentArticle.imageURL!
+            cell.imgNews.sd_setImage(with: URL(string: imgURL), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
             
             if textSizeSelected == 0{
                 cell.lblSource.font = FontConstants.smallFontContent
@@ -418,8 +424,8 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
                     cellOdd.lblSource.attributedText = attributedWithTextColor
                 }
             }
-            
-            cellOdd.imgNews.sd_setImage(with: URL(string: currentArticle.imageURL!), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
+            let imgURL = APPURL.imageServer + imgWidth + "x" + imgHeight + "/smart/" + currentArticle.imageURL!
+            cellOdd.imgNews.sd_setImage(with: URL(string: imgURL), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
             if textSizeSelected == 0{
                 cellOdd.lblSource.font = FontConstants.smallFontContent
                 cellOdd.lblNewsHeading.font = FontConstants.smallFontHeadingBold

@@ -23,7 +23,8 @@ class SourceVC: UIViewController {
     let textSizeSelected = UserDefaults.standard.value(forKey: "textSize") as! Int
     let activityIndicator = MDCActivityIndicator()
     var ShowArticle = [ArticleStatus]()
-    
+    var imgWidth = ""
+    var imgHeight = ""
     override func viewDidLoad() {
         super.viewDidLoad()
         sourceTV.tableFooterView = UIView(frame: .zero)
@@ -99,8 +100,6 @@ extension SourceVC: UITableViewDelegate, UITableViewDataSource{
 
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
-        
        /* let borderColor: UIColor = UIColor.lightGray
         
         cell.imgNews.layer.cornerRadius = 10.0
@@ -167,6 +166,8 @@ extension SourceVC: UITableViewDelegate, UITableViewDataSource{
         return cell*/
         let cell = tableView.dequeueReusableCell(withIdentifier: "sourceID", for:indexPath) as! sourceTVCell
         let cellOdd = tableView.dequeueReusableCell(withIdentifier: "sourceZigzagID", for:indexPath) as! sourceZigzagTVCell
+        imgWidth = String(describing : Int(cell.imgNews.frame.width))
+        imgHeight = String(describing : Int(cell.imgNews.frame.height))
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
         dateFormatter.timeZone = NSTimeZone.local
@@ -224,7 +225,8 @@ extension SourceVC: UITableViewDelegate, UITableViewDataSource{
                     cell.lblSource.attributedText = attributedWithTextColor
                 }
             }
-            cell.imgNews.sd_setImage(with: URL(string: currentArticle!.imageURL!), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
+            let imgURL = APPURL.imageServer + imgWidth + "x" + imgHeight + "/smart/" + currentArticle!.imageURL!
+            cell.imgNews.sd_setImage(with: URL(string: imgURL), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
             
             if textSizeSelected == 0{
                 cell.lblSource.font = FontConstants.smallFontContent
@@ -295,7 +297,8 @@ extension SourceVC: UITableViewDelegate, UITableViewDataSource{
                 }
             }
             
-            cellOdd.imgNews.sd_setImage(with: URL(string: currentArticle!.imageURL!), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
+            let imgURL = APPURL.imageServer + imgWidth + "x" + imgHeight + "/smart/" + currentArticle!.imageURL!
+            cellOdd.imgNews.sd_setImage(with: URL(string: imgURL), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
             if textSizeSelected == 0{
                 cellOdd.lblSource.font = FontConstants.smallFontContent
                 cellOdd.lblNewsDescription.font = FontConstants.smallFontHeadingBold

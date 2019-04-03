@@ -31,7 +31,7 @@ class DBManager{
                 print(code)
             }
             
-            if self.ArticleData.count != 0{
+            if self.ArticleData.count > 0{
                 
                 if self.ArticleData[0].header.status == "1" {
                     if self.ArticleData[0].body?.next != nil{
