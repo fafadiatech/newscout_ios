@@ -118,6 +118,8 @@ struct AssetConstants{
     static let economy = "economy"
     static let finance = "finance"
     static let misc = "news"
+    static let moon = "moon24"
+    static let whiteMoon = "moon_white24"
  }
 
 struct AppFontName {

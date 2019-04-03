@@ -28,7 +28,8 @@ class HomeParentVC: ButtonBarPagerTabStripViewController{
     @IBOutlet weak var btnSettingsNav: UIButton!
     @IBOutlet weak var btnBookmark: UIButton!
     @IBOutlet weak var viewNightMode: UIView!
-    @IBOutlet weak var switchNightMode: UISwitch!
+    @IBOutlet weak var viewBookmark: UIView!
+    @IBOutlet weak var viewSettings: UIView!
     @IBOutlet weak var btnSearch: UIButton!
     @IBOutlet weak var viewOptions: UIView!
     @IBOutlet weak var btnSettings: UIButton!
@@ -36,7 +37,10 @@ class HomeParentVC: ButtonBarPagerTabStripViewController{
     @IBOutlet weak var viewAppTitle: UIView!
     @IBOutlet weak var lblAppName: UILabel!
     @IBOutlet weak var btnNightMode: UIButton!
-   
+    @IBOutlet weak var btnNightModeImg: UIButton!
+    @IBOutlet weak var btnBookmarkImg: UIButton!
+    @IBOutlet weak var btnSettingImg: UIButton!
+    
     let activityIndicator = MDCActivityIndicator()
     var childrenVC = [UIViewController]()
     var jsonData : [Result] = []
@@ -52,7 +56,6 @@ class HomeParentVC: ButtonBarPagerTabStripViewController{
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        switchNightMode.set(width: 41, height: 21)
         viewOptions.isHidden = true
         menuCV.allowsMultipleSelection = false
         viewOptions.layer.borderWidth = 0.5
@@ -65,12 +68,6 @@ class HomeParentVC: ButtonBarPagerTabStripViewController{
         view.addSubview(activityIndicator)
         
         let switchStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
-        if switchStatus == true{
-            switchNightMode.isOn = true
-        }
-        else{
-            switchNightMode.isOn = false
-        }
         if UserDefaults.standard.value(forKey: "deviceToken") == nil{
   UserDefaults.standard.set("41ea0aaa15323ae5012992392e4edd6b8a6ee4547a8dc6fd1f3b31aab9839208", forKey: "deviceToken")
         }
@@ -98,7 +95,6 @@ class HomeParentVC: ButtonBarPagerTabStripViewController{
         let darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
         if  darkModeStatus == true{
             changeTheme()
-            
         }
         else{
             buttonBarView.backgroundColor = .white
@@ -139,6 +135,8 @@ class HomeParentVC: ButtonBarPagerTabStripViewController{
     
     func changeTheme(){
         viewNightMode.backgroundColor = colorConstants.grayBackground1
+        viewBookmark.backgroundColor = colorConstants.grayBackground1
+        viewSettings.backgroundColor = colorConstants.grayBackground1
         btnBookmark.setTitleColor(.white, for: UIControlState.normal)
         btnNightMode.setTitleColor(.white, for: UIControlState.normal)
         btnSettingsNav.setTitleColor(.white, for: UIControlState.normal)
@@ -261,8 +259,11 @@ class HomeParentVC: ButtonBarPagerTabStripViewController{
         btnBookmark.setTitleColor(.black, for: UIControlState.normal)
         btnNightMode.setTitleColor(.black, for: UIControlState.normal)
         btnSettingsNav.setTitleColor(.black, for: UIControlState.normal)
-        viewNightMode.backgroundColor = .white
-        viewOptions.backgroundColor = .white
+        viewNightMode.backgroundColor = colorConstants.txtlightGrayColor
+        viewSettings.backgroundColor = colorConstants.txtlightGrayColor
+        viewBookmark.backgroundColor = colorConstants.txtlightGrayColor
+        viewOptions.backgroundColor = colorConstants.txtlightGrayColor
+        btnNightModeImg.setImage(UIImage(named: AssetConstants.moon), for: .normal)
         reloadPagerTabStripView()
         activityIndicator.stopAnimating()
     }
@@ -385,15 +386,14 @@ class HomeParentVC: ButtonBarPagerTabStripViewController{
     }
     
     @IBAction func btnNightModeActn(_ sender: Any) {
-        
-    }
-    
-    @IBAction func nightModeSwitch(_ sender: Any) {
-        if switchNightMode.isOn == true {
+          let Status = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
+        if Status == false {
+            btnNightModeImg.setImage(UIImage(named: AssetConstants.whiteMoon), for: .normal)
             UserDefaults.standard.setValue(true, forKey: "darkModeEnabled")
             NotificationCenter.default.post(name: .darkModeEnabled, object: nil)
         }
         else {
+             btnNightModeImg.setImage(UIImage(named: AssetConstants.moon), for: .normal)
             UserDefaults.standard.setValue(false, forKey: "darkModeEnabled")
             NotificationCenter.default.post(name: .darkModeDisabled, object: nil)
         }
@@ -404,6 +404,7 @@ class HomeParentVC: ButtonBarPagerTabStripViewController{
         let bookmarkvc:BookmarkVC = storyboard.instantiateViewController(withIdentifier: "BookmarkID") as! BookmarkVC
         self.present(bookmarkvc, animated: true, completion: nil)
     }
+    
     @IBAction func btnSeachActn(_ sender: Any) {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let searchvc:SearchVC = storyboard.instantiateViewController(withIdentifier: "SearchID") as! SearchVC
