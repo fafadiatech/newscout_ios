@@ -33,6 +33,7 @@
 		263421F321624AD200C8510F /* SettingsTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 263421F221624AD200C8510F /* SettingsTVC.swift */; };
 		263589F721AEBE1800C9A444 /* APITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 263589F621AEBE1800C9A444 /* APITests.swift */; };
 		263589F921AEC00B00C9A444 /* HomeVCTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 263589F821AEC00B00C9A444 /* HomeVCTest.swift */; };
+		263D53F822562C05007A4781 /* HomeiPadVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 263D53F722562C05007A4781 /* HomeiPadVC.swift */; };
 		263F2D8F216B2DEE00764C45 /* DataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 263F2D8E216B2DEE00764C45 /* DataModel.swift */; };
 		263F2D9C216B7FC700764C45 /* ProfileVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 263F2D9B216B7FC700764C45 /* ProfileVC.swift */; };
 		2648C69521C915F300CCB657 /* SocialLoginTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2648C69421C915F300CCB657 /* SocialLoginTests.swift */; };
@@ -149,6 +150,7 @@
 		263421F221624AD200C8510F /* SettingsTVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = SettingsTVC.swift; sourceTree = "<group>"; };
 		263589F621AEBE1800C9A444 /* APITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APITests.swift; sourceTree = "<group>"; };
 		263589F821AEC00B00C9A444 /* HomeVCTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeVCTest.swift; sourceTree = "<group>"; };
+		263D53F722562C05007A4781 /* HomeiPadVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeiPadVC.swift; sourceTree = "<group>"; };
 		263F2D8E216B2DEE00764C45 /* DataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataModel.swift; sourceTree = "<group>"; };
 		263F2D9B216B7FC700764C45 /* ProfileVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileVC.swift; sourceTree = "<group>"; };
 		2648C69421C915F300CCB657 /* SocialLoginTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocialLoginTests.swift; sourceTree = "<group>"; };
@@ -412,6 +414,7 @@
 				26ACEA93216733BA000EF3C7 /* CategoryListVC.swift */,
 				263421F221624AD200C8510F /* SettingsTVC.swift */,
 				7E1D1398216CC79000FE342A /* HomeParentVC.swift */,
+				263D53F722562C05007A4781 /* HomeiPadVC.swift */,
 				263421EE216230F900C8510F /* SignUpVC.swift */,
 				263421F02162310D00C8510F /* LoginVC.swift */,
 				265E218521649ACE0053E5A0 /* SettingsVC.swift */,
@@ -810,6 +813,7 @@
 				42D12BF2215A0AEB0085EF12 /* SearchVC.swift in Sources */,
 				260FB9D82221656F008B0291 /* Category+CoreDataProperties.swift in Sources */,
 				26BEF806222E77700002DEBD /* MenuHashTag+CoreDataClass.swift in Sources */,
+				263D53F822562C05007A4781 /* HomeiPadVC.swift in Sources */,
 				421ADFC12156407400C00F6F /* NewsApp.xcdatamodeld in Sources */,
 				4265E20821B8E9F800C3F0D7 /* NotificationsName+Extensions.swift in Sources */,
 				26BEF807222E77700002DEBD /* MenuHashTag+CoreDataProperties.swift in Sources */,

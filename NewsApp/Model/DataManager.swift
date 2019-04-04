@@ -171,8 +171,10 @@ class DBManager{
             appDelegate?.persistentContainer.viewContext
         let fetchRequest =
             NSFetchRequest<NewsArticle>(entityName: "NewsArticle")
+        if UserDefaults.standard.value(forKey: "subMenuId") != nil{
         var subMenuId = UserDefaults.standard.value(forKey: "subMenuId") as! Int
         fetchRequest.predicate = NSPredicate(format: "categoryId = %d ", subMenuId)
+        }
         do {
             ShowArticle =  try (managedContext?.fetch(fetchRequest))!
         }catch let error as NSError {

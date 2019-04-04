@@ -40,6 +40,7 @@ class HomeParentVC: ButtonBarPagerTabStripViewController{
     @IBOutlet weak var btnBookmarkImg: UIButton!
     @IBOutlet weak var btnSettingImg: UIButton!
     
+    var statusBarOrientation: UIInterfaceOrientation = UIApplication.shared.statusBarOrientation
     let activityIndicator = MDCActivityIndicator()
     var childrenVC = [UIViewController]()
     var jsonData : [Result] = []
@@ -287,11 +288,20 @@ class HomeParentVC: ButtonBarPagerTabStripViewController{
         //Clear children viewcontrollers
         childrenVC.removeAll()
         if headingArr.count > 0{
+            if UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad && statusBarOrientation.isPortrait{
+                for cat in subMenuArr[HeadingRow]{
+                    let childVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "HomeiPadVC") as! HomeiPadVC
+                    childVC.tabBarTitle = cat
+                    childrenVC.append(childVC)
+            
+                }
+            }else{
             for cat in subMenuArr[HeadingRow]{
                 let childVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "HomeVC") as! HomeVC
                 childVC.tabBarTitle = cat
                 childrenVC.append(childVC)
                 childVC.protocolObj = self
+            }
             }
         }
         else{
