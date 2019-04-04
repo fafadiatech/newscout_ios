@@ -66,7 +66,7 @@ class APICall{
             response in
             if(response.result.isSuccess){
                 if let data = response.data {
-                     let jsonDecoder = JSONDecoder()
+                    let jsonDecoder = JSONDecoder()
                     do {
                         if response.response?.statusCode == 404{
                             completion("error 404",ArticleAPIResult.Change(404))
@@ -126,7 +126,7 @@ class APICall{
             }
         }
     }
-  
+    
     func loadSearchAPI(url: String,_ completion : @escaping (String, ArticleAPIResult) -> ()){
         Alamofire.request(url,method: .get, encoding: URLEncoding.default).responseJSON{
             response in

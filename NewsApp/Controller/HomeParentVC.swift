@@ -16,13 +16,12 @@ extension UISwitch {
         
         let standardHeight: CGFloat = 31
         let standardWidth: CGFloat = 51
-        
         let heightRatio = height / standardHeight
         let widthRatio = width / standardWidth
-        
         transform = CGAffineTransform(scaleX: widthRatio, y: heightRatio)
     }
 }
+
 class HomeParentVC: ButtonBarPagerTabStripViewController{
     
     @IBOutlet weak var btnSettingsNav: UIButton!
@@ -50,7 +49,6 @@ class HomeParentVC: ButtonBarPagerTabStripViewController{
     var submenu : [String] = []
     var HeadingRow = 0
     var subMenuRow = 0
-    var tagArr : [String] = []
     var submenuIndexArr = [[String]]()
     var headingImg = [AssetConstants.sector, AssetConstants.regional, AssetConstants.finance, AssetConstants.economy, AssetConstants.misc]
     
@@ -80,7 +78,7 @@ class HomeParentVC: ButtonBarPagerTabStripViewController{
         if UserDefaults.standard.value(forKey: "personalised") == nil{
             UserDefaults.standard.set(false, forKey: "personalised")
         }
-        sendDeviceDetails()
+        // sendDeviceDetails()
         settings.style.buttonBarItemsShouldFillAvailiableWidth = false
         saveFetchMenu()
         NotificationCenter.default.addObserver(self, selector: #selector(darkModeEnabled(_:)), name: .darkModeEnabled, object: nil)
@@ -127,6 +125,7 @@ class HomeParentVC: ButtonBarPagerTabStripViewController{
         viewAppTitle.addGestureRecognizer(tapRecognizer)
         tapRecognizer.delegate = self as UIGestureRecognizerDelegate
     }
+    
     @objc func tapped(gestureRecognizer: UITapGestureRecognizer) {
         if viewOptions.isHidden == false{
             viewOptions.isHidden = true
@@ -169,6 +168,7 @@ class HomeParentVC: ButtonBarPagerTabStripViewController{
             }
         }
     }
+    
     func sendDeviceDetails(){
         if UserDefaults.standard.value(forKey: "deviceToken") != nil{
             let id = UserDefaults.standard.value(forKey: "deviceToken") as! String
@@ -212,13 +212,12 @@ class HomeParentVC: ButtonBarPagerTabStripViewController{
                         self.submenu.append(sub.subMenuName!)
                     }
                     self.subMenuArr.append(self.submenu)
-                    self.fetchsubMenuTags(submenu: self.subMenuArr[self.HeadingRow][self.subMenuRow])
+                    self.fetchSubmenuId(submenu:self.subMenuArr[self.HeadingRow][self.subMenuRow] )
                     UserDefaults.standard.set(self.subMenuArr[self.HeadingRow][self.subMenuRow], forKey: "submenu")
                     self.reloadPagerTabStripView()
                     
                 case .Failure(let error):
                     print(error)
-                    
                 }
             }
         case .Failure(let error) :
@@ -226,15 +225,14 @@ class HomeParentVC: ButtonBarPagerTabStripViewController{
         }
     }
     
-    func fetchsubMenuTags(submenu : String){
-        let tagresult = DBManager().fetchMenuTags(subMenuName: submenu)
+    func fetchSubmenuId(submenu : String){
+        let tagresult = DBManager().fetchsubmenuId(subMenuName: submenu)
         switch tagresult{
-        case .Success(let tagData) :
-            tagArr.removeAll()
-            for tag in tagData{
-                tagArr.append(tag.hashTagName!)
-            }
-            UserDefaults.standard.setValue(tagArr, forKey: "subMenuTags")
+        case .Success(let id) :
+            var url = APPURL.ArticleByIdURL + "\(id)"
+            print(url)
+            UserDefaults.standard.setValue(id, forKey: "subMenuId")
+            UserDefaults.standard.setValue(url, forKey: "submenuURL")
         case .Failure(let error):
             print(error)
         }
@@ -275,7 +273,6 @@ class HomeParentVC: ButtonBarPagerTabStripViewController{
         return true
     }
     
-    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         viewOptions.isHidden = true
@@ -283,7 +280,6 @@ class HomeParentVC: ButtonBarPagerTabStripViewController{
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        
     }
     
     override func viewControllers(for pagerTabStripController: PagerTabStripViewController) -> [UIViewController] {
@@ -291,11 +287,9 @@ class HomeParentVC: ButtonBarPagerTabStripViewController{
         //Clear children viewcontrollers
         childrenVC.removeAll()
         if headingArr.count > 0{
-            for cat in subMenuArr[HeadingRow]
-            {
+            for cat in subMenuArr[HeadingRow]{
                 let childVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "HomeVC") as! HomeVC
                 childVC.tabBarTitle = cat
-                
                 childrenVC.append(childVC)
                 childVC.protocolObj = self
             }
@@ -303,7 +297,6 @@ class HomeParentVC: ButtonBarPagerTabStripViewController{
         else{
             let childVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "HomeVC") as! HomeVC
             childVC.tabBarTitle = "Test"
-            
             childrenVC.append(childVC)
         }
         return childrenVC
@@ -315,7 +308,6 @@ class HomeParentVC: ButtonBarPagerTabStripViewController{
         }
         else{
             let size: CGSize = headingArr[indexPath.row].size(withAttributes: nil)
-            // return CGSize(width:menuCV.frame.size.width/2, height: menuCV.frame.size.height)
             if (UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad){
                 return CGSize(width: size.width + 180.0, height: menuCV.bounds.size.height)
             }else{
@@ -323,7 +315,6 @@ class HomeParentVC: ButtonBarPagerTabStripViewController{
                 label.text = headingArr[indexPath.item]
                 label.sizeToFit()
                 return CGSize(width: label.frame.size.width + 100.0, height: menuCV.bounds.size.height)
-                // return CGSize(width: size.width + 100.0, height: menuCV.bounds.size.height)
             }
         }
     }
@@ -345,33 +336,22 @@ class HomeParentVC: ButtonBarPagerTabStripViewController{
             cell.imgMenu.image =  UIImage(named: headingImg[indexPath.row])
             return cell
         }
-        else   {
+        else {
             return super.collectionView(collectionView, cellForItemAt: indexPath)
         }
     }
+    
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         viewOptions.isHidden = true
         if (collectionView == buttonBarView) {
             subMenuRow = indexPath.row
             UserDefaults.standard.set(subMenuArr[HeadingRow][indexPath.row], forKey: "submenu")
-            fetchsubMenuTags(submenu: subMenuArr[HeadingRow][indexPath.row])
-            var url = APPURL.ArticlesByTagsURL
-            for tag in tagArr {
-                url = url + "&tag=" + tag
-            }
-            if tagArr.count > 0{
-                UserDefaults.standard.set(url, forKey: "submenuURL")
-            }
-            else{
-                UserDefaults.standard.set("", forKey: "submenuURL")
-            }
+            fetchSubmenuId(submenu: subMenuArr[HeadingRow][indexPath.row])
             return super.collectionView(collectionView,didSelectItemAt: indexPath)
-            
         }
         else{
             HeadingRow = indexPath.row
             reloadPagerTabStripView()
-            
         }
     }
     
@@ -382,6 +362,7 @@ class HomeParentVC: ButtonBarPagerTabStripViewController{
             viewOptions.isHidden = true
         }
     }
+    
     @IBAction func btnSettingsActn(_ sender: Any) {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let settingvc:SettingsVC = storyboard.instantiateViewController(withIdentifier: "SettingsID") as! SettingsVC
@@ -421,6 +402,7 @@ extension HomeParentVC : UIGestureRecognizerDelegate {
         return true
     }
 }
+
 extension HomeParentVC: ScrollDelegate{
     func isNavigate(status: Bool) {
         if status == true{

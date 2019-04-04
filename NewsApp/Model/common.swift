@@ -162,6 +162,7 @@ struct APPURL {
         static let getBookmarkList = Domains.version + "bookmark-articles/bookmark-news-list/"
         static let getTags = Domains.version + "tags/"
         static let ArticlesBytags = Domains.version + "article/search?"
+        static let ArticleById = Domains.version + "article/search?category="
         static let ArtilceByTags2 = Domains.version + "articles/?"
         static let menu = Domains.version + "menus"
         static let deviceDetails = Domains.version + "device/"
@@ -192,6 +193,7 @@ struct APPURL {
     static let getMenus = Domains.Local + Routes.menu
     static let sendDeviceDetailsURL = Domains.Local + Routes.deviceDetails
     static let sendNotificationDetails = Domains.Local + Routes.NotificationDetails
+    static let ArticleByIdURL = Domains.Local + Routes.ArticleById
     static let imageServer = "http://images.newscout.in/unsafe/"
     
 }

@@ -74,19 +74,20 @@ class DBManager{
                             newArticle.category = news.category
                             newArticle.current_page = Int64(self.ArticleData[0].body!.current_page)
                             newArticle.total_pages = Int64(self.ArticleData[0].body!.total_pages)
-                           /* if news.article_media!.count > 0 {
-                                for media in news.article_media!{
-                                    if self.someEntityExists(id: media.media_id, entity: "Media", keyword: "") == false {
-                                        let newMedia =  Media(context: managedContext!)
-                                        newMedia.articleId = Int64(news.article_id)
-                                        newMedia.imageURL =   media.img_url
-                                        newMedia.videoURL = media.video_url
-                                        newMedia.type = media.category
-                                        newMedia.mediaId =  Int64(media.media_id)
-                                    }
-                                    
-                                }
-                            }*/
+                            newArticle.categoryId = Int64(news.category_id)
+                            /* if news.article_media!.count > 0 {
+                             for media in news.article_media!{
+                             if self.someEntityExists(id: media.media_id, entity: "Media", keyword: "") == false {
+                             let newMedia =  Media(context: managedContext!)
+                             newMedia.articleId = Int64(news.article_id)
+                             newMedia.imageURL =   media.img_url
+                             newMedia.videoURL = media.video_url
+                             newMedia.type = media.category
+                             newMedia.mediaId =  Int64(media.media_id)
+                             }
+                             
+                             }
+                             }*/
                             if news.hash_tags.count > 0 {
                                 for tag in news.hash_tags {
                                     let newTag = HashTag(context: managedContext!)
@@ -161,6 +162,25 @@ class DBManager{
         }
         return ArticleDBfetchResult.Success(ShowArticle)
     }
+    
+    //fetch newsArticle heading->submenu->category id
+    func ArticlesfetchByCatId() -> ArticleDBfetchResult{
+        var ShowArticle = [NewsArticle]()
+        var tagData = [HashTag]()
+        let managedContext =
+            appDelegate?.persistentContainer.viewContext
+        let fetchRequest =
+            NSFetchRequest<NewsArticle>(entityName: "NewsArticle")
+        var subMenuId = UserDefaults.standard.value(forKey: "subMenuId") as! Int
+        fetchRequest.predicate = NSPredicate(format: "categoryId = %d ", subMenuId)
+        do {
+            ShowArticle =  try (managedContext?.fetch(fetchRequest))!
+        }catch let error as NSError {
+            return ArticleDBfetchResult.Failure(error.localizedDescription)
+        }
+        return ArticleDBfetchResult.Success(ShowArticle)
+    }
+    
     //check for existing entry in DB
     func someEntityExists(id: Int, entity : String, keyword: String) -> Bool {
         let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: entity)
@@ -906,6 +926,22 @@ class DBManager{
             return MenuHashTagDBFetchResult.Success(tagsData)
         } catch let error as NSError {
             return MenuHashTagDBFetchResult.Failure(error as! String)
+        }
+    }
+    func fetchsubmenuId(subMenuName : String) -> submenuIdDBFetchResult{
+        let managedContext =
+            appDelegate?.persistentContainer.viewContext
+        let tagfetchRequest = NSFetchRequest<HeadingSubMenu>(entityName:"HeadingSubMenu")
+        var id = 0
+        do {
+            tagfetchRequest.predicate = NSPredicate(format: "subMenuName == '\(subMenuName)'")
+            let IdData = try (managedContext?.fetch(tagfetchRequest))!
+            if IdData.count > 0{
+                id = Int(IdData[0].subMenuId)
+            }
+            return submenuIdDBFetchResult.Success(Int(id))
+        } catch let error as NSError {
+            return submenuIdDBFetchResult.Failure(error as! String)
         }
     }
 }

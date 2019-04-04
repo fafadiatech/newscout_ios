@@ -66,6 +66,7 @@ struct Article: Decodable{
     var blurb : String?
     var hash_tags : [String]
     var article_media : [ArticleMedia]?
+    var category_id : Int
     
     enum CodingKeys: String, CodingKey{
         case article_id = "id"
@@ -78,6 +79,7 @@ struct Article: Decodable{
         case blurb
         case hash_tags
         case article_media
+        case category_id
     }
 }
 
@@ -370,6 +372,12 @@ enum MenuHashTagDBFetchResult {
     case Success([MenuHashTag])
     case Failure(String)
 }
+
+enum submenuIdDBFetchResult {
+    case Success(Int)
+    case Failure(String)
+}
+
 
 enum MediaDBFetchResult {
     case Success([Media])

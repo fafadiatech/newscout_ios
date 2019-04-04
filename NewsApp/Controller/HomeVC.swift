@@ -82,17 +82,9 @@ class HomeVC: UIViewController{
         }
         
         //change data on swipe
-        fetchsubMenuTags(submenu: tabBarTitle)
-        var url = APPURL.ArticlesByTagsURL
-        for tag in tagArr {
-            url = url + "&tag=" + tag
+        if tabBarTitle != "Test"{
+            fetchSubmenuId(submenu: tabBarTitle)
         }
-        if tagArr.count > 0{
-            UserDefaults.standard.set(url, forKey: "submenuURL")
-        }else{
-            UserDefaults.standard.set("", forKey: "submenuURL")
-        }
-        
         //save and fetch like and bookmark data from DB
         if UserDefaults.standard.value(forKey: "token") != nil{
             if Reachability.isConnectedToNetwork(){
@@ -124,6 +116,19 @@ class HomeVC: UIViewController{
         }
     }
     
+    func fetchSubmenuId(submenu : String){
+        let tagresult = DBManager().fetchsubmenuId(subMenuName: submenu)
+        switch tagresult{
+        case .Success(let id) :
+            var url = APPURL.ArticleByIdURL + "\(id)"
+            print(url)
+            UserDefaults.standard.setValue(id, forKey: "subMenuId")
+            UserDefaults.standard.setValue(url, forKey: "submenuURL")
+        case .Failure(let error):
+            print(error)
+        }
+    }
+    
     func fetchsubMenuTags(submenu : String){
         let tagresult = DBManager().fetchMenuTags(subMenuName: submenu)
         switch tagresult{
@@ -139,11 +144,11 @@ class HomeVC: UIViewController{
     }
     
     func fetchArticlesFromDB(){
-        let result = DBManager().ArticlesfetchByTags()
+        let result = DBManager().ArticlesfetchByCatId()
         switch result {
         case .Success(let DBData) :
             ShowArticle = DBData
-            if ShowArticle.count != 0{
+            if ShowArticle.count > 0{
                 lblNonews.isHidden = true
                 self.HomeNewsTV.reloadData()
             }
@@ -378,7 +383,6 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
             return cell
         }
         else{
-            
             cellOdd.imgNews.layer.cornerRadius = 10.0
             cellOdd.imgNews.clipsToBounds = true
             //display data from DB
@@ -448,9 +452,11 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
             return cellOdd
         }
     }
+    
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         protocolObj?.isNavigate(status: true)
     }
+    
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         if indexPath.row == tableView.numberOfRows(inSection: indexPath.section) - 1 {
             var submenu = UserDefaults.standard.value(forKey: "submenu") as! String
@@ -480,7 +486,6 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
             }
         }
     }
-    
 }
 
 extension HomeVC: IndicatorInfoProvider{
