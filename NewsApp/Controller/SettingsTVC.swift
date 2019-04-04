@@ -289,7 +289,7 @@ class SettingsTVC: UITableViewController, GIDSignInUIDelegate {
         }
         
     }
-   
+    
     @IBAction func switchBreakingNewsActn(_ sender: Any) {
         if switchBreaking.isOn == true {
             UserDefaults.standard.set(true, forKey: "breaking")

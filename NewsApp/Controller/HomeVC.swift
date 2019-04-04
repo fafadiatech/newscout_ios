@@ -449,7 +449,7 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
         }
     }
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-          protocolObj?.isNavigate(status: true)
+        protocolObj?.isNavigate(status: true)
     }
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         if indexPath.row == tableView.numberOfRows(inSection: indexPath.section) - 1 {

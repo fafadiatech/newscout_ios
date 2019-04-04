@@ -69,7 +69,7 @@ class HomeParentVC: ButtonBarPagerTabStripViewController{
         
         let switchStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
         if UserDefaults.standard.value(forKey: "deviceToken") == nil{
-  UserDefaults.standard.set("41ea0aaa15323ae5012992392e4edd6b8a6ee4547a8dc6fd1f3b31aab9839208", forKey: "deviceToken")
+            UserDefaults.standard.set("41ea0aaa15323ae5012992392e4edd6b8a6ee4547a8dc6fd1f3b31aab9839208", forKey: "deviceToken")
         }
         if UserDefaults.standard.value(forKey: "daily") == nil{
             UserDefaults.standard.set(false, forKey: "daily")
@@ -127,7 +127,7 @@ class HomeParentVC: ButtonBarPagerTabStripViewController{
         viewAppTitle.addGestureRecognizer(tapRecognizer)
         tapRecognizer.delegate = self as UIGestureRecognizerDelegate
     }
-      @objc func tapped(gestureRecognizer: UITapGestureRecognizer) {
+    @objc func tapped(gestureRecognizer: UITapGestureRecognizer) {
         if viewOptions.isHidden == false{
             viewOptions.isHidden = true
         }
@@ -140,10 +140,12 @@ class HomeParentVC: ButtonBarPagerTabStripViewController{
         btnBookmark.setTitleColor(.white, for: UIControlState.normal)
         btnNightMode.setTitleColor(.white, for: UIControlState.normal)
         btnSettingsNav.setTitleColor(.white, for: UIControlState.normal)
+        btnNightModeImg.setImage(UIImage(named: AssetConstants.whiteMoon), for: .normal)
+        btnBookmarkImg.setImage(UIImage(named:AssetConstants.Bookmark_white), for: .normal)
         menuCV.backgroundColor = colorConstants.subTVgrayBackground
-        viewOptions.backgroundColor = colorConstants.grayBackground1
+        viewOptions.backgroundColor = colorConstants.txtlightGrayColor
         buttonBarView.backgroundColor = colorConstants.grayBackground1
-          buttonBarView.backgroundView?.backgroundColor = colorConstants.grayBackground1
+        buttonBarView.backgroundView?.backgroundColor = colorConstants.grayBackground1
         buttonBarView.selectedBar.backgroundColor = .red
         reloadPagerTabStripView()
         changeCurrentIndexProgressive = {[weak self](oldCell:ButtonBarViewCell?, newCell: ButtonBarViewCell?, progressPercentage:CGFloat, changeCurrentIndex:Bool, animated:Bool)-> Void in
@@ -247,12 +249,11 @@ class HomeParentVC: ButtonBarPagerTabStripViewController{
         self.activityIndicator.startAnimating()
         NightNight.theme = .night
         changeTheme()
-        
         activityIndicator.stopAnimating()
     }
     
     @objc private func darkModeDisabled(_ notification: Notification) {
-            self.activityIndicator.startAnimating()
+        self.activityIndicator.startAnimating()
         NightNight.theme = .normal
         buttonBarView.backgroundColor = colorConstants.whiteColor
         buttonBarView.selectedBar.backgroundColor = .red
@@ -263,7 +264,9 @@ class HomeParentVC: ButtonBarPagerTabStripViewController{
         viewSettings.backgroundColor = colorConstants.txtlightGrayColor
         viewBookmark.backgroundColor = colorConstants.txtlightGrayColor
         viewOptions.backgroundColor = colorConstants.txtlightGrayColor
+        btnNightModeImg.setImage(nil, for: .normal)
         btnNightModeImg.setImage(UIImage(named: AssetConstants.moon), for: .normal)
+        btnBookmarkImg.setImage(UIImage(named:AssetConstants.bookmark), for: .normal)
         reloadPagerTabStripView()
         activityIndicator.stopAnimating()
     }
@@ -319,10 +322,10 @@ class HomeParentVC: ButtonBarPagerTabStripViewController{
                 let label = UILabel(frame: CGRect.zero)
                 label.text = headingArr[indexPath.item]
                 label.sizeToFit()
-                 return CGSize(width: label.frame.size.width + 100.0, height: menuCV.bounds.size.height)
-               // return CGSize(width: size.width + 100.0, height: menuCV.bounds.size.height)
-    }
-    }
+                return CGSize(width: label.frame.size.width + 100.0, height: menuCV.bounds.size.height)
+                // return CGSize(width: size.width + 100.0, height: menuCV.bounds.size.height)
+            }
+        }
     }
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -386,14 +389,12 @@ class HomeParentVC: ButtonBarPagerTabStripViewController{
     }
     
     @IBAction func btnNightModeActn(_ sender: Any) {
-          let Status = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
+        let Status = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
         if Status == false {
-            btnNightModeImg.setImage(UIImage(named: AssetConstants.whiteMoon), for: .normal)
             UserDefaults.standard.setValue(true, forKey: "darkModeEnabled")
             NotificationCenter.default.post(name: .darkModeEnabled, object: nil)
         }
         else {
-             btnNightModeImg.setImage(UIImage(named: AssetConstants.moon), for: .normal)
             UserDefaults.standard.setValue(false, forKey: "darkModeEnabled")
             NotificationCenter.default.post(name: .darkModeDisabled, object: nil)
         }

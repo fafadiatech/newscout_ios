@@ -1012,7 +1012,7 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
             else{
                 imgNews.image = UIImage(named: AssetConstants.NoImage)
             }
-          
+            
         }
         if imgNews.image == nil{
             imgNews.image = UIImage(named: AssetConstants.NoImage)
@@ -1296,14 +1296,14 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let sourcevc:SourceVC = storyboard.instantiateViewController(withIdentifier: "SourceID") as! SourceVC
         if currentEntity == "SearchArticles"{
-             sourcevc.url = APPURL.SourceURL + SearchArticle[newsCurrentIndex].source!
+            sourcevc.url = APPURL.SourceURL + SearchArticle[newsCurrentIndex].source!
             sourcevc.source = SearchArticle[newsCurrentIndex].source!
         }else if currentEntity == "source"{
             sourcevc.url = APPURL.SourceURL + sourceArticle[newsCurrentIndex].source!
             sourcevc.source = sourceArticle[newsCurrentIndex].source!
         }
         else{
-        sourcevc.url = APPURL.SourceURL + ShowArticle[newsCurrentIndex].source!
+            sourcevc.url = APPURL.SourceURL + ShowArticle[newsCurrentIndex].source!
             sourcevc.source = ShowArticle[newsCurrentIndex].source!
         }
         
@@ -1337,11 +1337,11 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
     }
     
     @IBAction func btnShuffleActn(_ sender: Any) {
-//        if shuffleData.count > 0{
-//            let randomInt = Int.random(in: 0..<shuffleData.count)
-//            activityIndicator.stopAnimating()
-//            ShowNews(currentIndex: randomInt)
-//        }
+        //        if shuffleData.count > 0{
+        //            let randomInt = Int.random(in: 0..<shuffleData.count)
+        //            activityIndicator.stopAnimating()
+        //            ShowNews(currentIndex: randomInt)
+        //        }
         if newsCurrentIndex < ShowArticle.count - 2{
             newsCurrentIndex = newsCurrentIndex + 2
             ShowNews(currentIndex: newsCurrentIndex)

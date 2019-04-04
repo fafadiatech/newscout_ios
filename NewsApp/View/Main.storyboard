@@ -28,18 +28,18 @@
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uzw-Xq-ysg">
-                                        <rect key="frame" x="342" y="16" width="23" height="23"/>
+                                        <rect key="frame" x="342" y="14.5" width="23" height="26"/>
                                         <constraints>
-                                            <constraint firstAttribute="height" constant="23" id="EPj-Dc-VEX"/>
+                                            <constraint firstAttribute="height" constant="26" id="EPj-Dc-VEX"/>
                                             <constraint firstAttribute="width" constant="23" id="MiU-EX-PiP"/>
                                         </constraints>
-                                        <state key="normal" title="Button" image="settings"/>
+                                        <state key="normal" title="Button" image="menu"/>
                                         <connections>
                                             <action selector="btnSettingsOptions:" destination="SXV-EA-KWG" eventType="touchUpInside" id="KHh-EI-tnX"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sgS-XG-b68">
-                                        <rect key="frame" x="306" y="13.5" width="28" height="28"/>
+                                        <rect key="frame" x="310" y="13.5" width="28" height="28"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="28" id="YJf-5O-zNc"/>
                                             <constraint firstAttribute="height" constant="28" id="vKa-6b-ec3"/>
@@ -60,7 +60,7 @@
                                     <constraint firstAttribute="trailing" secondItem="uzw-Xq-ysg" secondAttribute="trailing" constant="10" id="T3H-PF-jY5"/>
                                     <constraint firstItem="pzB-EX-EQD" firstAttribute="centerY" secondItem="ao8-14-oL8" secondAttribute="centerY" id="Tge-20-fax"/>
                                     <constraint firstItem="pzB-EX-EQD" firstAttribute="centerX" secondItem="ao8-14-oL8" secondAttribute="centerX" id="Zaa-Cg-Z4M"/>
-                                    <constraint firstItem="uzw-Xq-ysg" firstAttribute="leading" secondItem="sgS-XG-b68" secondAttribute="trailing" constant="8" id="k7a-Bo-EKr"/>
+                                    <constraint firstItem="uzw-Xq-ysg" firstAttribute="leading" secondItem="sgS-XG-b68" secondAttribute="trailing" constant="4" id="k7a-Bo-EKr"/>
                                 </constraints>
                             </view>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="vYM-Wx-vng">
@@ -170,13 +170,13 @@
                                 </constraints>
                             </scrollView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="PfP-yG-u4f">
-                                <rect key="frame" x="181" y="59" width="184" height="132"/>
+                                <rect key="frame" x="181" y="60.5" width="184" height="132"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="MPH-DH-2YJ">
-                                        <rect key="frame" x="0.0" y="0.0" width="184" height="46"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="184" height="43.5"/>
                                         <subviews>
                                             <button opaque="NO" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" contentHorizontalAlignment="leading" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ven-a5-ngg">
-                                                <rect key="frame" x="43" y="0.0" width="96" height="46"/>
+                                                <rect key="frame" x="43" y="0.0" width="96" height="43.5"/>
                                                 <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="16"/>
                                                 <state key="normal" title="  Night Mode">
                                                     <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
@@ -188,14 +188,14 @@
                                                     <action selector="btnNightModeActn:" destination="SXV-EA-KWG" eventType="touchUpInside" id="roW-Dl-Rdy"/>
                                                 </connections>
                                             </button>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xeV-qS-NrM">
-                                                <rect key="frame" x="15" y="12" width="21" height="22"/>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xeV-qS-NrM">
+                                                <rect key="frame" x="15" y="11" width="21" height="22"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="22" id="FPB-RZ-Q2P"/>
                                                     <constraint firstAttribute="width" constant="21" id="r7O-g3-E0Q"/>
                                                 </constraints>
                                                 <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                <state key="normal" backgroundImage="moon24">
+                                                <state key="normal" image="moon24">
                                                     <color key="titleColor" red="0.9616458873" green="0.9616458873" blue="0.9616458873" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                                 </state>
                                                 <connections>
@@ -214,10 +214,10 @@
                                         </constraints>
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="MtJ-Pr-sZa">
-                                        <rect key="frame" x="0.0" y="46" width="184" height="46.5"/>
+                                        <rect key="frame" x="0.0" y="43.5" width="184" height="43.5"/>
                                         <subviews>
                                             <button opaque="NO" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" contentHorizontalAlignment="leading" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cYz-6A-Jgx">
-                                                <rect key="frame" x="43" y="0.0" width="121" height="46.5"/>
+                                                <rect key="frame" x="43" y="0.0" width="121" height="43.5"/>
                                                 <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="16"/>
                                                 <state key="normal" title="  My Bookmarks">
                                                     <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
@@ -229,13 +229,15 @@
                                                     <action selector="btnBookmarkActn:" destination="SXV-EA-KWG" eventType="touchUpInside" id="Or0-SQ-4Va"/>
                                                 </connections>
                                             </button>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LTj-3k-aAw">
-                                                <rect key="frame" x="11" y="12" width="25" height="23"/>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LTj-3k-aAw">
+                                                <rect key="frame" x="11" y="10.5" width="25" height="23"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" constant="25" id="rPO-DI-qUM"/>
                                                     <constraint firstAttribute="height" constant="23" id="rVP-Cu-RGG"/>
                                                 </constraints>
-                                                <state key="normal" backgroundImage="bookmark"/>
+                                                <state key="normal" image="bookmark">
+                                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                </state>
                                                 <connections>
                                                     <action selector="btnBookmarkActn:" destination="SXV-EA-KWG" eventType="touchUpInside" id="11X-Bd-RZz"/>
                                                 </connections>
@@ -251,10 +253,10 @@
                                         </constraints>
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8Ip-GX-jOR">
-                                        <rect key="frame" x="0.0" y="92.5" width="184" height="46"/>
+                                        <rect key="frame" x="0.0" y="87" width="184" height="43.5"/>
                                         <subviews>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="leading" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0z0-4g-NGU">
-                                                <rect key="frame" x="45" y="0.0" width="70" height="44"/>
+                                                <rect key="frame" x="45" y="0.0" width="70" height="41.5"/>
                                                 <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="16"/>
                                                 <state key="normal" title="  Settings">
                                                     <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
@@ -267,7 +269,7 @@
                                                 </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="o4G-5j-zjq">
-                                                <rect key="frame" x="15" y="12" width="23" height="22"/>
+                                                <rect key="frame" x="15" y="11" width="23" height="22"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="22" id="J1m-LH-UIz"/>
                                                     <constraint firstAttribute="width" constant="23" id="kBQ-st-LPO"/>
@@ -294,7 +296,7 @@
                                     <constraint firstAttribute="trailing" secondItem="MPH-DH-2YJ" secondAttribute="trailing" id="A1m-bR-bmU"/>
                                     <constraint firstItem="8Ip-GX-jOR" firstAttribute="height" secondItem="MPH-DH-2YJ" secondAttribute="height" id="HqW-Xy-luT"/>
                                     <constraint firstAttribute="trailing" secondItem="MtJ-Pr-sZa" secondAttribute="trailing" id="QFc-bX-4f0"/>
-                                    <constraint firstItem="MPH-DH-2YJ" firstAttribute="height" secondItem="PfP-yG-u4f" secondAttribute="height" multiplier="0.35" id="RhG-Or-flD"/>
+                                    <constraint firstItem="MPH-DH-2YJ" firstAttribute="height" secondItem="PfP-yG-u4f" secondAttribute="height" multiplier="0.33" id="RhG-Or-flD"/>
                                     <constraint firstItem="MtJ-Pr-sZa" firstAttribute="top" secondItem="MPH-DH-2YJ" secondAttribute="bottom" id="TLi-dw-ulD"/>
                                     <constraint firstAttribute="trailing" secondItem="8Ip-GX-jOR" secondAttribute="trailing" id="VfO-lR-t74"/>
                                     <constraint firstItem="MPH-DH-2YJ" firstAttribute="leading" secondItem="PfP-yG-u4f" secondAttribute="leading" id="fIr-p1-m8A"/>
@@ -352,7 +354,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ped-Xd-m0V" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2188" y="-636.4317841079461"/>
+            <point key="canvasLocation" x="1961" y="-736"/>
         </scene>
         <!--HomeVC-->
         <scene sceneID="tne-QT-ifu">
@@ -4648,6 +4650,7 @@
         <image name="flogo" width="512" height="512"/>
         <image name="glogo" width="48" height="48"/>
         <image name="logo" width="512" height="512"/>
+        <image name="menu" width="512" height="512"/>
         <image name="moon24" width="18" height="18"/>
         <image name="newsearch" width="512" height="512"/>
         <image name="play" width="256" height="256"/>

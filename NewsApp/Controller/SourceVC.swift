@@ -88,82 +88,82 @@ extension SourceVC: UITableViewDelegate, UITableViewDataSource{
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath){
-            let storyboard = UIStoryboard(name: "Main", bundle: nil)
-            let newsDetailvc:NewsDetailVC = storyboard.instantiateViewController(withIdentifier: "NewsDetailID") as! NewsDetailVC
-            newsDetailvc.newsCurrentIndex = indexPath.row
-            newsDetailvc.sourceArticle = (ShowArticle[0].body?.articles)!
-            newsDetailvc.articleId = (ShowArticle[0].body?.articles[indexPath.row].article_id)!
-            UserDefaults.standard.set("source", forKey: "isSearch")
-            present(newsDetailvc, animated: true, completion: nil)
-            sourceTV.deselectRow(at: indexPath, animated: true)
-        }
-
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let newsDetailvc:NewsDetailVC = storyboard.instantiateViewController(withIdentifier: "NewsDetailID") as! NewsDetailVC
+        newsDetailvc.newsCurrentIndex = indexPath.row
+        newsDetailvc.sourceArticle = (ShowArticle[0].body?.articles)!
+        newsDetailvc.articleId = (ShowArticle[0].body?.articles[indexPath.row].article_id)!
+        UserDefaults.standard.set("source", forKey: "isSearch")
+        present(newsDetailvc, animated: true, completion: nil)
+        sourceTV.deselectRow(at: indexPath, animated: true)
+    }
+    
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-       /* let borderColor: UIColor = UIColor.lightGray
-        
-        cell.imgNews.layer.cornerRadius = 10.0
-        cell.imgNews.clipsToBounds = true
-        cell.lblSource.textColor = colorConstants.txtDarkGrayColor
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
-        dateFormatter.timeZone = NSTimeZone.local
-        
-        var currentArticle = ShowArticle[0].body?.articles[indexPath.row]
-        var dateSubString = ""
-        if ((currentArticle!.published_on?.count)!) <= 20{
-            if !(currentArticle!.published_on?.contains("Z"))!{
-                currentArticle!.published_on?.append("Z")
-            }
-            let newDate = dateFormatter.date(from: currentArticle!.published_on!)
-            if newDate != nil{
-                let agoDate = try Helper().timeAgoSinceDate(newDate!)
-            }
-        }
-        else{
-            dateSubString = String(currentArticle!.published_on!.prefix(19))
-            if !(dateSubString.contains("Z")){
-                dateSubString.append("Z")
-            }
-            let newDate = dateFormatter.date(from: dateSubString
-            )
-            if newDate != nil{
-                let agoDate = try Helper().timeAgoSinceDate(newDate!)
-            }
-        }
-        cell.lblSource.text = currentArticle?.source
-        cell.lblNewsDescription.text = currentArticle?.title
-        cell.imgNews.sd_setImage(with: URL(string: currentArticle!.imageURL!), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
-        
-        
-        if textSizeSelected == 0{
-            cell.lblSource.font = FontConstants.smallFontContent
-            cell.lblNewsDescription.font = FontConstants.smallFontHeadingBold
-            
-        }
-        else if textSizeSelected == 2{
-            cell.lblSource.font = FontConstants.LargeFontContent
-            cell.lblNewsDescription.font = FontConstants.LargeFontHeadingBold
-        }
-        else{
-            cell.lblSource.font = FontConstants.NormalFontContent
-            cell.lblNewsDescription.font = FontConstants.NormalFontHeadingBold
-        }
-        let darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
-        if  darkModeStatus == true{
-            cell.ViewCellBackground.backgroundColor = colorConstants.grayBackground2
-            cell.lblSource.textColor = colorConstants.nightModeText
-            cell.lblNewsDescription.textColor = colorConstants.nightModeText
-            NightNight.theme =  .night
-        }
-        else{
-            NightNight.theme =  .normal
-        }
-        if cell.imgNews.image == nil{
-            cell.imgNews.image = UIImage(named: AssetConstants.NoImage)
-        }
-        activityIndicator.stopAnimating()
-        return cell*/
+        /* let borderColor: UIColor = UIColor.lightGray
+         
+         cell.imgNews.layer.cornerRadius = 10.0
+         cell.imgNews.clipsToBounds = true
+         cell.lblSource.textColor = colorConstants.txtDarkGrayColor
+         let dateFormatter = DateFormatter()
+         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
+         dateFormatter.timeZone = NSTimeZone.local
+         
+         var currentArticle = ShowArticle[0].body?.articles[indexPath.row]
+         var dateSubString = ""
+         if ((currentArticle!.published_on?.count)!) <= 20{
+         if !(currentArticle!.published_on?.contains("Z"))!{
+         currentArticle!.published_on?.append("Z")
+         }
+         let newDate = dateFormatter.date(from: currentArticle!.published_on!)
+         if newDate != nil{
+         let agoDate = try Helper().timeAgoSinceDate(newDate!)
+         }
+         }
+         else{
+         dateSubString = String(currentArticle!.published_on!.prefix(19))
+         if !(dateSubString.contains("Z")){
+         dateSubString.append("Z")
+         }
+         let newDate = dateFormatter.date(from: dateSubString
+         )
+         if newDate != nil{
+         let agoDate = try Helper().timeAgoSinceDate(newDate!)
+         }
+         }
+         cell.lblSource.text = currentArticle?.source
+         cell.lblNewsDescription.text = currentArticle?.title
+         cell.imgNews.sd_setImage(with: URL(string: currentArticle!.imageURL!), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
+         
+         
+         if textSizeSelected == 0{
+         cell.lblSource.font = FontConstants.smallFontContent
+         cell.lblNewsDescription.font = FontConstants.smallFontHeadingBold
+         
+         }
+         else if textSizeSelected == 2{
+         cell.lblSource.font = FontConstants.LargeFontContent
+         cell.lblNewsDescription.font = FontConstants.LargeFontHeadingBold
+         }
+         else{
+         cell.lblSource.font = FontConstants.NormalFontContent
+         cell.lblNewsDescription.font = FontConstants.NormalFontHeadingBold
+         }
+         let darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
+         if  darkModeStatus == true{
+         cell.ViewCellBackground.backgroundColor = colorConstants.grayBackground2
+         cell.lblSource.textColor = colorConstants.nightModeText
+         cell.lblNewsDescription.textColor = colorConstants.nightModeText
+         NightNight.theme =  .night
+         }
+         else{
+         NightNight.theme =  .normal
+         }
+         if cell.imgNews.image == nil{
+         cell.imgNews.image = UIImage(named: AssetConstants.NoImage)
+         }
+         activityIndicator.stopAnimating()
+         return cell*/
         let cell = tableView.dequeueReusableCell(withIdentifier: "sourceID", for:indexPath) as! sourceTVCell
         let cellOdd = tableView.dequeueReusableCell(withIdentifier: "sourceZigzagID", for:indexPath) as! sourceZigzagTVCell
         imgWidth = String(describing : Int(cell.imgNews.frame.width))
@@ -183,7 +183,7 @@ extension SourceVC: UITableViewDelegate, UITableViewDataSource{
             cell.imgNews.clipsToBounds = true
             
             //display data from DB
-           var currentArticle = ShowArticle[0].body?.articles[indexPath.row]
+            var currentArticle = ShowArticle[0].body?.articles[indexPath.row]
             cell.lblNewsDescription.text = currentArticle!.title
             
             if  darkModeStatus == true{
@@ -256,7 +256,7 @@ extension SourceVC: UITableViewDelegate, UITableViewDataSource{
             //display data from DB
             var currentArticle = ShowArticle[0].body?.articles[indexPath.row]
             cellOdd.lblNewsDescription.text = currentArticle!.title
-    
+            
             if  darkModeStatus == true{
                 cellOdd.ViewCellBackground.backgroundColor = colorConstants.grayBackground2
                 cellOdd.lblSource.textColor = colorConstants.nightModeText
