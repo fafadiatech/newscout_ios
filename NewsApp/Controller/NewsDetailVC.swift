@@ -1273,7 +1273,7 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
             let sourcevc:SourceVC = storyboard.instantiateViewController(withIdentifier: "SourceID") as! SourceVC
             self.present(sourcevc, animated: true, completion: nil)
         }
-        else if isSearch == "home"{
+        else if isSearch == "home" || isSearch == "shuffle"{
             self.dismiss(animated: false)
         }
     }
@@ -1322,33 +1322,12 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
         WKWebView.load(myRequest)
     }
     
-    func getShuffleData(){
-        let result = DBManager().FetchDataFromDB(entity: "NewsArticle")
-        switch result {
-        case .Success(let DBData) :
-            if DBData.count > 0{
-                shuffleData = DBData
-                let randomInt = Int.random(in: 0..<DBData.count)
-                activityIndicator.stopAnimating()
-                ShowNews(currentIndex: randomInt)
-            }
-        case .Failure(let errorMsg) : break
-        }
-    }
-    
     @IBAction func btnShuffleActn(_ sender: Any) {
-        //        if shuffleData.count > 0{
-        //            let randomInt = Int.random(in: 0..<shuffleData.count)
-        //            activityIndicator.stopAnimating()
-        //            ShowNews(currentIndex: randomInt)
-        //        }
-        if newsCurrentIndex < ShowArticle.count - 2{
-            newsCurrentIndex = newsCurrentIndex + 2
-            ShowNews(currentIndex: newsCurrentIndex)
-        }else{
-            newsCurrentIndex = newsCurrentIndex - 2
-            ShowNews(currentIndex: newsCurrentIndex)
-        }
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let vc:ShuffleDetailVC = storyboard.instantiateViewController(withIdentifier: "ShuffleID") as! ShuffleDetailVC
+        UserDefaults.standard.set("shuffle", forKey: "isSearch")
+        self.present(vc, animated: true, completion: nil)
+        UserDefaults.standard.set(false, forKey: "isSettingsLogin")
     }
     
     @IBAction func btnMoreStoriesActn(_ sender: Any) {

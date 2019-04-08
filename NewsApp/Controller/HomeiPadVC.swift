@@ -13,7 +13,6 @@ import CoreData
 import MaterialComponents.MaterialActivityIndicator
 import SDWebImage
 import NightNight
-import SeparatorCollectionViewFlowLayout
 
 class HomeiPadVC: UIViewController{
     @IBOutlet weak var HomeNewsCV: UICollectionView!
@@ -40,9 +39,9 @@ class HomeiPadVC: UIViewController{
     
     override func viewDidLoad(){
         super.viewDidLoad()
-       
+        
         protocolObj?.isNavigate(status: true)
-       // lblNonews.isHidden = true
+         lblNonews.isHidden = true
         
         NotificationCenter.default.addObserver(self, selector: #selector(darkModeEnabled(_:)), name: .darkModeEnabled, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(darkModeDisabled(_:)), name: .darkModeDisabled, object: nil)
@@ -90,7 +89,7 @@ class HomeiPadVC: UIViewController{
                 }
             }else{
                 activityIndicator.stopAnimating()
-                //lblNonews.isHidden = true
+                lblNonews.isHidden = true
             }
         }
     }
@@ -128,12 +127,12 @@ class HomeiPadVC: UIViewController{
         case .Success(let DBData) :
             ShowArticle = DBData
             if ShowArticle.count > 0{
-                //lblNonews.isHidden = true
+                lblNonews.isHidden = true
                 self.HomeNewsCV.reloadData()
             }
             else{
                 self.HomeNewsCV.reloadData()
-                //lblNonews.isHidden =  false
+                lblNonews.isHidden =  false
                 activityIndicator.stopAnimating()
             }
         case .Failure(let errorMsg) :
@@ -295,73 +294,73 @@ extension HomeiPadVC: UICollectionViewDelegate, UICollectionViewDataSource, UISc
         var fullTxt = ""
         var dateSubString = ""
         var agoDate = ""
-            cell.imgNews.layer.cornerRadius = 10.0
-            cell.imgNews.clipsToBounds = true
-            
-            //display data from DB
-            let currentArticle = sortedData[indexPath.row]
-            cell.lblTitle.text = currentArticle.title
-            
-            if  darkModeStatus == true{
-                cell.lblSource.textColor = colorConstants.nightModeText
-                cell.lblTitle.textColor = colorConstants.nightModeText
-                NightNight.theme =  .night
+        cell.imgNews.layer.cornerRadius = 10.0
+        cell.imgNews.clipsToBounds = true
+        
+        //display data from DB
+        let currentArticle = sortedData[indexPath.row]
+        cell.lblTitle.text = currentArticle.title
+        
+        if  darkModeStatus == true{
+            cell.lblSource.textColor = colorConstants.nightModeText
+            cell.lblTitle.textColor = colorConstants.nightModeText
+            NightNight.theme =  .night
+        }
+        else{
+            cell.lblSource.textColor = colorConstants.blackColor
+            cell.lblTitle.textColor = colorConstants.blackColor
+            NightNight.theme =  .normal
+        }
+        
+        if ((currentArticle.published_on?.count)!) <= 20{
+            if !(currentArticle.published_on?.contains("Z"))!{
+                currentArticle.published_on?.append("Z")
             }
-            else{
-                cell.lblSource.textColor = colorConstants.blackColor
-                cell.lblTitle.textColor = colorConstants.blackColor
-                NightNight.theme =  .normal
+            let newDate = dateFormatter.date(from: currentArticle.published_on!)
+            if newDate != nil{
+                agoDate = try Helper().timeAgoSinceDate(newDate!)
+                fullTxt = "\(agoDate)" + " via " + currentArticle.source!
+                let attributedWithTextColor: NSAttributedString = fullTxt.attributedStringWithColor([currentArticle.source!], color: UIColor.red)
+                cell.lblSource.attributedText = attributedWithTextColor
             }
-            
-            if ((currentArticle.published_on?.count)!) <= 20{
-                if !(currentArticle.published_on?.contains("Z"))!{
-                    currentArticle.published_on?.append("Z")
-                }
-                let newDate = dateFormatter.date(from: currentArticle.published_on!)
-                if newDate != nil{
-                    agoDate = try Helper().timeAgoSinceDate(newDate!)
-                    fullTxt = "\(agoDate)" + " via " + currentArticle.source!
-                    let attributedWithTextColor: NSAttributedString = fullTxt.attributedStringWithColor([currentArticle.source!], color: UIColor.red)
-                    cell.lblSource.attributedText = attributedWithTextColor
-                }
+        }
+        else{
+            dateSubString = String(currentArticle.published_on!.prefix(19))
+            if !(dateSubString.contains("Z")){
+                dateSubString.append("Z")
             }
-            else{
-                dateSubString = String(currentArticle.published_on!.prefix(19))
-                if !(dateSubString.contains("Z")){
-                    dateSubString.append("Z")
-                }
-                let newDate = dateFormatter.date(from: dateSubString
-                )
-                if newDate != nil{
-                    agoDate = try Helper().timeAgoSinceDate(newDate!)
-                    fullTxt = "\(agoDate)" + " via " + currentArticle.source!
-                    let attributedWithTextColor: NSAttributedString = fullTxt.attributedStringWithColor([currentArticle.source!], color: UIColor.red)
-                    cell.lblSource.attributedText = attributedWithTextColor
-                }
+            let newDate = dateFormatter.date(from: dateSubString
+            )
+            if newDate != nil{
+                agoDate = try Helper().timeAgoSinceDate(newDate!)
+                fullTxt = "\(agoDate)" + " via " + currentArticle.source!
+                let attributedWithTextColor: NSAttributedString = fullTxt.attributedStringWithColor([currentArticle.source!], color: UIColor.red)
+                cell.lblSource.attributedText = attributedWithTextColor
             }
-            let imgURL = APPURL.imageServer + imgWidth + "x" + imgHeight + "/smart/" + currentArticle.imageURL!
-            cell.imgNews.sd_setImage(with: URL(string: imgURL), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
-            
-            if textSizeSelected == 0{
-                cell.lblSource.font = FontConstants.smallFontContent
-                cell.lblTitle.font = FontConstants.smallFontHeadingBold
-            }
-            else if textSizeSelected == 2{
-                cell.lblSource.font = FontConstants.LargeFontContent
-                cell.lblTitle.font = FontConstants.LargeFontHeadingBold
-            }
-            else{
-                cell.lblSource.font =  FontConstants.NormalFontContent
-                cell.lblTitle.font = FontConstants.NormalFontHeadingBold
-            }
-            
-            if cell.imgNews.image == nil{
-                cell.imgNews.image = UIImage(named: AssetConstants.NoImage)
-            }
-            
-            activityIndicator.stopAnimating()
-            //lblNonews.isHidden = true
-            return cell
+        }
+        let imgURL = APPURL.imageServer + imgWidth + "x" + imgHeight + "/smart/" + currentArticle.imageURL!
+        cell.imgNews.sd_setImage(with: URL(string: imgURL), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
+        
+        if textSizeSelected == 0{
+            cell.lblSource.font = FontConstants.smallFontContent
+            cell.lblTitle.font = FontConstants.smallFontHeadingBold
+        }
+        else if textSizeSelected == 2{
+            cell.lblSource.font = FontConstants.LargeFontContent
+            cell.lblTitle.font = FontConstants.LargeFontHeadingBold
+        }
+        else{
+            cell.lblSource.font =  FontConstants.NormalFontContent
+            cell.lblTitle.font = FontConstants.NormalFontHeadingBold
+        }
+        
+        if cell.imgNews.image == nil{
+            cell.imgNews.image = UIImage(named: AssetConstants.NoImage)
+        }
+        
+        activityIndicator.stopAnimating()
+        lblNonews.isHidden = true
+        return cell
         
     }
     
@@ -371,7 +370,7 @@ extension HomeiPadVC: UICollectionViewDelegate, UICollectionViewDataSource, UISc
         protocolObj?.isNavigate(status: true)
     }
     
-   
+    
 }
 
 extension HomeiPadVC: IndicatorInfoProvider{
