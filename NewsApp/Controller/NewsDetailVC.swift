@@ -1133,6 +1133,15 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
                     else{
                         self.ResetBookmarkImg()
                         DBManager().deleteBookmarkedArticle(id: self.articleId)
+                        if self.currentEntity == "ShowArticle"{
+                        self.ShowArticle.remove(at: self.newsCurrentIndex)
+                        }else if self.currentEntity == "SearchArticles"{
+                            self.SearchArticle.remove(at: self.newsCurrentIndex)
+                        }else if self.currentEntity == "source"{
+                            self.sourceArticle.remove(at: self.newsCurrentIndex)
+                        }
+                        self.newsCurrentIndex = self.newsCurrentIndex - 1
+                        self.indexCount = self.indexCount - 1
                         self.view.makeToast(response, duration: 1.0, position: .center)
                     }
                 }
