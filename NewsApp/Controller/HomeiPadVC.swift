@@ -13,8 +13,9 @@ import CoreData
 import MaterialComponents.MaterialActivityIndicator
 import SDWebImage
 import NightNight
+import SeparatorCollectionViewFlowLayout
 
-class HomeiPadVC: UIViewController {
+class HomeiPadVC: UIViewController{
     @IBOutlet weak var HomeNewsCV: UICollectionView!
     @IBOutlet weak var lblNonews: UILabel!
     
@@ -36,10 +37,13 @@ class HomeiPadVC: UIViewController {
     var imgWidth = ""
     var imgHeight = ""
     
+    
     override func viewDidLoad(){
         super.viewDidLoad()
+       
         protocolObj?.isNavigate(status: true)
        // lblNonews.isHidden = true
+        
         NotificationCenter.default.addObserver(self, selector: #selector(darkModeEnabled(_:)), name: .darkModeEnabled, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(darkModeDisabled(_:)), name: .darkModeDisabled, object: nil)
         activityIndicator.cycleColors = [.blue]
@@ -256,6 +260,7 @@ class HomeiPadVC: UIViewController {
 }
 
 extension HomeiPadVC: UICollectionViewDelegate, UICollectionViewDataSource, UIScrollViewDelegate{
+    
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         
         let noOfCellsInRow = 3
@@ -276,7 +281,8 @@ extension HomeiPadVC: UICollectionViewDelegate, UICollectionViewDataSource, UISc
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "HomeIpadID", for:indexPath) as! HomeipadCVCell
-       
+        cell.containerView.layer.borderWidth = 0.5
+        cell.containerView.layer.borderColor = UIColor.lightGray.cgColor
         imgWidth = String(describing : Int(cell.imgNews.frame.width))
         imgHeight = String(describing : Int(cell.imgNews.frame.height))
         let dateFormatter = DateFormatter()

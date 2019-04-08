@@ -11,6 +11,7 @@ import UIKit
 class HomeipadCVCell: UICollectionViewCell {
     @IBOutlet weak var imgNews: UIImageView!
     
+    @IBOutlet weak var containerView: UIView!
     @IBOutlet weak var lblSource: UILabel!
     @IBOutlet weak var lblTitle: UILabel!
 }
