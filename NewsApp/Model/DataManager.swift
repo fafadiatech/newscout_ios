@@ -20,7 +20,7 @@ class DBManager{
     {
         var URLData = [NewsURL]()
         let managedContext = appDelegate?.persistentContainer.viewContext
-        APICall().loadNewsbyCategoryAPI(url : nextUrl){
+         APICall().loadNewsbyCategoryAPI(url : nextUrl){
             (status, response)  in
             switch response {
             case .Success(let data) :

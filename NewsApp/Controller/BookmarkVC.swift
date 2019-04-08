@@ -38,7 +38,7 @@ class BookmarkVC: UIViewController {
         activityIndicator.progress = 2.0
         view.addSubview(activityIndicator)
         activityIndicator.startAnimating()
-        if UserDefaults.standard.value(forKey: "token") != nil || UserDefaults.standard.value(forKey: "FBToken") != nil || UserDefaults.standard.value(forKey: "googleToken") != nil{
+        if UserDefaults.standard.value(forKey: "token") != nil {
             let coredataRecordCount = DBManager().IsCoreDataEmpty(entity: "BookmarkArticles")
             if coredataRecordCount != 0{
                 fetchBookmarkDataFromDB()
@@ -52,7 +52,7 @@ class BookmarkVC: UIViewController {
             self.view.makeToast("You need to login", duration: 1.0, position: .center)
         }
         let refreshControl = UIRefreshControl()
-        if UserDefaults.standard.value(forKey: "token") != nil || UserDefaults.standard.value(forKey: "FBToken") != nil || UserDefaults.standard.value(forKey: "googleToken") != nil{
+        if UserDefaults.standard.value(forKey: "token") != nil{
             refreshControl.addTarget(self, action: #selector(refreshBookmarkedNews), for: .valueChanged)
             bookmarkResultTV.refreshControl = refreshControl
             refreshControl.attributedTitle = NSAttributedString(string: "Pull  to Refresh...")

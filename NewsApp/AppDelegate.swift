@@ -92,7 +92,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
     
     func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
         let deviceTokenString = deviceToken.hexString
-        print(deviceTokenString)
+        print("deviceTokenString: \(deviceTokenString)")
         UserDefaults.standard.set(deviceTokenString, forKey: "deviceToken")
     }
     

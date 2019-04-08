@@ -79,7 +79,7 @@ class HomeParentVC: ButtonBarPagerTabStripViewController{
         if UserDefaults.standard.value(forKey: "personalised") == nil{
             UserDefaults.standard.set(false, forKey: "personalised")
         }
-        // sendDeviceDetails()
+        sendDeviceDetails()
         settings.style.buttonBarItemsShouldFillAvailiableWidth = false
         saveFetchMenu()
         NotificationCenter.default.addObserver(self, selector: #selector(darkModeEnabled(_:)), name: .darkModeEnabled, object: nil)

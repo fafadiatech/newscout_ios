@@ -70,7 +70,7 @@ class ProfileVC: UIViewController {
     }
     
     @IBAction func btnChangePswdActn(_ sender: Any) {
-        if UserDefaults.standard.value(forKey: "token") != nil ||  UserDefaults.standard.value(forKey: "googleToken") != nil || UserDefaults.standard.value(forKey: "FBToken") != nil{
+        if UserDefaults.standard.value(forKey: "token") != nil{
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             let vc:ChangePasswordVC = storyboard.instantiateViewController(withIdentifier: "ChangePswdID") as! ChangePasswordVC
             present(vc, animated: true, completion: nil)

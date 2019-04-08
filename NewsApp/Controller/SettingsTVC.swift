@@ -112,7 +112,7 @@ class SettingsTVC: UITableViewController, GIDSignInUIDelegate {
     
     func isLoggedIn()
     {
-        if UserDefaults.standard.value(forKey: "token") == nil && UserDefaults.standard.value(forKey: "googleToken") == nil && UserDefaults.standard.value(forKey: "FBToken") == nil  {
+        if UserDefaults.standard.value(forKey: "token") == nil {
             lblLogin.text = "Login"
             btnLogout.isHidden = true
         }
@@ -222,7 +222,7 @@ class SettingsTVC: UITableViewController, GIDSignInUIDelegate {
     
     override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
         if indexPath.section == 2 && indexPath.row == 0{
-            if UserDefaults.standard.value(forKey: "token") == nil && UserDefaults.standard.value(forKey: "googleToken") == nil && UserDefaults.standard.value(forKey: "FBToken") == nil {
+            if UserDefaults.standard.value(forKey: "token") == nil {
                 UserDefaults.standard.set(true, forKey: "isSettingsLogin")
                 let storyboard = UIStoryboard(name: "Main", bundle: nil)
                 let vc:LoginVC = storyboard.instantiateViewController(withIdentifier: "LoginID") as! LoginVC

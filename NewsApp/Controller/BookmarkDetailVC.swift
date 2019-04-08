@@ -542,7 +542,7 @@ class BookmarkDetailVC: UIViewController {
     }
     
     @IBAction func btnLikeActn(_ sender: Any) {
-        if UserDefaults.standard.value(forKey: "token") != nil || UserDefaults.standard.value(forKey: "FBToken") != nil || UserDefaults.standard.value(forKey: "googleToken") != nil{
+        if UserDefaults.standard.value(forKey: "token") != nil {
             if (btnLike.currentImage?.isEqual(UIImage(named: AssetConstants.thumb_up)))! {
                 let param = ["article_id" : articleId,
                              "isLike" : 0]
@@ -582,7 +582,7 @@ class BookmarkDetailVC: UIViewController {
     }
     
     @IBAction func btnDislikeActn(_ sender: Any) {
-        if UserDefaults.standard.value(forKey: "token") != nil || UserDefaults.standard.value(forKey: "FBToken") != nil || UserDefaults.standard.value(forKey: "googleToken") != nil{
+        if UserDefaults.standard.value(forKey: "token") != nil {
             if (btnDislike.currentImage?.isEqual(UIImage(named: AssetConstants.thumb_down)))! {
                 let param = ["article_id" : articleId,
                              "isLike" : 1]
@@ -621,7 +621,7 @@ class BookmarkDetailVC: UIViewController {
     }
     
     @IBAction func btnBookmarkActn(_ sender: Any) {
-        if UserDefaults.standard.value(forKey: "token") != nil || UserDefaults.standard.value(forKey: "FBToken") != nil || UserDefaults.standard.value(forKey: "googleToken") != nil{
+        if UserDefaults.standard.value(forKey: "token") != nil{
             if (((btnBookamark.currentImage?.isEqual(UIImage(named: AssetConstants.bookmark)))!) || ((btnBookamark.currentImage?.isEqual(UIImage(named: AssetConstants.Bookmark_white)))!)) {
                 
                 APICall().bookmarkAPI(id: articleId){

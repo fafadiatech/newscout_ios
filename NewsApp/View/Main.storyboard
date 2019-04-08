@@ -1678,6 +1678,7 @@
                     </view>
                     <connections>
                         <outlet property="HomeNewsCV" destination="pa3-Vj-ccf" id="tPf-5w-yol"/>
+                        <outlet property="lblNonews" destination="wFO-oA-kmX" id="pfQ-4v-XVz"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="kLw-Zf-x0N" userLabel="First Responder" sceneMemberID="firstResponder"/>
