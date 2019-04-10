@@ -260,28 +260,26 @@ class HomeiPadVC: UIViewController{
 
 extension HomeiPadVC: UICollectionViewDelegate, UICollectionViewDataSource, UIScrollViewDelegate{
     
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        
-        let noOfCellsInRow = 3
-        
-        let flowLayout = collectionViewLayout as! UICollectionViewFlowLayout
-        
-        let totalSpace = flowLayout.sectionInset.left
-            + flowLayout.sectionInset.right
-            + (flowLayout.minimumInteritemSpacing * CGFloat(noOfCellsInRow - 1))
-        
-        let size = Int((HomeNewsCV.bounds.width - totalSpace) / CGFloat(noOfCellsInRow))
-        
-        return CGSize(width: size, height: size)
-    }
+//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+//
+//        let noOfCellsInRow = 3
+//
+//        let flowLayout = collectionViewLayout as! UICollectionViewFlowLayout
+//
+//        let totalSpace = flowLayout.sectionInset.left
+//            + flowLayout.sectionInset.right
+//            + (flowLayout.minimumInteritemSpacing * CGFloat(noOfCellsInRow - 1))
+//
+//        let size = Int((HomeNewsCV.bounds.width - totalSpace) / CGFloat(noOfCellsInRow))
+//
+//        return CGSize(width: size, height: size)
+//    }
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return (ShowArticle.count > 0) ? self.ShowArticle.count : 0
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "HomeIpadID", for:indexPath) as! HomeipadCVCell
-        cell.containerView.layer.borderWidth = 0.5
-        cell.containerView.layer.borderColor = UIColor.lightGray.cgColor
         imgWidth = String(describing : Int(cell.imgNews.frame.width))
         imgHeight = String(describing : Int(cell.imgNews.frame.height))
         let dateFormatter = DateFormatter()
@@ -294,8 +292,8 @@ extension HomeiPadVC: UICollectionViewDelegate, UICollectionViewDataSource, UISc
         var fullTxt = ""
         var dateSubString = ""
         var agoDate = ""
-        cell.imgNews.layer.cornerRadius = 10.0
-        cell.imgNews.clipsToBounds = true
+//        cell.imgNews.layer.cornerRadius = 10.0
+//        cell.imgNews.clipsToBounds = true
         
         //display data from DB
         let currentArticle = sortedData[indexPath.row]
