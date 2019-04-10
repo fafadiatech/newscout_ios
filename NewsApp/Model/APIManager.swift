@@ -308,7 +308,6 @@ class APICall{
                             UserDefaults.standard.set(jsonData.body!.user!.first_name, forKey: "first_name")
                             UserDefaults.standard.set(jsonData.body!.user!.last_name, forKey: "last_name")
                             UserDefaults.standard.set(jsonData.body!.user!.user_id, forKey: "user_id")
-                            UserDefaults.standard.set(param["email"], forKey: "email")
                             UserDefaults.standard.set(jsonData.body?.user?.breaking_news, forKey: "breaking")
                             UserDefaults.standard.set(jsonData.body?.user?.breaking_news, forKey: "daily")
                             UserDefaults.standard.set(jsonData.body?.user?.breaking_news, forKey: "personalised")

@@ -118,6 +118,27 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
             // ...
             print("\(userId!) \n \(idToken) \n \(fullName!) \n \(email!) \n \(pic)")
             print("google sign in successful..")
+            if UserDefaults.standard.value(forKey: "googleToken") != nil{
+                let param = ["provider" : "google",
+                             "token_id" : UserDefaults.standard.value(forKey: "googleToken") as! String,
+                             "device_id" : UserDefaults.standard.value(forKey: "deviceToken") as! String,
+                             "device_name": "ios"]
+                APICall().SocialLoginAPI(param : param){(status,response) in
+                    print("google Login response:\(response)")
+                    if response == "1"{
+                        UserDefaults.standard.set(true, forKey: "isWalkthroughShown")
+                        let check = UserDefaults.standard.value(forKey: "isSettingsLogin") as! Bool
+                        if check == true{
+                            
+                            let mainStoryboard:UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
+                            let HomeVc = mainStoryboard.instantiateViewController(withIdentifier: "HomeParentID") as! HomeParentVC
+                            self.window?.rootViewController = HomeVc
+                            
+                        }
+                      
+                    }
+                }
+            }
             
             /*  let mainStoryboard:UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
              let HomeVc = mainStoryboard.instantiateViewController(withIdentifier: "HomeParentID") as! HomeParentVC

@@ -52,7 +52,7 @@ public struct ButtonBarPagerTabStripSettings {
         public var selectedBarVerticalAlignment: SelectedBarVerticalAlignment = .bottom
         
         public var buttonBarItemBackgroundColor: UIColor?
-        public var buttonBarItemFont = UIFont.systemFont(ofSize: 18)
+        public var buttonBarItemFont = UIFont(name:"HelveticaNeue-Light", size: 20.0)
         public var buttonBarItemLeftRightMargin: CGFloat = 8
         public var buttonBarItemTitleColor: UIColor?
         @available(*, deprecated: 7.0.0) public var buttonBarItemsShouldFillAvailiableWidth: Bool {
@@ -351,12 +351,10 @@ open class ButtonBarPagerTabStripViewController: PagerTabStripViewController, Pa
         cell.label.text = indicatorInfo.title//titleArr[indexPath.row] //
         print(cell.label.text)
         cell.accessibilityLabel = indicatorInfo.accessibilityLabel
-        if (UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.phone){
-            cell.label.font = UIFont(name:"HelveticaNeue-Light", size: 20.0)
-        }
-        else{
-            cell.label.font = UIFont(name:"HelveticaNeue-Light", size: 26.0)
-        }
+//        if (UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.phone){
+//            cell.label.font = UIFont(name:"HelveticaNeue-Light", size: 20.0)
+//        }
+
         cell.contentView.backgroundColor = settings.style.buttonBarItemBackgroundColor ?? cell.contentView.backgroundColor
        let darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
         if darkModeStatus == true{

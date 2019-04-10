@@ -503,19 +503,19 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
         let textSizeSelected = UserDefaults.standard.value(forKey: "textSize") as! Int
         
         if textSizeSelected == 0{
-            lblNewsHeading.font = FontConstants.smallFontHeadingBold
+            lblNewsHeading.font = FontConstants.smallFontDetailTitle
             btnSource.titleLabel?.font =  FontConstants.smallFontContentMedium
-            txtViewNewsDesc.font = FontConstants.smallFontTitle
+            txtViewNewsDesc.font = FontConstants.smallFontContentDetail
         }
         else if textSizeSelected == 2{
-            lblNewsHeading.font = FontConstants.LargeFontHeadingBold
+            lblNewsHeading.font = FontConstants.LargeFontDetailTitle
             btnSource.titleLabel?.font =  FontConstants.LargeFontContentMedium
-            txtViewNewsDesc.font = FontConstants.LargeFontTitle
+            txtViewNewsDesc.font = FontConstants.LargeFontContentDetail
         }
         else{
-            lblNewsHeading.font = FontConstants.NormalFontHeadingBold
+            lblNewsHeading.font = FontConstants.NormalFontDetailTitle
             btnSource.titleLabel?.font =  FontConstants.NormalFontContentMedium
-            txtViewNewsDesc.font = FontConstants.NormalFontTitle
+            txtViewNewsDesc.font = FontConstants.NormalFontContentDetail
         }
     }
     

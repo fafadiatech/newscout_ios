@@ -152,7 +152,7 @@ class SettingsTVC: UITableViewController, GIDSignInUIDelegate {
     @IBAction func btnLogoutActn(_ sender: Any) {
         if UserDefaults.standard.value(forKey: "googleToken") != nil{
             GIDSignIn.sharedInstance().signOut()
-            let defaultList = ["googleToken", "first_name", "last_name", "email"]
+            let defaultList = ["googleToken", "first_name", "last_name", "email", "token"]
             Helper().clearDefaults(list : defaultList)
             self.btnLogout.isHidden = true
             self.lblLogin.text = "Login"
@@ -164,7 +164,7 @@ class SettingsTVC: UITableViewController, GIDSignInUIDelegate {
             FBSDKAccessToken.setCurrent(nil)
             FBSDKProfile.setCurrent(nil)
             self.btnLogout.isHidden = true
-            let defaultList = ["FBToken", "first_name", "last_name", "email"]
+            let defaultList = ["FBToken", "first_name", "last_name", "email", "token"]
             Helper().clearDefaults(list : defaultList)
             self.lblLogin.text = "Login"
             print("google sign out successful..")

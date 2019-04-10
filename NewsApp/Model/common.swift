@@ -43,7 +43,12 @@ struct FontConstants{
     static let fontViewTitle:CGFloat = isPhone ? 23 : 35
     static let fontSettingsTVHeader:CGFloat = isPhone ? 20 : 23
     static let fontAppTitle:CGFloat = isPhone ? 22 : 32
-    
+    static let fontsmallDetailTitle:CGFloat = isPhone ? 17 : 21
+    static let fontNormalDetailTitle:CGFloat = isPhone ? 19 : 23
+    static let fontLargeDetailTitle:CGFloat = isPhone ? 21 : 25
+    static let fontsmallDetailContent:CGFloat = isPhone ? 14 : 19
+    static let fontNormalDetailContent:CGFloat = isPhone ? 16 : 21
+    static let fontLargeDetailCOntent:CGFloat = isPhone ? 18 : 23
     //for button titles
     static let FontBtnTitle = UIFont(name: AppFontName.medium, size: FontConstants.fontNormalBtn)
     //for news description
@@ -53,6 +58,9 @@ struct FontConstants{
     static let smallFontTitleMedium = UIFont(name: AppFontName.medium, size: FontConstants.fontSmallTitle)
     static let LargeFontTitleMedium = UIFont(name: AppFontName.medium, size: FontConstants.fontLargeTitle)
     static let NormalFontTitleMedium = UIFont(name: AppFontName.medium, size: FontConstants.fontNormalTitle)
+    static let smallFontContentDetail = UIFont(name: AppFontName.regular, size: FontConstants.fontsmallDetailContent)
+    static let LargeFontContentDetail = UIFont(name: AppFontName.regular, size: FontConstants.fontLargeDetailCOntent)
+    static let NormalFontContentDetail = UIFont(name: AppFontName.regular, size: FontConstants.fontNormalDetailContent)
     //for news title
     static let smallFontHeadingBold = UIFont(name: AppFontName.bold, size: FontConstants.fontSmallHeading)
     static let LargeFontHeadingBold = UIFont(name: AppFontName.bold, size: FontConstants.fontLargeHeading)
@@ -60,7 +68,9 @@ struct FontConstants{
     static let smallFontHeading = UIFont(name: AppFontName.regular, size: FontConstants.fontSmallHeading)
     static let LargeFontHeading = UIFont(name: AppFontName.regular, size: FontConstants.fontLargeHeading)
     static let NormalFontHeading = UIFont(name: AppFontName.regular, size: FontConstants.fontNormalHeading)
-    
+    static let smallFontDetailTitle = UIFont(name: AppFontName.bold, size: FontConstants.fontsmallDetailTitle)
+    static let LargeFontDetailTitle = UIFont(name: AppFontName.bold, size: FontConstants.fontLargeDetailTitle)
+    static let NormalFontDetailTitle = UIFont(name: AppFontName.bold, size: FontConstants.fontNormalDetailTitle)
     //for source, time
     static let smallFontContentBold = UIFont(name: AppFontName.bold, size: FontConstants.fontSmallContent)
     static let LargeFontContentBold = UIFont(name: AppFontName.bold, size: FontConstants.fontLargeContent)
@@ -120,6 +130,12 @@ struct AssetConstants{
     static let misc = "news"
     static let moon = "moon24"
     static let whiteMoon = "moon_white24"
+    static let screen1 = "Top-Menu"
+    static let screen2 = "Bottom_Menu"
+    static let screen3 = "Article_Details"
+    static let screen4 = "More_Stories_Section"
+    static let screen5 = "Share_screen"
+    static let screen6 = "Search_screen"
  }
 
 struct AppFontName {

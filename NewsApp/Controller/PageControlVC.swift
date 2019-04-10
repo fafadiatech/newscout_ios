@@ -15,7 +15,7 @@ class PageControlVC: UIViewController, UIScrollViewDelegate {
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var pageControl: UIPageControl!
     @IBOutlet weak var btnGetStarted: UIButton!
-    var arrImages =  [AssetConstants.f1, AssetConstants.f2, AssetConstants.f3]
+    var arrImages =  [AssetConstants.screen1, AssetConstants.screen2, AssetConstants.screen3, AssetConstants.screen4, AssetConstants.screen5, AssetConstants.screen6]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -45,8 +45,8 @@ class PageControlVC: UIViewController, UIScrollViewDelegate {
             
             let imageView = UIImageView()
             imageView.frame = CGRect(x: i * Int(self.pageView.frame.size.width) , y: 0 , width:
-                Int(self.pageView.frame.size.width) , height: Int(scrollView.frame.size.height))
-            
+                Int(self.pageView.frame.size.width) , height: Int(scrollView.frame.size.height - pageControl.frame.height))
+            imageView.contentMode = .scaleAspectFit
             imageView.image = UIImage(named:arrImages[i])
             self.scrollView.addSubview(imageView)
         }

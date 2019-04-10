@@ -57,7 +57,6 @@ class LoginVC: UIViewController, GIDSignInUIDelegate, FBSDKLoginButtonDelegate {
             print(FBSDKAccessToken.current())
             UserDefaults.standard.set(FBSDKAccessToken.current()?.tokenString, forKey: "FBToken")
             fetchProfile()
-            FBLogin()
         }
         btnFBLogin.titleLabel?.font = FontConstants.FontBtnTitle
         signInButton.titleLabel?.font = FontConstants.FontBtnTitle
@@ -96,9 +95,6 @@ class LoginVC: UIViewController, GIDSignInUIDelegate, FBSDKLoginButtonDelegate {
                 else{
                     self.dismiss(animated: false)
                 }
-            }
-            else{
-                self.view.makeToast(response, duration: 1.0, position: .center)
             }
         }
     }
@@ -154,6 +150,7 @@ class LoginVC: UIViewController, GIDSignInUIDelegate, FBSDKLoginButtonDelegate {
                         UserDefaults.standard.set(dictionary["email"] as! String?, forKey: "email")
                         UserDefaults.standard.set(dictionary["first_name"] as! String?, forKey: "first_name")
                         UserDefaults.standard.set(dictionary["last_name"] as! String?, forKey: "last_name")
+                        self.FBLogin()
                     }
                 }
             })
@@ -223,30 +220,7 @@ class LoginVC: UIViewController, GIDSignInUIDelegate, FBSDKLoginButtonDelegate {
     @IBAction func googleSignIn(_ sender: Any) {
         GIDSignIn.sharedInstance().uiDelegate=self
         GIDSignIn.sharedInstance().signIn()
-        if UserDefaults.standard.value(forKey: "googleToken") != nil{
-            let param = ["provider" : "google",
-                         "token_id" : UserDefaults.standard.value(forKey: "googleToken") as! String,
-                         "device_id" : UserDefaults.standard.value(forKey: "deviceToken") as! String,
-                         "device_name": "ios"]
-            APICall().SocialLoginAPI(param : param){(status,response) in
-                print("google Login response:\(response)")
-                if response == "1"{
-                    UserDefaults.standard.set(true, forKey: "isWalkthroughShown")
-                    let check = UserDefaults.standard.value(forKey: "isSettingsLogin") as! Bool
-                    if check == true{
-                        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-                        let HomeVc:HomeParentVC = storyboard.instantiateViewController(withIdentifier: "HomeParentID") as! HomeParentVC
-                        self.present(HomeVc, animated: true, completion: nil)
-                    }
-                    else{
-                        self.dismiss(animated: false)
-                    }
-                }
-                else{
-                    self.view.makeToast(response, duration: 1.0, position: .center)
-                }
-            }
-        }
+      
     }
     
     func loginButton(_ loginButton: FBSDKLoginButton!, didCompleteWith result: FBSDKLoginManagerLoginResult!, error: Error!) {

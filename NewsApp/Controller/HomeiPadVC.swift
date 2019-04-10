@@ -258,7 +258,7 @@ class HomeiPadVC: UIViewController{
     }
 }
 
-extension HomeiPadVC: UICollectionViewDelegate, UICollectionViewDataSource, UIScrollViewDelegate{
+extension HomeiPadVC: UICollectionViewDelegate, UICollectionViewDataSource { //UIScrollViewDelegate{
     
 //    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
 //
@@ -276,6 +276,16 @@ extension HomeiPadVC: UICollectionViewDelegate, UICollectionViewDataSource, UISc
 //    }
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return (ShowArticle.count > 0) ? self.ShowArticle.count : 0
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let newsDetailvc:NewsDetailVC = storyboard.instantiateViewController(withIdentifier: "NewsDetailID") as! NewsDetailVC
+        newsDetailvc.newsCurrentIndex = indexPath.row
+        newsDetailvc.ShowArticle = sortedData as! [NewsArticle]
+        newsDetailvc.articleId = Int(sortedData[indexPath.row].article_id)
+        UserDefaults.standard.set("home", forKey: "isSearch")
+        present(newsDetailvc, animated: true, completion: nil)
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -364,11 +374,75 @@ extension HomeiPadVC: UICollectionViewDelegate, UICollectionViewDataSource, UISc
     
     
     
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        protocolObj?.isNavigate(status: true)
+//    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+//        protocolObj?.isNavigate(status: true)
+//
+//            var submenu = UserDefaults.standard.value(forKey: "submenu") as! String
+//            if ShowArticle.count >= 20{
+//                if isAPICalled == false{
+//                    let result =  DBManager().FetchNextURL(category: submenu)
+//                    switch result {
+//                    case .Success(let DBData) :
+//                        let nextURL = DBData
+//                        
+//                        if nextURL.count != 0{
+//                            isAPICalled = false
+//                            if nextURL[0].category == submenu {
+//                                let nexturl = nextURL[0].nextURL
+//                                UserDefaults.standard.set(nexturl, forKey: "submenuURL")
+//                                self.saveArticlesInDB()
+//                            }
+//                        }
+//                        else{
+//                            isAPICalled = true
+//                            activityIndicator.stopAnimating()
+//                        }
+//                    case .Failure(let errorMsg) :
+//                        print(errorMsg)
+//                    }
+//                }
+//            }
+//        
+//    }
+//
+    func ScrollEnd() {
+        let lastSectionIndex = (self.HomeNewsCV?.numberOfSections)! - 1
+        let lastItemIndex = (HomeNewsCV.numberOfItems(inSection: lastSectionIndex)) - 1
+        let index =  IndexPath(item: lastItemIndex, section: lastSectionIndex)
+        if ShowArticle.count != 0{
+            HomeNewsCV.scrollToItem(at: index, at: UICollectionView.ScrollPosition.bottom, animated: false)
+        }    }
+    
+    func collectionView(collectionView: UICollectionView, willDisplayCell cell: UICollectionViewCell, forItemAtIndexPath indexPath: NSIndexPath) {
+        if indexPath.item == collectionView.numberOfItems(inSection: indexPath.section) - 1 {
+        
+            var submenu = UserDefaults.standard.value(forKey: "submenu") as! String
+            if ShowArticle.count >= 20{
+                if isAPICalled == false{
+                    let result =  DBManager().FetchNextURL(category: submenu)
+                    switch result {
+                    case .Success(let DBData) :
+                        let nextURL = DBData
+                        
+                        if nextURL.count != 0{
+                            isAPICalled = false
+                            if nextURL[0].category == submenu {
+                                let nexturl = nextURL[0].nextURL
+                                UserDefaults.standard.set(nexturl, forKey: "submenuURL")
+                                self.saveArticlesInDB()
+                            }
+                        }
+                        else{
+                            isAPICalled = true
+                            activityIndicator.stopAnimating()
+                        }
+                    case .Failure(let errorMsg) :
+                        print(errorMsg)
+                    }
+                }
+            }
+        }
     }
-    
-    
 }
 
 extension HomeiPadVC: IndicatorInfoProvider{
