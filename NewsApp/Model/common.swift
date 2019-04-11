@@ -27,28 +27,28 @@ struct colorConstants{
 struct FontConstants{
     static let isPhone = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.phone)
     static let fontSize:CGFloat = isPhone ? 12 :20
-    static let fontxLarge:CGFloat = isPhone ? 16:24 //16
-    static let fontxNormal:CGFloat = isPhone ? 15 :22 //14
-    static let fontxSmall:CGFloat = isPhone ? 12 :20 //12
-    static let fontLargeHeading:CGFloat = isPhone ? 21:22 //25
-    static let fontNormalHeading:CGFloat = isPhone ? 19 :18 //22
-    static let fontSmallHeading:CGFloat = isPhone ? 17 :18 //18
+    static let fontxLarge:CGFloat = isPhone ? 16:22 //16
+    static let fontxNormal:CGFloat = isPhone ? 15 :20 //14
+    static let fontxSmall:CGFloat = isPhone ? 12 :18 //12
+    static let fontLargeHeading:CGFloat = isPhone ? 21:18 //25
+    static let fontNormalHeading:CGFloat = isPhone ? 19 :16 //22
+    static let fontSmallHeading:CGFloat = isPhone ? 17 :14 //18
     static let fontLargeTitle:CGFloat = isPhone ? 21:26 //21
     static let fontNormalTitle:CGFloat = isPhone ? 17 :25//18
     static let fontSmallTitle:CGFloat = isPhone ? 14 :20 //14
-    static let fontLargeContent:CGFloat = isPhone ? 18 :22 //18
+    static let fontLargeContent:CGFloat = isPhone ? 18 :19 //18
     static let fontNormalContent:CGFloat = isPhone ? 16 :16 //14
-    static let fontSmallContent:CGFloat = isPhone ? 14 :18 //10
+    static let fontSmallContent:CGFloat = isPhone ? 14 :14 //10
     static let fontNormalBtn: CGFloat = isPhone ? 18 :26
     static let fontViewTitle:CGFloat = isPhone ? 23 : 35
     static let fontSettingsTVHeader:CGFloat = isPhone ? 20 : 23
     static let fontAppTitle:CGFloat = isPhone ? 22 : 32
-    static let fontsmallDetailTitle:CGFloat = isPhone ? 17 : 21
-    static let fontNormalDetailTitle:CGFloat = isPhone ? 19 : 23
-    static let fontLargeDetailTitle:CGFloat = isPhone ? 21 : 25
-    static let fontsmallDetailContent:CGFloat = isPhone ? 14 : 19
-    static let fontNormalDetailContent:CGFloat = isPhone ? 16 : 21
-    static let fontLargeDetailCOntent:CGFloat = isPhone ? 18 : 23
+    static let fontsmallDetailTitle:CGFloat = isPhone ? 17 : 19
+    static let fontNormalDetailTitle:CGFloat = isPhone ? 19 : 21
+    static let fontLargeDetailTitle:CGFloat = isPhone ? 21 : 23
+    static let fontsmallDetailContent:CGFloat = isPhone ? 14 : 17
+    static let fontNormalDetailContent:CGFloat = isPhone ? 16 : 19
+    static let fontLargeDetailCOntent:CGFloat = isPhone ? 18 : 21
     //for button titles
     static let FontBtnTitle = UIFont(name: AppFontName.medium, size: FontConstants.fontNormalBtn)
     //for news description
@@ -87,8 +87,8 @@ struct FontConstants{
     static let settingsTVHeader = UIFont(name: AppFontName.medium, size: FontConstants.fontSettingsTVHeader)
     static let appFont = UIFont(name: AppFontName.bold, size: FontConstants.fontAppTitle)
     static let smallRecommFont = UIFont(name: AppFontName.regular, size: FontConstants.fontxSmall)
-     static let largeRecommFont = UIFont(name: AppFontName.regular, size: FontConstants.fontxLarge)
-     static let normalRecommFont = UIFont(name: AppFontName.regular, size: FontConstants.fontxNormal)
+    static let largeRecommFont = UIFont(name: AppFontName.regular, size: FontConstants.fontxLarge)
+    static let normalRecommFont = UIFont(name: AppFontName.regular, size: FontConstants.fontxNormal)
     static let smallRecommTitleFont = UIFont(name: AppFontName.bold, size: FontConstants.fontxSmall)
     static let largeRecommTitleFont = UIFont(name: AppFontName.bold, size: FontConstants.fontxLarge)
     static let normalRecommTitleFont = UIFont(name: AppFontName.bold, size: FontConstants.fontxNormal)
@@ -136,7 +136,7 @@ struct AssetConstants{
     static let screen4 = "More_Stories_Section"
     static let screen5 = "Share_screen"
     static let screen6 = "Search_screen"
- }
+}
 
 struct AppFontName {
     static let regular = "HelveticaNeue-Light"

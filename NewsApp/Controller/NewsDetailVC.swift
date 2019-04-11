@@ -1134,7 +1134,7 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
                         self.ResetBookmarkImg()
                         DBManager().deleteBookmarkedArticle(id: self.articleId)
                         if self.currentEntity == "ShowArticle"{
-                        self.ShowArticle.remove(at: self.newsCurrentIndex)
+                            self.ShowArticle.remove(at: self.newsCurrentIndex)
                         }else if self.currentEntity == "SearchArticles"{
                             self.SearchArticle.remove(at: self.newsCurrentIndex)
                         }else if self.currentEntity == "source"{

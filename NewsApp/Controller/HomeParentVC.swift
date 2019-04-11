@@ -293,20 +293,20 @@ class HomeParentVC: ButtonBarPagerTabStripViewController{
                     let childVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "HomeiPadVC") as! HomeiPadVC
                     childVC.tabBarTitle = cat
                     childrenVC.append(childVC)
-            
+                    
                 }
             }else{
-            for cat in subMenuArr[HeadingRow]{
-                let childVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "HomeVC") as! HomeVC
-                childVC.tabBarTitle = cat
-                childrenVC.append(childVC)
-                childVC.protocolObj = self
-            }
+                for cat in subMenuArr[HeadingRow]{
+                    let childVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "HomeVC") as! HomeVC
+                    childVC.tabBarTitle = cat
+                    childrenVC.append(childVC)
+                    childVC.protocolObj = self
+                }
             }
         }
         else{
             let childVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "HomeVC") as! HomeVC
-            childVC.tabBarTitle = "Test"
+            childVC.tabBarTitle = "Trending"
             childrenVC.append(childVC)
         }
         return childrenVC

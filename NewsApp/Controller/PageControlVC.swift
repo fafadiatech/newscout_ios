@@ -29,6 +29,10 @@ class PageControlVC: UIViewController, UIScrollViewDelegate {
         self.loadScrollView()
     }
     
+    override var prefersStatusBarHidden: Bool {
+        return true
+    }
+    
     func loadScrollView() {
         let pageCount = arrImages.count
         scrollView.frame = pageView.bounds
