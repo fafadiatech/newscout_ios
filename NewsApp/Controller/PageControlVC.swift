@@ -16,7 +16,7 @@ class PageControlVC: UIViewController, UIScrollViewDelegate {
     @IBOutlet weak var pageControl: UIPageControl!
     @IBOutlet weak var btnGetStarted: UIButton!
     var arrImages =  [AssetConstants.screen1, AssetConstants.screen2, AssetConstants.screen3, AssetConstants.screen4, AssetConstants.screen5, AssetConstants.screen6]
-    
+    var txtArray = ["Top Menu for High level categories...You can swipe left or right", "Bottom menu for sub topic", "Click on any item for detail", "More Stories can be viewed by clicking on More Stories", "Any news article can be shared", "You can search news here"]
     override func viewDidLoad() {
         super.viewDidLoad()
         btnGetStarted.backgroundColor = .clear
@@ -48,10 +48,18 @@ class PageControlVC: UIViewController, UIScrollViewDelegate {
         for i in (0..<pageCount) {
             
             let imageView = UIImageView()
-            imageView.frame = CGRect(x: i * Int(self.pageView.frame.size.width) , y: 0 , width:
-                Int(self.pageView.frame.size.width) , height: Int(scrollView.frame.size.height - pageControl.frame.height))
+            let lblTxt = UILabel()
+            lblTxt.frame = CGRect(x: i * Int(pageView.frame.width), y: Int(pageView.frame.maxY - 90) , width:
+                Int(self.pageView.frame.size.width) , height: 26)
+            var heightToMinus = pageControl.frame.height + lblTxt.frame.height + 80
+            lblTxt.text = txtArray[i]
+            lblTxt.font = UIFont(name: AppFontName.regular, size: 22)
+            lblTxt.textAlignment = .center
+            imageView.frame = CGRect(x: i * Int(self.pageView.frame.size.width) , y: 20 , width:
+                Int(self.pageView.frame.size.width) , height: Int(scrollView.frame.size.height - heightToMinus))
             imageView.contentMode = .scaleAspectFit
             imageView.image = UIImage(named:arrImages[i])
+            self.scrollView.addSubview(lblTxt)
             self.scrollView.addSubview(imageView)
         }
         

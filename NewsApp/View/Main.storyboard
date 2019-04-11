@@ -1848,7 +1848,7 @@
                                 <rect key="frame" x="64" y="884.5" width="640" height="139.5"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0za-6j-9eB">
-                                        <rect key="frame" x="220" y="22" width="200" height="35"/>
+                                        <rect key="frame" x="220" y="75.5" width="200" height="35"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="200" id="ENF-g1-GSA"/>
@@ -1862,9 +1862,12 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Amv-UW-HdC">
-                                        <rect key="frame" x="190" y="69" width="260" height="32"/>
+                                        <rect key="frame" x="160" y="28.5" width="320" height="37"/>
                                         <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="17"/>
-                                        <state key="normal" title="Already have an account? SIgn In "/>
+                                        <state key="normal" title="Already have an account? Sign In "/>
+                                        <variation key="heightClass=regular-widthClass=regular">
+                                            <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="21"/>
+                                        </variation>
                                         <connections>
                                             <action selector="btnSignInActn:" destination="l0h-UV-BX0" eventType="touchUpInside" id="3OZ-dn-Hvi"/>
                                         </connections>
@@ -1873,10 +1876,10 @@
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstItem="0za-6j-9eB" firstAttribute="centerX" secondItem="tED-nP-Yof" secondAttribute="centerX" id="33Q-vM-PuU"/>
-                                    <constraint firstItem="Amv-UW-HdC" firstAttribute="centerX" secondItem="tED-nP-Yof" secondAttribute="centerX" id="7Qf-Bf-bs0"/>
-                                    <constraint firstItem="Amv-UW-HdC" firstAttribute="top" secondItem="0za-6j-9eB" secondAttribute="bottom" constant="12" id="LU8-yD-00M"/>
+                                    <constraint firstAttribute="bottom" secondItem="0za-6j-9eB" secondAttribute="bottom" constant="29" id="3QU-ih-IeT"/>
                                     <constraint firstAttribute="height" constant="139.5" id="Pbj-8d-DKV"/>
-                                    <constraint firstItem="0za-6j-9eB" firstAttribute="top" secondItem="tED-nP-Yof" secondAttribute="top" constant="22" id="kv8-RS-aD8"/>
+                                    <constraint firstItem="Amv-UW-HdC" firstAttribute="centerX" secondItem="tED-nP-Yof" secondAttribute="centerX" id="hBb-A1-GcM"/>
+                                    <constraint firstItem="0za-6j-9eB" firstAttribute="top" secondItem="Amv-UW-HdC" secondAttribute="bottom" constant="10" id="tuq-4D-Xk2"/>
                                 </constraints>
                             </view>
                         </subviews>
@@ -1901,7 +1904,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="oHs-in-UWQ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2623" y="11"/>
+            <point key="canvasLocation" x="2622.65625" y="10.546875"/>
         </scene>
         <!--SettingsTVC-->
         <scene sceneID="BST-1o-Suh">
