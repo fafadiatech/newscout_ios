@@ -41,6 +41,7 @@
 		2648C69721C917D500CCB657 /* FunctionalityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2648C69621C917D500CCB657 /* FunctionalityTests.swift */; };
 		264C5396219AAAD60050F79D /* Toast.swift in Sources */ = {isa = PBXBuildFile; fileRef = 264C5395219AAAD60050F79D /* Toast.swift */; };
 		264E304B2229151E00F73147 /* submenuCVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 264E304A2229151E00F73147 /* submenuCVCell.swift */; };
+		2651D7D5225F1A6D005FCE6B /* searchResultCVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2651D7D4225F1A6D005FCE6B /* searchResultCVCell.swift */; };
 		265E218621649ACE0053E5A0 /* SettingsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 265E218521649ACE0053E5A0 /* SettingsVC.swift */; };
 		2663DE27224A416A005DCFB5 /* SourceVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2663DE26224A416A005DCFB5 /* SourceVC.swift */; };
 		2663DE29224B4131005DCFB5 /* sourceTVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2663DE28224B4131005DCFB5 /* sourceTVCell.swift */; };
@@ -159,6 +160,7 @@
 		2648C69621C917D500CCB657 /* FunctionalityTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FunctionalityTests.swift; sourceTree = "<group>"; };
 		264C5395219AAAD60050F79D /* Toast.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Toast.swift; sourceTree = "<group>"; };
 		264E304A2229151E00F73147 /* submenuCVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = submenuCVCell.swift; sourceTree = "<group>"; };
+		2651D7D4225F1A6D005FCE6B /* searchResultCVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = searchResultCVCell.swift; sourceTree = "<group>"; };
 		2652532921EF5C950061F8E0 /* NewsApp.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = NewsApp.entitlements; sourceTree = "<group>"; };
 		265E218521649ACE0053E5A0 /* SettingsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsVC.swift; sourceTree = "<group>"; };
 		2663DE26224A416A005DCFB5 /* SourceVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourceVC.swift; sourceTree = "<group>"; };
@@ -430,6 +432,7 @@
 		421ADFEB2156553500C00F6F /* Cell */ = {
 			isa = PBXGroup;
 			children = (
+				2651D7D4225F1A6D005FCE6B /* searchResultCVCell.swift */,
 				263D53F922572A0B007A4781 /* HomeipadCVCell.swift */,
 				261ED092225241F00034AC75 /* searchZigzagTVCell.swift */,
 				42A1A808224E2EE400727882 /* HomeImgTVCell.swift */,
@@ -825,6 +828,7 @@
 				260FB9CB2221656F008B0291 /* HashTag+CoreDataClass.swift in Sources */,
 				26D3C90A21CBAC9C003F7331 /* AVPlayerView.swift in Sources */,
 				26BEF80E222E7C9F0002DEBD /* HeadingSubMenu+CoreDataClass.swift in Sources */,
+				2651D7D5225F1A6D005FCE6B /* searchResultCVCell.swift in Sources */,
 				42D12BF4215A0FA60085EF12 /* common.swift in Sources */,
 				263F2D8F216B2DEE00764C45 /* DataModel.swift in Sources */,
 				26BEF80F222E7C9F0002DEBD /* HeadingSubMenu+CoreDataProperties.swift in Sources */,
