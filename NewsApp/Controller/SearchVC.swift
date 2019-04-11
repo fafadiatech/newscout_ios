@@ -553,27 +553,22 @@ extension SearchVC: UICollectionViewDelegate, UICollectionViewDataSource{
             
         }else{
             if (scrollView.bounds.maxY) == scrollView.contentSize.height{
-                activityIndicator.startAnimating()
-                var submenu = UserDefaults.standard.value(forKey: "submenu") as! String
-                if Searchresults.count >= 20{
-                    let result =  DBManager().FetchNextURL(category: submenu)
-                    switch result {
-                    case .Success(let DBData) :
-                        let nextURL = DBData
-                        
-                        if nextURL.count != 0{
-                            if nextURL[0].category == submenu {
-                                let nexturl = nextURL[0].nextURL
-                                UserDefaults.standard.set(nexturl, forKey: "submenuURL")
-                                self.saveArticlesInDB(url : nexturl!)
-                            }
+                let keyword =  UserDefaults.standard.value(forKey: "searchTxt") as! String
+                let result =  DBManager().FetchNextURL(category: keyword)
+                switch result {
+                case .Success(let DBData) :
+                    let nextURL = DBData
+                    if nextURL.count != 0{
+                        if nextURL[0].category == keyword{
+                            let nexturl = nextURL[0].nextURL
+                            self.saveArticlesInDB(url : nexturl!)
                         }
-                        else{
-                            activityIndicator.stopAnimating()
-                        }
-                    case .Failure(let errorMsg) :
-                        print(errorMsg)
                     }
+                    else{
+                        activityIndicator.stopAnimating()
+                    }
+                case .Failure(let errorMsg) :
+                    print(errorMsg)
                 }
             }
         }

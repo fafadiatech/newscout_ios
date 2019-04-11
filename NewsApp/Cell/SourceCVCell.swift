@@ -1,5 +1,5 @@
 //
-//  BookmarkCVCell.swift
+//  SourceCVCell.swift
 //  NewsApp
 //
 //  Created by Jayashree on 11/04/19.
@@ -8,9 +8,9 @@
 
 import UIKit
 
-class BookmarkCVCell: UICollectionViewCell {
+class SourceCVCell: UICollectionViewCell {
     @IBOutlet weak var imgNews: UIImageView!
     @IBOutlet weak var containerView: UIView!
     @IBOutlet weak var lblSource: UILabel!
-    @IBOutlet weak var lblTitle: UILabel!    
+    @IBOutlet weak var lblTitle: UILabel!
 }

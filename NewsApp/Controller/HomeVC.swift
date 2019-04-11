@@ -490,6 +490,7 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
 
 extension HomeVC: IndicatorInfoProvider{
     func indicatorInfo(for pagerTabStripController: PagerTabStripViewController) -> IndicatorInfo {
+        UserDefaults.standard.set(tabBarTitle, forKey: "submenu")
         return IndicatorInfo(title: tabBarTitle)
     }
 }

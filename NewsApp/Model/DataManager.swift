@@ -36,6 +36,7 @@ class DBManager{
                 if self.ArticleData[0].header.status == "1" {
                     if self.ArticleData[0].body?.next != nil{
                         var submenu = UserDefaults.standard.value(forKey: "submenu") as! String
+
                         if self.someEntityExists(id: 0, entity: "NewsURL", keyword: submenu) == false {
                             let newUrl = NewsURL(context: managedContext!)
                             newUrl.category = submenu
