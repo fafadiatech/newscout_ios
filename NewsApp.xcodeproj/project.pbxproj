@@ -42,6 +42,7 @@
 		264C5396219AAAD60050F79D /* Toast.swift in Sources */ = {isa = PBXBuildFile; fileRef = 264C5395219AAAD60050F79D /* Toast.swift */; };
 		264E304B2229151E00F73147 /* submenuCVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 264E304A2229151E00F73147 /* submenuCVCell.swift */; };
 		2651D7D5225F1A6D005FCE6B /* searchResultCVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2651D7D4225F1A6D005FCE6B /* searchResultCVCell.swift */; };
+		2651D7D7225F23F7005FCE6B /* BookmarkCVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2651D7D6225F23F7005FCE6B /* BookmarkCVCell.swift */; };
 		265E218621649ACE0053E5A0 /* SettingsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 265E218521649ACE0053E5A0 /* SettingsVC.swift */; };
 		2663DE27224A416A005DCFB5 /* SourceVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2663DE26224A416A005DCFB5 /* SourceVC.swift */; };
 		2663DE29224B4131005DCFB5 /* sourceTVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2663DE28224B4131005DCFB5 /* sourceTVCell.swift */; };
@@ -161,6 +162,7 @@
 		264C5395219AAAD60050F79D /* Toast.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Toast.swift; sourceTree = "<group>"; };
 		264E304A2229151E00F73147 /* submenuCVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = submenuCVCell.swift; sourceTree = "<group>"; };
 		2651D7D4225F1A6D005FCE6B /* searchResultCVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = searchResultCVCell.swift; sourceTree = "<group>"; };
+		2651D7D6225F23F7005FCE6B /* BookmarkCVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkCVCell.swift; sourceTree = "<group>"; };
 		2652532921EF5C950061F8E0 /* NewsApp.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = NewsApp.entitlements; sourceTree = "<group>"; };
 		265E218521649ACE0053E5A0 /* SettingsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsVC.swift; sourceTree = "<group>"; };
 		2663DE26224A416A005DCFB5 /* SourceVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourceVC.swift; sourceTree = "<group>"; };
@@ -432,6 +434,7 @@
 		421ADFEB2156553500C00F6F /* Cell */ = {
 			isa = PBXGroup;
 			children = (
+				2651D7D6225F23F7005FCE6B /* BookmarkCVCell.swift */,
 				2651D7D4225F1A6D005FCE6B /* searchResultCVCell.swift */,
 				263D53F922572A0B007A4781 /* HomeipadCVCell.swift */,
 				261ED092225241F00034AC75 /* searchZigzagTVCell.swift */,
@@ -842,6 +845,7 @@
 				423F0A502170CF19001D52B5 /* ChangePasswordVC.swift in Sources */,
 				7E1D1399216CC79000FE342A /* HomeParentVC.swift in Sources */,
 				2663DE2B224B9A3B005DCFB5 /* ShuffleDetailVC.swift in Sources */,
+				2651D7D7225F23F7005FCE6B /* BookmarkCVCell.swift in Sources */,
 				268C112321E4C0F300C76B9C /* BookmarkVC.swift in Sources */,
 				26C24723219DA6C200A87A3B /* ForgotPasswordVC.swift in Sources */,
 				261ED093225241F00034AC75 /* searchZigzagTVCell.swift in Sources */,

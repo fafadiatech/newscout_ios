@@ -47,7 +47,8 @@ class SearchVC: UIViewController {
         }
         else{
             searchResultTV.isHidden = false
-            searchResultCV.isHidden = true        }
+            searchResultCV.isHidden = true
+        }
         lblNoNews.isHidden = true
         NotificationCenter.default.addObserver(self, selector: #selector(darkModeEnabled(_:)), name: .darkModeEnabled, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(darkModeDisabled(_:)), name: .darkModeDisabled, object: nil)
@@ -441,32 +442,18 @@ extension SearchVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDele
 
 extension SearchVC: UICollectionViewDelegate, UICollectionViewDataSource{
     
-    //    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-    //
-    //        let noOfCellsInRow = 3
-    //
-    //        let flowLayout = collectionViewLayout as! UICollectionViewFlowLayout
-    //
-    //        let totalSpace = flowLayout.sectionInset.left
-    //            + flowLayout.sectionInset.right
-    //            + (flowLayout.minimumInteritemSpacing * CGFloat(noOfCellsInRow - 1))
-    //
-    //        let size = Int((HomeNewsCV.bounds.width - totalSpace) / CGFloat(noOfCellsInRow))
-    //
-    //        return CGSize(width: size, height: size)
-    //    }
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return (Searchresults.count > 0) ? self.Searchresults.count : 0
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        //        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        //        let newsDetailvc:NewsDetailVC = storyboard.instantiateViewController(withIdentifier: "NewsDetailID") as! NewsDetailVC
-        //        newsDetailvc.newsCurrentIndex = indexPath.row
-        //        newsDetailvc.ShowArticle = sortedData as! [NewsArticle]
-        //        newsDetailvc.articleId = Int(sortedData[indexPath.row].article_id)
-        //        UserDefaults.standard.set("home", forKey: "isSearch")
-        //        present(newsDetailvc, animated: true, completion: nil)
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let newsDetailvc:NewsDetailVC = storyboard.instantiateViewController(withIdentifier: "NewsDetailID") as! NewsDetailVC
+        newsDetailvc.newsCurrentIndex = indexPath.row
+        newsDetailvc.SearchArticle = Searchresults
+        newsDetailvc.articleId = Int(Searchresults[indexPath.row].article_id)
+        UserDefaults.standard.set("search", forKey: "isSearch")
+        present(newsDetailvc, animated: true, completion: nil)
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
