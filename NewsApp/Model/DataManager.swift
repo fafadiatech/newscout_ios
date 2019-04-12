@@ -55,6 +55,7 @@ class DBManager{
                             for url in URLData{
                                 if url.category == submenu {
                                     url.nextURL = self.ArticleData[0].body?.next
+                                    UserDefaults.standard.set(self.ArticleData[0].body?.next, forKey: "homeNextURL")
                                 }
                             }
                         }
@@ -630,6 +631,7 @@ class DBManager{
                             let newUrl = NewsURL(context: managedContext!)
                             newUrl.category = search
                             newUrl.nextURL = self.ArticleData[0].body?.next
+                            UserDefaults.standard.set(self.ArticleData[0].body?.next, forKey: "searchNextURL")
                         }
                         else{
                             let fetchRequest =

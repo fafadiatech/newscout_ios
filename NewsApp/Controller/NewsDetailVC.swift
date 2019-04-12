@@ -530,8 +530,6 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
             switch swipeGesture.direction {
             case UISwipeGestureRecognizerDirection.right:
                 ViewWebContainer.isHidden = true
-                //                viewLikeDislike.isHidden = false
-                //                viewBack.isHidden = false
                 
             case UISwipeGestureRecognizerDirection.down:
                 if newsCurrentIndex > 0
@@ -560,11 +558,82 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
                     view.window!.layer.add(transition, forKey: kCATransition)
                 }
                 else{
-                    self.view.makeToast("No more news to show", duration: 1.0, position: .center)
+                    activityIndicator.startAnimating()
+                    pagination()
                 }
             default:
                 break
             }
+        }
+    }
+    
+    func pagination(){
+         let isSearch = UserDefaults.standard.value(forKey: "isSearch") as! String
+        if isSearch == "home"{
+            if UserDefaults.standard.value(forKey: "homeNextURL") != nil{
+                DBManager().SaveDataDB(nextUrl: UserDefaults.standard.value(forKey: "homeNextURL") as! String ){response in
+                    self.fetchArticlesFromDB()
+                }
+            }
+            else{
+                self.view.makeToast("No more news to show", duration: 1.0, position: .center)
+            }
+            
+        }
+        else if isSearch == "search"{
+            if UserDefaults.standard.value(forKey: "searchNextURL") != nil{
+                DBManager().SaveSearchDataDB(nextUrl: UserDefaults.standard.value(forKey: "searchNextURL") as! String ){response in
+                    self.fetchSearchArticlesfromDB()
+                }
+            }
+            else{
+                self.view.makeToast("No more news to show", duration: 1.0, position: .center)
+            }
+            
+        }
+    }
+    func fetchArticlesFromDB(){
+        let result = DBManager().ArticlesfetchByCatId()
+        switch result {
+        case .Success(let DBData) :
+            if DBData.count > 0{
+                ShowArticle.removeAll()
+                ShowArticle = DBData
+                indexCount = ShowArticle.count
+                newsCurrentIndex = newsCurrentIndex + 1
+                if newsCurrentIndex < ShowArticle.count {
+                ShowNews(currentIndex : newsCurrentIndex)
+                filterRecommendation()
+            }
+            }
+            else{
+                self.view.makeToast("No more news to show", duration: 1.0, position: .center)
+            }
+            
+        case .Failure(let errorMsg) :
+            print(errorMsg)
+        }
+    }
+    
+    func fetchSearchArticlesfromDB(){
+        let result = DBManager().FetchSearchDataFromDB(entity: "SearchArticles")
+        switch result {
+        case .Success(let DBData) :
+            if DBData.count > 0{
+               SearchArticle.removeAll()
+                SearchArticle = DBData
+                indexCount = SearchArticle.count
+                newsCurrentIndex = newsCurrentIndex + 1
+                if newsCurrentIndex < SearchArticle.count {
+                    ShowNews(currentIndex : newsCurrentIndex)
+                    filterRecommendation()
+                }
+            }
+            else{
+                self.view.makeToast("No more news to show", duration: 1.0, position: .center)
+            }
+        case .Failure(let errorMsg) :
+            print(errorMsg)
         }
     }
     func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
@@ -1289,8 +1358,6 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
     
     @IBAction func btnWebBackAction(_ sender: Any) {
         ViewWebContainer.isHidden = true
-        //        viewLikeDislike.isHidden = false
-        //        viewBack.isHidden = false
     }
     
     //btn Back Action

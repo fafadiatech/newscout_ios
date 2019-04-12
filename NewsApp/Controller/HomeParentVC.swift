@@ -306,7 +306,7 @@ class HomeParentVC: ButtonBarPagerTabStripViewController{
         }
         else{
             let childVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "HomeVC") as! HomeVC
-            childVC.tabBarTitle = "Trending"
+            childVC.tabBarTitle = "Test"
             childrenVC.append(childVC)
         }
         return childrenVC
