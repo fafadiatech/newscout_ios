@@ -235,6 +235,7 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
         index =  currentIndex
         imgScrollView.scrollRectToVisible(CGRect(x: view.frame.size.width * CGFloat(currentIndex), y:0, width: view.frame.width, height: imgScrollView.frame.height), animated: true)
     }
+    
     func RecommendationAPICall(){
         APICall().loadRecommendationNewsAPI(articleId: articleId){ (status,response) in
             switch response {
@@ -976,7 +977,6 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
                 imgNews.image = UIImage(named: AssetConstants.NoImage)
             }
             /*
-             
              var checkImg = false
              let imageFormats = ["jpg", "jpeg", "png", "gif"]
              for ext in imageFormats{

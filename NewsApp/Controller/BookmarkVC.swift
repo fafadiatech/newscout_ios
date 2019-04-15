@@ -228,52 +228,6 @@ extension BookmarkVC: UITableViewDelegate, UITableViewDataSource{
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "bookmarkResultID", for:indexPath) as! BookmarkTVCell
-        /*  let borderColor: UIColor = UIColor.lightGray
-         cell.ViewCellBackground.layer.borderColor = borderColor.cgColor
-         cell.ViewCellBackground.layer.borderWidth = 1
-         cell.ViewCellBackground.layer.cornerRadius = 10.0
-         cell.imgNews.layer.cornerRadius = 10.0
-         cell.imgNews.clipsToBounds = true
-         cell.lblSource.textColor = colorConstants.txtDarkGrayColor
-         let dateFormatter = DateFormatter()
-         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
-         dateFormatter.timeZone = NSTimeZone.local
-         if ShowArticle.count != 0{
-         let currentArticle = ShowArticle[indexPath.row]
-         cell.lblSource.text = currentArticle.source
-         let newDate = dateFormatter.date(from: currentArticle.published_on!)
-         let agoDate = Helper().timeAgoSinceDate(newDate!)
-         cell.lblNewsDescription.text = currentArticle.title
-         cell.imgNews.sd_setImage(with: URL(string: currentArticle.imageURL!), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
-         }
-         
-         if textSizeSelected == 0{
-         cell.lblSource.font = FontConstants.smallFontContent
-         cell.lblNewsDescription.font = FontConstants.smallFontHeadingBold
-         
-         }
-         else if textSizeSelected == 2{
-         cell.lblSource.font = FontConstants.LargeFontContent
-         cell.lblNewsDescription.font = FontConstants.LargeFontHeadingBold
-         }
-         else{
-         cell.lblSource.font = FontConstants.NormalFontContent
-         cell.lblNewsDescription.font = FontConstants.NormalFontHeadingBold
-         }
-         let darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
-         if  darkModeStatus == true{
-         cell.ViewCellBackground.backgroundColor = colorConstants.grayBackground2
-         cell.lblSource.textColor = colorConstants.nightModeText
-         cell.lblNewsDescription.textColor = colorConstants.nightModeText
-         NightNight.theme =  .night
-         }
-         else{
-         NightNight.theme =  .normal
-         }
-         if cell.imgNews.image == nil{
-         cell.imgNews.image = UIImage(named: AssetConstants.NoImage)
-         }
-         activityIndicator.stopAnimating()*/
         let cellOdd = tableView.dequeueReusableCell(withIdentifier: "bookmarkZigzagID", for:indexPath) as! BookmarkZigzagTVCell
         imgWidth = String(describing : Int(cell.imgNews.frame.width))
         imgHeight = String(describing : Int(cell.imgNews.frame.height))
@@ -353,9 +307,7 @@ extension BookmarkVC: UITableViewDelegate, UITableViewDataSource{
             if cell.imgNews.image == nil{
                 cell.imgNews.image = UIImage(named: AssetConstants.NoImage)
             }
-            
             activityIndicator.stopAnimating()
-            //lblNonews.isHidden = true
             return cell
         }
         else{
@@ -424,9 +376,7 @@ extension BookmarkVC: UITableViewDelegate, UITableViewDataSource{
             if cellOdd.imgNews.image == nil{
                 cellOdd.imgNews.image = UIImage(named: AssetConstants.NoImage)
             }
-            
             activityIndicator.stopAnimating()
-            //lblNonews.isHidden = true
             return cellOdd
         }
     }
@@ -496,9 +446,6 @@ extension BookmarkVC: UICollectionViewDelegate, UICollectionViewDataSource, UISc
         var fullTxt = ""
         var dateSubString = ""
         var agoDate = ""
-        //        cell.imgNews.layer.cornerRadius = 10.0
-        //        cell.imgNews.clipsToBounds = true
-        
         //display data from DB
         let currentArticle = ShowArticle[indexPath.row]
         cell.lblTitle.text = currentArticle.title

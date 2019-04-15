@@ -167,7 +167,7 @@ struct APPURL {
         static let Categories = Domains.version + "categories"
         static let Search = Domains.version + "article/search/?q="
         static let Source = Domains.version + "article/search/?source="
-        static let recommendation = Domains.version + "articles/" // + "\(articleId)" + "/recommendations/"
+        static let recommendation = Domains.version + "articles/"
         static let bookmark = Domains.version + "articles/bookmark/"
         static let likeDislike =  Domains.version + "articles/vote/"
         static let forgotPassword = Domains.version + "forgot-password/"

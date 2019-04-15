@@ -260,20 +260,6 @@ class HomeiPadVC: UIViewController{
 
 extension HomeiPadVC: UICollectionViewDelegate, UICollectionViewDataSource, UIScrollViewDelegate{
     
-    //    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-    //
-    //        let noOfCellsInRow = 3
-    //
-    //        let flowLayout = collectionViewLayout as! UICollectionViewFlowLayout
-    //
-    //        let totalSpace = flowLayout.sectionInset.left
-    //            + flowLayout.sectionInset.right
-    //            + (flowLayout.minimumInteritemSpacing * CGFloat(noOfCellsInRow - 1))
-    //
-    //        let size = Int((HomeNewsCV.bounds.width - totalSpace) / CGFloat(noOfCellsInRow))
-    //
-    //        return CGSize(width: size, height: size)
-    //    }
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return (ShowArticle.count > 0) ? self.ShowArticle.count : 0
     }
@@ -302,8 +288,6 @@ extension HomeiPadVC: UICollectionViewDelegate, UICollectionViewDataSource, UISc
         var fullTxt = ""
         var dateSubString = ""
         var agoDate = ""
-        //        cell.imgNews.layer.cornerRadius = 10.0
-        //        cell.imgNews.clipsToBounds = true
         
         //display data from DB
         let currentArticle = sortedData[indexPath.row]

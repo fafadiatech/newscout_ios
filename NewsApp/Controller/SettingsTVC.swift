@@ -196,29 +196,8 @@ class SettingsTVC: UITableViewController, GIDSignInUIDelegate {
         let headerView = view as! UITableViewHeaderFooterView
         headerView.textLabel?.textColor = .black
         headerView.textLabel?.font = FontConstants.settingsTVHeader
-        // let cell = SettingsTVCell()
         let darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
-        if  darkModeStatus == true{
-            //    cell.backgroundColor = .black
-        }
-        else{
-            //cell.backgroundColor = colorConstants.grayBackground3
-        }
     }
-    
-    //    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-    //
-    //        let cell = UITableViewCell()
-    //        let darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
-    //        if  darkModeStatus == true{
-    //             cell.backgroundColor = .black
-    //            changeColor()
-    //        }
-    //        else{
-    //        cell.backgroundColor = colorConstants.grayBackground3
-    //        }
-    //        return cell
-    //    }
     
     override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
         if indexPath.section == 2 && indexPath.row == 0{
@@ -229,7 +208,6 @@ class SettingsTVC: UITableViewController, GIDSignInUIDelegate {
                 print(indexPath.section)
                 present(vc, animated: true, completion: nil)
             }
-            
         }
         else if indexPath.section == 2 && indexPath.row == 1{
             if  UserDefaults.standard.value(forKey: "token") != nil{

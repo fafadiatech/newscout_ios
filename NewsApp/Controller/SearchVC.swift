@@ -194,60 +194,6 @@ extension SearchVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDele
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        /* let cell = tableView.dequeueReusableCell(withIdentifier: "search", for:indexPath) as! SearchResultTVCell
-         let borderColor: UIColor = UIColor.lightGray
-         cell.ViewCellBackground.layer.borderColor = borderColor.cgColor
-         cell.ViewCellBackground.layer.borderWidth = 1
-         cell.ViewCellBackground.layer.cornerRadius = 10.0
-         cell.imgNews.layer.cornerRadius = 10.0
-         cell.imgNews.clipsToBounds = true
-         cell.lblSource.textColor = colorConstants.txtDarkGrayColor
-         let dateFormatter = DateFormatter()
-         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
-         dateFormatter.timeZone = NSTimeZone.local
-         
-         if Searchresults.count > 0{
-         let currentArticle = Searchresults[indexPath.row]
-         cell.lblSource.text =  currentArticle.source
-         if !(currentArticle.published_on?.contains("Z"))!{
-         currentArticle.published_on?.append("Z")
-         }
-         let newDate = dateFormatter.date(from: currentArticle.published_on!)
-         if newDate != nil{
-         let agoDate = Helper().timeAgoSinceDate(newDate!)
-         }
-         cell.lblNewsDescription.text = currentArticle.title
-         cell.imgNews.sd_setImage(with: URL(string: currentArticle.imageURL!), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
-         }
-         
-         if textSizeSelected == 0{
-         cell.lblSource.font = FontConstants.smallFontContent
-         cell.lblNewsDescription.font = FontConstants.smallFontHeadingBold
-         
-         }
-         else if textSizeSelected == 2{
-         cell.lblSource.font = FontConstants.LargeFontContent
-         cell.lblNewsDescription.font = FontConstants.LargeFontHeadingBold
-         }
-         else{
-         cell.lblSource.font = FontConstants.NormalFontContent
-         cell.lblNewsDescription.font = FontConstants.NormalFontHeadingBold
-         }
-         let darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
-         if  darkModeStatus == true{
-         cell.ViewCellBackground.backgroundColor = colorConstants.grayBackground2
-         cell.lblSource.textColor = colorConstants.nightModeText
-         cell.lblNewsDescription.textColor = colorConstants.nightModeText
-         NightNight.theme =  .night
-         }
-         else{
-         NightNight.theme =  .normal
-         }
-         if cell.imgNews.image == nil{
-         cell.imgNews.image = UIImage(named: AssetConstants.NoImage)
-         }
-         activityIndicator.stopAnimating()
-         return cell*/
         let cell = tableView.dequeueReusableCell(withIdentifier: "search", for:indexPath) as! SearchResultTVCell
         let cellOdd = tableView.dequeueReusableCell(withIdentifier: "searchZigzagID", for:indexPath) as! searchZigzagTVCell
         imgWidth = String(describing : Int(cell.imgNews.frame.width))
@@ -328,9 +274,7 @@ extension SearchVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDele
             if cell.imgNews.image == nil{
                 cell.imgNews.image = UIImage(named: AssetConstants.NoImage)
             }
-            
             activityIndicator.stopAnimating()
-            //lblNonews.isHidden = true
             return cell
         }
         else{
@@ -401,7 +345,6 @@ extension SearchVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDele
             }
             
             activityIndicator.stopAnimating()
-            //lblNonews.isHidden = true
             return cellOdd
         }
     }
@@ -428,16 +371,6 @@ extension SearchVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDele
         }
     }
     
-    //    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-    //        let height = scrollView.frame.size.height
-    //        let contentYoffset = scrollView.contentOffset.y
-    //        let distanceFromBottom = scrollView.contentSize.height - contentYoffset
-    //        if distanceFromBottom < height {
-    //            if recordCount > 0 {
-    //                activityIndicator.startAnimating()
-    //            }
-    //        }
-    //    }
 }
 
 extension SearchVC: UICollectionViewDelegate, UICollectionViewDataSource{

@@ -98,6 +98,7 @@ class LoginVC: UIViewController, GIDSignInUIDelegate, FBSDKLoginButtonDelegate {
             }
         }
     }
+    
     func changeColor(){
         txtUsername.titleColor = colorConstants.grayBackground3
         txtUsername.selectedTitleColor = colorConstants.grayBackground3
@@ -220,7 +221,7 @@ class LoginVC: UIViewController, GIDSignInUIDelegate, FBSDKLoginButtonDelegate {
     @IBAction func googleSignIn(_ sender: Any) {
         GIDSignIn.sharedInstance().uiDelegate=self
         GIDSignIn.sharedInstance().signIn()
-      
+        
     }
     
     func loginButton(_ loginButton: FBSDKLoginButton!, didCompleteWith result: FBSDKLoginManagerLoginResult!, error: Error!) {
@@ -229,9 +230,6 @@ class LoginVC: UIViewController, GIDSignInUIDelegate, FBSDKLoginButtonDelegate {
         }
         else if result.isCancelled{
             self.view.makeToast("You have cancelled login using Facebook", duration: 1.0, position: .center)
-        }
-        else{
-            // UserDefaults.standard.set(email, forKey: "email")
         }
     }
     

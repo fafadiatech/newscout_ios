@@ -420,15 +420,15 @@ extension SourceVC: UICollectionViewDelegate, UICollectionViewDataSource, UIScro
                                 for article in (data[0].body?.articles)!{
                                     self.ShowArticle.append(article)
                                 }
-                            if data[0].body?.next != ""{
-                                self.nextURL = (data[0].body?.next)!
+                                if data[0].body?.next != ""{
+                                    self.nextURL = (data[0].body?.next)!
+                                }
+                                if self.sourceTV.isHidden == false{
+                                    self.sourceTV.reloadData()
+                                }else{
+                                    self.sourceCV.reloadData()
+                                }
                             }
-                            if self.sourceTV.isHidden == false{
-                                self.sourceTV.reloadData()
-                            }else{
-                                self.sourceCV.reloadData()
-                            }
-                        }
                             self.activityIndicator.stopAnimating()
                         case .Failure(let errormessage) :
                             print(errormessage)

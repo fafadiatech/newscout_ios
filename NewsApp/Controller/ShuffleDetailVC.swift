@@ -126,14 +126,10 @@ class ShuffleDetailVC: UIViewController , UIScrollViewDelegate, TAPageControlDel
         if  darkModeStatus == true{
             changeTheme()
         }
-        //newsDetailAPICall(currentIndex: articleId)
-        
-        // MediaData = DBManager().fetchArticleMedia(articleId: Int(ShowArticle[newsCurrentIndex].article_id))
     }
     
     override func viewDidAppear(_ animated: Bool) {
         timer = Timer.scheduledTimer(timeInterval: 3, target: self, selector: #selector(runImages), userInfo: nil, repeats: true)
-        // runImages()
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -154,7 +150,6 @@ class ShuffleDetailVC: UIViewController , UIScrollViewDelegate, TAPageControlDel
         let pageindex = imgScrollView.contentOffset.x / imgScrollView.frame.size.width
         customPagecontrol.currentPage = Int(pageindex)
         index = Int(pageindex)
-        // runImages()
     }
     
     func filterRecommendation(){
@@ -225,7 +220,6 @@ class ShuffleDetailVC: UIViewController , UIScrollViewDelegate, TAPageControlDel
         } catch let error {
             print(error)
         }
-        
         return nil
     }
     
@@ -302,6 +296,7 @@ class ShuffleDetailVC: UIViewController , UIScrollViewDelegate, TAPageControlDel
     func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
         activityIndicator.startAnimating()
     }
+    
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         activityIndicator.stopAnimating()
     }
@@ -309,9 +304,11 @@ class ShuffleDetailVC: UIViewController , UIScrollViewDelegate, TAPageControlDel
     func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
         activityIndicator.stopAnimating()
     }
+    
     func webViewDidFinishLoad(_ : WKWebView) {
         activityIndicator.stopAnimating()
     }
+    
     @IBAction func btnPlayVideo(_ sender: Any) {
         if player?.rate == 0
         {
@@ -386,7 +383,6 @@ class ShuffleDetailVC: UIViewController , UIScrollViewDelegate, TAPageControlDel
         }
     }
     
-    //func ShowNews(currentArticle: ArticleDict){ *for detail API pass articleDict
     func ShowNews(currentIndex: Int){
         MediaData.removeAll()
         activityIndicator.startAnimating()
@@ -801,8 +797,8 @@ extension ShuffleDetailVC:UICollectionViewDelegate, UICollectionViewDataSource, 
             }
             newsDetailvc.newsCurrentIndex = indexPath.row - 1
             if shuffleData.count > 0{
-                newsDetailvc.shuffleData =  RecomData //RecomArticleData[0].body!.articles
-                newsDetailvc.articleId = Int(RecomData[indexPath.row].article_id)  //RecomArticleData[0].body!.articles[indexPath.row - 1].article_id!
+                newsDetailvc.shuffleData =  RecomData
+                newsDetailvc.articleId = Int(RecomData[indexPath.row].article_id)
             }
             present(newsDetailvc, animated: true, completion: nil)
         }
