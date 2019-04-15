@@ -1466,15 +1466,15 @@ extension NewsDetailVC:UICollectionViewDelegate, UICollectionViewDataSource, UIC
         let textSizeSelected = UserDefaults.standard.value(forKey: "textSize") as! Int
         
         if textSizeSelected == 0{
-            cell.lblMoreStories.font = FontConstants.smallRecommTitleFont
+            cell.lblMoreStories.font = FontConstants.smallFontDetailTitle
             cell.lblTitle.font = FontConstants.smallRecommFont
         }
         else if textSizeSelected == 2{
-            cell.lblMoreStories.font = FontConstants.largeRecommTitleFont
+            cell.lblMoreStories.font = FontConstants.LargeFontDetailTitle
             cell.lblTitle.font = FontConstants.largeRecommFont
         }
         else{
-            cell.lblMoreStories.font = FontConstants.normalRecommTitleFont
+            cell.lblMoreStories.font = FontConstants.NormalFontDetailTitle
             cell.lblTitle.font = FontConstants.normalRecommFont
         }
         if indexPath.row == 0

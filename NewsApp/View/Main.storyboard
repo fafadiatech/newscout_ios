@@ -2860,12 +2860,12 @@
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OXg-4L-mra">
-                                                            <rect key="frame" x="25" y="29" width="125" height="20.5"/>
+                                                            <rect key="frame" x="25" y="37" width="102" height="20.5"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="84" id="4Po-0z-nQm"/>
                                                             </constraints>
                                                             <attributedString key="attributedText">
-                                                                <fragment content="MORE STORIES:">
+                                                                <fragment content="More Stories:">
                                                                     <attributes>
                                                                         <font key="NSFont" metaFont="system" size="17"/>
                                                                         <paragraphStyle key="NSParagraphStyle" alignment="natural" lineBreakMode="wordWrapping" baseWritingDirection="natural" lineSpacing="8" tighteningFactorForTruncation="0.0"/>
@@ -2877,6 +2877,7 @@
                                                     </subviews>
                                                 </view>
                                                 <constraints>
+                                                    <constraint firstItem="OXg-4L-mra" firstAttribute="centerY" secondItem="27h-ei-fui" secondAttribute="centerY" id="1De-OF-FnR"/>
                                                     <constraint firstItem="Iaw-08-67e" firstAttribute="centerX" secondItem="27h-ei-fui" secondAttribute="centerX" id="3zX-ho-fQq"/>
                                                     <constraint firstItem="27h-ei-fui" firstAttribute="leading" secondItem="Ma6-NY-KU3" secondAttribute="leading" id="428-uq-ho9"/>
                                                     <constraint firstItem="u54-K9-1c1" firstAttribute="top" secondItem="27h-ei-fui" secondAttribute="bottom" id="5Z0-Qm-yUY"/>
@@ -2889,9 +2890,6 @@
                                                     <constraint firstItem="u54-K9-1c1" firstAttribute="height" secondItem="Ma6-NY-KU3" secondAttribute="height" multiplier="0.35" id="an9-T3-GTB"/>
                                                     <constraint firstItem="Iaw-08-67e" firstAttribute="width" secondItem="27h-ei-fui" secondAttribute="width" multiplier="0.25" id="byO-0O-pZX"/>
                                                     <constraint firstItem="27h-ei-fui" firstAttribute="top" secondItem="Ma6-NY-KU3" secondAttribute="top" constant="3" id="f3P-I1-UA8"/>
-                                                    <constraint firstItem="OXg-4L-mra" firstAttribute="top" secondItem="Ma6-NY-KU3" secondAttribute="top" constant="29" id="hd1-92-oUu">
-                                                        <variation key="heightClass=regular-widthClass=regular" constant="29"/>
-                                                    </constraint>
                                                     <constraint firstItem="OXg-4L-mra" firstAttribute="leading" secondItem="Ma6-NY-KU3" secondAttribute="leading" constant="10" id="nY1-80-SfK">
                                                         <variation key="heightClass=regular-widthClass=regular" constant="25"/>
                                                     </constraint>
