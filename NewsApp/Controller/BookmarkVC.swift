@@ -12,6 +12,7 @@ import NightNight
 import SDWebImage
 
 class BookmarkVC: UIViewController {
+    @IBOutlet weak var bookmarkCV: UICollectionView!
     @IBOutlet weak var lblBookmark: UILabel!
     @IBOutlet weak var titleView: UIView!
     @IBOutlet weak var bookmarkResultTV: UITableView!
@@ -23,9 +24,13 @@ class BookmarkVC: UIViewController {
     var nextURL = ""
     var ShowArticle = [NewsArticle]()
     var bookmarkArticles = [BookmarkArticles]()
+    var imgWidth = ""
+    var imgHeight = ""
+    var statusBarOrientation: UIInterfaceOrientation = UIApplication.shared.statusBarOrientation
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        bookmarkResultTV.tableFooterView = UIView(frame: .zero)
         NotificationCenter.default.addObserver(self, selector: #selector(darkModeEnabled(_:)), name: .darkModeEnabled, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(darkModeDisabled(_:)), name: .darkModeDisabled, object: nil)
         activityIndicator.cycleColors = [.blue]
@@ -35,7 +40,15 @@ class BookmarkVC: UIViewController {
         activityIndicator.progress = 2.0
         view.addSubview(activityIndicator)
         activityIndicator.startAnimating()
-        if UserDefaults.standard.value(forKey: "token") != nil || UserDefaults.standard.value(forKey: "FBToken") != nil || UserDefaults.standard.value(forKey: "googleToken") != nil{
+        if UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad && statusBarOrientation.isPortrait{
+            bookmarkResultTV.isHidden = true
+            bookmarkCV.isHidden = false
+        }
+        else{
+            bookmarkResultTV.isHidden = false
+            bookmarkCV.isHidden = true
+        }
+        if UserDefaults.standard.value(forKey: "token") != nil {
             let coredataRecordCount = DBManager().IsCoreDataEmpty(entity: "BookmarkArticles")
             if coredataRecordCount != 0{
                 fetchBookmarkDataFromDB()
@@ -49,10 +62,10 @@ class BookmarkVC: UIViewController {
             self.view.makeToast("You need to login", duration: 1.0, position: .center)
         }
         let refreshControl = UIRefreshControl()
-         if UserDefaults.standard.value(forKey: "token") != nil || UserDefaults.standard.value(forKey: "FBToken") != nil || UserDefaults.standard.value(forKey: "googleToken") != nil{
-        refreshControl.addTarget(self, action: #selector(refreshBookmarkedNews), for: .valueChanged)
-        bookmarkResultTV.refreshControl = refreshControl
-        refreshControl.attributedTitle = NSAttributedString(string: "Pull  to Refresh...")
+        if UserDefaults.standard.value(forKey: "token") != nil{
+            refreshControl.addTarget(self, action: #selector(refreshBookmarkedNews), for: .valueChanged)
+            bookmarkResultTV.refreshControl = refreshControl
+            refreshControl.attributedTitle = NSAttributedString(string: "Pull  to Refresh...")
         }
         if (UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad){
             bookmarkResultTV.rowHeight = 190;
@@ -83,7 +96,11 @@ class BookmarkVC: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         changeFont()
-        bookmarkResultTV.reloadData()
+        if bookmarkResultTV.isHidden == false{
+            bookmarkResultTV.reloadData()
+        }else{
+            bookmarkCV.reloadData()
+        }
     }
     
     override var prefersStatusBarHidden: Bool {
@@ -99,7 +116,11 @@ class BookmarkVC: UIViewController {
                 activityIndicator.stopAnimating()
                 self.bookmarkResultTV.makeToast("No news found", duration: 3.0, position: .center)
             }
-            self.bookmarkResultTV.reloadData()
+            if bookmarkResultTV.isHidden == false{
+                bookmarkResultTV.reloadData()
+            }else{
+                bookmarkCV.reloadData()
+            }
         case .Failure(let errorMsg) :
             self.bookmarkResultTV.makeToast(errorMsg, duration: 1.0, position: .center)
         }
@@ -161,7 +182,11 @@ class BookmarkVC: UIViewController {
                         self.activityIndicator.stopAnimating()
                         self.bookmarkResultTV.makeToast("There is not any article bookmarked yet...", duration: 1.0, position: .center)
                     }else{
-                        self.bookmarkResultTV.reloadData()
+                        if self.bookmarkResultTV.isHidden == false{
+                            self.bookmarkResultTV.reloadData()
+                        }else{
+                            self.bookmarkCV.reloadData()
+                        }
                     }
                 }
             case .Failure(let errormessage) :
@@ -174,8 +199,8 @@ class BookmarkVC: UIViewController {
     }
     
     @objc func refreshBookmarkedNews(refreshControl: UIRefreshControl) {
-            BookmarkAPICall()
-            refreshControl.endRefreshing()
+        BookmarkAPICall()
+        refreshControl.endRefreshing()
     }
     
     @IBAction func btnBackActn(_ sender: Any) {
@@ -203,59 +228,157 @@ extension BookmarkVC: UITableViewDelegate, UITableViewDataSource{
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "bookmarkResultID", for:indexPath) as! BookmarkTVCell
-        let borderColor: UIColor = UIColor.lightGray
-        cell.ViewCellBackground.layer.borderColor = borderColor.cgColor
-        cell.ViewCellBackground.layer.borderWidth = 1
-        cell.ViewCellBackground.layer.cornerRadius = 10.0
-        cell.imgNews.layer.cornerRadius = 10.0
-        cell.imgNews.clipsToBounds = true
-        cell.lblSource.textColor = colorConstants.txtDarkGrayColor
-        cell.lbltimeAgo.textColor = colorConstants.txtDarkGrayColor
+        let cellOdd = tableView.dequeueReusableCell(withIdentifier: "bookmarkZigzagID", for:indexPath) as! BookmarkZigzagTVCell
+        imgWidth = String(describing : Int(cell.imgNews.frame.width))
+        imgHeight = String(describing : Int(cell.imgNews.frame.height))
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
         dateFormatter.timeZone = NSTimeZone.local
-        if ShowArticle.count != 0{
-            let currentArticle = ShowArticle[indexPath.row]
-            cell.lblSource.text = currentArticle.source
-            let newDate = dateFormatter.date(from: currentArticle.published_on!)
-            let agoDate = Helper().timeAgoSinceDate(newDate!)
-            cell.lbltimeAgo.text = agoDate
-            cell.lblNewsDescription.text = currentArticle.title
-            cell.imgNews.sd_setImage(with: URL(string: currentArticle.imageURL!), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
-        }
-        
-        if textSizeSelected == 0{
-            cell.lblSource.font = FontConstants.smallFontContent
-            cell.lbltimeAgo.font = FontConstants.smallFontContent
-            cell.lblNewsDescription.font = FontConstants.smallFontHeadingBold
-            
-        }
-        else if textSizeSelected == 2{
-            cell.lblSource.font = FontConstants.LargeFontContent
-            cell.lbltimeAgo.font = FontConstants.LargeFontContent
-            cell.lblNewsDescription.font = FontConstants.LargeFontHeadingBold
-        }
-        else{
-            cell.lblSource.font = FontConstants.NormalFontContent
-            cell.lbltimeAgo.font = FontConstants.NormalFontContent
-            cell.lblNewsDescription.font = FontConstants.NormalFontHeadingBold
-        }
         let darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
-        if  darkModeStatus == true{
-            cell.ViewCellBackground.backgroundColor = colorConstants.grayBackground2
-            cell.lblSource.textColor = colorConstants.nightModeText
-            cell.lbltimeAgo.textColor = colorConstants.nightModeText
-            cell.lblNewsDescription.textColor = colorConstants.nightModeText
-            NightNight.theme =  .night
+        let textSizeSelected = UserDefaults.standard.value(forKey: "textSize") as! Int
+        var sourceColor = UIColor()
+        var fullTxt = ""
+        var dateSubString = ""
+        var agoDate = ""
+        if indexPath.row % 2 != 0{
+            
+            cell.imgNews.layer.cornerRadius = 10.0
+            cell.imgNews.clipsToBounds = true
+            
+            //display data from DB
+            let currentArticle = ShowArticle[indexPath.row]
+            cell.lblNewsDescription.text = currentArticle.title
+            
+            if  darkModeStatus == true{
+                cell.ViewCellBackground.backgroundColor = colorConstants.grayBackground2
+                cell.lblSource.textColor = colorConstants.nightModeText
+                cell.lblNewsDescription.textColor = colorConstants.nightModeText
+                NightNight.theme =  .night
+            }
+            else{
+                cell.ViewCellBackground.backgroundColor = .white
+                cell.lblSource.textColor = colorConstants.blackColor
+                cell.lblNewsDescription.textColor = colorConstants.blackColor
+                NightNight.theme =  .normal
+            }
+            
+            if ((currentArticle.published_on?.count)!) <= 20{
+                if !(currentArticle.published_on?.contains("Z"))!{
+                    currentArticle.published_on?.append("Z")
+                }
+                let newDate = dateFormatter.date(from: currentArticle.published_on!)
+                if newDate != nil{
+                    agoDate = try Helper().timeAgoSinceDate(newDate!)
+                    fullTxt = "\(agoDate)" + " via " + currentArticle.source!
+                    let attributedWithTextColor: NSAttributedString = fullTxt.attributedStringWithColor([currentArticle.source!], color: UIColor.red)
+                    cell.lblSource.attributedText = attributedWithTextColor
+                }
+            }
+            else{
+                dateSubString = String(currentArticle.published_on!.prefix(19))
+                if !(dateSubString.contains("Z")){
+                    dateSubString.append("Z")
+                }
+                let newDate = dateFormatter.date(from: dateSubString
+                )
+                if newDate != nil{
+                    agoDate = try Helper().timeAgoSinceDate(newDate!)
+                    fullTxt = "\(agoDate)" + " via " + currentArticle.source!
+                    let attributedWithTextColor: NSAttributedString = fullTxt.attributedStringWithColor([currentArticle.source!], color: UIColor.red)
+                    cell.lblSource.attributedText = attributedWithTextColor
+                }
+            }
+            let imgURL = APPURL.imageServer + imgWidth + "x" + imgHeight + "/smart/" + currentArticle.imageURL!
+            cell.imgNews.sd_setImage(with: URL(string: imgURL), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
+            
+            if textSizeSelected == 0{
+                cell.lblSource.font = FontConstants.smallFontContent
+                cell.lblNewsDescription.font = FontConstants.smallFontHeadingBold
+            }
+            else if textSizeSelected == 2{
+                cell.lblSource.font = FontConstants.LargeFontContent
+                cell.lblNewsDescription.font = FontConstants.LargeFontHeadingBold
+            }
+            else{
+                cell.lblSource.font =  FontConstants.NormalFontContent
+                cell.lblNewsDescription.font = FontConstants.NormalFontHeadingBold
+            }
+            
+            if cell.imgNews.image == nil{
+                cell.imgNews.image = UIImage(named: AssetConstants.NoImage)
+            }
+            activityIndicator.stopAnimating()
+            return cell
         }
         else{
-            NightNight.theme =  .normal
+            
+            cellOdd.imgNews.layer.cornerRadius = 10.0
+            cellOdd.imgNews.clipsToBounds = true
+            //display data from DB
+            let currentArticle = ShowArticle[indexPath.row]
+            cellOdd.lblNewsDescription.text = currentArticle.title
+            
+            if  darkModeStatus == true{
+                cellOdd.ViewCellBackground.backgroundColor = colorConstants.grayBackground2
+                cellOdd.lblSource.textColor = colorConstants.nightModeText
+                cellOdd.lblNewsDescription.textColor = colorConstants.nightModeText
+                NightNight.theme =  .night
+            }
+            else{
+                cellOdd.ViewCellBackground.backgroundColor = .white
+                cellOdd.lblSource.textColor = colorConstants.blackColor
+                cellOdd.lblNewsDescription.textColor = colorConstants.blackColor
+                NightNight.theme =  .normal
+            }
+            
+            if ((currentArticle.published_on?.count)!) <= 20{
+                if !(currentArticle.published_on?.contains("Z"))!{
+                    currentArticle.published_on?.append("Z")
+                }
+                let newDate = dateFormatter.date(from: currentArticle.published_on!)
+                if newDate != nil{
+                    agoDate = try Helper().timeAgoSinceDate(newDate!)
+                    fullTxt = "\(agoDate)" + " via " + currentArticle.source!
+                    let attributedWithTextColor: NSAttributedString = fullTxt.attributedStringWithColor([currentArticle.source!], color: UIColor.red)
+                    cellOdd.lblSource.attributedText = attributedWithTextColor
+                }
+            }
+            else{
+                dateSubString = String(currentArticle.published_on!.prefix(19))
+                if !(dateSubString.contains("Z")){
+                    dateSubString.append("Z")
+                }
+                let newDate = dateFormatter.date(from: dateSubString
+                )
+                if newDate != nil{
+                    agoDate = try Helper().timeAgoSinceDate(newDate!)
+                    fullTxt = "\(agoDate)" + " via " + currentArticle.source!
+                    let attributedWithTextColor: NSAttributedString = fullTxt.attributedStringWithColor([currentArticle.source!], color: UIColor.red)
+                    cellOdd.lblSource.attributedText = attributedWithTextColor
+                }
+            }
+            
+            let imgURL = APPURL.imageServer + imgWidth + "x" + imgHeight + "/smart/" + currentArticle.imageURL!
+            cellOdd.imgNews.sd_setImage(with: URL(string: imgURL), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
+            if textSizeSelected == 0{
+                cellOdd.lblSource.font = FontConstants.smallFontContent
+                cellOdd.lblNewsDescription.font = FontConstants.smallFontHeadingBold
+            }
+            else if textSizeSelected == 2{
+                cellOdd.lblSource.font = FontConstants.LargeFontContent
+                cellOdd.lblNewsDescription.font = FontConstants.LargeFontHeadingBold
+            }
+            else{
+                cellOdd.lblSource.font =  FontConstants.NormalFontContent
+                cellOdd.lblNewsDescription.font = FontConstants.NormalFontHeadingBold
+            }
+            
+            if cellOdd.imgNews.image == nil{
+                cellOdd.imgNews.image = UIImage(named: AssetConstants.NoImage)
+            }
+            activityIndicator.stopAnimating()
+            return cellOdd
         }
-        if cell.imgNews.image == nil{
-            cell.imgNews.image = UIImage(named: AssetConstants.NoImage)
-        }
-        activityIndicator.stopAnimating()
-        return cell
     }
     
     //check whether tableview scrolled up or down
@@ -275,7 +398,11 @@ extension BookmarkVC: UITableViewDelegate, UITableViewDataSource{
                                 self.nextURL = ""
                                 self.bookmarkResultTV.makeToast("No more news to show", duration: 1.0, position: .center)
                             }
-                            self.bookmarkResultTV.reloadData()
+                            if self.bookmarkResultTV.isHidden == false{
+                                self.bookmarkResultTV.reloadData()
+                            }else{
+                                self.bookmarkCV.reloadData()
+                            }
                         }
                     case .Failure(let errormessage) :
                         self.activityIndicator.startAnimating()
@@ -285,6 +412,137 @@ extension BookmarkVC: UITableViewDelegate, UITableViewDataSource{
                     }
                 }
                 self.activityIndicator.stopAnimating()
+            }
+        }
+    }
+}
+
+extension BookmarkVC: UICollectionViewDelegate, UICollectionViewDataSource, UIScrollViewDelegate{
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return (ShowArticle.count > 0) ? self.ShowArticle.count : 0
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let newsDetailvc:NewsDetailVC = storyboard.instantiateViewController(withIdentifier: "NewsDetailID") as! NewsDetailVC
+        newsDetailvc.newsCurrentIndex = indexPath.row
+        newsDetailvc.ShowArticle = ShowArticle
+        UserDefaults.standard.set("bookmark", forKey: "isSearch")
+        newsDetailvc.articleId = Int(ShowArticle[indexPath.row].article_id)
+        present(newsDetailvc, animated: true, completion: nil)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "BookmarkIpadID", for:indexPath) as! BookmarkCVCell
+        imgWidth = String(describing : Int(cell.imgNews.frame.width))
+        imgHeight = String(describing : Int(cell.imgNews.frame.height))
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
+        dateFormatter.timeZone = NSTimeZone.local
+        let darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
+        let textSizeSelected = UserDefaults.standard.value(forKey: "textSize") as! Int
+        var sourceColor = UIColor()
+        var fullTxt = ""
+        var dateSubString = ""
+        var agoDate = ""
+        //display data from DB
+        let currentArticle = ShowArticle[indexPath.row]
+        cell.lblTitle.text = currentArticle.title
+        
+        if  darkModeStatus == true{
+            cell.lblSource.textColor = colorConstants.nightModeText
+            cell.lblTitle.textColor = colorConstants.nightModeText
+            NightNight.theme =  .night
+        }
+        else{
+            cell.lblSource.textColor = colorConstants.blackColor
+            cell.lblTitle.textColor = colorConstants.blackColor
+            NightNight.theme =  .normal
+        }
+        
+        if ((currentArticle.published_on?.count)!) <= 20{
+            if !(currentArticle.published_on?.contains("Z"))!{
+                currentArticle.published_on?.append("Z")
+            }
+            let newDate = dateFormatter.date(from: currentArticle.published_on!)
+            if newDate != nil{
+                agoDate = try Helper().timeAgoSinceDate(newDate!)
+                fullTxt = "\(agoDate)" + " via " + currentArticle.source!
+                let attributedWithTextColor: NSAttributedString = fullTxt.attributedStringWithColor([currentArticle.source!], color: UIColor.red)
+                cell.lblSource.attributedText = attributedWithTextColor
+            }
+        }
+        else{
+            dateSubString = String(currentArticle.published_on!.prefix(19))
+            if !(dateSubString.contains("Z")){
+                dateSubString.append("Z")
+            }
+            let newDate = dateFormatter.date(from: dateSubString
+            )
+            if newDate != nil{
+                agoDate = try Helper().timeAgoSinceDate(newDate!)
+                fullTxt = "\(agoDate)" + " via " + currentArticle.source!
+                let attributedWithTextColor: NSAttributedString = fullTxt.attributedStringWithColor([currentArticle.source!], color: UIColor.red)
+                cell.lblSource.attributedText = attributedWithTextColor
+            }
+        }
+        let imgURL = APPURL.imageServer + imgWidth + "x" + imgHeight + "/smart/" + currentArticle.imageURL!
+        cell.imgNews.sd_setImage(with: URL(string: imgURL), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
+        
+        if textSizeSelected == 0{
+            cell.lblSource.font = FontConstants.smallFontContent
+            cell.lblTitle.font = FontConstants.smallFontHeadingBold
+        }
+        else if textSizeSelected == 2{
+            cell.lblSource.font = FontConstants.LargeFontContent
+            cell.lblTitle.font = FontConstants.LargeFontHeadingBold
+        }
+        else{
+            cell.lblSource.font =  FontConstants.NormalFontContent
+            cell.lblTitle.font = FontConstants.NormalFontHeadingBold
+        }
+        
+        if cell.imgNews.image == nil{
+            cell.imgNews.image = UIImage(named: AssetConstants.NoImage)
+        }
+        
+        activityIndicator.stopAnimating()
+        return cell
+        
+    }
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        
+        if (scrollView.bounds.maxY) == scrollView.contentSize.height{
+            activityIndicator.startAnimating()
+            
+            if ShowArticle.count >= 20{
+                if nextURL != "" {
+                    self.activityIndicator.startAnimating()
+                    APICall().BookmarkedArticlesAPI(url: nextURL){ response in
+                        switch response {
+                        case .Success(let data) :
+                            if data.count > 0{
+                                self.bookmarkedArticlesArr.append(contentsOf: data[0].body!.articles)
+                                if data[0].body!.next != nil{
+                                    self.nextURL = data[0].body!.next!
+                                }
+                                else{
+                                    self.nextURL = ""
+                                    self.bookmarkResultTV.makeToast("No more news to show", duration: 1.0, position: .center)
+                                }
+                                self.bookmarkCV.reloadData()
+                            }
+                        case .Failure(let errormessage) :
+                            self.activityIndicator.startAnimating()
+                            self.bookmarkResultTV.makeToast(errormessage, duration: 2.0, position: .center)
+                        case .Change(let code):
+                            print(code)
+                        }
+                    }
+                    self.activityIndicator.stopAnimating()
+                }
             }
         }
     }

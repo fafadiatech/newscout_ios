@@ -51,6 +51,7 @@
         <attribute name="article_id" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="blurb" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="category" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="categoryId" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="current_page" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="imageURL" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="published_on" optional="YES" attributeType="String" syncable="YES"/>
@@ -93,7 +94,7 @@
         <element name="Media" positionX="414" positionY="99" width="128" height="120"/>
         <element name="MenuHashTag" positionX="423" positionY="108" width="128" height="120"/>
         <element name="MenuHeadings" positionX="405" positionY="90" width="128" height="75"/>
-        <element name="NewsArticle" positionX="407.63671875" positionY="-45.1953125" width="128" height="240"/>
+        <element name="NewsArticle" positionX="407.63671875" positionY="-45.1953125" width="128" height="255"/>
         <element name="NewsURL" positionX="405" positionY="63" width="128" height="90"/>
         <element name="PeriodicTags" positionX="405" positionY="90" width="128" height="90"/>
         <element name="SearchArticles" positionX="405" positionY="54" width="128" height="195"/>

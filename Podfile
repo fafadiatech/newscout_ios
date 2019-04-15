@@ -6,12 +6,10 @@ target 'NewsApp' do
     use_frameworks!
     
     # Pods for NewsApp
-    
     pod 'GoogleSignIn'
     pod 'FBSDKLoginKit'
     pod 'SwiftyJSON'
     pod 'Alamofire'
-    pod "Floaty"
     pod 'XLPagerTabStrip'
     pod 'MaterialComponents/ActivityIndicator'
     pod 'Toast-Swift'
@@ -23,6 +21,7 @@ target 'NewsApp' do
     pod 'Crashlytics'
     pod 'Sentry'
     pod 'TAPageControl'
+    
     target 'NewsAppTests' do
         inherit! :search_paths
         # Pods for testing

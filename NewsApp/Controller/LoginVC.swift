@@ -53,6 +53,7 @@ class LoginVC: UIViewController, GIDSignInUIDelegate, FBSDKLoginButtonDelegate {
         btnFBLogin.readPermissions = ["public_profile", "email"]
         tryFBlogin.isHidden = true
         if FBSDKAccessToken.current() != nil{
+            print("FBSDKAccessToken.current():")
             print(FBSDKAccessToken.current())
             UserDefaults.standard.set(FBSDKAccessToken.current()?.tokenString, forKey: "FBToken")
             fetchProfile()
@@ -73,6 +74,28 @@ class LoginVC: UIViewController, GIDSignInUIDelegate, FBSDKLoginButtonDelegate {
         else{
             txtUsername.selectedTitleColor = .white
             txtPassword.selectedTitleColor = .white
+        }
+    }
+    
+    func FBLogin(){
+        let param = ["provider" : "facebook",
+                     "token_id" : UserDefaults.standard.value(forKey: "FBToken") as! String,
+                     "device_id" : UserDefaults.standard.value(forKey: "deviceToken") as! String,
+                     "device_name": "ios"]
+        APICall().SocialLoginAPI(param : param){(status,response) in
+            print("FB Login response:\(response)")
+            if response == "1"{
+                UserDefaults.standard.set(true, forKey: "isWalkthroughShown")
+                let check = UserDefaults.standard.value(forKey: "isSettingsLogin") as! Bool
+                if check == true{
+                    let storyboard = UIStoryboard(name: "Main", bundle: nil)
+                    let HomeVc:HomeParentVC = storyboard.instantiateViewController(withIdentifier: "HomeParentID") as! HomeParentVC
+                    self.present(HomeVc, animated: true, completion: nil)
+                }
+                else{
+                    self.dismiss(animated: false)
+                }
+            }
         }
     }
     
@@ -128,6 +151,7 @@ class LoginVC: UIViewController, GIDSignInUIDelegate, FBSDKLoginButtonDelegate {
                         UserDefaults.standard.set(dictionary["email"] as! String?, forKey: "email")
                         UserDefaults.standard.set(dictionary["first_name"] as! String?, forKey: "first_name")
                         UserDefaults.standard.set(dictionary["last_name"] as! String?, forKey: "last_name")
+                        self.FBLogin()
                     }
                 }
             })
@@ -172,6 +196,7 @@ class LoginVC: UIViewController, GIDSignInUIDelegate, FBSDKLoginButtonDelegate {
             APICall().LoginAPI(param : param){(status,response) in
                 print("Login response:\(response)")
                 if response == "1"{
+                    UserDefaults.standard.set(true, forKey: "isWalkthroughShown")
                     let check = UserDefaults.standard.value(forKey: "isSettingsLogin") as! Bool
                     if check == true{
                         let storyboard = UIStoryboard(name: "Main", bundle: nil)
@@ -196,11 +221,7 @@ class LoginVC: UIViewController, GIDSignInUIDelegate, FBSDKLoginButtonDelegate {
     @IBAction func googleSignIn(_ sender: Any) {
         GIDSignIn.sharedInstance().uiDelegate=self
         GIDSignIn.sharedInstance().signIn()
-        if UserDefaults.standard.value(forKey: "googleToken") != nil{
-            let storyboard = UIStoryboard(name: "Main", bundle: nil)
-            let HomeVc:HomeParentVC = storyboard.instantiateViewController(withIdentifier: "HomeParentID") as! HomeParentVC
-            self.present(HomeVc, animated: true, completion: nil)
-        }
+        
     }
     
     func loginButton(_ loginButton: FBSDKLoginButton!, didCompleteWith result: FBSDKLoginManagerLoginResult!, error: Error!) {
@@ -209,9 +230,6 @@ class LoginVC: UIViewController, GIDSignInUIDelegate, FBSDKLoginButtonDelegate {
         }
         else if result.isCancelled{
             self.view.makeToast("You have cancelled login using Facebook", duration: 1.0, position: .center)
-        }
-        else{
-            // UserDefaults.standard.set(email, forKey: "email")
         }
     }
     

@@ -19,28 +19,36 @@ struct colorConstants{
     static let grayBackground3 = UIColor(hexFromString: "C0C0C0")
     static let txtlightGrayColor = UIColor(hexFromString: "9B9B9B")
     static let txtDarkGrayColor = UIColor(hexFromString: "424242")
+    static let TVgrayBackground = UIColor(hexFromString: "FAF9F8")
+    static let subTVgrayBackground = UIColor(hexFromString: "A6ACAF") //A6ACAF
+    static let MenugrayBackground = UIColor(hexFromString: "F3EFED")
 }
 
 struct FontConstants{
     static let isPhone = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.phone)
     static let fontSize:CGFloat = isPhone ? 12 :20
-    static let fontxLarge:CGFloat = isPhone ? 16:24 //16
-    static let fontxNormal:CGFloat = isPhone ? 15 :22 //14
-    static let fontxSmall:CGFloat = isPhone ? 12 :20 //12
-    static let fontLargeHeading:CGFloat = isPhone ? 20:26 //25
-    static let fontNormalHeading:CGFloat = isPhone ? 18 :24 //22
-    static let fontSmallHeading:CGFloat = isPhone ? 16 :22 //18
+    static let fontxLarge:CGFloat = isPhone ? 16:22 //16
+    static let fontxNormal:CGFloat = isPhone ? 15 :20 //14
+    static let fontxSmall:CGFloat = isPhone ? 12 :18 //12
+    static let fontLargeHeading:CGFloat = isPhone ? 21:18 //25
+    static let fontNormalHeading:CGFloat = isPhone ? 19 :16 //22
+    static let fontSmallHeading:CGFloat = isPhone ? 17 :14 //18
     static let fontLargeTitle:CGFloat = isPhone ? 21:26 //21
     static let fontNormalTitle:CGFloat = isPhone ? 17 :25//18
     static let fontSmallTitle:CGFloat = isPhone ? 14 :20 //14
-    static let fontLargeContent:CGFloat = isPhone ? 18 :28 //18
-    static let fontNormalContent:CGFloat = isPhone ? 16 :22 //14
-    static let fontSmallContent:CGFloat = isPhone ? 14 :22 //10
+    static let fontLargeContent:CGFloat = isPhone ? 18 :16 //18
+    static let fontNormalContent:CGFloat = isPhone ? 16 :14 //14
+    static let fontSmallContent:CGFloat = isPhone ? 14 :12 //10
     static let fontNormalBtn: CGFloat = isPhone ? 18 :26
     static let fontViewTitle:CGFloat = isPhone ? 23 : 35
     static let fontSettingsTVHeader:CGFloat = isPhone ? 20 : 23
     static let fontAppTitle:CGFloat = isPhone ? 22 : 32
-    
+    static let fontsmallDetailTitle:CGFloat = isPhone ? 17 : 19
+    static let fontNormalDetailTitle:CGFloat = isPhone ? 19 : 21
+    static let fontLargeDetailTitle:CGFloat = isPhone ? 21 : 23
+    static let fontsmallDetailContent:CGFloat = isPhone ? 14 : 16
+    static let fontNormalDetailContent:CGFloat = isPhone ? 16 : 17
+    static let fontLargeDetailCOntent:CGFloat = isPhone ? 18 : 19
     //for button titles
     static let FontBtnTitle = UIFont(name: AppFontName.medium, size: FontConstants.fontNormalBtn)
     //for news description
@@ -50,6 +58,9 @@ struct FontConstants{
     static let smallFontTitleMedium = UIFont(name: AppFontName.medium, size: FontConstants.fontSmallTitle)
     static let LargeFontTitleMedium = UIFont(name: AppFontName.medium, size: FontConstants.fontLargeTitle)
     static let NormalFontTitleMedium = UIFont(name: AppFontName.medium, size: FontConstants.fontNormalTitle)
+    static let smallFontContentDetail = UIFont(name: AppFontName.regular, size: FontConstants.fontsmallDetailContent)
+    static let LargeFontContentDetail = UIFont(name: AppFontName.regular, size: FontConstants.fontLargeDetailCOntent)
+    static let NormalFontContentDetail = UIFont(name: AppFontName.regular, size: FontConstants.fontNormalDetailContent)
     //for news title
     static let smallFontHeadingBold = UIFont(name: AppFontName.bold, size: FontConstants.fontSmallHeading)
     static let LargeFontHeadingBold = UIFont(name: AppFontName.bold, size: FontConstants.fontLargeHeading)
@@ -57,7 +68,9 @@ struct FontConstants{
     static let smallFontHeading = UIFont(name: AppFontName.regular, size: FontConstants.fontSmallHeading)
     static let LargeFontHeading = UIFont(name: AppFontName.regular, size: FontConstants.fontLargeHeading)
     static let NormalFontHeading = UIFont(name: AppFontName.regular, size: FontConstants.fontNormalHeading)
-    
+    static let smallFontDetailTitle = UIFont(name: AppFontName.bold, size: FontConstants.fontsmallDetailTitle)
+    static let LargeFontDetailTitle = UIFont(name: AppFontName.bold, size: FontConstants.fontLargeDetailTitle)
+    static let NormalFontDetailTitle = UIFont(name: AppFontName.bold, size: FontConstants.fontNormalDetailTitle)
     //for source, time
     static let smallFontContentBold = UIFont(name: AppFontName.bold, size: FontConstants.fontSmallContent)
     static let LargeFontContentBold = UIFont(name: AppFontName.bold, size: FontConstants.fontLargeContent)
@@ -74,8 +87,8 @@ struct FontConstants{
     static let settingsTVHeader = UIFont(name: AppFontName.medium, size: FontConstants.fontSettingsTVHeader)
     static let appFont = UIFont(name: AppFontName.bold, size: FontConstants.fontAppTitle)
     static let smallRecommFont = UIFont(name: AppFontName.regular, size: FontConstants.fontxSmall)
-     static let largeRecommFont = UIFont(name: AppFontName.regular, size: FontConstants.fontxLarge)
-     static let normalRecommFont = UIFont(name: AppFontName.regular, size: FontConstants.fontxNormal)
+    static let largeRecommFont = UIFont(name: AppFontName.regular, size: FontConstants.fontxLarge)
+    static let normalRecommFont = UIFont(name: AppFontName.regular, size: FontConstants.fontxNormal)
     static let smallRecommTitleFont = UIFont(name: AppFontName.bold, size: FontConstants.fontxSmall)
     static let largeRecommTitleFont = UIFont(name: AppFontName.bold, size: FontConstants.fontxLarge)
     static let normalRecommTitleFont = UIFont(name: AppFontName.bold, size: FontConstants.fontxNormal)
@@ -87,6 +100,9 @@ struct Constants{
 }
 
 struct AssetConstants{
+    static let f1 = "f1"
+    static let f2 = "f2"
+    static let f3 = "f3"
     static let backArrow = "back1"
     static let cross = "cross"
     static let bookmark = "bookmark"
@@ -108,10 +124,19 @@ struct AssetConstants{
     static let flogo = "flogo"
     static let menu = "menu"
     static let sector = "sector_update"
-    static let regional = "regional_update_1"
+    static let regional = "internet"
     static let economy = "economy"
     static let finance = "finance"
- }
+    static let misc = "news"
+    static let moon = "moon24"
+    static let whiteMoon = "moon_white24"
+    static let screen1 = "Top-Menu"
+    static let screen2 = "Bottom_Menu"
+    static let screen3 = "Article_Details"
+    static let screen4 = "More_Stories_Section"
+    static let screen5 = "Share_screen"
+    static let screen6 = "Search_screen"
+}
 
 struct AppFontName {
     static let regular = "HelveticaNeue-Light"
@@ -141,7 +166,8 @@ struct APPURL {
         static let Logout = Domains.version + "logout/"
         static let Categories = Domains.version + "categories"
         static let Search = Domains.version + "article/search/?q="
-        static let recommendation = Domains.version + "articles/" // + "\(articleId)" + "/recommendations/"
+        static let Source = Domains.version + "article/search/?source="
+        static let recommendation = Domains.version + "articles/"
         static let bookmark = Domains.version + "articles/bookmark/"
         static let likeDislike =  Domains.version + "articles/vote/"
         static let forgotPassword = Domains.version + "forgot-password/"
@@ -152,10 +178,12 @@ struct APPURL {
         static let getBookmarkList = Domains.version + "bookmark-articles/bookmark-news-list/"
         static let getTags = Domains.version + "tags/"
         static let ArticlesBytags = Domains.version + "article/search?"
+        static let ArticleById = Domains.version + "article/search?category="
         static let ArtilceByTags2 = Domains.version + "articles/?"
         static let menu = Domains.version + "menus"
         static let deviceDetails = Domains.version + "device/"
         static let NotificationDetails = Domains.version + "notification/"
+        static let socialLogin = Domains.version + "social-login/"
     }
     
     static let ArticlesURL = Domains.Local + Routes.Articles
@@ -166,6 +194,7 @@ struct APPURL {
     static let LogoutURL =  Domains.Local + Routes.Logout
     static let CategoriesURL =  Domains.Local + Routes.Categories
     static let SearchURL =  Domains.Local + Routes.Search
+    static let SourceURL = Domains.Local + Routes.Source
     static let recommendationURL = Domains.Local + Routes.recommendation
     static let bookmarkURL = Domains.Local + Routes.bookmark
     static let likeDislikeURL = Domains.Local + Routes.likeDislike
@@ -181,6 +210,10 @@ struct APPURL {
     static let getMenus = Domains.Local + Routes.menu
     static let sendDeviceDetailsURL = Domains.Local + Routes.deviceDetails
     static let sendNotificationDetails = Domains.Local + Routes.NotificationDetails
+    static let ArticleByIdURL = Domains.Local + Routes.ArticleById
+    static let socialLoginURL = Domains.Local + Routes.socialLogin
+    static let imageServer = "http://images.newscout.in/unsafe/"
+    
 }
 
 

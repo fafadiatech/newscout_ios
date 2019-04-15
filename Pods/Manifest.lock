@@ -13,7 +13,6 @@ PODS:
     - Bolts (~> 1.7)
   - FBSDKLoginKit (4.35.0):
     - FBSDKCoreKit
-  - Floaty (4.0.1)
   - GoogleSignIn (4.1.2):
     - "GoogleToolboxForMac/NSDictionary+URLArguments (~> 2.1)"
     - "GoogleToolboxForMac/NSString+URLArguments (~> 2.1)"
@@ -64,7 +63,6 @@ DEPENDENCIES:
   - Crashlytics
   - Fabric
   - FBSDKLoginKit
-  - Floaty
   - GoogleSignIn
   - MaterialComponents/ActivityIndicator
   - NightNight
@@ -85,7 +83,6 @@ SPEC REPOS:
     - Fabric
     - FBSDKCoreKit
     - FBSDKLoginKit
-    - Floaty
     - GoogleSignIn
     - GoogleToolboxForMac
     - GTMOAuth2
@@ -111,7 +108,6 @@ SPEC CHECKSUMS:
   Fabric: f988e33c97f08930a413e08123064d2e5f68d655
   FBSDKCoreKit: 1a5b2e3ceb5ca827a53c54aa5f4a3480efff80d2
   FBSDKLoginKit: 00a3d65d1226852f9d76dcddff01981e5e6d9c38
-  Floaty: 82854e1a5ef4fa208281ebd4da2f3d1e51ba67a6
   GoogleSignIn: d9ef55b10f0aa401a5de2747f59b725e4b9732ac
   GoogleToolboxForMac: 91c824d21e85b31c2aae9bb011c5027c9b4e738f
   GTMOAuth2: e8b6512c896235149df975c41d9a36c868ab7fba
@@ -130,6 +126,6 @@ SPEC CHECKSUMS:
   Toast-Swift: ba0b01b095aada709d915f9beb1d38184a2721c3
   XLPagerTabStrip: c908b17cbf42fcd2598ee1adfc49bae25444d88a
 
-PODFILE CHECKSUM: 35777faa38570f967bb142f8fa059e2e79e6b292
+PODFILE CHECKSUM: bffaf33e06ee7d7916e3aa1951140b490caaff64
 
 COCOAPODS: 1.5.3

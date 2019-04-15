@@ -19,7 +19,7 @@ import Sentry
 class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
     
     var window: UIWindow?
-   
+    
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         GIDSignIn.sharedInstance().clientID = "424337192018-pnik0j5sm85mjg48uf0u02ucrb64e6lc.apps.googleusercontent.com"
         GIDSignIn.sharedInstance().delegate = self as! GIDSignInDelegate
@@ -27,13 +27,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
         if UserDefaults.standard.value(forKey: "darkModeEnabled") == nil{
             UserDefaults.standard.set(false, forKey: "darkModeEnabled")
         }
-       
+        
         if UserDefaults.standard.value(forKey: "darkModeEnabled") == nil{
             UserDefaults.standard.setValue(false, forKey: "darkModeEnabled")
         }
+        
         if UserDefaults.standard.value(forKey: "searchTxt") != nil{
             UserDefaults.standard.set("", forKey: "searchTxt")
         }
+        
         let notificationTypes: UIUserNotificationType = [UIUserNotificationType.alert, UIUserNotificationType.badge, UIUserNotificationType.sound]
         let pushNotificationSettings = UIUserNotificationSettings(types: notificationTypes, categories: nil)
         application.registerUserNotificationSettings(pushNotificationSettings)
@@ -46,9 +48,24 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
         } catch let error {
             print("\(error)")
         }
+        self.window = UIWindow(frame: UIScreen.main.bounds)
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        if UserDefaults.standard.value(forKey: "isWalkthroughShown") == nil{
+            UserDefaults.standard.set(false, forKey: "isWalkthroughShown")
+        }
+        let isWalkthroughShown = UserDefaults.standard.value(forKey: "isWalkthroughShown") as! Bool
+        var initialViewController = UIViewController()
+        if isWalkthroughShown == true{
+            initialViewController = storyboard.instantiateViewController(withIdentifier: "HomeParentID")
+        }else{
+            initialViewController = storyboard.instantiateViewController(withIdentifier: "PageID")
+        }
+        
+        self.window?.rootViewController = initialViewController
+        self.window?.makeKeyAndVisible()
         return true
     }
-
+    
     func application(_ app: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey : Any] = [:]) -> Bool {
         
         
@@ -75,7 +92,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
     
     func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
         let deviceTokenString = deviceToken.hexString
-        print(deviceTokenString)
+        print("deviceTokenString: \(deviceTokenString)")
         UserDefaults.standard.set(deviceTokenString, forKey: "deviceToken")
     }
     
@@ -101,6 +118,27 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
             // ...
             print("\(userId!) \n \(idToken) \n \(fullName!) \n \(email!) \n \(pic)")
             print("google sign in successful..")
+            if UserDefaults.standard.value(forKey: "googleToken") != nil{
+                let param = ["provider" : "google",
+                             "token_id" : UserDefaults.standard.value(forKey: "googleToken") as! String,
+                             "device_id" : UserDefaults.standard.value(forKey: "deviceToken") as! String,
+                             "device_name": "ios"]
+                APICall().SocialLoginAPI(param : param){(status,response) in
+                    print("google Login response:\(response)")
+                    if response == "1"{
+                        UserDefaults.standard.set(true, forKey: "isWalkthroughShown")
+                        let check = UserDefaults.standard.value(forKey: "isSettingsLogin") as! Bool
+                        if check == true{
+                            
+                            let mainStoryboard:UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
+                            let HomeVc = mainStoryboard.instantiateViewController(withIdentifier: "HomeParentID") as! HomeParentVC
+                            self.window?.rootViewController = HomeVc
+                            
+                        }
+                      
+                    }
+                }
+            }
             
             /*  let mainStoryboard:UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
              let HomeVc = mainStoryboard.instantiateViewController(withIdentifier: "HomeParentID") as! HomeParentVC

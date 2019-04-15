@@ -8,14 +8,40 @@
 
 import UIKit
 import XLPagerTabStrip
-import Floaty
 import NightNight
-
-class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
+import MaterialComponents.MaterialActivityIndicator
+extension UISwitch {
     
+    func set(width: CGFloat, height: CGFloat) {
+        
+        let standardHeight: CGFloat = 31
+        let standardWidth: CGFloat = 51
+        let heightRatio = height / standardHeight
+        let widthRatio = width / standardWidth
+        transform = CGAffineTransform(scaleX: widthRatio, y: heightRatio)
+    }
+}
+
+class HomeParentVC: ButtonBarPagerTabStripViewController{
+    
+    @IBOutlet weak var btnSettingsNav: UIButton!
+    @IBOutlet weak var btnBookmark: UIButton!
+    @IBOutlet weak var viewNightMode: UIView!
+    @IBOutlet weak var viewBookmark: UIView!
+    @IBOutlet weak var viewSettings: UIView!
+    @IBOutlet weak var btnSearch: UIButton!
+    @IBOutlet weak var viewOptions: UIView!
+    @IBOutlet weak var btnSettings: UIButton!
     @IBOutlet weak var menuCV: UICollectionView!
     @IBOutlet weak var viewAppTitle: UIView!
     @IBOutlet weak var lblAppName: UILabel!
+    @IBOutlet weak var btnNightMode: UIButton!
+    @IBOutlet weak var btnNightModeImg: UIButton!
+    @IBOutlet weak var btnBookmarkImg: UIButton!
+    @IBOutlet weak var btnSettingImg: UIButton!
+    
+    var statusBarOrientation: UIInterfaceOrientation = UIApplication.shared.statusBarOrientation
+    let activityIndicator = MDCActivityIndicator()
     var childrenVC = [UIViewController]()
     var jsonData : [Result] = []
     var expandData = [NSMutableDictionary]()
@@ -24,13 +50,23 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
     var submenu : [String] = []
     var HeadingRow = 0
     var subMenuRow = 0
-    var tagArr : [String] = []
     var submenuIndexArr = [[String]]()
-    var headingImg = [AssetConstants.sector, AssetConstants.regional, AssetConstants.finance, AssetConstants.economy, AssetConstants.search]
+    var headingImg = [AssetConstants.sector, AssetConstants.regional, AssetConstants.finance, AssetConstants.economy, AssetConstants.misc]
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        viewOptions.isHidden = true
         menuCV.allowsMultipleSelection = false
+        viewOptions.layer.borderWidth = 0.5
+        viewOptions.layer.borderColor =  UIColor.darkGray.cgColor
+        
+        activityIndicator.frame = CGRect(x: view.frame.width/2, y: view.frame.height/2 - 100, width: 40, height: 40)
+        activityIndicator.sizeToFit()
+        activityIndicator.indicatorMode = .indeterminate
+        activityIndicator.progress = 2.0
+        view.addSubview(activityIndicator)
+        
+        let switchStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
         if UserDefaults.standard.value(forKey: "deviceToken") == nil{
             UserDefaults.standard.set("41ea0aaa15323ae5012992392e4edd6b8a6ee4547a8dc6fd1f3b31aab9839208", forKey: "deviceToken")
         }
@@ -57,9 +93,7 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
         
         let darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
         if  darkModeStatus == true{
-            buttonBarView.backgroundColor = colorConstants.grayBackground1
-            buttonBarView.selectedBar.backgroundColor = colorConstants.redColor
-            buttonBarView.backgroundView?.backgroundColor = colorConstants.grayBackground1
+            changeTheme()
         }
         else{
             buttonBarView.backgroundColor = .white
@@ -67,32 +101,6 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
             buttonBarView.selectedBar.backgroundColor = .red
         }
         lblAppName.text = Constants.AppName
-        let floaty = Floaty()
-        floaty.itemButtonColor = colorConstants.redColor
-        floaty.buttonColor = colorConstants.redColor
-        floaty.plusColor = .black
-        
-        floaty.addItem("  Search  ", icon: UIImage(named: AssetConstants.search)!) { item in
-            floaty.autoCloseOnTap = true
-            let storyboard = UIStoryboard(name: "Main", bundle: nil)
-            let searchvc:SearchVC = storyboard.instantiateViewController(withIdentifier: "SearchID") as! SearchVC
-            self.present(searchvc, animated: true, completion: nil)
-        }
-        
-        floaty.addItem("  Settings  ", icon: UIImage(named: AssetConstants.settings)!) { item in
-            floaty.autoCloseOnTap = true
-            let storyboard = UIStoryboard(name: "Main", bundle: nil)
-            let settingvc:SettingsVC = storyboard.instantiateViewController(withIdentifier: "SettingsID") as! SettingsVC
-            self.present(settingvc, animated: true, completion: nil)
-        }
-        
-        floaty.addItem("  Bookmark  ", icon: UIImage(named: AssetConstants.bookmark)!) { item in
-            floaty.autoCloseOnTap = true
-            let storyboard = UIStoryboard(name: "Main", bundle: nil)
-            let bookmarkvc:BookmarkVC = storyboard.instantiateViewController(withIdentifier: "BookmarkID") as! BookmarkVC
-            self.present(bookmarkvc, animated: true, completion: nil)
-        }
-        self.view.addSubview(floaty)
         changeCurrentIndexProgressive = {[weak self](oldCell:ButtonBarViewCell?, newCell: ButtonBarViewCell?, progressPercentage:CGFloat, changeCurrentIndex:Bool, animated:Bool)-> Void in
             guard changeCurrentIndex == true else {return}
             let darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
@@ -114,6 +122,52 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
             }
         }
         
+        let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapped(gestureRecognizer:)))
+        viewAppTitle.addGestureRecognizer(tapRecognizer)
+        tapRecognizer.delegate = self as UIGestureRecognizerDelegate
+    }
+    
+    @objc func tapped(gestureRecognizer: UITapGestureRecognizer) {
+        if viewOptions.isHidden == false{
+            viewOptions.isHidden = true
+        }
+    }
+    
+    func changeTheme(){
+        viewNightMode.backgroundColor = colorConstants.grayBackground1
+        viewBookmark.backgroundColor = colorConstants.grayBackground1
+        viewSettings.backgroundColor = colorConstants.grayBackground1
+        btnBookmark.setTitleColor(.white, for: UIControlState.normal)
+        btnNightMode.setTitleColor(.white, for: UIControlState.normal)
+        btnSettingsNav.setTitleColor(.white, for: UIControlState.normal)
+        btnNightModeImg.setImage(UIImage(named: AssetConstants.whiteMoon), for: .normal)
+        btnBookmarkImg.setImage(UIImage(named:AssetConstants.Bookmark_white), for: .normal)
+        menuCV.backgroundColor = colorConstants.subTVgrayBackground
+        viewOptions.backgroundColor = colorConstants.txtlightGrayColor
+        buttonBarView.backgroundColor = colorConstants.grayBackground1
+        buttonBarView.backgroundView?.backgroundColor = colorConstants.grayBackground1
+        buttonBarView.selectedBar.backgroundColor = .red
+        reloadPagerTabStripView()
+        changeCurrentIndexProgressive = {[weak self](oldCell:ButtonBarViewCell?, newCell: ButtonBarViewCell?, progressPercentage:CGFloat, changeCurrentIndex:Bool, animated:Bool)-> Void in
+            guard changeCurrentIndex == true else {return}
+            let darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
+            if  darkModeStatus == true{
+                oldCell?.label.textColor = colorConstants.whiteColor
+                oldCell?.label.backgroundColor = colorConstants.grayBackground1
+                newCell?.label.backgroundColor = colorConstants.grayBackground1
+                newCell?.label.textColor =  colorConstants.whiteColor
+                oldCell?.backgroundColor = colorConstants.grayBackground1
+                newCell?.backgroundColor = colorConstants.grayBackground1
+            }
+            else{
+                oldCell?.label.textColor = colorConstants.blackColor
+                oldCell?.label.backgroundColor = colorConstants.whiteColor
+                newCell?.label.backgroundColor = colorConstants.whiteColor
+                newCell?.label.textColor =  colorConstants.redColor
+                oldCell?.backgroundColor = colorConstants.whiteColor
+                newCell?.backgroundColor = colorConstants.whiteColor
+            }
+        }
     }
     
     func sendDeviceDetails(){
@@ -159,13 +213,12 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
                         self.submenu.append(sub.subMenuName!)
                     }
                     self.subMenuArr.append(self.submenu)
-                    self.fetchsubMenuTags(submenu: self.subMenuArr[self.HeadingRow][self.subMenuRow])
+                    self.fetchSubmenuId(submenu:self.subMenuArr[self.HeadingRow][self.subMenuRow] )
                     UserDefaults.standard.set(self.subMenuArr[self.HeadingRow][self.subMenuRow], forKey: "submenu")
                     self.reloadPagerTabStripView()
                     
                 case .Failure(let error):
                     print(error)
-                    
                 }
             }
         case .Failure(let error) :
@@ -173,15 +226,14 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
         }
     }
     
-    func fetchsubMenuTags(submenu : String){
-        let tagresult = DBManager().fetchMenuTags(subMenuName: submenu)
+    func fetchSubmenuId(submenu : String){
+        let tagresult = DBManager().fetchsubmenuId(subMenuName: submenu)
         switch tagresult{
-        case .Success(let tagData) :
-            tagArr.removeAll()
-            for tag in tagData{
-                tagArr.append(tag.hashTagName!)
-            }
-            UserDefaults.standard.setValue(tagArr, forKey: "subMenuTags")
+        case .Success(let id) :
+            var url = APPURL.ArticleByIdURL + "\(id)"
+            print(url)
+            UserDefaults.standard.setValue(id, forKey: "subMenuId")
+            UserDefaults.standard.setValue(url, forKey: "submenuURL")
         case .Failure(let error):
             print(error)
         }
@@ -192,30 +244,43 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
         NotificationCenter.default.removeObserver(self, name: .darkModeDisabled, object: nil)
     }
     
-    @objc private func darkModeEnabled(_ notification: Notification) {
+    @objc private func darkModeEnabled(_ notification: Notification){
+        self.activityIndicator.startAnimating()
         NightNight.theme = .night
-        buttonBarView.backgroundColor = colorConstants.grayBackground1
-        buttonBarView.selectedBar.backgroundColor = .red
+        changeTheme()
+        activityIndicator.stopAnimating()
     }
     
     @objc private func darkModeDisabled(_ notification: Notification) {
+        self.activityIndicator.startAnimating()
         NightNight.theme = .normal
         buttonBarView.backgroundColor = colorConstants.whiteColor
         buttonBarView.selectedBar.backgroundColor = .red
+        btnBookmark.setTitleColor(.black, for: UIControlState.normal)
+        btnNightMode.setTitleColor(.black, for: UIControlState.normal)
+        btnSettingsNav.setTitleColor(.black, for: UIControlState.normal)
+        viewNightMode.backgroundColor = colorConstants.txtlightGrayColor
+        viewSettings.backgroundColor = colorConstants.txtlightGrayColor
+        viewBookmark.backgroundColor = colorConstants.txtlightGrayColor
+        viewOptions.backgroundColor = colorConstants.txtlightGrayColor
+        btnNightModeImg.setImage(nil, for: .normal)
+        btnNightModeImg.setImage(UIImage(named: AssetConstants.moon), for: .normal)
+        btnBookmarkImg.setImage(UIImage(named:AssetConstants.bookmark), for: .normal)
+        reloadPagerTabStripView()
+        activityIndicator.stopAnimating()
     }
     
     override var prefersStatusBarHidden: Bool {
         return true
     }
     
-    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        viewOptions.isHidden = true
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        
     }
     
     override func viewControllers(for pagerTabStripController: PagerTabStripViewController) -> [UIViewController] {
@@ -223,18 +288,25 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
         //Clear children viewcontrollers
         childrenVC.removeAll()
         if headingArr.count > 0{
-            for cat in subMenuArr[HeadingRow]
-            {
-                let childVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "HomeVC") as! HomeVC
-                childVC.tabBarTitle = cat
-                
-                childrenVC.append(childVC)
+            if UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad && statusBarOrientation.isPortrait{
+                for cat in subMenuArr[HeadingRow]{
+                    let childVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "HomeiPadVC") as! HomeiPadVC
+                    childVC.tabBarTitle = cat
+                    childrenVC.append(childVC)
+                    
+                }
+            }else{
+                for cat in subMenuArr[HeadingRow]{
+                    let childVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "HomeVC") as! HomeVC
+                    childVC.tabBarTitle = cat
+                    childrenVC.append(childVC)
+                    childVC.protocolObj = self
+                }
             }
         }
         else{
             let childVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "HomeVC") as! HomeVC
             childVC.tabBarTitle = "Test"
-            
             childrenVC.append(childVC)
         }
         return childrenVC
@@ -246,15 +318,15 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
         }
         else{
             let size: CGSize = headingArr[indexPath.row].size(withAttributes: nil)
-            // return CGSize(width:menuCV.frame.size.width/2, height: menuCV.frame.size.height)
             if (UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad){
                 return CGSize(width: size.width + 180.0, height: menuCV.bounds.size.height)
             }else{
-                
-                return CGSize(width: size.width + 100.0, height: menuCV.bounds.size.height)
+                let label = UILabel(frame: CGRect.zero)
+                label.text = headingArr[indexPath.item]
+                label.sizeToFit()
+                return CGSize(width: label.frame.size.width + 100.0, height: menuCV.bounds.size.height)
             }
         }
-        
     }
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -269,39 +341,83 @@ class HomeParentVC: ButtonBarPagerTabStripViewController, FloatyDelegate{
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         if collectionView ==  menuCV {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "subMenuID", for: indexPath) as! submenuCVCell
+            let darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
             cell.lblMenu.text = headingArr[indexPath.row].localizedCapitalized
             cell.imgMenu.image =  UIImage(named: headingImg[indexPath.row])
             return cell
         }
-        else   {
+        else {
             return super.collectionView(collectionView, cellForItemAt: indexPath)
         }
     }
+    
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        viewOptions.isHidden = true
         if (collectionView == buttonBarView) {
             subMenuRow = indexPath.row
             UserDefaults.standard.set(subMenuArr[HeadingRow][indexPath.row], forKey: "submenu")
-            fetchsubMenuTags(submenu: subMenuArr[HeadingRow][indexPath.row])
-            var url = APPURL.ArticlesByTagsURL
-            for tag in tagArr {
-                url = url + "&tag=" + tag
-            }
-            if tagArr.count > 0{
-                UserDefaults.standard.set(url, forKey: "submenuURL")
-            }
-            else{
-                UserDefaults.standard.set("", forKey: "submenuURL")
-            }
+            fetchSubmenuId(submenu: subMenuArr[HeadingRow][indexPath.row])
             return super.collectionView(collectionView,didSelectItemAt: indexPath)
-            
         }
         else{
             HeadingRow = indexPath.row
             reloadPagerTabStripView()
-            
         }
+    }
+    
+    @IBAction func btnSettingsOptions(_ sender: Any) {
+        if viewOptions.isHidden == true{
+            viewOptions.isHidden = false
+        }else{
+            viewOptions.isHidden = true
+        }
+    }
+    
+    @IBAction func btnSettingsActn(_ sender: Any) {
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let settingvc:SettingsVC = storyboard.instantiateViewController(withIdentifier: "SettingsID") as! SettingsVC
+        self.present(settingvc, animated: true, completion: nil)
+    }
+    
+    @IBAction func btnNightModeActn(_ sender: Any) {
+        let Status = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
+        if Status == false {
+            UserDefaults.standard.setValue(true, forKey: "darkModeEnabled")
+            NotificationCenter.default.post(name: .darkModeEnabled, object: nil)
+        }
+        else {
+            UserDefaults.standard.setValue(false, forKey: "darkModeEnabled")
+            NotificationCenter.default.post(name: .darkModeDisabled, object: nil)
+        }
+    }
+    
+    @IBAction func btnBookmarkActn(_ sender: Any) {
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let bookmarkvc:BookmarkVC = storyboard.instantiateViewController(withIdentifier: "BookmarkID") as! BookmarkVC
+        self.present(bookmarkvc, animated: true, completion: nil)
+    }
+    
+    @IBAction func btnSeachActn(_ sender: Any) {
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let searchvc:SearchVC = storyboard.instantiateViewController(withIdentifier: "SearchID") as! SearchVC
+        self.present(searchvc, animated: true, completion: nil)
     }
 }
 
+extension HomeParentVC : UIGestureRecognizerDelegate {
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
+        if touch.view!.superview!.superclass! .isSubclass(of: UIButton.self) {
+            return false
+        }
+        return true
+    }
+}
 
+extension HomeParentVC: ScrollDelegate{
+    func isNavigate(status: Bool) {
+        if status == true{
+            viewOptions.isHidden = true
+        }
+    }
+}
 

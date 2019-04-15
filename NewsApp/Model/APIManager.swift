@@ -50,14 +50,6 @@ class APICall{
             let token = "Token " + "\(UserDefaults.standard.value(forKey: "token")!)"
             headers = ["Authorization": token]
         }
-        else if UserDefaults.standard.value(forKey: "googleToken") != nil{
-            let token = "Token " + "\(UserDefaults.standard.value(forKey: "googleToken")!)"
-            headers = ["Authorization": token]
-        }
-        else if UserDefaults.standard.value(forKey: "FBToken") != nil{
-            let token = "Token " + "\(UserDefaults.standard.value(forKey: "FBToken")!)"
-            headers = ["Authorization": token]
-        }
         else{
             headers = ["Authorization": ""]
         }
@@ -66,7 +58,7 @@ class APICall{
             response in
             if(response.result.isSuccess){
                 if let data = response.data {
-                     let jsonDecoder = JSONDecoder()
+                    let jsonDecoder = JSONDecoder()
                     do {
                         if response.response?.statusCode == 404{
                             completion("error 404",ArticleAPIResult.Change(404))
@@ -292,20 +284,54 @@ class APICall{
         }
     }
     
+    //social login
+    func SocialLoginAPI(param : Dictionary<String, String>,_ completion : @escaping (Int , String) ->()) {
+        let url = APPURL.socialLoginURL
+        Alamofire.request(url,method: .post, parameters: param).responseString{
+            response in
+            if(response.result.isSuccess){
+                if let data = response.data {
+                    let jsonDecoder = JSONDecoder()
+                    do {
+                        let jsonData = try jsonDecoder.decode(MainModel.self, from: data)
+                        if jsonData.header.status == "0"{
+                            if jsonData.errors?.invalid_credentials != nil{
+                                completion((response.response?.statusCode)!, (jsonData.errors?.invalid_credentials)!)
+                            }
+                            else{
+                                completion((response.response?.statusCode)!,(jsonData.errors?.Msg)!)
+                            }
+                           
+                        }
+                        else{
+                            UserDefaults.standard.set(jsonData.body!.user!.token, forKey: "token")
+                            UserDefaults.standard.set(jsonData.body!.user!.first_name, forKey: "first_name")
+                            UserDefaults.standard.set(jsonData.body!.user!.last_name, forKey: "last_name")
+                            UserDefaults.standard.set(jsonData.body!.user!.user_id, forKey: "user_id")
+                            UserDefaults.standard.set(jsonData.body?.user?.breaking_news, forKey: "breaking")
+                            UserDefaults.standard.set(jsonData.body?.user?.breaking_news, forKey: "daily")
+                            UserDefaults.standard.set(jsonData.body?.user?.breaking_news, forKey: "personalised")
+                            completion((response.response?.statusCode)!, jsonData.header.status)
+                        }
+                    }
+                    catch {
+                        completion(0,error.localizedDescription)
+                    }
+                }
+            }
+            else{
+                if let err = response.result.error as? URLError, err.code == .notConnectedToInternet {
+                    completion(0,Constants.InternetErrorMsg)
+                }
+            }
+        }
+    }
     //Logout API
     func LogoutAPI(_ completion : @escaping (String, String) ->()) {
         let url = APPURL.LogoutURL
         var headers : [String: String]
         if UserDefaults.standard.value(forKey: "token") != nil{
             let token = "Token " + "\(UserDefaults.standard.value(forKey: "token")!)"
-            headers = ["Authorization": token]
-        }
-        else if UserDefaults.standard.value(forKey: "googleToken") != nil{
-            let token = "Token " + "\(UserDefaults.standard.value(forKey: "googleToken")!)"
-            headers = ["Authorization": token]
-        }
-        else if UserDefaults.standard.value(forKey: "FBToken") != nil{
-            let token = "Token " + "\(UserDefaults.standard.value(forKey: "FBToken")!)"
             headers = ["Authorization": token]
         }
         else{
@@ -323,7 +349,7 @@ class APICall{
                             completion(jsonData.header.status,jsonData.errors!.Msg!)
                         }
                         else{
-                            let defaultList = ["token", "first_name", "last_name", "user_id", "email"]
+                            let defaultList = ["token", "first_name", "last_name", "user_id", "email", "FBToken", "googleToken"]
                             Helper().clearDefaults(list : defaultList)
                             completion(jsonData.header.status,jsonData.body!.Msg!)
                         }
@@ -348,14 +374,6 @@ class APICall{
         var headers : [String: String]
         if UserDefaults.standard.value(forKey: "token") != nil{
             let token = "Token " + "\(UserDefaults.standard.value(forKey: "token")!)"
-            headers = ["Authorization": token]
-        }
-        else if UserDefaults.standard.value(forKey: "googleToken") != nil{
-            let token = "Token " + "\(UserDefaults.standard.value(forKey: "googleToken")!)"
-            headers = ["Authorization": token]
-        }
-        else if UserDefaults.standard.value(forKey: "FBToken") != nil{
-            let token = "Token " + "\(UserDefaults.standard.value(forKey: "FBToken")!)"
             headers = ["Authorization": token]
         }
         else{
@@ -394,14 +412,6 @@ class APICall{
         var headers : [String: String]
         if UserDefaults.standard.value(forKey: "token") != nil{
             let token = "Token " + "\(UserDefaults.standard.value(forKey: "token")!)"
-            headers = ["Authorization": token]
-        }
-        else if UserDefaults.standard.value(forKey: "googleToken") != nil{
-            let token = "Token " + "\(UserDefaults.standard.value(forKey: "googleToken")!)"
-            headers = ["Authorization": token]
-        }
-        else if UserDefaults.standard.value(forKey: "FBToken") != nil{
-            let token = "Token " + "\(UserDefaults.standard.value(forKey: "FBToken")!)"
             headers = ["Authorization": token]
         }
         else{
@@ -473,14 +483,6 @@ class APICall{
             let token = "Token " + "\(UserDefaults.standard.value(forKey: "token")!)"
             headers = ["Authorization": token]
         }
-        else if UserDefaults.standard.value(forKey: "googleToken") != nil{
-            let token = "Token " + "\(UserDefaults.standard.value(forKey: "googleToken")!)"
-            headers = ["Authorization": token]
-        }
-        else if UserDefaults.standard.value(forKey: "FBToken") != nil{
-            let token = "Token " + "\(UserDefaults.standard.value(forKey: "FBToken")!)"
-            headers = ["Authorization": token]
-        }
         else{
             headers = ["Authorization": ""]
         }
@@ -519,14 +521,6 @@ class APICall{
             let token = "Token " + "\(UserDefaults.standard.value(forKey: "token")!)"
             headers = ["Authorization": token]
         }
-        else if UserDefaults.standard.value(forKey: "googleToken") != nil{
-            let token = "Token " + "\(UserDefaults.standard.value(forKey: "googleToken")!)"
-            headers = ["Authorization": token]
-        }
-        else if UserDefaults.standard.value(forKey: "FBToken") != nil{
-            let token = "Token " + "\(UserDefaults.standard.value(forKey: "FBToken")!)"
-            headers = ["Authorization": token]
-        }
         else{
             headers = ["Authorization": ""]
         }
@@ -557,14 +551,6 @@ class APICall{
         var headers : [String: String]
         if UserDefaults.standard.value(forKey: "token") != nil{
             let token = "Token " + "\(UserDefaults.standard.value(forKey: "token")!)"
-            headers = ["Authorization": token]
-        }
-        else if UserDefaults.standard.value(forKey: "googleToken") != nil{
-            let token = "Token " + "\(UserDefaults.standard.value(forKey: "googleToken")!)"
-            headers = ["Authorization": token]
-        }
-        else if UserDefaults.standard.value(forKey: "FBToken") != nil{
-            let token = "Token " + "\(UserDefaults.standard.value(forKey: "FBToken")!)"
             headers = ["Authorization": token]
         }
         else{
@@ -602,14 +588,6 @@ class APICall{
         var headers : [String: String]
         if UserDefaults.standard.value(forKey: "token") != nil{
             let token = "Token " + "\(UserDefaults.standard.value(forKey: "token")!)"
-            headers = ["Authorization": token]
-        }
-        else if UserDefaults.standard.value(forKey: "googleToken") != nil{
-            let token = "Token " + "\(UserDefaults.standard.value(forKey: "googleToken")!)"
-            headers = ["Authorization": token]
-        }
-        else if UserDefaults.standard.value(forKey: "FBToken") != nil{
-            let token = "Token " + "\(UserDefaults.standard.value(forKey: "FBToken")!)"
             headers = ["Authorization": token]
         }
         else{

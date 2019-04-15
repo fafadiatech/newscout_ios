@@ -46,11 +46,15 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
     @IBOutlet weak var viewLikeDislikeBottom: NSLayoutConstraint!
     @IBOutlet weak var viewBack: UIView!
     @IBOutlet weak var imgScrollView: UIScrollView!
-    
     @IBOutlet weak var viewImgContainerTop: NSLayoutConstraint!
     @IBOutlet weak var viewImgContainer: UIView!
     @IBOutlet weak var viewContainerTop: NSLayoutConstraint!
-    
+    @IBOutlet weak var btnSource: UIButton!
+    @IBOutlet weak var btnSourceBottomConstraint: NSLayoutConstraint!
+    @IBOutlet weak var viewReadMore: UIView!
+    @IBOutlet weak var btnShuffle: UIButton!
+    @IBOutlet weak var btnReadMore: UIButton!
+    @IBOutlet weak var btnMoreStories: UIButton!
     
     var btnPlay = UIButton(type: .custom)
     let imageCache = NSCache<NSString, UIImage>()
@@ -59,9 +63,12 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
     var ArticleData = [ArticleStatus]()
     var RecomData = [NewsArticle]()
     var searchRecomData = [SearchArticles]()
+    var sourceRecomData = [Article]()
     var bookmarkedArticle = [BookmarkArticles]()
     var ShowArticle = [NewsArticle]()
     var SearchArticle = [SearchArticles]()
+    var sourceArticle = [Article]()
+    var shuffleData =  [NewsArticle]()
     var ArticleDetail : ArticleDetails!
     var newsCurrentIndex = 0
     var articleId = 0
@@ -87,10 +94,20 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
     var index = 0
     var timer = Timer()
     var customPagecontrol = TAPageControl()
+    var imgWidth = ""
+    var imgHeight = ""
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        imgWidth = String(describing : Int(imgNews.frame.width))
+        imgHeight = String(describing : Int(imgNews.frame.height))
+        btnReadMore.setTitleColor(.black, for: UIControlState.normal)
+        suggestedView.isHidden = true
         WKWebView.navigationDelegate = self
+        btnReadMore.backgroundColor = .clear
+        btnReadMore.layer.cornerRadius = 5
+        btnReadMore.layer.borderWidth = 1
+        btnReadMore.layer.borderColor = UIColor.gray.cgColor
         filterRecommendation()
         btnPlayVideo.isHidden = true
         imgScrollView.delegate = self
@@ -102,29 +119,32 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
         activityIndicator.progress = 2.0
         imgNews.addSubview(activityIndicator)
         txtViewNewsDesc.textContainer.lineBreakMode = NSLineBreakMode.byTruncatingTail
-        if UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad && statusBarOrientation.isPortrait{
-            viewLikeDislike.isHidden = false
-            viewBack.isHidden = false
-            addsourceConstraint()
-        }
-        else if UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad && statusBarOrientation.isLandscape {
-            viewLikeDislike.isHidden = true
-            viewBack.isHidden = true
-            addImageConstaints()
-            addLandscapeConstraints()
-        }
-        else{
-            viewLikeDislike.isHidden = true
-            viewBack.isHidden = true
-            addPotraitConstraint()
-            addImageConstaints()
-        }
+        /* if UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad && statusBarOrientation.isPortrait{
+         viewLikeDislike.isHidden = false
+         viewBack.isHidden = false
+         //addsourceConstraint()
+         }
+         else if UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad && statusBarOrientation.isLandscape {
+         viewLikeDislike.isHidden = true
+         viewBack.isHidden = true
+         //addImageConstaints()
+         //addLandscapeConstraints()
+         }
+         else{
+         viewLikeDislike.isHidden = true
+         viewBack.isHidden = true
+         //addPotraitConstraint()
+         //addImageConstaints()
+         }*/
         viewLikeDislike.backgroundColor = colorConstants.redColor
         viewBack.backgroundColor = colorConstants.redColor
         ViewWebContainer.isHidden = true
         if ShowArticle.count != 0 {
             indexCount = ShowArticle.count
-        }else{
+        }else if sourceArticle.count > 0{
+            indexCount = sourceArticle.count
+        }
+        else{
             indexCount = SearchArticle.count
         }
         
@@ -142,10 +162,6 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
         swipeUp.direction = UISwipeGestureRecognizerDirection.up
         self.newsView.addGestureRecognizer(swipeUp)
         
-        let swipeLeft = UISwipeGestureRecognizer(target: self, action: #selector(self.respondToSwipeGesture))
-        swipeLeft.direction = UISwipeGestureRecognizerDirection.left
-        self.newsView.addGestureRecognizer(swipeLeft)
-        
         let swipeRight = UISwipeGestureRecognizer(target: self, action: #selector(self.respondToSwipeGesture))
         swipeRight.direction = UISwipeGestureRecognizerDirection.right
         self.newsView.addGestureRecognizer(swipeRight)
@@ -157,8 +173,6 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
         let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapped(gestureRecognizer:)))
         viewNewsArea.addGestureRecognizer(tapRecognizer)
         tapRecognizer.delegate = self as UIGestureRecognizerDelegate
-        
-        
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -189,15 +203,24 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
     
     func filterRecommendation(){
         RecomData.removeAll()
+        sourceRecomData.removeAll()
         searchRecomData.removeAll()
-        if ShowArticle.count != 0{
+        if ShowArticle.count > 0{
             articleId = Int(ShowArticle[newsCurrentIndex].article_id)
             for news in ShowArticle{
                 if news.article_id != articleId{
                     RecomData.append(news)
                 }
             }
-        }else{
+        }else if sourceArticle.count > 0{
+            articleId = (sourceArticle[newsCurrentIndex].article_id)!
+            for news in sourceArticle{
+                if news.article_id != articleId{
+                    sourceRecomData.append(news)
+                }
+            }
+        }
+        else{
             for news in SearchArticle{
                 articleId  = Int(SearchArticle[newsCurrentIndex].article_id)
                 if news.article_id != articleId{
@@ -212,6 +235,7 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
         index =  currentIndex
         imgScrollView.scrollRectToVisible(CGRect(x: view.frame.size.width * CGFloat(currentIndex), y:0, width: view.frame.width, height: imgScrollView.frame.height), animated: true)
     }
+    
     func RecommendationAPICall(){
         APICall().loadRecommendationNewsAPI(articleId: articleId){ (status,response) in
             switch response {
@@ -248,10 +272,10 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
     }
     
     func addsourceConstraint(){
-        if lblSourceBottomConstraint != nil && lblTimeAgoBottomConstraint != nil {
-            NSLayoutConstraint.deactivate([lblSourceBottomConstraint])
+        if btnSourceBottomConstraint != nil && lblTimeAgoBottomConstraint != nil {
+            NSLayoutConstraint.deactivate([btnSourceBottomConstraint])
             NSLayoutConstraint.deactivate([lblTimeAgoBottomConstraint])
-            lblSourceBottomConstraint = NSLayoutConstraint (item: lblSource,
+            btnSourceBottomConstraint = NSLayoutConstraint (item: btnSource,
                                                             attribute: NSLayoutAttribute.bottom,
                                                             relatedBy: NSLayoutRelation.equal,
                                                             toItem: viewLikeDislike,
@@ -266,7 +290,7 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
                                                              multiplier: 1,
                                                              constant: -10)
             NSLayoutConstraint.activate([lblTimeAgoBottomConstraint])
-            NSLayoutConstraint.activate([lblSourceBottomConstraint])
+            NSLayoutConstraint.activate([btnSourceBottomConstraint])
         }
     }
     
@@ -303,10 +327,10 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
     }
     
     func addLandscapeConstraints(){
-        if lblSourceBottomConstraint != nil && lblTimeAgoBottomConstraint != nil {
-            NSLayoutConstraint.deactivate([lblSourceBottomConstraint])
+        if btnSourceBottomConstraint != nil && lblTimeAgoBottomConstraint != nil {
+            NSLayoutConstraint.deactivate([btnSourceBottomConstraint])
             NSLayoutConstraint.deactivate([lblTimeAgoBottomConstraint])
-            lblSourceBottomConstraint = NSLayoutConstraint(item:lblSource,
+            btnSourceBottomConstraint = NSLayoutConstraint(item:btnSource,
                                                            attribute: NSLayoutAttribute.bottom,
                                                            relatedBy: NSLayoutRelation.equal,
                                                            toItem: suggestedView,
@@ -321,7 +345,7 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
                                                              multiplier: 1,
                                                              constant: -10)
             NSLayoutConstraint.activate([lblTimeAgoBottomConstraint])
-            NSLayoutConstraint.activate([lblSourceBottomConstraint])
+            NSLayoutConstraint.activate([btnSourceBottomConstraint])
         }
         if viewLikeDislikeBottom != nil{
             NSLayoutConstraint.deactivate([viewLikeDislikeBottom])
@@ -347,24 +371,24 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
         
         super.viewWillTransition(to: size, with: coordinator)
         
-        if UIDevice.current.orientation.isLandscape {
-            print(UIDevice.current.orientation)
-            viewLikeDislike.isHidden = true
-            viewBack.isHidden = true
-            print("landscape")
-            addLandscapeConstraints()
-        } else {
-            print(UIDevice.current.orientation)
-            print("potrait")
-            viewLikeDislike.isHidden = false
-            viewBack.isHidden = false
-            if UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad{
-                addipadPotraitConstraint()
-            }
-            else{
-                addPotraitConstraint()
-            }
-        }
+        /* if UIDevice.current.orientation.isLandscape {
+         print(UIDevice.current.orientation)
+         viewLikeDislike.isHidden = true
+         viewBack.isHidden = true
+         print("landscape")
+         addLandscapeConstraints()
+         } else {
+         print(UIDevice.current.orientation)
+         print("potrait")
+         viewLikeDislike.isHidden = false
+         viewBack.isHidden = false
+         if UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad{
+         addipadPotraitConstraint()
+         }
+         else{
+         addPotraitConstraint()
+         }
+         }*/
     }
     
     @objc private func darkModeEnabled(_ notification: Notification){
@@ -413,13 +437,16 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
     
     func changeTheme(){
         suggestedCV.backgroundColor = colorConstants.txtlightGrayColor
+        btnSource.setTitleColor(.white, for: UIControlState.normal)
+        btnMoreStories.setTitleColor(.white, for: UIControlState.normal)
+        viewReadMore.backgroundColor = colorConstants.txtlightGrayColor
+        btnReadMore.setTitleColor(.white, for: UIControlState.normal)
+        btnReadMore.backgroundColor = colorConstants.txtlightGrayColor
         newsView.backgroundColor = colorConstants.grayBackground1
         viewContainer.backgroundColor = colorConstants.grayBackground1
         viewNewsArea.backgroundColor = colorConstants.grayBackground1
         txtViewNewsDesc.backgroundColor = colorConstants.grayBackground1
         lblNewsHeading.textColor = colorConstants.whiteColor
-        lblSource.textColor = colorConstants.whiteColor
-        lblTimeAgo.textColor = colorConstants.whiteColor
         txtViewNewsDesc.textColor = colorConstants.whiteColor
         viewWebTitle.backgroundColor = colorConstants.grayBackground3
         lblWebSource.textColor = .white
@@ -436,32 +463,32 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
     }
     
     @objc func tapped(gestureRecognizer: UITapGestureRecognizer) {
-        if UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.phone {
-            if viewLikeDislike.isHidden == true{
-                viewLikeDislike.isHidden = false
-                viewBack.isHidden = false
-            }
-            else{
-                viewLikeDislike.isHidden = true
-                viewBack.isHidden = true
-            }
-        }
-        if UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad{
-            if statusBarOrientation.isPortrait {
-                viewLikeDislike.isHidden = false
-                viewBack.isHidden = false
-            }
-            else{
-                if viewLikeDislike.isHidden == true{
-                    viewLikeDislike.isHidden = false
-                    viewBack.isHidden = false
-                }
-                else{
-                    viewLikeDislike.isHidden = true
-                    viewBack.isHidden = true
-                }
-            }
-        }
+        /*if UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.phone {
+         if viewLikeDislike.isHidden == true{
+         viewLikeDislike.isHidden = false
+         viewBack.isHidden = false
+         }
+         else{
+         viewLikeDislike.isHidden = true
+         viewBack.isHidden = true
+         }
+         }
+         if UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad{
+         if statusBarOrientation.isPortrait {
+         viewLikeDislike.isHidden = false
+         viewBack.isHidden = false
+         }
+         else{
+         if viewLikeDislike.isHidden == true{
+         viewLikeDislike.isHidden = false
+         viewBack.isHidden = false
+         }
+         else{
+         viewLikeDislike.isHidden = true
+         viewBack.isHidden = true
+         }
+         }
+         }*/
     }
     
     override var prefersStatusBarHidden: Bool {
@@ -477,22 +504,19 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
         let textSizeSelected = UserDefaults.standard.value(forKey: "textSize") as! Int
         
         if textSizeSelected == 0{
-            lblNewsHeading.font = FontConstants.smallFontHeadingBold
-            lblSource.font = FontConstants.smallFontContentMedium
-            lblTimeAgo.font = FontConstants.smallFontContentMedium
-            txtViewNewsDesc.font = FontConstants.smallFontTitle
+            lblNewsHeading.font = FontConstants.smallFontDetailTitle
+            btnSource.titleLabel?.font =  FontConstants.smallFontContentMedium
+            txtViewNewsDesc.font = FontConstants.smallFontContentDetail
         }
         else if textSizeSelected == 2{
-            lblNewsHeading.font = FontConstants.LargeFontHeadingBold
-            lblSource.font = FontConstants.LargeFontContentMedium
-            lblTimeAgo.font = FontConstants.LargeFontContentMedium
-            txtViewNewsDesc.font = FontConstants.LargeFontTitle
+            lblNewsHeading.font = FontConstants.LargeFontDetailTitle
+            btnSource.titleLabel?.font =  FontConstants.LargeFontContentMedium
+            txtViewNewsDesc.font = FontConstants.LargeFontContentDetail
         }
         else{
-            lblNewsHeading.font = FontConstants.NormalFontHeadingBold
-            lblSource.font = FontConstants.NormalFontContentMedium 
-            lblTimeAgo.font = FontConstants.NormalFontContentMedium
-            txtViewNewsDesc.font = FontConstants.NormalFontTitle
+            lblNewsHeading.font = FontConstants.NormalFontDetailTitle
+            btnSource.titleLabel?.font =  FontConstants.NormalFontContentMedium
+            txtViewNewsDesc.font = FontConstants.NormalFontContentDetail
         }
     }
     
@@ -507,12 +531,11 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
             switch swipeGesture.direction {
             case UISwipeGestureRecognizerDirection.right:
                 ViewWebContainer.isHidden = true
-                viewLikeDislike.isHidden = false
-                viewBack.isHidden = false
                 
             case UISwipeGestureRecognizerDirection.down:
                 if newsCurrentIndex > 0
                 {
+                    suggestedView.isHidden = true
                     newsCurrentIndex = newsCurrentIndex - 1
                     ShowNews(currentIndex : newsCurrentIndex)
                     filterRecommendation()
@@ -523,27 +546,12 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
                 else{
                     self.view.makeToast("No more news to show", duration: 1.0, position: .center)
                 }
-            case UISwipeGestureRecognizerDirection.left:
-                WKWebView.addSubview(activityIndicator)
-                ViewWebContainer.isHidden = false
-                viewLikeDislike.isHidden = true
-                viewBack.isHidden = true
-                let url = URL(string: sourceURL)
-                print(sourceURL)
-                let domain = url?.host
-                lblWebSource.text = "\(domain!)"
-                transition.type = kCATransitionPush
-                transition.subtype = kCATransitionFromRight
-                view.window!.layer.add(transition, forKey: kCATransition)
-                let myURL = URL(string: sourceURL)!
-                let myRequest = URLRequest(url: myURL)
-                
-                WKWebView.load(myRequest)
                 
             case UISwipeGestureRecognizerDirection.up:
                 if newsCurrentIndex < indexCount - 1
                 {
                     newsCurrentIndex = newsCurrentIndex + 1
+                    suggestedView.isHidden = true
                     ShowNews(currentIndex : newsCurrentIndex)
                     filterRecommendation()
                     transition.type = kCATransitionPush
@@ -551,11 +559,82 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
                     view.window!.layer.add(transition, forKey: kCATransition)
                 }
                 else{
-                    self.view.makeToast("No more news to show", duration: 1.0, position: .center)
+                    activityIndicator.startAnimating()
+                    pagination()
                 }
             default:
                 break
             }
+        }
+    }
+    
+    func pagination(){
+         let isSearch = UserDefaults.standard.value(forKey: "isSearch") as! String
+        if isSearch == "home"{
+            if UserDefaults.standard.value(forKey: "homeNextURL") != nil{
+                DBManager().SaveDataDB(nextUrl: UserDefaults.standard.value(forKey: "homeNextURL") as! String ){response in
+                    self.fetchArticlesFromDB()
+                }
+            }
+            else{
+                self.view.makeToast("No more news to show", duration: 1.0, position: .center)
+            }
+            
+        }
+        else if isSearch == "search"{
+            if UserDefaults.standard.value(forKey: "searchNextURL") != nil{
+                DBManager().SaveSearchDataDB(nextUrl: UserDefaults.standard.value(forKey: "searchNextURL") as! String ){response in
+                    self.fetchSearchArticlesfromDB()
+                }
+            }
+            else{
+                self.view.makeToast("No more news to show", duration: 1.0, position: .center)
+            }
+            
+        }
+    }
+    func fetchArticlesFromDB(){
+        let result = DBManager().ArticlesfetchByCatId()
+        switch result {
+        case .Success(let DBData) :
+            if DBData.count > 0{
+                ShowArticle.removeAll()
+                ShowArticle = DBData
+                indexCount = ShowArticle.count
+                newsCurrentIndex = newsCurrentIndex + 1
+                if newsCurrentIndex < ShowArticle.count {
+                ShowNews(currentIndex : newsCurrentIndex)
+                filterRecommendation()
+            }
+            }
+            else{
+                self.view.makeToast("No more news to show", duration: 1.0, position: .center)
+            }
+            
+        case .Failure(let errorMsg) :
+            print(errorMsg)
+        }
+    }
+    
+    func fetchSearchArticlesfromDB(){
+        let result = DBManager().FetchSearchDataFromDB(entity: "SearchArticles")
+        switch result {
+        case .Success(let DBData) :
+            if DBData.count > 0{
+               SearchArticle.removeAll()
+                SearchArticle = DBData
+                indexCount = SearchArticle.count
+                newsCurrentIndex = newsCurrentIndex + 1
+                if newsCurrentIndex < SearchArticle.count {
+                    ShowNews(currentIndex : newsCurrentIndex)
+                    filterRecommendation()
+                }
+            }
+            else{
+                self.view.makeToast("No more news to show", duration: 1.0, position: .center)
+            }
+        case .Failure(let errorMsg) :
+            print(errorMsg)
         }
     }
     func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
@@ -655,26 +734,54 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
         playbackSlider.removeFromSuperview()
         // avPlayerView.isHidden = true
         
-        if ShowArticle.count != 0{
+        if ShowArticle.count > 0{
             fetchBookmarkDataFromDB()
             currentEntity = "ShowArticle"
             let currentArticle = ShowArticle[currentIndex]
             let newDate = dateFormatter.date(from: currentArticle.published_on!)
+            var agoDate = ""
             if newDate != nil{
-                let agoDate = Helper().timeAgoSinceDate(newDate!)
-                lblTimeAgo.text = agoDate
+                agoDate = Helper().timeAgoSinceDate(newDate!)
             }
             articleId = Int(currentArticle.article_id)
             lblNewsHeading.text = currentArticle.title
             txtViewNewsDesc.text = currentArticle.blurb
-            lblSource.text = currentArticle.source
+            var fullTxt = "\(agoDate)" + " via " + currentArticle.source!
+            let attributedWithTextColor: NSAttributedString = fullTxt.attributedStringWithColor([currentArticle.source!], color: UIColor.red)
             
+            btnSource.setAttributedTitle(attributedWithTextColor, for: .normal)
             sourceURL = currentArticle.source_url!
             if currentArticle.imageURL != ""{
-                imgNews.sd_setImage(with: URL(string: currentArticle.imageURL!), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
+                
+                let imgURL = APPURL.imageServer + imgWidth + "x" + imgHeight + "/smart/" + currentArticle.imageURL!
+                print("newImage URL : \(imgURL)")
+                imgNews.sd_setImage(with: URL(string: imgURL), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
             }
             else{
                 imgNews.image = UIImage(named: AssetConstants.NoImage)
+            }
+            if UserDefaults.standard.value(forKey: "token") != nil{
+                if currentArticle.likeDislike?.isLike == 0 {
+                    btnLike.setImage(UIImage(named: AssetConstants.thumb_up_filled), for: .normal)
+                    btnDislike.setImage(UIImage(named: AssetConstants.thumb_down), for: .normal)
+                }
+                else if currentArticle.likeDislike?.isLike == 1{
+                    btnLike.setImage(UIImage(named: AssetConstants.thumb_up), for: .normal)
+                    btnDislike.setImage(UIImage(named: AssetConstants.thumb_down_filled), for: .normal)
+                }
+                else{
+                    btnLike.setImage(UIImage(named: AssetConstants.thumb_up), for: .normal)
+                    btnDislike.setImage(UIImage(named: AssetConstants.thumb_down), for: .normal)
+                }
+                if currentArticle.bookmark?.isBookmark == 1 {
+                    setBookmarkImg()
+                }else{
+                    ResetBookmarkImg()
+                }
+            }else{
+                btnLike.setImage(UIImage(named: AssetConstants.thumb_up), for: .normal)
+                btnDislike.setImage(UIImage(named: AssetConstants.thumb_down), for: .normal)
+                ResetBookmarkImg()
             }
             /* let result = DBManager().fetchArticleMedia(articleId: Int(ShowArticle[currentIndex].article_id))
              switch result {
@@ -842,49 +949,34 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
              self.imgNews.sd_setImage(with: URL(string: currentArticle.imageURL!), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
              }*/
             
-            if UserDefaults.standard.value(forKey: "token") != nil{
-                if currentArticle.likeDislike?.isLike == 0 {
-                    btnLike.setImage(UIImage(named: AssetConstants.thumb_up_filled), for: .normal)
-                    btnDislike.setImage(UIImage(named: AssetConstants.thumb_down), for: .normal)
-                }
-                else if currentArticle.likeDislike?.isLike == 1{
-                    btnLike.setImage(UIImage(named: AssetConstants.thumb_up), for: .normal)
-                    btnDislike.setImage(UIImage(named: AssetConstants.thumb_down_filled), for: .normal)
-                }
-                else{
-                    btnLike.setImage(UIImage(named: AssetConstants.thumb_up), for: .normal)
-                    btnDislike.setImage(UIImage(named: AssetConstants.thumb_down), for: .normal)
-                }
-                if currentArticle.bookmark?.isBookmark == 1 {
-                    setBookmarkImg()
-                }else{
-                    ResetBookmarkImg()
-                }
-            }else{
-                btnLike.setImage(UIImage(named: AssetConstants.thumb_up), for: .normal)
-                btnDislike.setImage(UIImage(named: AssetConstants.thumb_down), for: .normal)
-                ResetBookmarkImg()
-            }
         }
-        else if SearchArticle.count != 0 {
+        else if SearchArticle.count > 0 {
             currentEntity = "SearchArticles"
             fetchSearchBookmarkDataFromDB()
             let currentArticle = SearchArticle[currentIndex]
             let newDate = dateFormatter.date(from: currentArticle.published_on!)
-            let agoDate = Helper().timeAgoSinceDate(newDate!)
+            var agoDate = ""
+            if newDate != nil{
+                agoDate = Helper().timeAgoSinceDate(newDate!)
+            }
             articleId = Int(currentArticle.article_id)
             lblNewsHeading.text = currentArticle.title
             txtViewNewsDesc.text = currentArticle.blurb
-            lblSource.text = currentArticle.source
-            lblTimeAgo.text = agoDate
+            var fullTxt = "\(agoDate)" + " via " + currentArticle.source!
+            let attributedWithTextColor: NSAttributedString = fullTxt.attributedStringWithColor([currentArticle.source!], color: UIColor.red)
+            
+            btnSource.setAttributedTitle(attributedWithTextColor, for: .normal)
             sourceURL = currentArticle.source_url!
             if currentArticle.imageURL != ""{
-                imgNews.sd_setImage(with: URL(string: currentArticle.imageURL!), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
+                
+                let imgURL = APPURL.imageServer + imgWidth + "x" + imgHeight + "/smart/" + currentArticle.imageURL!
+                print("newImage URL : \(imgURL)")
+                imgNews.sd_setImage(with: URL(string: imgURL), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
             }
             else{
                 imgNews.image = UIImage(named: AssetConstants.NoImage)
-            }/*
-             
+            }
+            /*
              var checkImg = false
              let imageFormats = ["jpg", "jpeg", "png", "gif"]
              for ext in imageFormats{
@@ -965,6 +1057,32 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
                 ResetBookmarkImg()
             }
         }
+        else if sourceArticle.count > 0{
+            currentEntity = "source"
+            let currentArticle = sourceArticle[currentIndex]
+            let newDate = dateFormatter.date(from: currentArticle.published_on!)
+            var agoDate = ""
+            if newDate != nil{
+                agoDate = Helper().timeAgoSinceDate(newDate!)
+            }
+            articleId = Int(currentArticle.article_id)
+            lblNewsHeading.text = currentArticle.title
+            txtViewNewsDesc.text = currentArticle.blurb
+            var fullTxt = "\(agoDate)" + " via " + currentArticle.source!
+            let attributedWithTextColor: NSAttributedString = fullTxt.attributedStringWithColor([currentArticle.source!], color: UIColor.red)
+            btnSource.setAttributedTitle(attributedWithTextColor, for: .normal)
+            sourceURL = (currentArticle.url!)
+            if currentArticle.imageURL != ""{
+                
+                let imgURL = APPURL.imageServer + imgWidth + "x" + imgHeight + "/smart/" + currentArticle.imageURL!
+                print("newImage URL : \(imgURL)")
+                imgNews.sd_setImage(with: URL(string: imgURL), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
+            }
+            else{
+                imgNews.image = UIImage(named: AssetConstants.NoImage)
+            }
+            
+        }
         if imgNews.image == nil{
             imgNews.image = UIImage(named: AssetConstants.NoImage)
         }
@@ -972,7 +1090,7 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
     }
     
     @IBAction func btnLikeActn(_ sender: Any) {
-        if UserDefaults.standard.value(forKey: "token") != nil || UserDefaults.standard.value(forKey: "FBToken") != nil || UserDefaults.standard.value(forKey: "googleToken") != nil{
+        if UserDefaults.standard.value(forKey: "token") != nil{
             if (btnLike.currentImage?.isEqual(UIImage(named: AssetConstants.thumb_up)))! {
                 let param = ["article_id" : articleId,
                              "isLike" : 0]
@@ -1017,7 +1135,7 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
     }
     
     @IBAction func btnDislikeActn(_ sender: Any) {
-        if UserDefaults.standard.value(forKey: "token") != nil || UserDefaults.standard.value(forKey: "FBToken") != nil || UserDefaults.standard.value(forKey: "googleToken") != nil{
+        if UserDefaults.standard.value(forKey: "token") != nil {
             if (btnDislike.currentImage?.isEqual(UIImage(named: AssetConstants.thumb_down)))! {
                 let param = ["article_id" : articleId,
                              "isLike" : 1]
@@ -1060,7 +1178,7 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
     }
     
     @IBAction func btnBookmarkActn(_ sender: Any) {
-        if UserDefaults.standard.value(forKey: "token") != nil || UserDefaults.standard.value(forKey: "FBToken") != nil || UserDefaults.standard.value(forKey: "googleToken") != nil{
+        if UserDefaults.standard.value(forKey: "token") != nil {
             if (((btnBookamark.currentImage?.isEqual(UIImage(named: AssetConstants.bookmark)))!) || ((btnBookamark.currentImage?.isEqual(UIImage(named: AssetConstants.Bookmark_white)))!)) {
                 
                 APICall().bookmarkAPI(id: articleId){
@@ -1084,6 +1202,15 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
                     else{
                         self.ResetBookmarkImg()
                         DBManager().deleteBookmarkedArticle(id: self.articleId)
+                        if self.currentEntity == "ShowArticle"{
+                            self.ShowArticle.remove(at: self.newsCurrentIndex)
+                        }else if self.currentEntity == "SearchArticles"{
+                            self.SearchArticle.remove(at: self.newsCurrentIndex)
+                        }else if self.currentEntity == "source"{
+                            self.sourceArticle.remove(at: self.newsCurrentIndex)
+                        }
+                        self.newsCurrentIndex = self.newsCurrentIndex - 1
+                        self.indexCount = self.indexCount - 1
                         self.view.makeToast(response, duration: 1.0, position: .center)
                     }
                 }
@@ -1126,7 +1253,7 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
         var sourceURL : URL!
         if currentEntity == "ShowArticle"{
             text = ShowArticle[newsCurrentIndex].title!
-            if ShowArticle[newsCurrentIndex].imageURL != nil{
+            if ShowArticle[newsCurrentIndex].imageURL != ""{
                 let url = URL(string:ShowArticle[newsCurrentIndex].imageURL!)
                 let image1 = UIImage(named: "\(url)")
                 var image = UIImage()
@@ -1134,20 +1261,42 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
                 {
                     image = UIImage(data: data)!
                 }
-                if ShowArticle[newsCurrentIndex].source_url != nil{
+                if ShowArticle[newsCurrentIndex].source_url != ""{
                     sourceURL = URL(string: ShowArticle[newsCurrentIndex].source_url!)
                 }
-                shareAll = [ text , image1, image,  sourceURL , webURL ] as [Any]
+                shareAll = [ text , image,  sourceURL , webURL ] as [Any]
             }
             else{
-                if ShowArticle[newsCurrentIndex].source_url != nil{
+                if ShowArticle[newsCurrentIndex].source_url != ""{
                     sourceURL = URL(string: ShowArticle[newsCurrentIndex].source_url!)
                 }
                 shareAll = [ text , sourceURL , webURL ] as [Any]
             }
         }
+        else if currentEntity == "source"{
+            text = sourceArticle[newsCurrentIndex].title!
+            if sourceArticle[newsCurrentIndex].imageURL != ""{
+                let url = URL(string:sourceArticle[newsCurrentIndex].imageURL!)
+                let image1 = UIImage(named: "\(url)")
+                var image = UIImage()
+                if let data = try? Data(contentsOf: url!)
+                {
+                    image = UIImage(data: data)!
+                }
+                if sourceArticle[newsCurrentIndex].source != ""{
+                    sourceURL = URL(string: sourceArticle[newsCurrentIndex].source!)
+                }
+                shareAll = [ text , image,  sourceURL , webURL ] as [Any]
+            }
+            else{
+                if sourceArticle[newsCurrentIndex].source! != ""{
+                    sourceURL = URL(string: sourceArticle[newsCurrentIndex].source!)
+                }
+                shareAll = [ text , sourceURL , webURL ] as [Any]
+            }
+        }
         else{
-            if SearchArticle[newsCurrentIndex].imageURL != nil{
+            if SearchArticle[newsCurrentIndex].imageURL != ""{
                 text = SearchArticle[newsCurrentIndex].title!
                 let url = URL(string:SearchArticle[newsCurrentIndex].imageURL!)
                 let image1 = UIImage(named: "\(url)")
@@ -1156,22 +1305,20 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
                 {
                     image = UIImage(data: data)!
                 }
-                if SearchArticle[newsCurrentIndex].source_url != nil{
+                if SearchArticle[newsCurrentIndex].source_url != ""{
                     sourceURL = URL(string: SearchArticle[newsCurrentIndex].source_url!)
                 }
-                shareAll = [ text , image1, image,  sourceURL , webURL ] as [Any]
+                shareAll = [ text , image,  sourceURL , webURL ] as [Any]
             }
             else{
-                if SearchArticle[newsCurrentIndex].source_url != nil{
+                if SearchArticle[newsCurrentIndex].source_url != ""{
                     sourceURL = URL(string: SearchArticle[newsCurrentIndex].source_url!)
                 }
                 shareAll = [ text , sourceURL , webURL ] as [Any]
             }
-            
         }
-        
-        
         let activityViewController = UIActivityViewController(activityItems: shareAll, applicationActivities: nil)
+        activityViewController.excludedActivityTypes = [UIActivityType.airDrop]
         activityViewController.popoverPresentationController?.sourceView = sender as! UIView
         self.present(activityViewController, animated: true, completion: nil)
         
@@ -1182,8 +1329,12 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
         if isSearch == "search"{
             self.dismiss(animated: false)
         }
+        else if isSearch == "source"{
+            self.dismiss(animated: false)
+        }
         else if isSearch == "recommend" {
-            self.view.window!.rootViewController?.dismiss(animated: false, completion: nil)
+            //self.view.window!.rootViewController?.dismiss(animated: false, completion: nil)
+            self.dismiss(animated: false)
         }
         else if isSearch == "bookmark"{
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
@@ -1195,17 +1346,18 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
             let searchvc:SearchVC = storyboard.instantiateViewController(withIdentifier: "SearchID") as! SearchVC
             self.present(searchvc, animated: true, completion: nil)
         }
-        else if isSearch == "home"{
+        else if isSearch == "sourcerecommend"{
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let sourcevc:SourceVC = storyboard.instantiateViewController(withIdentifier: "SourceID") as! SourceVC
+            self.present(sourcevc, animated: true, completion: nil)
+        }
+        else if isSearch == "home" || isSearch == "shuffle"{
             self.dismiss(animated: false)
-            
-            
         }
     }
     
     @IBAction func btnWebBackAction(_ sender: Any) {
         ViewWebContainer.isHidden = true
-        viewLikeDislike.isHidden = false
-        viewBack.isHidden = false
     }
     
     //btn Back Action
@@ -1216,6 +1368,53 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
     @IBAction func PlayButtonTapped() -> Void {
     }
     
+    @IBAction func btnSourceActn(_ sender: Any) {
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let sourcevc:SourceVC = storyboard.instantiateViewController(withIdentifier: "SourceID") as! SourceVC
+        if currentEntity == "SearchArticles"{
+            sourcevc.url = APPURL.SourceURL + SearchArticle[newsCurrentIndex].source!
+            sourcevc.source = SearchArticle[newsCurrentIndex].source!
+        }else if currentEntity == "source"{
+            sourcevc.url = APPURL.SourceURL + sourceArticle[newsCurrentIndex].source!
+            sourcevc.source = sourceArticle[newsCurrentIndex].source!
+        }
+        else{
+            sourcevc.url = APPURL.SourceURL + ShowArticle[newsCurrentIndex].source!
+            sourcevc.source = ShowArticle[newsCurrentIndex].source!
+        }
+        
+        self.present(sourcevc, animated: true, completion: nil)
+    }
+    
+    @IBAction func btnReadMoreActn(_ sender: Any) {
+        WKWebView.addSubview(activityIndicator)
+        ViewWebContainer.isHidden = false
+        let url = URL(string: sourceURL)
+        print(sourceURL)
+        let domain = url?.host
+        lblWebSource.text = "\(domain!)"
+        let myURL = URL(string: sourceURL)!
+        let myRequest = URLRequest(url: myURL)
+        WKWebView.load(myRequest)
+    }
+    
+    @IBAction func btnShuffleActn(_ sender: Any) {
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let vc:ShuffleDetailVC = storyboard.instantiateViewController(withIdentifier: "ShuffleID") as! ShuffleDetailVC
+        UserDefaults.standard.set("shuffle", forKey: "isSearch")
+        self.present(vc, animated: true, completion: nil)
+        UserDefaults.standard.set(false, forKey: "isSettingsLogin")
+    }
+    
+    @IBAction func btnMoreStoriesActn(_ sender: Any) {
+        if suggestedView.isHidden == true{
+            suggestedView.isHidden = false
+            btnMoreStories.setTitleColor(.white, for: .normal)
+        }else{
+            btnMoreStories.setTitleColor(.black, for: .normal)
+            suggestedView.isHidden = true
+        }
+    }
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
@@ -1242,16 +1441,18 @@ extension NewsDetailVC:UICollectionViewDelegate, UICollectionViewDataSource, UIC
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         // return (self.RecomArticleData.count != 0) ? self.RecomArticleData[0].body!.articles.count + 1 : 0
-        if RecomData.count == 0 && searchRecomData.count == 0{
+        if RecomData.count == 0 && searchRecomData.count == 0 && sourceRecomData.count == 0{
             return 0
         }
-        else if RecomData.count >= 5 || searchRecomData.count >= 5{
+        else if RecomData.count >= 5 || searchRecomData.count >= 5 || sourceRecomData.count >= 5{
             return 6
         }else{
-            if RecomData.count != 0{
+            if RecomData.count > 0{
                 return RecomData.count + 1
-            }else{
+            }else if searchRecomData.count > 0 {
                 return searchRecomData.count + 1
+            }else{
+                return sourceRecomData.count + 1
             }
         }
         // return ShowArticle.count != 0 ? ShowArticle.count : 0
@@ -1265,15 +1466,15 @@ extension NewsDetailVC:UICollectionViewDelegate, UICollectionViewDataSource, UIC
         let textSizeSelected = UserDefaults.standard.value(forKey: "textSize") as! Int
         
         if textSizeSelected == 0{
-            cell.lblMoreStories.font = FontConstants.smallRecommTitleFont
+            cell.lblMoreStories.font = FontConstants.smallFontDetailTitle
             cell.lblTitle.font = FontConstants.smallRecommFont
         }
         else if textSizeSelected == 2{
-            cell.lblMoreStories.font = FontConstants.largeRecommTitleFont
+            cell.lblMoreStories.font = FontConstants.LargeFontDetailTitle
             cell.lblTitle.font = FontConstants.largeRecommFont
         }
         else{
-            cell.lblMoreStories.font = FontConstants.normalRecommTitleFont
+            cell.lblMoreStories.font = FontConstants.NormalFontDetailTitle
             cell.lblTitle.font = FontConstants.normalRecommFont
         }
         if indexPath.row == 0
@@ -1293,7 +1494,14 @@ extension NewsDetailVC:UICollectionViewDelegate, UICollectionViewDataSource, UIC
                 if currentArticle.imageURL != nil{
                     cell.imgNews.sd_setImage(with: URL(string: currentArticle.imageURL!), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
                 }
-            }else{
+            }else if currentEntity == "source"{
+                let currentArticle =  sourceRecomData[indexPath.row - 1] //RecomArticleData[0].body!.articles[indexPath.row - 1]
+                cell.lblTitle.text = currentArticle.title
+                if currentArticle.imageURL != nil{
+                    cell.imgNews.sd_setImage(with: URL(string: currentArticle.imageURL!), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
+                }
+            }
+            else{
                 let currentArticle =  RecomData[indexPath.row - 1] //RecomArticleData[0].body!.articles[indexPath.row - 1]
                 cell.lblTitle.text = currentArticle.title
                 if currentArticle.imageURL != nil{
@@ -1304,7 +1512,6 @@ extension NewsDetailVC:UICollectionViewDelegate, UICollectionViewDataSource, UIC
             if cell.imgNews.image == nil{
                 cell.imgNews.image = UIImage(named: AssetConstants.NoImage)
             }
-            
         }
         
         if  darkModeStatus == true{
@@ -1327,14 +1534,21 @@ extension NewsDetailVC:UICollectionViewDelegate, UICollectionViewDataSource, UIC
             else if check == "search" {
                 UserDefaults.standard.set("searchrecommend", forKey: "isSearch")
             }
+            else if check == "source"{
+                UserDefaults.standard.set("sourcerecommend", forKey: "isSearch")
+            }
             else{
                 UserDefaults.standard.set("recommend", forKey: "isSearch")
             }
             newsDetailvc.newsCurrentIndex = indexPath.row - 1
-            if ShowArticle.count != 0{
+            if ShowArticle.count > 0{
                 newsDetailvc.ShowArticle =  RecomData //RecomArticleData[0].body!.articles
                 newsDetailvc.articleId = Int(RecomData[indexPath.row].article_id)  //RecomArticleData[0].body!.articles[indexPath.row - 1].article_id!
-            }else{
+            }else if sourceArticle.count > 0{
+                newsDetailvc.sourceArticle = sourceRecomData
+                newsDetailvc.articleId = Int(sourceRecomData[indexPath.row].article_id)
+            }
+            else{
                 newsDetailvc.SearchArticle = searchRecomData
                 newsDetailvc.articleId = Int(searchRecomData[indexPath.row].article_id)
             }

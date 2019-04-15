@@ -14,7 +14,6 @@ import NightNight
 
 class SettingsTVC: UITableViewController, GIDSignInUIDelegate {
     @IBOutlet weak var lblDailyEdition: UILabel!
-    @IBOutlet weak var lblNIghtMode: UILabel!
     @IBOutlet weak var lblProfile: UILabel!
     @IBOutlet weak var lblPersonlized: UILabel!
     @IBOutlet weak var lblBreakingNews: UILabel!
@@ -22,7 +21,6 @@ class SettingsTVC: UITableViewController, GIDSignInUIDelegate {
     @IBOutlet weak var segmentTextSize: UISegmentedControl!
     @IBOutlet weak var lblLogin: UILabel!
     @IBOutlet weak var btnLogout: UIButton!
-    @IBOutlet weak var switchNightMode: UISwitch!
     @IBOutlet weak var switchBreaking: UISwitch!
     @IBOutlet weak var switchDaily: UISwitch!
     @IBOutlet weak var switchPersonalised: UISwitch!
@@ -33,12 +31,6 @@ class SettingsTVC: UITableViewController, GIDSignInUIDelegate {
         super.viewDidLoad()
         
         let switchStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
-        if switchStatus == true{
-            switchNightMode.isOn = true
-        }
-        else{
-            switchNightMode.isOn = false
-        }
         let dailyStatus = UserDefaults.standard.value(forKey: "daily") as! Bool
         if dailyStatus == true{
             switchDaily.isOn = true
@@ -108,7 +100,6 @@ class SettingsTVC: UITableViewController, GIDSignInUIDelegate {
         lblLogin.textColor = .black
         btnLogout.titleLabel?.textColor = .black
         lblProfile.textColor = .black
-        lblNIghtMode.textColor = .black
         lblPersonlized.textColor = .black
         lblBreakingNews.textColor = .black
         lblDailyEdition.textColor = .black
@@ -121,7 +112,7 @@ class SettingsTVC: UITableViewController, GIDSignInUIDelegate {
     
     func isLoggedIn()
     {
-        if UserDefaults.standard.value(forKey: "token") == nil && UserDefaults.standard.value(forKey: "googleToken") == nil && UserDefaults.standard.value(forKey: "FBToken") == nil  {
+        if UserDefaults.standard.value(forKey: "token") == nil {
             lblLogin.text = "Login"
             btnLogout.isHidden = true
         }
@@ -161,7 +152,7 @@ class SettingsTVC: UITableViewController, GIDSignInUIDelegate {
     @IBAction func btnLogoutActn(_ sender: Any) {
         if UserDefaults.standard.value(forKey: "googleToken") != nil{
             GIDSignIn.sharedInstance().signOut()
-            let defaultList = ["googleToken", "first_name", "last_name", "email"]
+            let defaultList = ["googleToken", "first_name", "last_name", "email", "token"]
             Helper().clearDefaults(list : defaultList)
             self.btnLogout.isHidden = true
             self.lblLogin.text = "Login"
@@ -173,7 +164,7 @@ class SettingsTVC: UITableViewController, GIDSignInUIDelegate {
             FBSDKAccessToken.setCurrent(nil)
             FBSDKProfile.setCurrent(nil)
             self.btnLogout.isHidden = true
-            let defaultList = ["FBToken", "first_name", "last_name", "email"]
+            let defaultList = ["FBToken", "first_name", "last_name", "email", "token"]
             Helper().clearDefaults(list : defaultList)
             self.lblLogin.text = "Login"
             print("google sign out successful..")
@@ -205,40 +196,18 @@ class SettingsTVC: UITableViewController, GIDSignInUIDelegate {
         let headerView = view as! UITableViewHeaderFooterView
         headerView.textLabel?.textColor = .black
         headerView.textLabel?.font = FontConstants.settingsTVHeader
-        // let cell = SettingsTVCell()
         let darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
-        if  darkModeStatus == true{
-            //    cell.backgroundColor = .black
-        }
-        else{
-            //cell.backgroundColor = colorConstants.grayBackground3
-        }
     }
-    
-    //    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-    //
-    //        let cell = UITableViewCell()
-    //        let darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
-    //        if  darkModeStatus == true{
-    //             cell.backgroundColor = .black
-    //            changeColor()
-    //        }
-    //        else{
-    //        cell.backgroundColor = colorConstants.grayBackground3
-    //        }
-    //        return cell
-    //    }
     
     override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
         if indexPath.section == 2 && indexPath.row == 0{
-            if UserDefaults.standard.value(forKey: "token") == nil && UserDefaults.standard.value(forKey: "googleToken") == nil && UserDefaults.standard.value(forKey: "FBToken") == nil {
+            if UserDefaults.standard.value(forKey: "token") == nil {
                 UserDefaults.standard.set(true, forKey: "isSettingsLogin")
                 let storyboard = UIStoryboard(name: "Main", bundle: nil)
                 let vc:LoginVC = storyboard.instantiateViewController(withIdentifier: "LoginID") as! LoginVC
                 print(indexPath.section)
                 present(vc, animated: true, completion: nil)
             }
-            
         }
         else if indexPath.section == 2 && indexPath.row == 1{
             if  UserDefaults.standard.value(forKey: "token") != nil{
@@ -251,7 +220,7 @@ class SettingsTVC: UITableViewController, GIDSignInUIDelegate {
                 self.view.makeToast("You need to login", duration: 1.0, position: .center)
             }
         }
-        else if indexPath.section == 3 && indexPath.row == 1{
+        else if indexPath.section == 3 && indexPath.row == 0{
             let text = "checkout newScout app. I found it best for reading news."
             let url = URL(string: "http://www.fafadiatech.com/")
             let shareAll = [ text, url] as [Any]
@@ -264,12 +233,12 @@ class SettingsTVC: UITableViewController, GIDSignInUIDelegate {
             self.present(activityViewController, animated: true, completion: nil)
         }
             //Replace url with itunes app url
-        else if indexPath.section == 3 && indexPath.row == 2{
+        else if indexPath.section == 3 && indexPath.row == 1{
             //  UIApplication.sharedApplication().openURL(NSURL(string : "itms-apps://itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?id=\(0)&onlyLatestVersion=true&pageNumber=0&sortOrdering=1)")!);
             let url = URL(string: "https://mail.google.com")!
             UIApplication.shared.openURL(url)
         }
-        else if indexPath.section == 3 && indexPath.row == 3{
+        else if indexPath.section == 3 && indexPath.row == 2{
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             let AboutUsvc:AboutUsVC
                 = storyboard.instantiateViewController(withIdentifier: "AboutUsID") as! AboutUsVC
@@ -297,16 +266,6 @@ class SettingsTVC: UITableViewController, GIDSignInUIDelegate {
             print(status,response)
         }
         
-    }
-    @IBAction func switchNightModeActn(_ sender: Any) {
-        if switchNightMode.isOn == true {
-            UserDefaults.standard.setValue(true, forKey: "darkModeEnabled")
-            NotificationCenter.default.post(name: .darkModeEnabled, object: nil)
-        }
-        else {
-            UserDefaults.standard.setValue(false, forKey: "darkModeEnabled")
-            NotificationCenter.default.post(name: .darkModeDisabled, object: nil)
-        }
     }
     
     @IBAction func switchBreakingNewsActn(_ sender: Any) {

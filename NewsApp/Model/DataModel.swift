@@ -38,9 +38,9 @@ struct articleBody : Decodable{
 }
 
 struct ArticleFilter : Decodable{
-    let category : [FilterCategory]
-    let source : [FilterCategory]
-    let hash_tags : [FilterCategory]
+    let category : [FilterCategory]?
+    let source : [FilterCategory]?
+    let hash_tags : [FilterCategory]?
 }
 struct FilterCategory : Decodable{
     let key : String
@@ -66,6 +66,7 @@ struct Article: Decodable{
     var blurb : String?
     var hash_tags : [String]
     var article_media : [ArticleMedia]?
+    var category_id : Int
     
     enum CodingKeys: String, CodingKey{
         case article_id = "id"
@@ -78,6 +79,7 @@ struct Article: Decodable{
         case blurb
         case hash_tags
         case article_media
+        case category_id
     }
 }
 
@@ -239,14 +241,14 @@ struct Heading : Decodable{
     let submenu : [SubMenu]
     
     enum CodingKeys: String, CodingKey{
-        case headingId = "id"
+        case headingId = "category_id"
         case headingName = "name"
         case submenu = "submenu"
     }
 }
 
 struct SubMenu : Decodable{
-    let id : Int
+    let category_id : Int
     let name : String
     let hash_tags : [TagList]
 }
@@ -370,6 +372,12 @@ enum MenuHashTagDBFetchResult {
     case Success([MenuHashTag])
     case Failure(String)
 }
+
+enum submenuIdDBFetchResult {
+    case Success(Int)
+    case Failure(String)
+}
+
 
 enum MediaDBFetchResult {
     case Success([Media])
