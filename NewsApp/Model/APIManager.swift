@@ -91,29 +91,29 @@ class APICall{
         }
     }
     
-    func loadRecommendationNewsAPI(articleId : Int,_ completion : @escaping (String, ArticleAPIResult) -> ()){
+    func loadRecommendationNewsAPI(articleId : Int,_ completion : @escaping (String, RecommendationAPIResult) -> ()){
         let url = APPURL.recommendationURL + "\(articleId)" + "/recommendations/"
-        Alamofire.request(url,method: .post).responseJSON{
+        Alamofire.request(url,method: .get).responseJSON{
             response in
             if(response.result.isSuccess){
                 if let data = response.data {
                     let jsonDecoder = JSONDecoder()
                     do {
-                        let jsonData = try jsonDecoder.decode(ArticleStatus.self, from: data)
-                        completion(String((response.response?.statusCode)!),ArticleAPIResult.Success([jsonData]))
+                        let jsonData = try jsonDecoder.decode(Recommendation.self, from: data)
+                        completion(String((response.response?.statusCode)!),RecommendationAPIResult.Success([jsonData]))
                     }
                     catch {
-                        completion(String((response.response?.statusCode)!), ArticleAPIResult.Failure(error.localizedDescription))
+                        completion(String((response.response?.statusCode)!), RecommendationAPIResult.Failure(error.localizedDescription))
                     }
                 }
                 
             }
             else{
                 if let err = response.result.error as? URLError, err.code == .notConnectedToInternet {
-                    completion("no net", ArticleAPIResult.Failure(err.localizedDescription))
+                    completion("no net", RecommendationAPIResult.Failure(err.localizedDescription))
                 }
                 else{
-                    completion(String((response.response?.statusCode)!), ArticleAPIResult.Failure("\(String(describing: response.response?.statusCode))"))
+                    completion(String((response.response?.statusCode)!), RecommendationAPIResult.Failure("\(String(describing: response.response?.statusCode))"))
                 }
             }
         }

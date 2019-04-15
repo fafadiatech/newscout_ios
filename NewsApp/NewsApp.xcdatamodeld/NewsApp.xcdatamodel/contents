@@ -73,6 +73,10 @@
         <attribute name="tagName" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="type" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
+    <entity name="RecommendationID" representedClassName="RecommendationID" syncable="YES">
+        <attribute name="articleID" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="recomArticleID" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+    </entity>
     <entity name="SearchArticles" representedClassName="SearchArticles" syncable="YES">
         <attribute name="article_id" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="blurb" optional="YES" attributeType="String" syncable="YES"/>
@@ -98,5 +102,6 @@
         <element name="NewsURL" positionX="405" positionY="63" width="128" height="90"/>
         <element name="PeriodicTags" positionX="405" positionY="90" width="128" height="90"/>
         <element name="SearchArticles" positionX="405" positionY="54" width="128" height="195"/>
+        <element name="RecommendationID" positionX="414" positionY="99" width="128" height="75"/>
     </elements>
 </model>

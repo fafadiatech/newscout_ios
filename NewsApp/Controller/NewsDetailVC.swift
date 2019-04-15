@@ -157,6 +157,7 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
         //newsDetailAPICall(currentIndex: articleId)
         
         ShowNews(currentIndex: newsCurrentIndex)
+        RecommendationAPICall()
         // MediaData = DBManager().fetchArticleMedia(articleId: Int(ShowArticle[newsCurrentIndex].article_id))
         let swipeUp = UISwipeGestureRecognizer(target: self, action: #selector(self.respondToSwipeGesture))
         swipeUp.direction = UISwipeGestureRecognizerDirection.up
@@ -236,7 +237,8 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
         imgScrollView.scrollRectToVisible(CGRect(x: view.frame.size.width * CGFloat(currentIndex), y:0, width: view.frame.width, height: imgScrollView.frame.height), animated: true)
     }
     
-    func RecommendationAPICall(){
+   /* func RecommendationAPICall(){
+        
         APICall().loadRecommendationNewsAPI(articleId: articleId){ (status,response) in
             switch response {
             case .Success(let data) :
@@ -253,6 +255,28 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
                     self.NavigationToLogin()
                 }
             }
+        }
+    }*/
+    func RecommendationAPICall(){
+    DBManager().saveRecommendation(articleId : articleId){
+        response in
+        self.fetchRecommendation()
+    }
+    }
+    
+    func fetchRecommendation() {
+        let result = DBManager().fetchRecommendation(articleId : articleId)
+        switch result {
+        case .Success(let DBData) :
+            ShowArticle = DBData
+            if ShowArticle.count > 0{
+                suggestedCV.reloadData()
+            }
+            else{
+                activityIndicator.stopAnimating()
+            }
+        case .Failure(let errorMsg) :
+            print(errorMsg)
         }
     }
     

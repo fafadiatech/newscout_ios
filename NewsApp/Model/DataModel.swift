@@ -24,7 +24,7 @@ struct articleBody : Decodable{
     var articles : [Article]
     var categoryDetail : CategoryDetails?
     var filters : ArticleFilter?
-    
+   
     enum CodingKeys: String, CodingKey{
         case articles = "results"
         case count
@@ -35,6 +35,33 @@ struct articleBody : Decodable{
         case total_pages
         case filters
     }
+}
+
+struct Recommendation : Decodable{
+    let header : Header
+    var body: RecomResult
+}
+struct RecomResult : Decodable{
+    var results : [RecommendationBody]
+}
+struct RecommendationBody : Decodable{
+    var _index : String
+    var _type : String
+    var _id : String
+    var _score : Int
+    var _source : SourceRecommendation
+}
+
+struct SourceRecommendation : Decodable {
+    var id : Int64
+    var recommendation : [RecommendationArticles]
+}
+
+struct  RecommendationArticles : Decodable {
+    var id : Int
+    var title : String
+    var blurb : String
+    var cover_images : String
 }
 
 struct ArticleFilter : Decodable{
@@ -298,6 +325,11 @@ enum ArticleAPIResult {
     case Change(Int)
 }
 
+enum RecommendationAPIResult {
+    case Success([Recommendation])
+    case Failure(String)
+}
+
 enum ArticleDetailAPIResult {
     case Success(ArticleDetails)
     case Failure(String)
@@ -378,8 +410,12 @@ enum submenuIdDBFetchResult {
     case Failure(String)
 }
 
-
 enum MediaDBFetchResult {
     case Success([Media])
+    case Failure(String)
+}
+
+enum RecommendationDBFetchResult {
+    case Success([RecommendationID])
     case Failure(String)
 }

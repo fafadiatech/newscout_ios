@@ -92,7 +92,7 @@ class BookmarkDetailVC: UIViewController {
         
         viewLikeDislike.backgroundColor = colorConstants.redColor
         ViewWebContainer.isHidden = true
-        APICall().loadRecommendationNewsAPI(articleId: articleId){ (status,response) in
+       /* APICall().loadRecommendationNewsAPI(articleId: articleId){ (status,response) in
             switch response {
             case .Success(let data) :
                 self.RecomArticleData = data
@@ -106,7 +106,7 @@ class BookmarkDetailVC: UIViewController {
                     self.showMsg(title: "Please login to continue..", msg: "")
                 }
             }
-        }
+        }*/
         
         NotificationCenter.default.addObserver(self, selector: #selector(darkModeEnabled(_:)), name: .darkModeEnabled, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(darkModeDisabled(_:)), name: .darkModeDisabled, object: nil)

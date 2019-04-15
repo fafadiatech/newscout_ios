@@ -170,7 +170,7 @@ class ShuffleDetailVC: UIViewController , UIScrollViewDelegate, TAPageControlDel
         imgScrollView.scrollRectToVisible(CGRect(x: view.frame.size.width * CGFloat(currentIndex), y:0, width: view.frame.width, height: imgScrollView.frame.height), animated: true)
     }
     
-    func RecommendationAPICall(){
+ /*   func RecommendationAPICall(){
         APICall().loadRecommendationNewsAPI(articleId: articleId){ (status,response) in
             switch response {
             case .Success(let data) :
@@ -188,7 +188,7 @@ class ShuffleDetailVC: UIViewController , UIScrollViewDelegate, TAPageControlDel
                 }
             }
         }
-    }
+    }*/
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)

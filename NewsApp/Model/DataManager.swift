@@ -15,12 +15,13 @@ class DBManager{
     var ArticleData = [ArticleStatus]()
     var CategoryData = [CategoryList]()
     var tagType = ""
+    
     //save articles in DB
     func SaveDataDB(nextUrl:String,_ completion : @escaping (Bool) -> ())
     {
         var URLData = [NewsURL]()
         let managedContext = appDelegate?.persistentContainer.viewContext
-         APICall().loadNewsbyCategoryAPI(url : nextUrl){
+        APICall().loadNewsbyCategoryAPI(url : nextUrl){
             (status, response)  in
             switch response {
             case .Success(let data) :
@@ -36,7 +37,7 @@ class DBManager{
                 if self.ArticleData[0].header.status == "1" {
                     if self.ArticleData[0].body?.next != nil{
                         var submenu = UserDefaults.standard.value(forKey: "submenu") as! String
-
+                        
                         if self.someEntityExists(id: 0, entity: "NewsURL", keyword: submenu) == false {
                             let newUrl = NewsURL(context: managedContext!)
                             newUrl.category = submenu
@@ -114,6 +115,88 @@ class DBManager{
         }
     }
     
+    func saveRecommendation(articleId : Int,_ completion : @escaping (Bool) -> ()){
+        var RecomArticleData = [Recommendation]()
+        let managedContext = appDelegate?.persistentContainer.viewContext
+        APICall().loadRecommendationNewsAPI(articleId: articleId){ (status,response) in
+            switch response {
+            case .Success(let data) :
+                RecomArticleData = data
+            case .Failure(let errormessage) :
+                print(errormessage)
+            }
+            
+            if RecomArticleData.count > 0{
+                
+                if RecomArticleData[0].header.status == "1" {
+                    
+                    for news in RecomArticleData[0].body.results[0]._source.recommendation{
+                        if  self.someEntityExists(id: Int(news.id), entity: "NewsArticle", keyword: "") == false
+                        {
+                            let newArticle = NewsArticle(context: managedContext!)
+                            let newRecom = RecommendationID(context: managedContext!)
+                            newRecom.articleID = Int64(articleId)
+                            newRecom.recomArticleID = Int64(news.id)
+                            newArticle.article_id = Int64(news.id)
+                            newArticle.title = news.title
+                            newArticle.blurb = news.blurb
+                            newArticle.imageURL = news.cover_images
+                            
+                            self.saveBlock()
+                        }
+                        
+                    }
+                    completion(true)
+                }
+                else{
+                    completion(false)
+                }
+            }else{
+                completion(false)
+            }
+        }
+    }
+    
+    func fetchRecommendation(articleId : Int) -> ArticleDBfetchResult{
+        var IDs = [RecommendationID]()
+        var ShowArticle = [NewsArticle]()
+        let managedContext =
+            appDelegate?.persistentContainer.viewContext
+        let result = DBManager().fetchRecomIds(articleId: articleId)
+        let fetchRequest =
+            NSFetchRequest<NewsArticle>(entityName: "NewsArticle")
+        
+        switch(result){
+        case .Success(let DBData) :
+            IDs = DBData
+        case .Failure(let errorMsg) :
+            print(errorMsg)
+        }
+        for ID in IDs{
+            do {
+                let article  =  try (managedContext?.fetch(fetchRequest))!
+                ShowArticle.append(article[0])
+            }catch let error as NSError {
+                return ArticleDBfetchResult.Failure(error.localizedDescription)
+            }
+        }
+        return ArticleDBfetchResult.Success(ShowArticle)
+        
+    }
+    
+    func fetchRecomIds(articleId : Int) -> RecommendationDBFetchResult{
+        let managedContext =
+            appDelegate?.persistentContainer.viewContext
+        let fetchRequest =
+            NSFetchRequest<RecommendationID>(entityName: "RecommendationID")
+        fetchRequest.predicate = NSPredicate(format: "articleID = %d",articleId)
+        do {
+            let IDs = try (managedContext?.fetch(fetchRequest))!
+            return RecommendationDBFetchResult.Success(IDs)
+        } catch let error as NSError {
+            return RecommendationDBFetchResult.Failure(error as! String)
+        }
+    }
     //fetch article media
     func fetchArticleMedia(articleId : Int) -> MediaDBFetchResult{
         var  mediaData = [Media]()
@@ -174,8 +257,8 @@ class DBManager{
         let fetchRequest =
             NSFetchRequest<NewsArticle>(entityName: "NewsArticle")
         if UserDefaults.standard.value(forKey: "subMenuId") != nil{
-        var subMenuId = UserDefaults.standard.value(forKey: "subMenuId") as! Int
-        fetchRequest.predicate = NSPredicate(format: "categoryId = %d ", subMenuId)
+            var subMenuId = UserDefaults.standard.value(forKey: "subMenuId") as! Int
+            fetchRequest.predicate = NSPredicate(format: "categoryId = %d ", subMenuId)
         }
         do {
             ShowArticle =  try (managedContext?.fetch(fetchRequest))!
@@ -185,6 +268,26 @@ class DBManager{
         return ArticleDBfetchResult.Success(ShowArticle)
     }
     
+    func someIDExist(id: Int, RecomID: Int)-> Bool {
+        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "RecommendationID")
+        let managedContext =
+            appDelegate?.persistentContainer.viewContext
+        var results: [NSManagedObject] = []
+        fetchRequest.predicate = NSPredicate(format: "recomArticleID = %d", RecomID)
+        do {
+            results = (try managedContext?.fetch(fetchRequest))!
+        }
+        catch {
+            print("error executing fetch request: \(error)")
+        }
+        if results.count == 0{
+            return false
+        }
+        else{
+            return true
+        }
+        
+    }
     //check for existing entry in DB
     func someEntityExists(id: Int, entity : String, keyword: String) -> Bool {
         let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: entity)
