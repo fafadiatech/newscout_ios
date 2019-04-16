@@ -213,6 +213,7 @@ class HomeParentVC: ButtonBarPagerTabStripViewController{
                     for sub in subMenuData{
                         self.submenu.append(sub.subMenuName!)
                     }
+                    
                     self.subMenuArr.append(self.submenu)
                     self.fetchSubmenuId(submenu:self.subMenuArr[self.HeadingRow][self.subMenuRow] )
                     UserDefaults.standard.set(self.subMenuArr[self.HeadingRow][self.subMenuRow], forKey: "submenu")
@@ -222,9 +223,11 @@ class HomeParentVC: ButtonBarPagerTabStripViewController{
                     print(error)
                 }
             }
+            
         case .Failure(let error) :
             print(error)
         }
+        subMenuArr.append(["today"])
     }
     
     func fetchSubmenuId(submenu : String){
@@ -361,14 +364,14 @@ class HomeParentVC: ButtonBarPagerTabStripViewController{
             return super.collectionView(collectionView,didSelectItemAt: indexPath)
         }
         else{
-            if indexPath.row < 5{
             HeadingRow = indexPath.row
             reloadPagerTabStripView()
-            }
-            else{
-                DBManager().saveTrending{response in
-                }
-            }
+            
+            //            else{
+            //                DBManager().saveTrending{response in
+            //                    DBManager().fetchTrendingArticle()
+            //                }
+            //            }
         }
     }
     

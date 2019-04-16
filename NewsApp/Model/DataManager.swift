@@ -268,6 +268,62 @@ class DBManager{
         }
     }
     
+    func fetchTrendingArticle() -> ArticleDBfetchResult{
+        var trendingArticleIDs = [TrendingCategory]()
+        var trendingArticles = [NewsArticle]()
+        let managedContext =
+            appDelegate?.persistentContainer.viewContext
+        let fetchRequest =
+            NSFetchRequest<NewsArticle>(entityName: "NewsArticle")
+        let result = DBManager().fetchTrendingNewsIDs()
+        switch result {
+        case .Success(let DBData) :
+           trendingArticleIDs = DBData
+        case .Failure(let errorMsg) :
+            print(errorMsg)
+        }
+        for article in trendingArticleIDs{
+            fetchRequest.predicate = NSPredicate(format: "article_id = %d", article.articleID)
+            do {
+                let article = try (managedContext?.fetch(fetchRequest))!
+                trendingArticles.append(article[0])
+            }catch let error as NSError {
+                return ArticleDBfetchResult.Failure(error.localizedDescription)
+            }
+        }
+        return ArticleDBfetchResult.Success(trendingArticles)
+    }
+    
+    func fetchTrendingNewsIDs() -> FetchTrendingFromDB{
+        var  trendingData = [TrendingCategory]()
+        var trendingIDs = [Int]()
+        let managedContext =
+            appDelegate?.persistentContainer.viewContext
+        let trendingRequest =  NSFetchRequest<TrendingCategory>(entityName: "TrendingCategory")
+        do {
+            trendingData = try (managedContext?.fetch(trendingRequest))!
+        }catch let error as NSError {
+            return FetchTrendingFromDB.Failure(error.localizedDescription)
+        }
+        for trend in trendingData{
+            if !trendingIDs.contains(Int(trend.trendingID)){
+            trendingIDs.append(Int(trend.trendingID))
+            }
+        }
+        trendingData.removeAll()
+        for trend in trendingIDs{
+         trendingRequest.predicate = NSPredicate(format: "trendingID = %d", trend)
+        trendingRequest.fetchLimit = 1
+        do {
+            let article = try (managedContext?.fetch(trendingRequest))!
+            trendingData.append(article[0])
+        }catch let error as NSError {
+            return FetchTrendingFromDB.Failure(error.localizedDescription)
+        }
+        }
+        return FetchTrendingFromDB.Success(trendingData)
+    }
+    
     //fetch article media
     func fetchArticleMedia(articleId : Int) -> MediaDBFetchResult{
         var  mediaData = [Media]()

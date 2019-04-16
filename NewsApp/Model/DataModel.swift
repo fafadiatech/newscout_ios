@@ -398,6 +398,11 @@ enum TrendingAPIResult {
     case Failure(String)
 }
 
+enum FetchTrendingFromDB{
+    case Success([TrendingCategory])
+    case Failure(String)
+}
+
 enum DailyTagAPIResult {
     case Success([DailyTags])
     case Failure(String)

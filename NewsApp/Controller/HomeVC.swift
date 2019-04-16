@@ -82,8 +82,29 @@ class HomeVC: UIViewController{
         }
         
         //change data on swipe
-        if tabBarTitle != "Test"{
+        if tabBarTitle != "Test" || tabBarTitle != "today"{
             fetchSubmenuId(submenu: tabBarTitle)
+        }
+        if tabBarTitle == "today"{
+            DBManager().saveTrending{response in
+                
+                let result = DBManager().fetchTrendingArticle()
+                switch result {
+                case .Success(let DBData) :
+                    self.ShowArticle = DBData
+                    if self.ShowArticle.count > 0{
+                        self.lblNonews.isHidden = true
+                        self.HomeNewsTV.reloadData()
+                    }
+                    else{
+                        self.HomeNewsTV.reloadData()
+                        self.lblNonews.isHidden =  false
+                        self.activityIndicator.stopAnimating()
+                    }
+                case .Failure(let errorMsg) :
+                    print(errorMsg)
+                }
+            }
         }
         //save and fetch like and bookmark data from DB
         if UserDefaults.standard.value(forKey: "token") != nil{
