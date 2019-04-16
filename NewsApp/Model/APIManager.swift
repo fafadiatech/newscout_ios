@@ -119,11 +119,38 @@ class APICall{
         }
     }
     
+    func loadTrendingArticles(completion : @escaping (String, TrendingAPIResult) -> ()){
+        Alamofire.request(APPURL.trendingURL ,method: .get, encoding: URLEncoding.default).responseJSON{
+            response in
+            if(response.result.isSuccess){
+                if let data = response.data {
+                    let  jsonDecoder = JSONDecoder()
+                    do {
+                        let jsonData = try jsonDecoder.decode(Trending.self, from: data)
+                        if jsonData.header.status == "1" {
+                            completion(String((response.response?.statusCode)!), TrendingAPIResult.Success([jsonData]))
+                        }
+                    }
+                    catch {
+                        completion(String((response.response?.statusCode)!), TrendingAPIResult.Failure(error as! String))
+                    }
+                }
+                else{
+                    completion(String((response.response?.statusCode)!), TrendingAPIResult.Failure("\(response.response?.statusCode)"))
+                }
+            }
+            else{
+                if let err = response.result.error as? URLError, err.code == .notConnectedToInternet {
+                    completion("no net", TrendingAPIResult.Failure(err.localizedDescription))
+                }
+            }
+        }
+    }
+    
     func loadSearchAPI(url: String,_ completion : @escaping (String, ArticleAPIResult) -> ()){
         Alamofire.request(url,method: .get, encoding: URLEncoding.default).responseJSON{
             response in
             if(response.result.isSuccess){
-                //if response.response?.statusCode == 200{
                 if let data = response.data {
                     let  jsonDecoder = JSONDecoder()
                     do {
@@ -138,7 +165,6 @@ class APICall{
                         completion(String((response.response?.statusCode)!), ArticleAPIResult.Failure(error as! String))
                     }
                 }
-                    // }
                 else{
                     completion(String((response.response?.statusCode)!), ArticleAPIResult.Failure("\(response.response?.statusCode)"))
                 }

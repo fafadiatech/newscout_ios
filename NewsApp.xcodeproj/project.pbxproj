@@ -83,6 +83,8 @@
 		26DE849D2223CC1C000A32F7 /* PeriodicTags+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26DE849B2223CC1C000A32F7 /* PeriodicTags+CoreDataProperties.swift */; };
 		26F9A0FB2209B4EC008694BC /* Reachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26F9A0FA2209B4EC008694BC /* Reachability.swift */; };
 		40DAD2A94E0870B8278E705F /* Pods_NewsAppUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53DC2E5EA9235D86628350C7 /* Pods_NewsAppUITests.framework */; };
+		420318B52265A70400EEBBD5 /* Trending+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 420318B32265A70400EEBBD5 /* Trending+CoreDataClass.swift */; };
+		420318B62265A70400EEBBD5 /* Trending+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 420318B42265A70400EEBBD5 /* Trending+CoreDataProperties.swift */; };
 		421ADFB92156407400C00F6F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 421ADFB82156407400C00F6F /* AppDelegate.swift */; };
 		421ADFBB2156407400C00F6F /* HomeVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 421ADFBA2156407400C00F6F /* HomeVC.swift */; };
 		421ADFC12156407400C00F6F /* NewsApp.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 421ADFBF2156407400C00F6F /* NewsApp.xcdatamodeld */; };
@@ -207,6 +209,8 @@
 		26DE849B2223CC1C000A32F7 /* PeriodicTags+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PeriodicTags+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		26F9A0FA2209B4EC008694BC /* Reachability.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Reachability.swift; sourceTree = "<group>"; };
 		2F9C18092C8836EA83BB9B53 /* Pods-NewsAppTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NewsAppTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-NewsAppTests/Pods-NewsAppTests.release.xcconfig"; sourceTree = "<group>"; };
+		420318B32265A70400EEBBD5 /* Trending+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Trending+CoreDataClass.swift"; sourceTree = "<group>"; };
+		420318B42265A70400EEBBD5 /* Trending+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Trending+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		421ADFB52156407400C00F6F /* NewsApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NewsApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		421ADFB82156407400C00F6F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		421ADFBA2156407400C00F6F /* HomeVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeVC.swift; sourceTree = "<group>"; };
@@ -286,6 +290,8 @@
 		260FB9DB222168D5008B0291 /* CoreData */ = {
 			isa = PBXGroup;
 			children = (
+				420318B32265A70400EEBBD5 /* Trending+CoreDataClass.swift */,
+				420318B42265A70400EEBBD5 /* Trending+CoreDataProperties.swift */,
 				26DD063D22645FB600363F2F /* RecommendationID+CoreDataClass.swift */,
 				26DD063E22645FB600363F2F /* RecommendationID+CoreDataProperties.swift */,
 				26BEF80C222E7C9F0002DEBD /* HeadingSubMenu+CoreDataClass.swift */,
@@ -818,6 +824,7 @@
 				266C6B302158C2B6009A0A9D /* SearchResultTVCell.swift in Sources */,
 				260FB9D92221656F008B0291 /* NewsURL+CoreDataClass.swift in Sources */,
 				427B430B2180840E00F00269 /* Helper.swift in Sources */,
+				420318B52265A70400EEBBD5 /* Trending+CoreDataClass.swift in Sources */,
 				2663DE29224B4131005DCFB5 /* sourceTVCell.swift in Sources */,
 				260FB9D52221656F008B0291 /* NewsArticle+CoreDataClass.swift in Sources */,
 				422B5C53222118A400091429 /* MenuTVCell.swift in Sources */,
@@ -840,6 +847,7 @@
 				2690F3CC21BF8C12003E65CA /* SettingsTVCell.swift in Sources */,
 				260FB9CB2221656F008B0291 /* HashTag+CoreDataClass.swift in Sources */,
 				2651D7D9225F400E005FCE6B /* SourceCVCell.swift in Sources */,
+				420318B62265A70400EEBBD5 /* Trending+CoreDataProperties.swift in Sources */,
 				26D3C90A21CBAC9C003F7331 /* AVPlayerView.swift in Sources */,
 				26BEF80E222E7C9F0002DEBD /* HeadingSubMenu+CoreDataClass.swift in Sources */,
 				2651D7D5225F1A6D005FCE6B /* searchResultCVCell.swift in Sources */,

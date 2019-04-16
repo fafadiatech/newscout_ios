@@ -37,13 +37,66 @@ struct articleBody : Decodable{
     }
 }
 
+struct Trending : Decodable{
+    let header : Header
+    var body: TrendingBody
+}
+
+struct TrendingBody : Decodable{
+    let results : [TrendingResult]
+}
+
+struct TrendingResult : Decodable{
+    let id  : Int
+    let created_at : String
+    let modified_at : String
+    let active : Bool
+    let score : Int
+    let articles : [TrendingArticle]
+}
+struct TrendingArticle: Decodable{
+    var article_id : Int!
+    var category : String?
+    var source: String?
+    var title : String?
+    var imageURL : String?
+    var url : String?
+    var published_on : String?
+    var blurb : String?
+    var hash_tags : [TrendingHashTag]
+    var article_media : [ArticleMedia]?
+    var category_id : Int
+    
+    enum CodingKeys: String, CodingKey{
+        case article_id = "id"
+        case imageURL = "cover_image"
+        case url = "source_url"
+        case category
+        case source
+        case title
+        case published_on
+        case blurb
+        case hash_tags
+        case article_media
+        case category_id
+    }
+}
+
+struct TrendingHashTag : Decodable{
+    var id : Int
+    var name : String
+    var count : Int
+}
+
 struct Recommendation : Decodable{
     let header : Header
     var body: RecomResult
 }
+
 struct RecomResult : Decodable{
     var results : [RecommendationBody]
 }
+
 struct RecommendationBody : Decodable{
     var _index : String
     var _type : String
@@ -337,6 +390,11 @@ enum ArticleDetailAPIResult {
 
 enum ArticleDBfetchResult {
     case Success([NewsArticle])
+    case Failure(String)
+}
+
+enum TrendingAPIResult {
+    case Success([Trending])
     case Failure(String)
 }
 

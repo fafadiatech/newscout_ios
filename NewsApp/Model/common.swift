@@ -184,6 +184,7 @@ struct APPURL {
         static let deviceDetails = Domains.version + "device/"
         static let NotificationDetails = Domains.version + "notification/"
         static let socialLogin = Domains.version + "social-login/"
+        static let trending = Domains.version + "trending/"
     }
     
     static let ArticlesURL = Domains.Local + Routes.Articles
@@ -212,6 +213,7 @@ struct APPURL {
     static let sendNotificationDetails = Domains.Local + Routes.NotificationDetails
     static let ArticleByIdURL = Domains.Local + Routes.ArticleById
     static let socialLoginURL = Domains.Local + Routes.socialLogin
+    static let trendingURL = Domains.Local + Routes.trending
     static let imageServer = "http://images.newscout.in/unsafe/"
     
 }

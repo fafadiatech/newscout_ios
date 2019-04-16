@@ -162,10 +162,9 @@ class DBManager{
         var ShowArticle = [NewsArticle]()
         let managedContext =
             appDelegate?.persistentContainer.viewContext
-        let result = DBManager().fetchRecomIds(articleId: articleId)
         let fetchRequest =
             NSFetchRequest<NewsArticle>(entityName: "NewsArticle")
-        
+        let result = DBManager().fetchRecomIds(articleId: articleId)
         switch(result){
         case .Success(let DBData) :
             IDs = DBData
@@ -197,6 +196,78 @@ class DBManager{
             return RecommendationDBFetchResult.Failure(error as! String)
         }
     }
+    //save trending articles
+    func saveTrending(_ completion : @escaping (Bool) -> ()){
+        var URLData = [NewsURL]()
+        var TrendingData = [Trending]()
+        let managedContext = appDelegate?.persistentContainer.viewContext
+        APICall().loadTrendingArticles{
+            (status, response)  in
+            switch response {
+            case .Success(let data) :
+                TrendingData = data
+            case .Failure(let errormessage) :
+                print(errormessage)
+            }
+            
+            if TrendingData.count > 0{
+                if TrendingData[0].header.status == "1" {
+                    for result in 0..<TrendingData[0].body.results.count {
+                    for news in TrendingData[0].body.results[result].articles{
+                    
+                            let newArticle = NewsArticle(context: managedContext!)
+                            let newTrending  = TrendingCategory(context: managedContext!)
+                            newTrending.trendingID = Int64(TrendingData[0].body.results[result].id)
+                            newTrending.articleID = Int64(news.article_id)
+                            if  self.someEntityExists(id: Int(news.article_id), entity: "NewsArticle", keyword: "") == false{
+                            newArticle.article_id = Int64(news.article_id)
+                            newArticle.title = news.title
+                            newArticle.source = news.source!
+                            newArticle.imageURL = news.imageURL
+                            newArticle.source_url = news.url
+                            newArticle.published_on = news.published_on
+                            newArticle.blurb = news.blurb
+                            newArticle.category = news.category
+                            newArticle.categoryId = Int64(news.category_id)
+                            /* if news.article_media!.count > 0 {
+                             for media in news.article_media!{
+                             if self.someEntityExists(id: media.media_id, entity: "Media", keyword: "") == false {
+                             let newMedia =  Media(context: managedContext!)
+                             newMedia.articleId = Int64(news.article_id)
+                             newMedia.imageURL =   media.img_url
+                             newMedia.videoURL = media.video_url
+                             newMedia.type = media.category
+                             newMedia.mediaId =  Int64(media.media_id)
+                             }
+                             
+                             }
+                             }*/
+                           /* if news.hash_tags.count > 0 {
+                                for tag in news.hash_tags {
+                                    let newTag = HashTag(context: managedContext!)
+                                    newTag.articleId = Int64(news.article_id!)
+                                    newTag.name = tag
+                                    newTag.addToArticleTags(newArticle)
+                                    //newArticle.addToHashTags(newTag)
+                                }
+                                
+                            }*/
+                         
+                        }
+                    }
+                       self.saveBlock()
+                    completion(true)
+                }
+                }
+                else{
+                    completion(false)
+                }
+            }else{
+                completion(false)
+            }
+        }
+    }
+    
     //fetch article media
     func fetchArticleMedia(articleId : Int) -> MediaDBFetchResult{
         var  mediaData = [Media]()
@@ -269,11 +340,11 @@ class DBManager{
     }
     
     func someIDExist(id: Int, RecomID: Int)-> Bool {
-        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "RecommendationID")
+        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "TrendingCategory")
         let managedContext =
             appDelegate?.persistentContainer.viewContext
         var results: [NSManagedObject] = []
-        fetchRequest.predicate = NSPredicate(format: "recomArticleID = %d", RecomID)
+        fetchRequest.predicate = NSPredicate(format: "trendingID = %d", id)
         do {
             results = (try managedContext?.fetch(fetchRequest))!
         }
@@ -465,7 +536,7 @@ class DBManager{
                 let ShowArticle1 = try (managedContext?.fetch(fetchRequest))!
                 ShowArticle.append(contentsOf: ShowArticle1)
                 
-                if ShowArticle1.count != 0 {
+                if ShowArticle1.count > 0 {
                     book.addToArticle(ShowArticle1[0])
                 }
                 
@@ -479,7 +550,7 @@ class DBManager{
             fetchRequest.predicate = NSPredicate(format: "article_id  = %d", like.article_id)
             do {
                 let ShowArticle1 = try (managedContext?.fetch(fetchRequest))!
-                if ShowArticle1.count != 0 {
+                if ShowArticle1.count > 0 {
                     like.addToLikedArticle(ShowArticle1[0])
                 }
                 
@@ -541,7 +612,7 @@ class DBManager{
                 print(errormessage)
             }
             
-            if LikeData.body?.listResult!.count != 0{
+            if (LikeData.body?.listResult!.count)! > 0{
                 for news in (LikeData.body?.listResult)!{
                     if  self.someEntityExists(id: Int(news.article_id), entity: "LikeDislike", keyword: "") == false
                     {
@@ -727,7 +798,7 @@ class DBManager{
             }
             let search = UserDefaults.standard.value(forKey: "searchTxt") as! String
             var URLData = [NewsURL]()
-            if self.ArticleData.count != 0{
+            if self.ArticleData.count > 0{
                 if self.ArticleData[0].header.status == "1" {
                     if self.ArticleData[0].body?.next != nil{
                         if self.someEntityExists(id: 0, entity: "NewsURL", keyword: search) == false{
@@ -755,7 +826,7 @@ class DBManager{
                     }
                 }
             }
-            if self.ArticleData.count != 0{
+            if self.ArticleData.count > 0{
                 for news in self.ArticleData[0].body!.articles{
                     if  self.someEntityExists(id: Int(news.article_id!), entity: "SearchArticles", keyword: "") == false
                     {
@@ -826,7 +897,7 @@ class DBManager{
                 let ShowArticle1 = try (managedContext?.fetch(fetchRequest))!
                 ShowArticle.append(contentsOf: ShowArticle1)
                 
-                if ShowArticle1.count != 0 {
+                if ShowArticle1.count > 0 {
                     book.addToSearchArticle(ShowArticle1[0])
                 }
                 
@@ -840,7 +911,7 @@ class DBManager{
             fetchRequest.predicate = NSPredicate(format: "article_id  = %d", like.article_id)
             do {
                 let ShowArticle1 = try (managedContext?.fetch(fetchRequest))!
-                if ShowArticle1.count != 0 {
+                if ShowArticle1.count > 0 {
                     like.addToSearchlikeArticles(ShowArticle1[0])
                 }
                 

@@ -51,7 +51,7 @@ class HomeParentVC: ButtonBarPagerTabStripViewController{
     var HeadingRow = 0
     var subMenuRow = 0
     var submenuIndexArr = [[String]]()
-    var headingImg = [AssetConstants.sector, AssetConstants.regional, AssetConstants.finance, AssetConstants.economy, AssetConstants.misc]
+    var headingImg = [AssetConstants.sector, AssetConstants.regional, AssetConstants.finance, AssetConstants.economy, AssetConstants.misc, AssetConstants.sector]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -202,6 +202,7 @@ class HomeParentVC: ButtonBarPagerTabStripViewController{
             for i in headingData{
                 self.headingArr.append(i.headingName!)
             }
+            headingArr.append("Trending")
             self.menuCV.reloadData()
             for heading in headingData{
                 let subresult = DBManager().fetchSubMenu(headingId: Int(heading.headingId))
@@ -360,8 +361,14 @@ class HomeParentVC: ButtonBarPagerTabStripViewController{
             return super.collectionView(collectionView,didSelectItemAt: indexPath)
         }
         else{
+            if indexPath.row < 5{
             HeadingRow = indexPath.row
             reloadPagerTabStripView()
+            }
+            else{
+                DBManager().saveTrending{response in
+                }
+            }
         }
     }
     

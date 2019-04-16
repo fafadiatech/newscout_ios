@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="14460.32" systemVersion="18D109" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="14460.32" systemVersion="18A391" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="BookmarkArticles" representedClassName="BookmarkArticles" syncable="YES">
         <attribute name="article_id" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="isBookmark" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
@@ -89,6 +89,10 @@
         <relationship name="bookmark" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="BookmarkArticles" inverseName="searchArticle" inverseEntity="BookmarkArticles" syncable="YES"/>
         <relationship name="likeDislike" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="LikeDislike" inverseName="searchlikeArticles" inverseEntity="LikeDislike" syncable="YES"/>
     </entity>
+    <entity name="TrendingCategory" representedClassName="TrendingCategory" syncable="YES">
+        <attribute name="articleID" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="trendingID" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+    </entity>
     <elements>
         <element name="BookmarkArticles" positionX="405" positionY="18" width="128" height="120"/>
         <element name="Category" positionX="405" positionY="18" width="128" height="75"/>
@@ -101,7 +105,8 @@
         <element name="NewsArticle" positionX="407.63671875" positionY="-45.1953125" width="128" height="255"/>
         <element name="NewsURL" positionX="405" positionY="63" width="128" height="90"/>
         <element name="PeriodicTags" positionX="405" positionY="90" width="128" height="90"/>
-        <element name="SearchArticles" positionX="405" positionY="54" width="128" height="195"/>
         <element name="RecommendationID" positionX="414" positionY="99" width="128" height="75"/>
+        <element name="SearchArticles" positionX="405" positionY="54" width="128" height="195"/>
+        <element name="TrendingCategory" positionX="405" positionY="90" width="128" height="75"/>
     </elements>
 </model>
