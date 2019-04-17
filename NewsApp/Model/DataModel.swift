@@ -52,7 +52,7 @@ struct TrendingResult : Decodable{
     let modified_at : String
     let active : Bool
     let score : Int
-    let articles : [TrendingArticle]
+    let articles : [Article]
 }
 struct TrendingArticle: Decodable{
     var article_id : Int!

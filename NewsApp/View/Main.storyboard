@@ -563,6 +563,76 @@
                                             <outlet property="lblSource" destination="aXH-Yn-Uby" id="6qA-5j-f7I"/>
                                         </connections>
                                     </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="ClusterTVCellID" rowHeight="400" id="60l-g7-rnj" customClass="ClusterTVCell" customModule="NewsApp" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="302" width="768" height="400"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="60l-g7-rnj" id="uZs-QF-YiM">
+                                            <rect key="frame" x="0.0" y="0.0" width="768" height="399.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="EMc-zn-hJV">
+                                                    <rect key="frame" x="0.0" y="0.0" width="768" height="486"/>
+                                                    <subviews>
+                                                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="NoImage" translatesAutoresizingMaskIntoConstraints="NO" id="tbS-ml-a0a">
+                                                            <rect key="frame" x="16" y="16" width="736" height="251.5"/>
+                                                        </imageView>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="t3L-R1-N5T">
+                                                            <rect key="frame" x="16" y="271.5" width="736" height="75.5"/>
+                                                            <attributedString key="attributedText">
+                                                                <fragment content="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum">
+                                                                    <attributes>
+                                                                        <font key="NSFont" size="14" name="HelveticaNeue-Light"/>
+                                                                        <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" lineSpacing="4" tighteningFactorForTruncation="0.0"/>
+                                                                    </attributes>
+                                                                </fragment>
+                                                            </attributedString>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5sK-hE-4KO">
+                                                            <rect key="frame" x="16" y="347" width="736" height="16.5"/>
+                                                            <attributedString key="attributedText">
+                                                                <fragment content="Source">
+                                                                    <attributes>
+                                                                        <color key="NSColor" white="0.33000000000000002" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                        <font key="NSFont" size="14" name="HelveticaNeue"/>
+                                                                    </attributes>
+                                                                </fragment>
+                                                            </attributedString>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
+                                                    </subviews>
+                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="trailing" secondItem="t3L-R1-N5T" secondAttribute="trailing" constant="16" id="3Au-Im-swQ"/>
+                                                        <constraint firstItem="t3L-R1-N5T" firstAttribute="height" secondItem="tbS-ml-a0a" secondAttribute="height" multiplier="0.3" id="7CQ-vb-Ynv"/>
+                                                        <constraint firstAttribute="trailing" secondItem="5sK-hE-4KO" secondAttribute="trailing" constant="16" id="Aa7-02-blc"/>
+                                                        <constraint firstItem="tbS-ml-a0a" firstAttribute="top" secondItem="EMc-zn-hJV" secondAttribute="top" constant="16" id="B3t-0a-tdI"/>
+                                                        <constraint firstItem="5sK-hE-4KO" firstAttribute="leading" secondItem="EMc-zn-hJV" secondAttribute="leading" constant="16" id="LO6-zq-RAf"/>
+                                                        <constraint firstItem="t3L-R1-N5T" firstAttribute="top" secondItem="tbS-ml-a0a" secondAttribute="bottom" constant="4" id="TgC-Ux-Pqf"/>
+                                                        <constraint firstItem="tbS-ml-a0a" firstAttribute="height" secondItem="EMc-zn-hJV" secondAttribute="height" multiplier="0.63" id="iPI-qJ-MIz"/>
+                                                        <constraint firstAttribute="trailing" secondItem="tbS-ml-a0a" secondAttribute="trailing" constant="16" id="lwJ-VP-1Q5"/>
+                                                        <constraint firstItem="tbS-ml-a0a" firstAttribute="leading" secondItem="EMc-zn-hJV" secondAttribute="leading" constant="16" id="vnf-eD-ESo"/>
+                                                        <constraint firstItem="t3L-R1-N5T" firstAttribute="leading" secondItem="EMc-zn-hJV" secondAttribute="leading" constant="16" id="xkF-qv-rzZ"/>
+                                                        <constraint firstItem="5sK-hE-4KO" firstAttribute="top" secondItem="t3L-R1-N5T" secondAttribute="bottom" id="xl1-A1-Hcf"/>
+                                                    </constraints>
+                                                </view>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstAttribute="bottom" secondItem="EMc-zn-hJV" secondAttribute="bottom" id="Iei-xH-Gs8"/>
+                                                <constraint firstItem="EMc-zn-hJV" firstAttribute="top" secondItem="uZs-QF-YiM" secondAttribute="top" id="dGC-q6-3vW"/>
+                                                <constraint firstAttribute="trailing" secondItem="EMc-zn-hJV" secondAttribute="trailing" id="k04-hO-5Au"/>
+                                                <constraint firstItem="EMc-zn-hJV" firstAttribute="leading" secondItem="uZs-QF-YiM" secondAttribute="leading" id="vBp-Bs-hy2"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <color key="backgroundColor" red="0.90196079019999997" green="0.90196079019999997" blue="0.90196079019999997" alpha="1" colorSpace="calibratedRGB"/>
+                                        <inset key="separatorInset" minX="10" minY="0.0" maxX="10" maxY="0.0"/>
+                                        <connections>
+                                            <outlet property="ViewCellBackground" destination="EMc-zn-hJV" id="Ir7-7S-NtD"/>
+                                            <outlet property="imgNews" destination="tbS-ml-a0a" id="ZHG-eW-thF"/>
+                                            <outlet property="lblNewsHeading" destination="t3L-R1-N5T" id="ift-fe-eSC"/>
+                                            <outlet property="lblSource" destination="5sK-hE-4KO" id="IC1-G4-IF3"/>
+                                        </connections>
+                                    </tableViewCell>
                                 </prototypes>
                                 <connections>
                                     <outlet property="dataSource" destination="BYZ-38-t0r" id="Od6-P3-YIe"/>
@@ -598,7 +668,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4202" y="-977"/>
+            <point key="canvasLocation" x="4201.5625" y="-977.34374999999989"/>
         </scene>
         <!--Change PasswordVC-->
         <scene sceneID="nIk-Zg-xN0">

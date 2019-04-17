@@ -60,8 +60,34 @@ class HomeiPadVC: UIViewController{
         refreshControl.attributedTitle = NSAttributedString(string: "Pull  to Refresh...")
         
         //change data on swipe
-        if tabBarTitle != "Test"{
+        if tabBarTitle != "Test" && tabBarTitle != "today"{
             fetchSubmenuId(submenu: tabBarTitle)
+            coredataRecordCount = DBManager().IsCoreDataEmpty(entity: "NewsArticle")
+            if self.coredataRecordCount > 0 {
+                self.fetchArticlesFromDB()
+            }
+            else{
+                if Reachability.isConnectedToNetwork(){
+                    activityIndicator.startAnimating()
+                    if UserDefaults.standard.value(forKey: "submenuURL") != nil{
+                        self.saveArticlesInDB()
+                    }
+                }else{
+                    activityIndicator.stopAnimating()
+                    lblNonews.isHidden = true
+                }
+            }
+        }
+        
+        if tabBarTitle == "today"{
+            var records = DBManager().IsCoreDataEmpty(entity: "TrendingCategory")
+            if records <= 0{
+                DBManager().saveTrending{response in
+                    self.fetchTrending()
+                }
+            }else{
+                self.fetchTrending()
+            }
         }
         //save and fetch like and bookmark data from DB
         if UserDefaults.standard.value(forKey: "token") != nil{
@@ -77,23 +103,28 @@ class HomeiPadVC: UIViewController{
                 }
             }
         }
-        coredataRecordCount = DBManager().IsCoreDataEmpty(entity: "NewsArticle")
-        if self.coredataRecordCount != 0 {
-            self.fetchArticlesFromDB()
-        }
-        else{
-            if Reachability.isConnectedToNetwork(){
-                activityIndicator.startAnimating()
-                if UserDefaults.standard.value(forKey: "submenuURL") != nil{
-                    self.saveArticlesInDB()
-                }
-            }else{
-                activityIndicator.stopAnimating()
-                lblNonews.isHidden = true
-            }
-        }
+
     }
     
+    func fetchTrending(){
+        let result = DBManager().fetchTrendingArticle()
+        switch result {
+        case .Success(let DBData) :
+            self.ShowArticle.removeAll()
+            self.ShowArticle = DBData
+            if self.ShowArticle.count > 0{
+                self.lblNonews.isHidden = true
+                self.HomeNewsCV.reloadData()
+            }
+            else{
+                self.HomeNewsCV.reloadData()
+                self.lblNonews.isHidden =  false
+                self.activityIndicator.stopAnimating()
+            }
+        case .Failure(let errorMsg) :
+            print(errorMsg)
+        }
+    }
     func fetchSubmenuId(submenu : String){
         let tagresult = DBManager().fetchsubmenuId(subMenuName: submenu)
         switch tagresult{
@@ -210,19 +241,31 @@ class HomeiPadVC: UIViewController{
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        if Reachability.isConnectedToNetwork(){
-            activityIndicator.startAnimating()
-            if UserDefaults.standard.value(forKey: "submenuURL") != nil{
-                self.saveArticlesInDB()
-                fetchArticlesFromDB()
+        if tabBarTitle != "Test" && tabBarTitle != "today"{
+            if Reachability.isConnectedToNetwork(){
+                activityIndicator.startAnimating()
+                if UserDefaults.standard.value(forKey: "submenuURL") != nil{
+                    self.saveArticlesInDB()
+                    fetchArticlesFromDB()
+                }
+            }else{
+                coredataRecordCount = DBManager().IsCoreDataEmpty(entity: "NewsArticle")
+                if self.coredataRecordCount != 0 {
+                    self.fetchArticlesFromDB()
+                }
+                else{
+                    activityIndicator.stopAnimating()
+                }
             }
-        }else{
-            coredataRecordCount = DBManager().IsCoreDataEmpty(entity: "NewsArticle")
-            if self.coredataRecordCount != 0 {
-                self.fetchArticlesFromDB()
-            }
-            else{
-                activityIndicator.stopAnimating()
+        }
+        if tabBarTitle == "today"{
+            var records = DBManager().IsCoreDataEmpty(entity: "TrendingCategory")
+            if records <= 0{
+                DBManager().saveTrending{response in
+                    self.fetchTrending()
+                }
+            }else{
+                self.fetchTrending()
             }
         }
     }
@@ -276,13 +319,21 @@ extension HomeiPadVC: UICollectionViewDelegate, UICollectionViewDataSource, UISc
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "HomeIpadID", for:indexPath) as! HomeipadCVCell
+         var currentArticle = NewsArticle()
         imgWidth = String(describing : Int(cell.imgNews.frame.width))
         imgHeight = String(describing : Int(cell.imgNews.frame.height))
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
         dateFormatter.timeZone = NSTimeZone.local
         let darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
-        sortedData = ShowArticle.sorted{ $0.published_on! > $1.published_on! }
+        if tabBarTitle != "today"{
+            sortedData = ShowArticle.sorted{ $0.published_on! > $1.published_on! }
+            currentArticle = sortedData[indexPath.row]
+        }
+        else{
+            currentArticle = ShowArticle[indexPath.row]
+        }
+       
         let textSizeSelected = UserDefaults.standard.value(forKey: "textSize") as! Int
         var sourceColor = UIColor()
         var fullTxt = ""
@@ -290,7 +341,6 @@ extension HomeiPadVC: UICollectionViewDelegate, UICollectionViewDataSource, UISc
         var agoDate = ""
         
         //display data from DB
-        let currentArticle = sortedData[indexPath.row]
         cell.lblTitle.text = currentArticle.title
         
         if  darkModeStatus == true{
@@ -360,6 +410,7 @@ extension HomeiPadVC: UICollectionViewDelegate, UICollectionViewDataSource, UISc
         
         if (scrollView.bounds.maxY) == scrollView.contentSize.height{
             activityIndicator.startAnimating()
+             if tabBarTitle != "Test" && tabBarTitle != "today"{
             var submenu = UserDefaults.standard.value(forKey: "submenu") as! String
             if ShowArticle.count >= 20{
                 if isAPICalled == false{
@@ -384,6 +435,7 @@ extension HomeiPadVC: UICollectionViewDelegate, UICollectionViewDataSource, UISc
                         print(errorMsg)
                     }
                 }
+            }
             }
         }
     }

@@ -317,7 +317,8 @@ class DBManager{
         do {
             let article = try (managedContext?.fetch(trendingRequest))!
             trendingData.append(article[0])
-        }catch let error as NSError {
+        }
+        catch let error as NSError {
             return FetchTrendingFromDB.Failure(error.localizedDescription)
         }
         }
@@ -535,6 +536,16 @@ class DBManager{
             var records = [MenuHeadings]()
             do {
                 records = (try managedContext?.fetch(fetchRequest)) as! [MenuHeadings]
+            }
+            catch {
+                print("error executing fetch request: \(error)")
+            }
+            recordCount = records.count
+        }
+        else if entity == "TrendingCategory"{
+            var records = [TrendingCategory]()
+            do {
+                records = (try managedContext?.fetch(fetchRequest)) as! [TrendingCategory]
             }
             catch {
                 print("error executing fetch request: \(error)")

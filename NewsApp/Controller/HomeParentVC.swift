@@ -358,20 +358,16 @@ class HomeParentVC: ButtonBarPagerTabStripViewController{
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         viewOptions.isHidden = true
         if (collectionView == buttonBarView) {
+            if subMenuArr[HeadingRow][indexPath.row] != "today"{
             subMenuRow = indexPath.row
             UserDefaults.standard.set(subMenuArr[HeadingRow][indexPath.row], forKey: "submenu")
             fetchSubmenuId(submenu: subMenuArr[HeadingRow][indexPath.row])
+            }
             return super.collectionView(collectionView,didSelectItemAt: indexPath)
         }
         else{
             HeadingRow = indexPath.row
             reloadPagerTabStripView()
-            
-            //            else{
-            //                DBManager().saveTrending{response in
-            //                    DBManager().fetchTrendingArticle()
-            //                }
-            //            }
         }
     }
     

@@ -120,7 +120,7 @@ class APICall{
     }
     
     func loadTrendingArticles(completion : @escaping (String, TrendingAPIResult) -> ()){
-        Alamofire.request(APPURL.trendingURL ,method: .get, encoding: URLEncoding.default).responseJSON{
+        Alamofire.request(APPURL.trendingURL ,method: .get).responseJSON{
             response in
             if(response.result.isSuccess){
                 if let data = response.data {
