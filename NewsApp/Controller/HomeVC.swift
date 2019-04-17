@@ -82,30 +82,36 @@ class HomeVC: UIViewController{
         }
         
         //change data on swipe
-        if tabBarTitle != "Test" || tabBarTitle != "today"{
+        if tabBarTitle != "Test" && tabBarTitle != "today"{
             fetchSubmenuId(submenu: tabBarTitle)
-        }
-        if tabBarTitle == "today"{
-            DBManager().saveTrending{response in
-                
-                let result = DBManager().fetchTrendingArticle()
-                switch result {
-                case .Success(let DBData) :
-                    self.ShowArticle = DBData
-                    if self.ShowArticle.count > 0{
-                        self.lblNonews.isHidden = true
-                        self.HomeNewsTV.reloadData()
+            coredataRecordCount = DBManager().IsCoreDataEmpty(entity: "NewsArticle")
+            if self.coredataRecordCount > 0 {
+                self.fetchArticlesFromDB()
+            }
+            else{
+                if Reachability.isConnectedToNetwork(){
+                    activityIndicator.startAnimating()
+                    if UserDefaults.standard.value(forKey: "submenuURL") != nil{
+                        self.saveArticlesInDB()
                     }
-                    else{
-                        self.HomeNewsTV.reloadData()
-                        self.lblNonews.isHidden =  false
-                        self.activityIndicator.stopAnimating()
-                    }
-                case .Failure(let errorMsg) :
-                    print(errorMsg)
+                }else{
+                    activityIndicator.stopAnimating()
+                    lblNonews.isHidden = true
                 }
             }
         }
+        
+        if tabBarTitle == "today"{
+            var records = DBManager().IsCoreDataEmpty(entity: "TrendingCategory")
+            if records < 0{
+                DBManager().saveTrending{response in
+                    self.fetchTrending()
+                }
+            }else{
+                self.fetchTrending()
+            }
+        }
+        
         //save and fetch like and bookmark data from DB
         if UserDefaults.standard.value(forKey: "token") != nil{
             if Reachability.isConnectedToNetwork(){
@@ -120,20 +126,24 @@ class HomeVC: UIViewController{
                 }
             }
         }
-        coredataRecordCount = DBManager().IsCoreDataEmpty(entity: "NewsArticle")
-        if self.coredataRecordCount != 0 {
-            self.fetchArticlesFromDB()
-        }
-        else{
-            if Reachability.isConnectedToNetwork(){
-                activityIndicator.startAnimating()
-                if UserDefaults.standard.value(forKey: "submenuURL") != nil{
-                    self.saveArticlesInDB()
-                }
-            }else{
-                activityIndicator.stopAnimating()
-                lblNonews.isHidden = true
+        
+    }
+    
+    func fetchTrending(){
+        let result = DBManager().fetchTrendingArticle()
+        switch result {
+        case .Success(let DBData) :
+            self.ShowArticle = DBData
+            if self.ShowArticle.count > 0{
+                self.lblNonews.isHidden = true
+                self.HomeNewsTV.reloadData()
             }
+            else{
+                self.lblNonews.isHidden =  false
+                self.activityIndicator.stopAnimating()
+            }
+        case .Failure(let errorMsg) :
+            print(errorMsg)
         }
     }
     
@@ -253,19 +263,21 @@ class HomeVC: UIViewController{
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        if Reachability.isConnectedToNetwork(){
-            activityIndicator.startAnimating()
-            if UserDefaults.standard.value(forKey: "submenuURL") != nil{
-                self.saveArticlesInDB()
-                fetchArticlesFromDB()
-            }
-        }else{
-            coredataRecordCount = DBManager().IsCoreDataEmpty(entity: "NewsArticle")
-            if self.coredataRecordCount != 0 {
-                self.fetchArticlesFromDB()
-            }
-            else{
-                activityIndicator.stopAnimating()
+        if tabBarTitle != "Test" || tabBarTitle != "today"{
+            if Reachability.isConnectedToNetwork(){
+                activityIndicator.startAnimating()
+                if UserDefaults.standard.value(forKey: "submenuURL") != nil{
+                    self.saveArticlesInDB()
+                    fetchArticlesFromDB()
+                }
+            }else{
+                coredataRecordCount = DBManager().IsCoreDataEmpty(entity: "NewsArticle")
+                if self.coredataRecordCount != 0 {
+                    self.fetchArticlesFromDB()
+                }
+                else{
+                    activityIndicator.stopAnimating()
+                }
             }
         }
     }
