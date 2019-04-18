@@ -52,6 +52,18 @@
                                             <action selector="btnSeachActn:" destination="SXV-EA-KWG" eventType="touchUpInside" id="VQh-pA-Ek9"/>
                                         </connections>
                                     </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4pE-7p-WTz">
+                                        <rect key="frame" x="0.0" y="0.0" width="75" height="75"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="75" id="Zl7-vk-deS">
+                                                <variation key="heightClass=regular-widthClass=compact" constant="55"/>
+                                            </constraint>
+                                        </constraints>
+                                        <state key="normal" backgroundImage="back1"/>
+                                        <connections>
+                                            <action selector="btnBackAction:" destination="SXV-EA-KWG" eventType="touchUpInside" id="ftI-GP-2nc"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
@@ -62,7 +74,11 @@
                                     <constraint firstItem="uzw-Xq-ysg" firstAttribute="centerY" secondItem="ao8-14-oL8" secondAttribute="centerY" id="DAT-6G-eog"/>
                                     <constraint firstAttribute="trailing" secondItem="uzw-Xq-ysg" secondAttribute="trailing" constant="10" id="T3H-PF-jY5"/>
                                     <constraint firstItem="pzB-EX-EQD" firstAttribute="centerY" secondItem="ao8-14-oL8" secondAttribute="centerY" id="Tge-20-fax"/>
+                                    <constraint firstItem="4pE-7p-WTz" firstAttribute="top" secondItem="ao8-14-oL8" secondAttribute="top" id="XFR-kL-jHh"/>
                                     <constraint firstItem="pzB-EX-EQD" firstAttribute="centerX" secondItem="ao8-14-oL8" secondAttribute="centerX" id="Zaa-Cg-Z4M"/>
+                                    <constraint firstItem="4pE-7p-WTz" firstAttribute="centerY" secondItem="ao8-14-oL8" secondAttribute="centerY" id="ac4-05-ag1"/>
+                                    <constraint firstAttribute="bottom" secondItem="4pE-7p-WTz" secondAttribute="bottom" id="dkW-j1-1B3"/>
+                                    <constraint firstItem="4pE-7p-WTz" firstAttribute="leading" secondItem="ao8-14-oL8" secondAttribute="leading" id="iX5-MT-lTF"/>
                                     <constraint firstItem="uzw-Xq-ysg" firstAttribute="leading" secondItem="sgS-XG-b68" secondAttribute="trailing" constant="4" id="k7a-Bo-EKr"/>
                                 </constraints>
                             </view>
@@ -335,6 +351,7 @@
                     </view>
                     <navigationItem key="navigationItem" id="QiD-dl-AUc"/>
                     <connections>
+                        <outlet property="btnBack" destination="4pE-7p-WTz" id="665-vm-vp8"/>
                         <outlet property="btnBookmark" destination="cYz-6A-Jgx" id="cgK-Uk-Iw4"/>
                         <outlet property="btnBookmarkImg" destination="LTj-3k-aAw" id="kHv-i3-wbc"/>
                         <outlet property="btnNightMode" destination="Ven-a5-ngg" id="zgz-mS-Qri"/>

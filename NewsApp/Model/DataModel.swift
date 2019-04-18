@@ -94,28 +94,10 @@ struct Recommendation : Decodable{
 }
 
 struct RecomResult : Decodable{
-    var results : [RecommendationBody]
+    var results : [TrendingArticle]
 }
 
-struct RecommendationBody : Decodable{
-    var _index : String
-    var _type : String
-    var _id : String
-    var _score : Int
-    var _source : SourceRecommendation
-}
 
-struct SourceRecommendation : Decodable {
-    var id : Int64
-    var recommendation : [RecommendationArticles]
-}
-
-struct  RecommendationArticles : Decodable {
-    var id : Int
-    var title : String
-    var blurb : String
-    var cover_images : String
-}
 
 struct ArticleFilter : Decodable{
     let category : [FilterCategory]?

@@ -217,8 +217,10 @@ class DBManager{
                     
                             let newArticle = NewsArticle(context: managedContext!)
                             let newTrending  = TrendingCategory(context: managedContext!)
+                        if self.someIDExist(id: news.article_id) == false{
                             newTrending.trendingID = Int64(TrendingData[0].body.results[result].id)
                             newTrending.articleID = Int64(news.article_id)
+                        }
                             if  self.someEntityExists(id: Int(news.article_id), entity: "NewsArticle", keyword: "") == false{
                             newArticle.article_id = Int64(news.article_id)
                             newArticle.title = news.title
@@ -286,7 +288,9 @@ class DBManager{
             fetchRequest.predicate = NSPredicate(format: "article_id = %d", article.articleID)
             do {
                 let article = try (managedContext?.fetch(fetchRequest))!
+                if article.count > 0{
                 trendingArticles.append(article[0])
+                }
             }catch let error as NSError {
                 return ArticleDBfetchResult.Failure(error.localizedDescription)
             }
@@ -310,6 +314,7 @@ class DBManager{
             trendingIDs.append(Int(trend.trendingID))
             }
         }
+        UserDefaults.standard.set(trendingIDs, forKey: "trendingArray")
         trendingData.removeAll()
         for trend in trendingIDs{
          trendingRequest.predicate = NSPredicate(format: "trendingID = %d", trend)
@@ -323,6 +328,48 @@ class DBManager{
         }
         }
         return FetchTrendingFromDB.Success(trendingData)
+    }
+    //fetch Article Ids of specific trending id
+    func fetchTrendingNewsIds(trendingId: Int) -> FetchTrendingFromDB{
+        var  trendingData = [TrendingCategory]()
+        var trendingIDs = [Int]()
+        let managedContext =
+            appDelegate?.persistentContainer.viewContext
+        let trendingRequest =  NSFetchRequest<TrendingCategory>(entityName: "TrendingCategory")
+          trendingRequest.predicate = NSPredicate(format: "trendingID = %d", trendingId)
+        do {
+            trendingData = try (managedContext?.fetch(trendingRequest))!
+        }catch let error as NSError {
+            return FetchTrendingFromDB.Failure(error.localizedDescription)
+        }
+         return FetchTrendingFromDB.Success(trendingData)
+    }
+    
+    func fetchClusterArticles(trendingId: Int)-> ArticleDBfetchResult{
+        var  trendingData = [TrendingCategory]()
+        var trendingArticles = [NewsArticle]()
+        let managedContext =
+            appDelegate?.persistentContainer.viewContext
+        let fetchRequest =
+            NSFetchRequest<NewsArticle>(entityName: "NewsArticle")
+        let result = DBManager().fetchTrendingNewsIds(trendingId : trendingId)
+        switch result {
+        case .Success(let DBData) :
+            trendingData = DBData
+        case .Failure(let errorMsg) :
+            print(errorMsg)
+        }
+       
+        for id in trendingData{
+            fetchRequest.predicate = NSPredicate(format: "article_id = %d", id.articleID)
+            do {
+                let article = try (managedContext?.fetch(fetchRequest))!
+                trendingArticles.append(article[0])
+            }catch let error as NSError {
+                return ArticleDBfetchResult.Failure(error.localizedDescription)
+            }
+        }
+        return ArticleDBfetchResult.Success(trendingArticles)
     }
     
     //fetch article media
@@ -396,12 +443,12 @@ class DBManager{
         return ArticleDBfetchResult.Success(ShowArticle)
     }
     
-    func someIDExist(id: Int, RecomID: Int)-> Bool {
+    func someIDExist(id: Int)-> Bool {
         let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "TrendingCategory")
         let managedContext =
             appDelegate?.persistentContainer.viewContext
         var results: [NSManagedObject] = []
-        fetchRequest.predicate = NSPredicate(format: "trendingID = %d", id)
+        fetchRequest.predicate = NSPredicate(format: "articleID = %d", id)
         do {
             results = (try managedContext?.fetch(fetchRequest))!
         }

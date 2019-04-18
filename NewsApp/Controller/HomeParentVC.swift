@@ -24,6 +24,7 @@ extension UISwitch {
 
 class HomeParentVC: ButtonBarPagerTabStripViewController{
     
+    @IBOutlet weak var btnBack: UIButton!
     @IBOutlet weak var btnSettingsNav: UIButton!
     @IBOutlet weak var btnBookmark: UIButton!
     @IBOutlet weak var viewNightMode: UIView!
@@ -55,6 +56,7 @@ class HomeParentVC: ButtonBarPagerTabStripViewController{
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        btnBack.isHidden = true
         viewOptions.isHidden = true
         menuCV.allowsMultipleSelection = false
         viewOptions.layer.borderWidth = 0.5
@@ -379,6 +381,10 @@ class HomeParentVC: ButtonBarPagerTabStripViewController{
         }
     }
     
+    @IBAction func btnBackAction(_ sender: Any) {
+        self.dismiss(animated: false)
+    }
+    
     @IBAction func btnSettingsActn(_ sender: Any) {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let settingvc:SettingsVC = storyboard.instantiateViewController(withIdentifier: "SettingsID") as! SettingsVC
@@ -423,6 +429,15 @@ extension HomeParentVC: ScrollDelegate{
     func isNavigate(status: Bool) {
         if status == true{
             viewOptions.isHidden = true
+        }
+    }
+}
+extension HomeParentVC: TrendingBack{
+    func isTrendingTVLoaded(status: Bool) {
+        if status == true{
+            btnBack.isHidden = false
+        }else{
+            btnBack.isHidden = true
         }
     }
 }

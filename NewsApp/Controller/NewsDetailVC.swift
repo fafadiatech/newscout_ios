@@ -139,7 +139,7 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
         viewLikeDislike.backgroundColor = colorConstants.redColor
         viewBack.backgroundColor = colorConstants.redColor
         ViewWebContainer.isHidden = true
-        if ShowArticle.count != 0 {
+        if ShowArticle.count > 0 {
             indexCount = ShowArticle.count
         }else if sourceArticle.count > 0{
             indexCount = sourceArticle.count
@@ -237,31 +237,31 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
         imgScrollView.scrollRectToVisible(CGRect(x: view.frame.size.width * CGFloat(currentIndex), y:0, width: view.frame.width, height: imgScrollView.frame.height), animated: true)
     }
     
-   /* func RecommendationAPICall(){
-        
-        APICall().loadRecommendationNewsAPI(articleId: articleId){ (status,response) in
-            switch response {
-            case .Success(let data) :
-                self.RecomArticleData = data
-                self.suggestedCV.reloadData()
-            case .Failure(let errormessage) :
-                if errormessage == "no net"{
-                    self.view.makeToast(errormessage, duration: 2.0, position: .center)
-                }
-            case .Change(let code):
-                if code == 404{
-                    let defaultList = ["googleToken","FBToken","token", "first_name", "last_name", "user_id", "email"]
-                    Helper().clearDefaults(list : defaultList)
-                    self.NavigationToLogin()
-                }
-            }
-        }
-    }*/
+    /* func RecommendationAPICall(){
+     
+     APICall().loadRecommendationNewsAPI(articleId: articleId){ (status,response) in
+     switch response {
+     case .Success(let data) :
+     self.RecomArticleData = data
+     self.suggestedCV.reloadData()
+     case .Failure(let errormessage) :
+     if errormessage == "no net"{
+     self.view.makeToast(errormessage, duration: 2.0, position: .center)
+     }
+     case .Change(let code):
+     if code == 404{
+     let defaultList = ["googleToken","FBToken","token", "first_name", "last_name", "user_id", "email"]
+     Helper().clearDefaults(list : defaultList)
+     self.NavigationToLogin()
+     }
+     }
+     }
+     }*/
     func RecommendationAPICall(){
-    DBManager().saveRecommendation(articleId : articleId){
-        response in
-        self.fetchRecommendation()
-    }
+        DBManager().saveRecommendation(articleId : articleId){
+            response in
+            self.fetchRecommendation()
+        }
     }
     
     func fetchRecommendation() {
@@ -566,6 +566,7 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
                     transition.type = kCATransitionPush
                     transition.subtype = kCATransitionFromBottom
                     view.window!.layer.add(transition, forKey: kCATransition)
+                    
                 }
                 else{
                     self.view.makeToast("No more news to show", duration: 1.0, position: .center)
@@ -583,8 +584,11 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
                     view.window!.layer.add(transition, forKey: kCATransition)
                 }
                 else{
-                    activityIndicator.startAnimating()
-                    pagination()
+                    let status =  UserDefaults.standard.value(forKey: "isSearch") as! String
+                    if status == "home"{
+                        activityIndicator.startAnimating()
+                        pagination()
+                    }
                 }
             default:
                 break
@@ -593,7 +597,7 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
     }
     
     func pagination(){
-         let isSearch = UserDefaults.standard.value(forKey: "isSearch") as! String
+        let isSearch = UserDefaults.standard.value(forKey: "isSearch") as! String
         if isSearch == "home"{
             if UserDefaults.standard.value(forKey: "homeNextURL") != nil{
                 DBManager().SaveDataDB(nextUrl: UserDefaults.standard.value(forKey: "homeNextURL") as! String ){response in
@@ -627,9 +631,9 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
                 indexCount = ShowArticle.count
                 newsCurrentIndex = newsCurrentIndex + 1
                 if newsCurrentIndex < ShowArticle.count {
-                ShowNews(currentIndex : newsCurrentIndex)
-                filterRecommendation()
-            }
+                    ShowNews(currentIndex : newsCurrentIndex)
+                    filterRecommendation()
+                }
             }
             else{
                 self.view.makeToast("No more news to show", duration: 1.0, position: .center)
@@ -645,7 +649,7 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
         switch result {
         case .Success(let DBData) :
             if DBData.count > 0{
-               SearchArticle.removeAll()
+                SearchArticle.removeAll()
                 SearchArticle = DBData
                 indexCount = SearchArticle.count
                 newsCurrentIndex = newsCurrentIndex + 1
@@ -1375,7 +1379,7 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
             let sourcevc:SourceVC = storyboard.instantiateViewController(withIdentifier: "SourceID") as! SourceVC
             self.present(sourcevc, animated: true, completion: nil)
         }
-        else if isSearch == "home" || isSearch == "shuffle"{
+        else if isSearch == "home" || isSearch == "shuffle" || isSearch == "cluster"{
             self.dismiss(animated: false)
         }
     }
