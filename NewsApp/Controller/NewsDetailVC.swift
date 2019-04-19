@@ -603,6 +603,7 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
             
         }
     }
+    
     func fetchArticlesFromDB(){
         let result = DBManager().ArticlesfetchByCatId()
         switch result {
@@ -647,9 +648,11 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
             print(errorMsg)
         }
     }
+    
     func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
         activityIndicator.startAnimating()
     }
+    
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         activityIndicator.stopAnimating()
     }
@@ -657,9 +660,11 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
     func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
         activityIndicator.stopAnimating()
     }
+    
     func webViewDidFinishLoad(_ : WKWebView) {
         activityIndicator.stopAnimating()
     }
+    
     @IBAction func btnPlayVideo(_ sender: Any) {
         if player?.rate == 0
         {
@@ -744,10 +749,12 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
         playbackSlider.removeFromSuperview()
         // avPlayerView.isHidden = true
         
+        
         if ShowArticle.count > 0{
             fetchBookmarkDataFromDB()
             currentEntity = "ShowArticle"
             let currentArticle = ShowArticle[currentIndex]
+            Helper().getMenuEvents(action: "item_detail", menuId: articleId, menuName: currentArticle.title! )
             let newDate = dateFormatter.date(from: currentArticle.published_on!)
             var agoDate = ""
             if newDate != nil{
@@ -964,6 +971,7 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
             currentEntity = "SearchArticles"
             fetchSearchBookmarkDataFromDB()
             let currentArticle = SearchArticle[currentIndex]
+            Helper().getMenuEvents(action: "item_detail", menuId: articleId, menuName: currentArticle.title! )
             let newDate = dateFormatter.date(from: currentArticle.published_on!)
             var agoDate = ""
             if newDate != nil{
@@ -1070,6 +1078,7 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
         else if sourceArticle.count > 0{
             currentEntity = "source"
             let currentArticle = sourceArticle[currentIndex]
+            Helper().getMenuEvents(action: "item_detail", menuId: articleId, menuName: currentArticle.title! )
             let newDate = dateFormatter.date(from: currentArticle.published_on!)
             var agoDate = ""
             if newDate != nil{
@@ -1381,15 +1390,19 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
     @IBAction func btnSourceActn(_ sender: Any) {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let sourcevc:SourceVC = storyboard.instantiateViewController(withIdentifier: "SourceID") as! SourceVC
+
         if currentEntity == "SearchArticles"{
             sourcevc.url = APPURL.SourceURL + SearchArticle[newsCurrentIndex].source!
+              Helper().getMenuEvents(action: "item_view_source", menuId: 0, menuName: SearchArticle[newsCurrentIndex].source!)
             sourcevc.source = SearchArticle[newsCurrentIndex].source!
         }else if currentEntity == "source"{
             sourcevc.url = APPURL.SourceURL + sourceArticle[newsCurrentIndex].source!
+            Helper().getMenuEvents(action: "item_view_source", menuId: 0, menuName: sourceArticle[newsCurrentIndex].source!)
             sourcevc.source = sourceArticle[newsCurrentIndex].source!
         }
         else{
             sourcevc.url = APPURL.SourceURL + ShowArticle[newsCurrentIndex].source!
+            Helper().getMenuEvents(action: "item_view_source", menuId: 0, menuName: ShowArticle[newsCurrentIndex].source!)
             sourcevc.source = ShowArticle[newsCurrentIndex].source!
         }
         
@@ -1425,6 +1438,7 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
             suggestedView.isHidden = true
         }
     }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }

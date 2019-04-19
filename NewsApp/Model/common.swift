@@ -97,6 +97,7 @@ struct FontConstants{
 struct Constants{
     static let AppName = "NewScout"
     static let InternetErrorMsg = "The Internet connection appears to be offline"
+    static let platform = "ios"
 }
 
 struct AssetConstants{
@@ -155,6 +156,7 @@ struct APPURL {
         static let searchServer = "http://www.newscout.in"
         static let Server = ""
         static let version = "/api/v1/"
+        static let tracking = "http://t.fafadiatech.com"
     }
     
     private  struct Routes {
@@ -216,7 +218,7 @@ struct APPURL {
     static let socialLoginURL = Domains.Local + Routes.socialLogin
     static let trendingURL = Domains.Local + Routes.trending
     static let imageServer = "http://images.newscout.in/unsafe/"
-    static let trackingURL = Domains.Local + Routes.tracking
+    static let trackingURL = Domains.tracking + Routes.tracking
     
 }
 

@@ -119,6 +119,19 @@ class APICall{
         }
     }
     
+    func trackingEventsAPI(param : Dictionary<String, Any>,_ completion : @escaping (Bool) -> ()){
+        Alamofire.request(APPURL.trackingURL, method: .get, parameters: param).responseString{
+            response in
+            if(response.result.isSuccess){
+                if response.response?.statusCode == 200{
+                    completion(true)
+                }
+                else{
+                    completion(false)
+                }
+            }
+        }
+    }
     
     func loadTrendingArticles(completion : @escaping (String, TrendingAPIResult) -> ()){
         Alamofire.request(APPURL.trendingURL ,method: .get).responseJSON{

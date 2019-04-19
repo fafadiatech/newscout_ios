@@ -115,6 +115,7 @@ class SearchVC: UIViewController {
         return true
     }
     
+    
     func changeFont(){
         if textSizeSelected == 0{
             lblTitle.font = FontConstants.NormalFontTitleMedium
@@ -522,12 +523,28 @@ extension String {
 }
 
 extension SearchVC: UITextFieldDelegate{
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool
-    {
+    func getSearchEvents(query: String){
+        var id = ""
+        if UserDefaults.standard.value(forKey: "deviceToken") != nil{
+            id = UserDefaults.standard.value(forKey: "deviceToken") as! String
+        }
+        let param = ["action" : "search",
+                     "platform" : Constants.platform,
+                     "device_id" : id,
+                     "q": query] as! [String : Any]
+        APICall().trackingEventsAPI(param : param){response in
+            if response == true{
+                print("event captured")
+            }
+        }
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool{
         txtSearch.resignFirstResponder()
         if !(txtSearch.text?.isEmpty)!{
             if txtSearch.text != ""{
                 var search = txtSearch.text!
+                getSearchEvents(query: search)
                 activityIndicator.startAnimating()
                 search = search.trimmingCharacters(in: .whitespaces)
                 
@@ -537,17 +554,14 @@ extension SearchVC: UITextFieldDelegate{
                     search = escapedString
                 }
                 UserDefaults.standard.set(search, forKey: "searchTxt")
+                
                 if search == ""{
                     self.activityIndicator.stopAnimating()
                     self.searchResultTV.makeToast("Enter keyword to search", duration: 2.0, position: .center)
                 }else{
                     Searchresults.removeAll()
                     recordCount = 0
-                    if searchResultTV.isHidden == false{
-                        searchResultTV.reloadData()
-                    }else{
-                        searchResultCV.reloadData()
-                    }
+                    searchResultCV.reloadData()
                     DBManager().deleteSearchNextURl()
                     search = search.replacingOccurrences(of: " ", with: "%20")
                     let url = APPURL.SearchURL + search

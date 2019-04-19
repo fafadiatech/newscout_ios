@@ -47,6 +47,7 @@ class HomeParentVC: ButtonBarPagerTabStripViewController{
     var jsonData : [Result] = []
     var expandData = [NSMutableDictionary]()
     var headingArr : [String] = []
+    var headingIds : [Int] = []
     var subMenuArr = [[String]]()
     var submenu : [String] = []
     var HeadingRow = 0
@@ -176,7 +177,7 @@ class HomeParentVC: ButtonBarPagerTabStripViewController{
         if UserDefaults.standard.value(forKey: "deviceToken") != nil{
             let id = UserDefaults.standard.value(forKey: "deviceToken") as! String
             let param = ["device_id" : id,
-                         "device_name": "ios"]
+                         "device_name": Constants.platform]
             APICall().deviceAPI(param : param){(status,response) in
                 print(status,response)
             }
@@ -203,6 +204,7 @@ class HomeParentVC: ButtonBarPagerTabStripViewController{
         case .Success(let headingData) :
             for i in headingData{
                 self.headingArr.append(i.headingName!)
+                self.headingIds.append(Int(i.headingId))
             }
             headingArr.append("Trending")
             self.menuCV.reloadData()
@@ -361,14 +363,20 @@ class HomeParentVC: ButtonBarPagerTabStripViewController{
         viewOptions.isHidden = true
         if (collectionView == buttonBarView) {
             if subMenuArr[HeadingRow][indexPath.row] != "today"{
-            subMenuRow = indexPath.row
-            UserDefaults.standard.set(subMenuArr[HeadingRow][indexPath.row], forKey: "submenu")
-            fetchSubmenuId(submenu: subMenuArr[HeadingRow][indexPath.row])
+                subMenuRow = indexPath.row
+                UserDefaults.standard.set(subMenuArr[HeadingRow][indexPath.row], forKey: "submenu")
+                fetchSubmenuId(submenu: subMenuArr[HeadingRow][indexPath.row])
             }
+            var SubmenuId = 0
+            if UserDefaults.standard.value(forKey: "subMenuId") != nil{
+                SubmenuId = UserDefaults.standard.value(forKey: "subMenuId") as! Int
+            }
+            Helper().getMenuEvents(action: "sub_menu_click", menuId: SubmenuId, menuName: subMenuArr[HeadingRow][indexPath.row])
             return super.collectionView(collectionView,didSelectItemAt: indexPath)
         }
         else{
             HeadingRow = indexPath.row
+            Helper().getMenuEvents(action: "menu_click", menuId: headingIds[indexPath.row], menuName: headingArr[indexPath.row])
             reloadPagerTabStripView()
         }
     }
