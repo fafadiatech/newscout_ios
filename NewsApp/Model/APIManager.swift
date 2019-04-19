@@ -119,6 +119,7 @@ class APICall{
         }
     }
     
+    
     func loadTrendingArticles(completion : @escaping (String, TrendingAPIResult) -> ()){
         Alamofire.request(APPURL.trendingURL ,method: .get).responseJSON{
             response in
@@ -327,7 +328,7 @@ class APICall{
                             else{
                                 completion((response.response?.statusCode)!,(jsonData.errors?.Msg)!)
                             }
-                           
+                            
                         }
                         else{
                             UserDefaults.standard.set(jsonData.body!.user!.token, forKey: "token")

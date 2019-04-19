@@ -130,17 +130,17 @@ class DBManager{
                 
                 if RecomArticleData[0].header.status == "1" {
                     
-                    for news in RecomArticleData[0].body.results[0]._source.recommendation{
-                        if  self.someEntityExists(id: Int(news.id), entity: "NewsArticle", keyword: "") == false
+                    for news in RecomArticleData[0].body.results{
+                        if  self.someEntityExists(id: Int(news.article_id), entity: "NewsArticle", keyword: "") == false
                         {
                             let newArticle = NewsArticle(context: managedContext!)
                             let newRecom = RecommendationID(context: managedContext!)
                             newRecom.articleID = Int64(articleId)
-                            newRecom.recomArticleID = Int64(news.id)
-                            newArticle.article_id = Int64(news.id)
+                            newRecom.recomArticleID = Int64(news.article_id)
+                            newArticle.article_id = Int64(news.article_id)
                             newArticle.title = news.title
                             newArticle.blurb = news.blurb
-                            newArticle.imageURL = news.cover_images
+                            newArticle.imageURL = news.imageURL
                             
                             self.saveBlock()
                         }
@@ -172,6 +172,7 @@ class DBManager{
             print(errorMsg)
         }
         for ID in IDs{
+            fetchRequest.predicate = NSPredicate(format: "article_id = %d", ID.recomArticleID)
             do {
                 let article  =  try (managedContext?.fetch(fetchRequest))!
                 ShowArticle.append(article[0])
@@ -213,53 +214,53 @@ class DBManager{
             if TrendingData.count > 0{
                 if TrendingData[0].header.status == "1" {
                     for result in 0..<TrendingData[0].body.results.count {
-                    for news in TrendingData[0].body.results[result].articles{
-                    
+                        for news in TrendingData[0].body.results[result].articles{
+                            
                             let newArticle = NewsArticle(context: managedContext!)
                             let newTrending  = TrendingCategory(context: managedContext!)
-                        if self.someIDExist(id: news.article_id) == false{
-                            newTrending.trendingID = Int64(TrendingData[0].body.results[result].id)
-                            newTrending.articleID = Int64(news.article_id)
-                        }
+                            if self.someIDExist(id: news.article_id) == false{
+                                newTrending.trendingID = Int64(TrendingData[0].body.results[result].id)
+                                newTrending.articleID = Int64(news.article_id)
+                            }
                             if  self.someEntityExists(id: Int(news.article_id), entity: "NewsArticle", keyword: "") == false{
-                            newArticle.article_id = Int64(news.article_id)
-                            newArticle.title = news.title
-                            newArticle.source = news.source!
-                            newArticle.imageURL = news.imageURL
-                            newArticle.source_url = news.url
-                            newArticle.published_on = news.published_on
-                            newArticle.blurb = news.blurb
-                            newArticle.category = news.category
-                            newArticle.categoryId = Int64(news.category_id)
-                            /* if news.article_media!.count > 0 {
-                             for media in news.article_media!{
-                             if self.someEntityExists(id: media.media_id, entity: "Media", keyword: "") == false {
-                             let newMedia =  Media(context: managedContext!)
-                             newMedia.articleId = Int64(news.article_id)
-                             newMedia.imageURL =   media.img_url
-                             newMedia.videoURL = media.video_url
-                             newMedia.type = media.category
-                             newMedia.mediaId =  Int64(media.media_id)
-                             }
-                             
-                             }
-                             }*/
-                           /* if news.hash_tags.count > 0 {
-                                for tag in news.hash_tags {
-                                    let newTag = HashTag(context: managedContext!)
-                                    newTag.articleId = Int64(news.article_id!)
-                                    newTag.name = tag
-                                    newTag.addToArticleTags(newArticle)
-                                    //newArticle.addToHashTags(newTag)
-                                }
+                                newArticle.article_id = Int64(news.article_id)
+                                newArticle.title = news.title
+                                newArticle.source = news.source!
+                                newArticle.imageURL = news.imageURL
+                                newArticle.source_url = news.url
+                                newArticle.published_on = news.published_on
+                                newArticle.blurb = news.blurb
+                                newArticle.category = news.category
+                                newArticle.categoryId = Int64(news.category_id)
+                                /* if news.article_media!.count > 0 {
+                                 for media in news.article_media!{
+                                 if self.someEntityExists(id: media.media_id, entity: "Media", keyword: "") == false {
+                                 let newMedia =  Media(context: managedContext!)
+                                 newMedia.articleId = Int64(news.article_id)
+                                 newMedia.imageURL =   media.img_url
+                                 newMedia.videoURL = media.video_url
+                                 newMedia.type = media.category
+                                 newMedia.mediaId =  Int64(media.media_id)
+                                 }
+                                 
+                                 }
+                                 }*/
+                                /* if news.hash_tags.count > 0 {
+                                 for tag in news.hash_tags {
+                                 let newTag = HashTag(context: managedContext!)
+                                 newTag.articleId = Int64(news.article_id!)
+                                 newTag.name = tag
+                                 newTag.addToArticleTags(newArticle)
+                                 //newArticle.addToHashTags(newTag)
+                                 }
+                                 
+                                 }*/
                                 
-                            }*/
-                         
+                            }
                         }
+                        self.saveBlock()
+                        completion(true)
                     }
-                       self.saveBlock()
-                    completion(true)
-                }
                 }
                 else{
                     completion(false)
@@ -280,7 +281,7 @@ class DBManager{
         let result = DBManager().fetchTrendingNewsIDs()
         switch result {
         case .Success(let DBData) :
-           trendingArticleIDs = DBData
+            trendingArticleIDs = DBData
         case .Failure(let errorMsg) :
             print(errorMsg)
         }
@@ -289,7 +290,7 @@ class DBManager{
             do {
                 let article = try (managedContext?.fetch(fetchRequest))!
                 if article.count > 0{
-                trendingArticles.append(article[0])
+                    trendingArticles.append(article[0])
                 }
             }catch let error as NSError {
                 return ArticleDBfetchResult.Failure(error.localizedDescription)
@@ -311,21 +312,21 @@ class DBManager{
         }
         for trend in trendingData{
             if !trendingIDs.contains(Int(trend.trendingID)){
-            trendingIDs.append(Int(trend.trendingID))
+                trendingIDs.append(Int(trend.trendingID))
             }
         }
         UserDefaults.standard.set(trendingIDs, forKey: "trendingArray")
         trendingData.removeAll()
         for trend in trendingIDs{
-         trendingRequest.predicate = NSPredicate(format: "trendingID = %d", trend)
-        trendingRequest.fetchLimit = 1
-        do {
-            let article = try (managedContext?.fetch(trendingRequest))!
-            trendingData.append(article[0])
-        }
-        catch let error as NSError {
-            return FetchTrendingFromDB.Failure(error.localizedDescription)
-        }
+            trendingRequest.predicate = NSPredicate(format: "trendingID = %d", trend)
+            trendingRequest.fetchLimit = 1
+            do {
+                let article = try (managedContext?.fetch(trendingRequest))!
+                trendingData.append(article[0])
+            }
+            catch let error as NSError {
+                return FetchTrendingFromDB.Failure(error.localizedDescription)
+            }
         }
         return FetchTrendingFromDB.Success(trendingData)
     }
@@ -336,13 +337,13 @@ class DBManager{
         let managedContext =
             appDelegate?.persistentContainer.viewContext
         let trendingRequest =  NSFetchRequest<TrendingCategory>(entityName: "TrendingCategory")
-          trendingRequest.predicate = NSPredicate(format: "trendingID = %d", trendingId)
+        trendingRequest.predicate = NSPredicate(format: "trendingID = %d", trendingId)
         do {
             trendingData = try (managedContext?.fetch(trendingRequest))!
         }catch let error as NSError {
             return FetchTrendingFromDB.Failure(error.localizedDescription)
         }
-         return FetchTrendingFromDB.Success(trendingData)
+        return FetchTrendingFromDB.Success(trendingData)
     }
     
     func fetchClusterArticles(trendingId: Int)-> ArticleDBfetchResult{
@@ -359,7 +360,7 @@ class DBManager{
         case .Failure(let errorMsg) :
             print(errorMsg)
         }
-       
+        
         for id in trendingData{
             fetchRequest.predicate = NSPredicate(format: "article_id = %d", id.articleID)
             do {

@@ -66,6 +66,7 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
     var sourceRecomData = [Article]()
     var bookmarkedArticle = [BookmarkArticles]()
     var ShowArticle = [NewsArticle]()
+    var RecommendationArticle = [NewsArticle]()
     var SearchArticle = [SearchArticles]()
     var sourceArticle = [Article]()
     var shuffleData =  [NewsArticle]()
@@ -157,7 +158,7 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
         //newsDetailAPICall(currentIndex: articleId)
         
         ShowNews(currentIndex: newsCurrentIndex)
-        RecommendationAPICall()
+        RecommendationDBCall()
         // MediaData = DBManager().fetchArticleMedia(articleId: Int(ShowArticle[newsCurrentIndex].article_id))
         let swipeUp = UISwipeGestureRecognizer(target: self, action: #selector(self.respondToSwipeGesture))
         swipeUp.direction = UISwipeGestureRecognizerDirection.up
@@ -237,27 +238,8 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
         imgScrollView.scrollRectToVisible(CGRect(x: view.frame.size.width * CGFloat(currentIndex), y:0, width: view.frame.width, height: imgScrollView.frame.height), animated: true)
     }
     
-    /* func RecommendationAPICall(){
-     
-     APICall().loadRecommendationNewsAPI(articleId: articleId){ (status,response) in
-     switch response {
-     case .Success(let data) :
-     self.RecomArticleData = data
-     self.suggestedCV.reloadData()
-     case .Failure(let errormessage) :
-     if errormessage == "no net"{
-     self.view.makeToast(errormessage, duration: 2.0, position: .center)
-     }
-     case .Change(let code):
-     if code == 404{
-     let defaultList = ["googleToken","FBToken","token", "first_name", "last_name", "user_id", "email"]
-     Helper().clearDefaults(list : defaultList)
-     self.NavigationToLogin()
-     }
-     }
-     }
-     }*/
-    func RecommendationAPICall(){
+    
+    func RecommendationDBCall(){
         DBManager().saveRecommendation(articleId : articleId){
             response in
             self.fetchRecommendation()
@@ -268,8 +250,8 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
         let result = DBManager().fetchRecommendation(articleId : articleId)
         switch result {
         case .Success(let DBData) :
-            ShowArticle = DBData
-            if ShowArticle.count > 0{
+            RecommendationArticle = DBData
+            if RecommendationArticle.count > 0{
                 suggestedCV.reloadData()
             }
             else{
@@ -1468,21 +1450,21 @@ extension NewsDetailVC:UICollectionViewDelegate, UICollectionViewDataSource, UIC
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        // return (self.RecomArticleData.count != 0) ? self.RecomArticleData[0].body!.articles.count + 1 : 0
-        if RecomData.count == 0 && searchRecomData.count == 0 && sourceRecomData.count == 0{
-            return 0
-        }
-        else if RecomData.count >= 5 || searchRecomData.count >= 5 || sourceRecomData.count >= 5{
-            return 6
-        }else{
-            if RecomData.count > 0{
-                return RecomData.count + 1
-            }else if searchRecomData.count > 0 {
-                return searchRecomData.count + 1
-            }else{
-                return sourceRecomData.count + 1
-            }
-        }
+        return (self.RecommendationArticle.count != 0) ? self.RecommendationArticle.count + 1 : 0 //.count + 1 : 0
+        /* if RecomData.count == 0 && searchRecomData.count == 0 && sourceRecomData.count == 0{
+         return 0
+         }
+         else if RecomData.count >= 5 || searchRecomData.count >= 5 || sourceRecomData.count >= 5{
+         return 6
+         }else{
+         if RecomData.count > 0{
+         return RecomData.count + 1
+         }else if searchRecomData.count > 0 {
+         return searchRecomData.count + 1
+         }else{
+         return sourceRecomData.count + 1
+         }
+         }*/
         // return ShowArticle.count != 0 ? ShowArticle.count : 0
     }
     
@@ -1516,26 +1498,13 @@ extension NewsDetailVC:UICollectionViewDelegate, UICollectionViewDataSource, UIC
             cell.imgNews.isHidden = false
             cell.lblTitle.isHidden = false
             cell.lblMoreStories.isHidden = true
-            if currentEntity == "SearchArticles"{
-                let currentArticle =  searchRecomData[indexPath.row - 1] //RecomArticleData[0].body!.articles[indexPath.row - 1]
-                cell.lblTitle.text = currentArticle.title
-                if currentArticle.imageURL != nil{
-                    cell.imgNews.sd_setImage(with: URL(string: currentArticle.imageURL!), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
-                }
-            }else if currentEntity == "source"{
-                let currentArticle =  sourceRecomData[indexPath.row - 1] //RecomArticleData[0].body!.articles[indexPath.row - 1]
-                cell.lblTitle.text = currentArticle.title
-                if currentArticle.imageURL != nil{
-                    cell.imgNews.sd_setImage(with: URL(string: currentArticle.imageURL!), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
-                }
+            
+            let currentArticle =  RecommendationArticle[indexPath.row - 1]
+            cell.lblTitle.text = currentArticle.title
+            if currentArticle.imageURL != nil{
+                cell.imgNews.sd_setImage(with: URL(string: currentArticle.imageURL!), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
             }
-            else{
-                let currentArticle =  RecomData[indexPath.row - 1] //RecomArticleData[0].body!.articles[indexPath.row - 1]
-                cell.lblTitle.text = currentArticle.title
-                if currentArticle.imageURL != nil{
-                    cell.imgNews.sd_setImage(with: URL(string: currentArticle.imageURL!), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
-                }
-            }
+            
             
             if cell.imgNews.image == nil{
                 cell.imgNews.image = UIImage(named: AssetConstants.NoImage)
@@ -1570,15 +1539,8 @@ extension NewsDetailVC:UICollectionViewDelegate, UICollectionViewDataSource, UIC
             }
             newsDetailvc.newsCurrentIndex = indexPath.row - 1
             if ShowArticle.count > 0{
-                newsDetailvc.ShowArticle =  RecomData //RecomArticleData[0].body!.articles
-                newsDetailvc.articleId = Int(RecomData[indexPath.row].article_id)  //RecomArticleData[0].body!.articles[indexPath.row - 1].article_id!
-            }else if sourceArticle.count > 0{
-                newsDetailvc.sourceArticle = sourceRecomData
-                newsDetailvc.articleId = Int(sourceRecomData[indexPath.row].article_id)
-            }
-            else{
-                newsDetailvc.SearchArticle = searchRecomData
-                newsDetailvc.articleId = Int(searchRecomData[indexPath.row].article_id)
+                newsDetailvc.ShowArticle =  RecommendationArticle //RecomArticleData[0].body!.articles
+                newsDetailvc.articleId = Int(RecommendationArticle[indexPath.row].article_id)  //RecomArticleData[0].body!.articles[indexPath.row - 1].article_id!
             }
             present(newsDetailvc, animated: true, completion: nil)
         }

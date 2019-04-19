@@ -24,7 +24,7 @@ struct articleBody : Decodable{
     var articles : [Article]
     var categoryDetail : CategoryDetails?
     var filters : ArticleFilter?
-   
+    
     enum CodingKeys: String, CodingKey{
         case articles = "results"
         case count
@@ -94,7 +94,7 @@ struct Recommendation : Decodable{
 }
 
 struct RecomResult : Decodable{
-    var results : [TrendingArticle]
+    var results : [Article]
 }
 
 
