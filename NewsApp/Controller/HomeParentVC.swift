@@ -371,12 +371,20 @@ class HomeParentVC: ButtonBarPagerTabStripViewController{
             if UserDefaults.standard.value(forKey: "subMenuId") != nil{
                 SubmenuId = UserDefaults.standard.value(forKey: "subMenuId") as! Int
             }
+            if subMenuArr[HeadingRow][indexPath.row] != "today"{
             Helper().getMenuEvents(action: "sub_menu_click", menuId: SubmenuId, menuName: subMenuArr[HeadingRow][indexPath.row])
+            }
             return super.collectionView(collectionView,didSelectItemAt: indexPath)
         }
         else{
             HeadingRow = indexPath.row
+            let count = headingArr.count - 1
+            if indexPath.row < count{
             Helper().getMenuEvents(action: "menu_click", menuId: headingIds[indexPath.row], menuName: headingArr[indexPath.row])
+        }
+            else{
+                  Helper().getMenuEvents(action: "menu_click", menuId: 0, menuName: headingArr[indexPath.row])
+            }
             reloadPagerTabStripView()
         }
     }

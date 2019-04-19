@@ -292,9 +292,17 @@ class HomeVC: UIViewController{
         }
     }
     
+    func retainClusterData(){
+         if isTrendingDetail ==  2{
+            ShowArticle = clusterArticles
+            HomeNewsTV.reloadData()
+    }
+    }
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        if tabBarTitle != "Test" && tabBarTitle != "today"{
+        //if tabBarTitle != "Test" && tabBarTitle != "today"{
+        if isTrendingDetail == 0 {
             if Reachability.isConnectedToNetwork(){
                 activityIndicator.startAnimating()
                 if UserDefaults.standard.value(forKey: "submenuURL") != nil{
@@ -311,7 +319,8 @@ class HomeVC: UIViewController{
                 }
             }
         }
-        if tabBarTitle == "today"{
+        //if tabBarTitle == "today"{
+         if isTrendingDetail == 1 {
             var records = DBManager().IsCoreDataEmpty(entity: "TrendingCategory")
             if records <= 0{
                 DBManager().saveTrending{response in
@@ -320,6 +329,9 @@ class HomeVC: UIViewController{
             }else{
                 self.fetchTrending()
             }
+        }
+         else if isTrendingDetail == 2{
+            retainClusterData()
         }
     }
     

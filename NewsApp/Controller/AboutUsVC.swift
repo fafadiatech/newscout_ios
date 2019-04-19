@@ -47,7 +47,6 @@ class AboutUsVC: UIViewController {
             txtViewAboutUs.backgroundColor = colorConstants.grayBackground3
             viewLblContainer.backgroundColor = colorConstants.grayBackground3
         }
-        
     }
     
     @objc private func darkModeEnabled(_ notification: Notification) {
