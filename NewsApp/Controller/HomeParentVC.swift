@@ -208,6 +208,14 @@ class HomeParentVC: ButtonBarPagerTabStripViewController{
                 self.headingIds.append(Int(i.headingId))
             }
             headingArr.append("Trending")
+            headingIds.append(0)
+            var temp  = headingArr.count / 2 - 1
+            print("temp:\(temp)")
+            headingArr.rearrange(from: headingArr.count - 1, to: temp)
+            headingIds.rearrange(from: headingArr.count - 1, to: temp)
+//            headingArr.rearrange(from: headingArr.count - 1, to: temp)
+//            headingArr.rearrange(from: headingArr.count - 1, to: temp)
+            print("headingArr after rearrange: \(headingArr)")
             self.menuCV.reloadData()
             for heading in headingData{
                 let subresult = DBManager().fetchSubMenu(headingId: Int(heading.headingId))
@@ -232,7 +240,10 @@ class HomeParentVC: ButtonBarPagerTabStripViewController{
         case .Failure(let error) :
             print(error)
         }
+        var temp  = headingArr.count / 2 - 1
         subMenuArr.append(["today"])
+        print(subMenuArr)
+        subMenuArr.rearrange(from: subMenuArr.count - 1, to: temp)
     }
     
     func fetchSubmenuId(submenu : String){

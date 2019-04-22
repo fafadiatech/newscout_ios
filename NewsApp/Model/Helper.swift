@@ -108,6 +108,18 @@ class Helper{
         
     }
 }
+
+extension RangeReplaceableCollection where Indices: Equatable {
+    mutating func rearrange(from: Index, to: Index) {
+        precondition(from != to && indices.contains(from) && indices.contains(to), "invalid indices")
+        insert(remove(at: from), at: to)
+    }
+}
+extension Array {
+    mutating func rearrange(from: Int, to: Int) {
+        insert(remove(at: from), at: to)
+    }
+}
 //show an image from url
 extension UIImageView {
     func downloadedFrom(url: URL, contentMode mode: UIViewContentMode = .scaleAspectFit) {
