@@ -301,18 +301,27 @@ class HomeiPadVC: UIViewController{
     }
 }
 
-extension HomeiPadVC: UICollectionViewDelegate, UICollectionViewDataSource, UIScrollViewDelegate{
+extension HomeiPadVC: UICollectionViewDelegate, UICollectionViewDataSource, UIScrollViewDelegate, UICollectionViewDelegateFlowLayout{
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         var width = CGFloat()
-        if tabBarTitle != "trending" ||  tabBarTitle != "test"{
-     width = HomeNewsCV.frame.width/2
+        if tabBarTitle != "today" ||  tabBarTitle != "test"{
+     width = HomeNewsCV.frame.width/3
         }
         else{
-             width = HomeNewsCV.frame.width/3
+             width = HomeNewsCV.frame.width/2
         }
-    let height : CGFloat = 160.0
+    let height : CGFloat = 305.0
     return CGSize(width: width, height: height)
     }
+    
+//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+//
+//        let width = self.HomeNewsCV.frame.size.width / 3
+//
+//        return CGSize(width: width, height: 230)
+//
+//    }
+   
     //these methods are to configure the spacing between items
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
