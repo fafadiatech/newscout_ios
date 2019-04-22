@@ -109,7 +109,6 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
         btnReadMore.layer.cornerRadius = 5
         btnReadMore.layer.borderWidth = 1
         btnReadMore.layer.borderColor = UIColor.gray.cgColor
-        filterRecommendation()
         btnPlayVideo.isHidden = true
         imgScrollView.delegate = self
         imgArray = [#imageLiteral(resourceName: "f3"),#imageLiteral(resourceName: "f1") ,#imageLiteral(resourceName: "f2")]
@@ -255,6 +254,7 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
                 suggestedCV.reloadData()
             }
             else{
+               // filterRecommendation()
                 activityIndicator.stopAnimating()
             }
         case .Failure(let errorMsg) :
@@ -1124,7 +1124,6 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
                             self.btnDislike.setImage(UIImage(named: AssetConstants.thumb_down), for: .normal)
                             
                         }
-                        self.view.makeToast(response, duration: 1.0, position: .center)
                         DBManager().addLikedArticle(tempentity: self.currentEntity, id: self.articleId, status: 0)
                     }
                 }
@@ -1168,7 +1167,6 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
                         if (self.btnLike.currentImage?.isEqual(UIImage(named: AssetConstants.thumb_up_filled)))! {
                             self.btnLike.setImage(UIImage(named: AssetConstants.thumb_up), for: .normal)
                         }
-                        self.view.makeToast(response, duration: 1.0, position: .center)
                         DBManager().addLikedArticle(tempentity:self.currentEntity, id: self.articleId, status: 1)
                     }
                 }
@@ -1208,7 +1206,6 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
                     else{
                         self.setBookmarkImg()
                         DBManager().addBookmarkedArticles(currentEntity: self.currentEntity, id: self.articleId)
-                        self.view.makeToast(response, duration: 1.0, position: .center)
                     }
                 }
             }
@@ -1230,7 +1227,6 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
                         }
                         self.newsCurrentIndex = self.newsCurrentIndex - 1
                         self.indexCount = self.indexCount - 1
-                        self.view.makeToast(response, duration: 1.0, position: .center)
                     }
                 }
             }

@@ -194,30 +194,30 @@
                                         <rect key="frame" x="0.0" y="0.0" width="315" height="59.5"/>
                                         <subviews>
                                             <button opaque="NO" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" contentHorizontalAlignment="leading" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ven-a5-ngg">
-                                                <rect key="frame" x="43" y="0.0" width="119" height="59.5"/>
+                                                <rect key="frame" x="45" y="0.0" width="88" height="59.5"/>
                                                 <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="16"/>
-                                                <state key="normal" title="  Night Mode">
+                                                <state key="normal" title="  Settings">
                                                     <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                                 </state>
                                                 <variation key="heightClass=regular-widthClass=regular">
                                                     <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="20"/>
                                                 </variation>
                                                 <connections>
-                                                    <action selector="btnNightModeActn:" destination="SXV-EA-KWG" eventType="touchUpInside" id="roW-Dl-Rdy"/>
+                                                    <action selector="btnSettingsActn:" destination="SXV-EA-KWG" eventType="touchUpInside" id="igC-Ie-7Nw"/>
                                                 </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xeV-qS-NrM">
-                                                <rect key="frame" x="15" y="18.5" width="21" height="22"/>
+                                                <rect key="frame" x="15" y="18.5" width="23" height="22"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="22" id="FPB-RZ-Q2P"/>
-                                                    <constraint firstAttribute="width" constant="21" id="r7O-g3-E0Q"/>
+                                                    <constraint firstAttribute="width" constant="23" id="r7O-g3-E0Q"/>
                                                 </constraints>
                                                 <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                <state key="normal" image="moon24">
+                                                <state key="normal" image="settings">
                                                     <color key="titleColor" red="0.9616458873" green="0.9616458873" blue="0.9616458873" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                                 </state>
                                                 <connections>
-                                                    <action selector="btnNightModeActn:" destination="SXV-EA-KWG" eventType="touchUpInside" id="W7J-bd-1v2"/>
+                                                    <action selector="btnSettingsActn:" destination="SXV-EA-KWG" eventType="touchUpInside" id="Jsq-NF-gSB"/>
                                                 </connections>
                                             </button>
                                         </subviews>
@@ -274,27 +274,28 @@
                                         <rect key="frame" x="0.0" y="119" width="315" height="59"/>
                                         <subviews>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="leading" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0z0-4g-NGU">
-                                                <rect key="frame" x="45" y="0.0" width="88" height="57"/>
+                                                <rect key="frame" x="43" y="0.0" width="119" height="57"/>
                                                 <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="16"/>
-                                                <state key="normal" title="  Settings">
+                                                <state key="normal" title="  Night Mode">
                                                     <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                                 </state>
                                                 <variation key="heightClass=regular-widthClass=regular">
                                                     <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="20"/>
                                                 </variation>
                                                 <connections>
-                                                    <action selector="btnSettingsActn:" destination="SXV-EA-KWG" eventType="touchUpInside" id="DSs-C5-1zx"/>
+                                                    <action selector="btnNightModeActn:" destination="SXV-EA-KWG" eventType="touchUpInside" id="eiy-lq-0eY"/>
                                                 </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="o4G-5j-zjq">
-                                                <rect key="frame" x="15" y="18.5" width="23" height="22"/>
+                                                <rect key="frame" x="15" y="18.5" width="21" height="22"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="22" id="J1m-LH-UIz"/>
-                                                    <constraint firstAttribute="width" constant="23" id="kBQ-st-LPO"/>
+                                                    <constraint firstAttribute="width" constant="21" id="kBQ-st-LPO"/>
                                                 </constraints>
-                                                <state key="normal" backgroundImage="settings"/>
+                                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <state key="normal" backgroundImage="moon24"/>
                                                 <connections>
-                                                    <action selector="btnSettingsActn:" destination="SXV-EA-KWG" eventType="touchUpInside" id="whG-tf-LXF"/>
+                                                    <action selector="btnNightModeActn:" destination="SXV-EA-KWG" eventType="touchUpInside" id="Eqc-wd-7Jn"/>
                                                 </connections>
                                             </button>
                                         </subviews>
@@ -353,12 +354,12 @@
                         <outlet property="btnBack" destination="4pE-7p-WTz" id="665-vm-vp8"/>
                         <outlet property="btnBookmark" destination="cYz-6A-Jgx" id="cgK-Uk-Iw4"/>
                         <outlet property="btnBookmarkImg" destination="LTj-3k-aAw" id="kHv-i3-wbc"/>
-                        <outlet property="btnNightMode" destination="Ven-a5-ngg" id="zgz-mS-Qri"/>
-                        <outlet property="btnNightModeImg" destination="xeV-qS-NrM" id="nsI-NW-TIN"/>
+                        <outlet property="btnNightMode" destination="0z0-4g-NGU" id="znp-xM-J8b"/>
+                        <outlet property="btnNightModeImg" destination="o4G-5j-zjq" id="rmO-Yr-vjx"/>
                         <outlet property="btnSearch" destination="sgS-XG-b68" id="NMD-Aw-wPH"/>
-                        <outlet property="btnSettingImg" destination="o4G-5j-zjq" id="Pih-ZV-IFZ"/>
+                        <outlet property="btnSettingImg" destination="xeV-qS-NrM" id="Tz5-y3-Ikv"/>
                         <outlet property="btnSettings" destination="uzw-Xq-ysg" id="eRq-33-bOL"/>
-                        <outlet property="btnSettingsNav" destination="0z0-4g-NGU" id="diB-h0-8D9"/>
+                        <outlet property="btnSettingsNav" destination="Ven-a5-ngg" id="L2c-M3-lpz"/>
                         <outlet property="buttonBarView" destination="ocm-su-HUj" id="5Ig-B9-2lv"/>
                         <outlet property="containerView" destination="T1n-KR-odW" id="5uc-hW-IkO"/>
                         <outlet property="containerViewTopConstraint" destination="PwR-Q7-p8c" id="YBa-zs-wUY"/>
@@ -1188,14 +1189,25 @@
                                     <outlet property="delegate" destination="5nH-8b-x0R" id="dHC-yY-3Mk"/>
                                 </connections>
                             </collectionView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="No news found" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Cn9-8Q-NdF">
+                                <rect key="frame" x="285.5" y="546" width="197" height="35.5"/>
+                                <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="20"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                                <variation key="heightClass=regular-widthClass=regular">
+                                    <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="30"/>
+                                </variation>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="KTg-9I-CP3" firstAttribute="leading" secondItem="D9u-G9-ZAc" secondAttribute="leading" id="1p7-j4-Irp"/>
                             <constraint firstItem="ZCL-97-bel" firstAttribute="top" secondItem="PKt-C2-T3c" secondAttribute="bottom" id="2gh-oh-baW"/>
+                            <constraint firstItem="Cn9-8Q-NdF" firstAttribute="centerY" secondItem="KTg-9I-CP3" secondAttribute="centerY" id="DlX-qi-REy"/>
                             <constraint firstItem="KTg-9I-CP3" firstAttribute="top" secondItem="B8k-dk-ekg" secondAttribute="bottom" id="EC7-33-qyP"/>
                             <constraint firstItem="B8k-dk-ekg" firstAttribute="height" secondItem="D9u-G9-ZAc" secondAttribute="height" multiplier="0.082" id="IbE-iH-Yjd"/>
                             <constraint firstItem="B8k-dk-ekg" firstAttribute="top" secondItem="LnB-Co-tcs" secondAttribute="bottom" id="LZL-ze-eA3"/>
+                            <constraint firstItem="Cn9-8Q-NdF" firstAttribute="centerX" secondItem="KTg-9I-CP3" secondAttribute="centerX" id="V20-AF-YyT"/>
                             <constraint firstItem="KTg-9I-CP3" firstAttribute="trailing" secondItem="D9u-G9-ZAc" secondAttribute="trailing" id="aNI-t9-Puh"/>
                             <constraint firstAttribute="trailing" secondItem="PKt-C2-T3c" secondAttribute="trailing" id="abs-XS-PI8"/>
                             <constraint firstItem="PKt-C2-T3c" firstAttribute="leading" secondItem="D9u-G9-ZAc" secondAttribute="leading" id="cjB-6d-Ope"/>
@@ -1210,6 +1222,7 @@
                         <outlet property="bookmarkResultTV" destination="KTg-9I-CP3" id="o6Y-Hg-qm0"/>
                         <outlet property="btnBack" destination="Iev-1c-cA0" id="AO8-oc-8hl"/>
                         <outlet property="lblBookmark" destination="GcZ-75-Wwf" id="fOt-JA-3p1"/>
+                        <outlet property="lblNoBookmark" destination="Cn9-8Q-NdF" id="bbg-gw-rsm"/>
                         <outlet property="titleView" destination="B8k-dk-ekg" id="ZTX-tO-LI1"/>
                     </connections>
                 </viewController>

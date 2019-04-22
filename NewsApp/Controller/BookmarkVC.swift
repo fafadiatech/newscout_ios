@@ -17,6 +17,7 @@ class BookmarkVC: UIViewController {
     @IBOutlet weak var titleView: UIView!
     @IBOutlet weak var bookmarkResultTV: UITableView!
     @IBOutlet weak var btnBack: UIButton!
+    @IBOutlet weak var lblNoBookmark: UILabel!
     let activityIndicator = MDCActivityIndicator()
     let appDelegate = UIApplication.shared.delegate as? AppDelegate
     let textSizeSelected = UserDefaults.standard.value(forKey: "textSize") as! Int
@@ -30,6 +31,7 @@ class BookmarkVC: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        lblNoBookmark.isHidden = true
         bookmarkResultTV.tableFooterView = UIView(frame: .zero)
         NotificationCenter.default.addObserver(self, selector: #selector(darkModeEnabled(_:)), name: .darkModeEnabled, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(darkModeDisabled(_:)), name: .darkModeDisabled, object: nil)
@@ -58,8 +60,8 @@ class BookmarkVC: UIViewController {
         }
         else{
             activityIndicator.stopAnimating()
-            self.showMsg(title: "Please login to continue..", msg: "")
-            self.view.makeToast("You need to login", duration: 1.0, position: .center)
+            lblNoBookmark.text = "Login to see bookmark list"
+            lblNoBookmark.isHidden = false
         }
         let refreshControl = UIRefreshControl()
         if UserDefaults.standard.value(forKey: "token") != nil{
@@ -114,7 +116,9 @@ class BookmarkVC: UIViewController {
             ShowArticle = DBData
             if ShowArticle.count == 0{
                 activityIndicator.stopAnimating()
-                self.bookmarkResultTV.makeToast("No news found", duration: 3.0, position: .center)
+                lblNoBookmark.text = "No bookmarks"
+                lblNoBookmark.isHidden = false
+                //self.bookmarkResultTV.makeToast("No news found", duration: 3.0, position: .center)
             }
             if bookmarkResultTV.isHidden == false{
                 bookmarkResultTV.reloadData()
@@ -122,7 +126,7 @@ class BookmarkVC: UIViewController {
                 bookmarkCV.reloadData()
             }
         case .Failure(let errorMsg) :
-            self.bookmarkResultTV.makeToast(errorMsg, duration: 1.0, position: .center)
+            print(errorMsg)
         }
     }
     
@@ -180,7 +184,8 @@ class BookmarkVC: UIViewController {
                     }
                     if data[0].body!.articles.count == 0{
                         self.activityIndicator.stopAnimating()
-                        self.bookmarkResultTV.makeToast("There is not any article bookmarked yet...", duration: 1.0, position: .center)
+                        self.lblNoBookmark.text = "No bookmarks"
+                        self.lblNoBookmark.isHidden = false
                     }else{
                         if self.bookmarkResultTV.isHidden == false{
                             self.bookmarkResultTV.reloadData()
@@ -191,7 +196,7 @@ class BookmarkVC: UIViewController {
                 }
             case .Failure(let errormessage) :
                 self.activityIndicator.startAnimating()
-                self.bookmarkResultTV.makeToast(errormessage, duration: 2.0, position: .center)
+                print(errormessage)
             case .Change(let code) :
                 print(code)
             }
@@ -330,7 +335,8 @@ extension BookmarkVC: UITableViewDelegate, UITableViewDataSource{
                 cellOdd.lblNewsDescription.textColor = colorConstants.blackColor
                 NightNight.theme =  .normal
             }
-            
+            print(indexPath.row)
+            print(currentArticle)
             if ((currentArticle.published_on?.count)!) <= 20{
                 if !(currentArticle.published_on?.contains("Z"))!{
                     currentArticle.published_on?.append("Z")
@@ -406,7 +412,7 @@ extension BookmarkVC: UITableViewDelegate, UITableViewDataSource{
                         }
                     case .Failure(let errormessage) :
                         self.activityIndicator.startAnimating()
-                        self.bookmarkResultTV.makeToast(errormessage, duration: 2.0, position: .center)
+                        print(errormessage)
                     case .Change(let code):
                         print(code)
                     }
@@ -536,7 +542,7 @@ extension BookmarkVC: UICollectionViewDelegate, UICollectionViewDataSource, UISc
                             }
                         case .Failure(let errormessage) :
                             self.activityIndicator.startAnimating()
-                            self.bookmarkResultTV.makeToast(errormessage, duration: 2.0, position: .center)
+                            print(errormessage)
                         case .Change(let code):
                             print(code)
                         }

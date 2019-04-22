@@ -314,13 +314,6 @@ extension HomeiPadVC: UICollectionViewDelegate, UICollectionViewDataSource, UISc
     return CGSize(width: width, height: height)
     }
     
-//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-//
-//        let width = self.HomeNewsCV.frame.size.width / 3
-//
-//        return CGSize(width: width, height: 230)
-//
-//    }
    
     //these methods are to configure the spacing between items
     
