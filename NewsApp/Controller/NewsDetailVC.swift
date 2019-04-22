@@ -544,7 +544,7 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
                     suggestedView.isHidden = true
                     newsCurrentIndex = newsCurrentIndex - 1
                     ShowNews(currentIndex : newsCurrentIndex)
-                    filterRecommendation()
+                    RecommendationDBCall()
                     transition.type = kCATransitionPush
                     transition.subtype = kCATransitionFromBottom
                     view.window!.layer.add(transition, forKey: kCATransition)
@@ -560,7 +560,7 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
                     newsCurrentIndex = newsCurrentIndex + 1
                     suggestedView.isHidden = true
                     ShowNews(currentIndex : newsCurrentIndex)
-                    filterRecommendation()
+                    RecommendationDBCall()
                     transition.type = kCATransitionPush
                     transition.subtype = kCATransitionFromTop
                     view.window!.layer.add(transition, forKey: kCATransition)
@@ -1464,7 +1464,7 @@ extension NewsDetailVC:UICollectionViewDelegate, UICollectionViewDataSource, UIC
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return (self.RecommendationArticle.count != 0) ? self.RecommendationArticle.count + 1 : 0 //.count + 1 : 0
+        return (self.RecommendationArticle.count > 0) ? 6 : 0 //.count + 1 : 0
         /* if RecomData.count == 0 && searchRecomData.count == 0 && sourceRecomData.count == 0{
          return 0
          }

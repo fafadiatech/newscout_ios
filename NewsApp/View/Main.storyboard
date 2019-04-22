@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="SXV-EA-KWG">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="SXV-EA-KWG">
     <device id="ipad9_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -53,7 +53,7 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4pE-7p-WTz">
-                                        <rect key="frame" x="0.0" y="0.0" width="75" height="75"/>
+                                        <rect key="frame" x="0.0" y="4" width="75" height="67"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="75" id="Zl7-vk-deS">
                                                 <variation key="heightClass=regular-widthClass=compact" constant="55"/>
@@ -74,10 +74,9 @@
                                     <constraint firstItem="uzw-Xq-ysg" firstAttribute="centerY" secondItem="ao8-14-oL8" secondAttribute="centerY" id="DAT-6G-eog"/>
                                     <constraint firstAttribute="trailing" secondItem="uzw-Xq-ysg" secondAttribute="trailing" constant="10" id="T3H-PF-jY5"/>
                                     <constraint firstItem="pzB-EX-EQD" firstAttribute="centerY" secondItem="ao8-14-oL8" secondAttribute="centerY" id="Tge-20-fax"/>
-                                    <constraint firstItem="4pE-7p-WTz" firstAttribute="top" secondItem="ao8-14-oL8" secondAttribute="top" id="XFR-kL-jHh"/>
+                                    <constraint firstItem="4pE-7p-WTz" firstAttribute="top" secondItem="ao8-14-oL8" secondAttribute="top" constant="4" id="XFR-kL-jHh"/>
                                     <constraint firstItem="pzB-EX-EQD" firstAttribute="centerX" secondItem="ao8-14-oL8" secondAttribute="centerX" id="Zaa-Cg-Z4M"/>
-                                    <constraint firstItem="4pE-7p-WTz" firstAttribute="centerY" secondItem="ao8-14-oL8" secondAttribute="centerY" id="ac4-05-ag1"/>
-                                    <constraint firstAttribute="bottom" secondItem="4pE-7p-WTz" secondAttribute="bottom" id="dkW-j1-1B3"/>
+                                    <constraint firstAttribute="bottom" secondItem="4pE-7p-WTz" secondAttribute="bottom" constant="4" id="dkW-j1-1B3"/>
                                     <constraint firstItem="4pE-7p-WTz" firstAttribute="leading" secondItem="ao8-14-oL8" secondAttribute="leading" id="iX5-MT-lTF"/>
                                     <constraint firstItem="uzw-Xq-ysg" firstAttribute="leading" secondItem="sgS-XG-b68" secondAttribute="trailing" constant="4" id="k7a-Bo-EKr"/>
                                 </constraints>
@@ -362,6 +361,7 @@
                         <outlet property="btnSettingsNav" destination="0z0-4g-NGU" id="diB-h0-8D9"/>
                         <outlet property="buttonBarView" destination="ocm-su-HUj" id="5Ig-B9-2lv"/>
                         <outlet property="containerView" destination="T1n-KR-odW" id="5uc-hW-IkO"/>
+                        <outlet property="containerViewTopConstraint" destination="PwR-Q7-p8c" id="YBa-zs-wUY"/>
                         <outlet property="lblAppName" destination="pzB-EX-EQD" id="QSu-57-LfK"/>
                         <outlet property="menuCV" destination="vYM-Wx-vng" id="f5T-vd-82T"/>
                         <outlet property="viewAppTitle" destination="ao8-14-oL8" id="ko8-sk-Rjl"/>
@@ -5238,10 +5238,10 @@
         <image name="glogo" width="48" height="48"/>
         <image name="logo" width="512" height="512"/>
         <image name="menu" width="512" height="512"/>
-        <image name="moon24" width="18" height="18"/>
+        <image name="moon24" width="24" height="24"/>
         <image name="newsearch" width="512" height="512"/>
         <image name="play" width="256" height="256"/>
-        <image name="search" width="37.5" height="37.5"/>
+        <image name="search" width="50" height="50"/>
         <image name="settings" width="512" height="512"/>
         <image name="share" width="512" height="512"/>
         <image name="shuffled" width="512" height="512"/>

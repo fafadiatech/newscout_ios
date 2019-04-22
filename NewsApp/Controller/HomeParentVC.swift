@@ -40,6 +40,7 @@ class HomeParentVC: ButtonBarPagerTabStripViewController{
     @IBOutlet weak var btnNightModeImg: UIButton!
     @IBOutlet weak var btnBookmarkImg: UIButton!
     @IBOutlet weak var btnSettingImg: UIButton!
+    @IBOutlet weak var containerViewTopConstraint: NSLayoutConstraint!
     
     var statusBarOrientation: UIInterfaceOrientation = UIApplication.shared.statusBarOrientation
     let activityIndicator = MDCActivityIndicator()
@@ -309,6 +310,14 @@ class HomeParentVC: ButtonBarPagerTabStripViewController{
                     childVC.tabBarTitle = cat
                     childrenVC.append(childVC)
                     childVC.protocolObj = self
+                    childVC.trendingProtocol = self
+                    if childVC.tabBarTitle == "today"{
+                        buttonBarView.isHidden = true
+                        HideButtonBarView()
+                    }else{
+                        buttonBarView.isHidden = false
+                        unhideButtonBarView()
+                    }
                 }
             }
         }
@@ -317,9 +326,36 @@ class HomeParentVC: ButtonBarPagerTabStripViewController{
             childVC.tabBarTitle = "Test"
             childrenVC.append(childVC)
         }
+        
         return childrenVC
     }
     
+    func HideButtonBarView(){
+        if containerViewTopConstraint != nil{
+            NSLayoutConstraint.deactivate([containerViewTopConstraint])
+            containerViewTopConstraint = NSLayoutConstraint (item: containerView,
+                                                        attribute: NSLayoutAttribute.top,
+                                                        relatedBy: NSLayoutRelation.equal,
+                                                        toItem: menuCV,
+                                                        attribute: NSLayoutAttribute.bottom,
+                                                        multiplier: 1,
+                                                        constant: 0)
+            NSLayoutConstraint.activate([containerViewTopConstraint])
+        }
+    }
+    func unhideButtonBarView(){
+        if containerViewTopConstraint != nil{
+            NSLayoutConstraint.deactivate([containerViewTopConstraint])
+            containerViewTopConstraint = NSLayoutConstraint (item: containerView,
+                                                             attribute: NSLayoutAttribute.top,
+                                                             relatedBy: NSLayoutRelation.equal,
+                                                             toItem: buttonBarView,
+                                                             attribute: NSLayoutAttribute.bottom,
+                                                             multiplier: 1,
+                                                             constant: 0)
+            NSLayoutConstraint.activate([containerViewTopConstraint])
+        }
+    }
     override func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: IndexPath) -> CGSize {
         if (collectionView == buttonBarView) {
             return super.collectionView(collectionView,layout: UICollectionViewLayout.init(), sizeForItemAtIndexPath : indexPath)
@@ -398,7 +434,9 @@ class HomeParentVC: ButtonBarPagerTabStripViewController{
     }
     
     @IBAction func btnBackAction(_ sender: Any) {
-        self.dismiss(animated: false)
+        //self.dismiss(animated: false)
+    reloadPagerTabStripView()
+        
     }
     
     @IBAction func btnSettingsActn(_ sender: Any) {
@@ -452,6 +490,7 @@ extension HomeParentVC: TrendingBack{
     func isTrendingTVLoaded(status: Bool) {
         if status == true{
             btnBack.isHidden = false
+            //reloadPagerTabStripView()
         }else{
             btnBack.isHidden = true
         }

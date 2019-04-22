@@ -168,6 +168,7 @@ class HomeVC: UIViewController{
                 self.lblNonews.isHidden = true
                 ShowArticle = DBData
                 self.HomeNewsTV.reloadData()
+                scrollToFirstRow()
             }
             else{
                 self.HomeNewsTV.reloadData()
@@ -395,7 +396,10 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
             isTrendingDetail = 2
         }
     }
-    
+    func scrollToFirstRow() {
+        let indexPath = NSIndexPath(row: 0, section: 0)
+        self.HomeNewsTV.scrollToRow(at: indexPath as IndexPath, at: .top, animated: true)
+    }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
