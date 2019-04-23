@@ -141,6 +141,10 @@ class DBManager{
                             newArticle.title = news.title
                             newArticle.blurb = news.blurb
                             newArticle.imageURL = news.imageURL
+                            newArticle.source = news.source!
+                            newArticle.source_url = news.url
+                            newArticle.published_on = news.published_on
+                            newArticle.category = news.category
                             
                             self.saveBlock()
                         }
@@ -218,10 +222,10 @@ class DBManager{
                             
                             let newArticle = NewsArticle(context: managedContext!)
                             let newTrending  = TrendingCategory(context: managedContext!)
-                            if self.someIDExist(id: news.article_id) == false{
+                            //if self.someIDExist(id: news.article_id) == false{
                                 newTrending.trendingID = Int64(TrendingData[0].body.results[result].id)
                                 newTrending.articleID = Int64(news.article_id)
-                            }
+                               
                             if  self.someEntityExists(id: Int(news.article_id), entity: "NewsArticle", keyword: "") == false{
                                 newArticle.article_id = Int64(news.article_id)
                                 newArticle.title = news.title
@@ -230,8 +234,7 @@ class DBManager{
                                 newArticle.source_url = news.url
                                 newArticle.published_on = news.published_on
                                 newArticle.blurb = news.blurb
-                                newArticle.category = news.category
-                                newArticle.categoryId = Int64(news.category_id)
+                                
                                 /* if news.article_media!.count > 0 {
                                  for media in news.article_media!{
                                  if self.someEntityExists(id: media.media_id, entity: "Media", keyword: "") == false {
@@ -257,8 +260,9 @@ class DBManager{
                                  }*/
                                 
                             }
-                        }
+                        
                         self.saveBlock()
+                        }
                         completion(true)
                     }
                 }
@@ -290,7 +294,9 @@ class DBManager{
             do {
                 let article = try (managedContext?.fetch(fetchRequest))!
                 if article.count > 0{
+                    if !trendingArticles.contains(article[0]){
                     trendingArticles.append(article[0])
+                    }
                 }
             }catch let error as NSError {
                 return ArticleDBfetchResult.Failure(error.localizedDescription)
@@ -365,7 +371,9 @@ class DBManager{
             fetchRequest.predicate = NSPredicate(format: "article_id = %d", id.articleID)
             do {
                 let article = try (managedContext?.fetch(fetchRequest))!
+                 if !trendingArticles.contains(article[0]){
                 trendingArticles.append(article[0])
+                }
             }catch let error as NSError {
                 return ArticleDBfetchResult.Failure(error.localizedDescription)
             }

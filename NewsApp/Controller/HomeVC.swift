@@ -60,6 +60,7 @@ class HomeVC: UIViewController{
     var imgHeight = ""
     var cellHeight:CGFloat = CGFloat()
     var isTrendingDetail = 0
+    
     override func viewDidLoad(){
         super.viewDidLoad()
         HomeNewsTV.tableFooterView = UIView(frame: .zero)
@@ -277,8 +278,23 @@ class HomeVC: UIViewController{
     }
     
     @objc func refreshNews(refreshControl: UIRefreshControl) {
-        saveArticlesInDB()
-        refreshControl.endRefreshing()
+        if isTrendingDetail == 0{
+            saveArticlesInDB()
+            refreshControl.endRefreshing()
+        }
+        else if isTrendingDetail == 1{
+            saveTrending()
+            refreshControl.endRefreshing()
+        }
+        else{
+            refreshControl.endRefreshing()
+        }
+    }
+    
+    func saveTrending(){
+        DBManager().saveTrending{response in
+            self.fetchTrending()
+        }
     }
     
     func filterNews(selectedTag : String){
@@ -294,10 +310,10 @@ class HomeVC: UIViewController{
     }
     
     func retainClusterData(){
-         if isTrendingDetail ==  2{
+        if isTrendingDetail ==  2{
             ShowArticle = clusterArticles
             HomeNewsTV.reloadData()
-    }
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -321,7 +337,7 @@ class HomeVC: UIViewController{
             }
         }
         //if tabBarTitle == "today"{
-         if isTrendingDetail == 1 {
+        if isTrendingDetail == 1 {
             var records = DBManager().IsCoreDataEmpty(entity: "TrendingCategory")
             if records <= 0{
                 DBManager().saveTrending{response in
@@ -331,7 +347,7 @@ class HomeVC: UIViewController{
                 self.fetchTrending()
             }
         }
-         else if isTrendingDetail == 2{
+        else if isTrendingDetail == 2{
             retainClusterData()
         }
     }
@@ -372,7 +388,7 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return (ShowArticle.count > 0) ? self.ShowArticle.count : 0
     }
-  
+    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let newsDetailvc:NewsDetailVC = storyboard.instantiateViewController(withIdentifier: "NewsDetailID") as! NewsDetailVC
@@ -382,15 +398,16 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
             UserDefaults.standard.set("cluster", forKey: "isSearch")
         }
         if isTrendingDetail == 0 || isTrendingDetail == 2{
-            newsDetailvc.newsCurrentIndex = indexPath.row
-            newsDetailvc.ShowArticle = sortedData as! [NewsArticle]
-            newsDetailvc.articleId = Int(sortedData[indexPath.row].article_id)
-            
-            present(newsDetailvc, animated: true, completion: nil)
+            if sortedData.count > 0 {
+                newsDetailvc.newsCurrentIndex = indexPath.row
+                newsDetailvc.ShowArticle = sortedData as! [NewsArticle]
+                newsDetailvc.articleId = Int(sortedData[indexPath.row].article_id)
+                present(newsDetailvc, animated: true, completion: nil)
+            }
         }
         else{
             var id = UserDefaults.standard.array(forKey: "trendingArray") as! [Int]
-            let selectedCluster = id[indexPath.row]
+            let selectedCluster = id[indexPath.row + 1]
             fetchClusterIdArticles(clusterID: selectedCluster)
             trendingProtocol?.isTrendingTVLoaded(status: true)
             isTrendingDetail = 2
@@ -565,6 +582,7 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
             }
         }
         else {
+            
             currentArticle = ShowArticle[indexPath.row]
             let cellCluster = tableView.dequeueReusableCell(withIdentifier: "ClusterTVCellID", for:indexPath) as! ClusterTVCell
             imgWidth = String(describing : Int(cellCluster.imgNews.frame.width))
@@ -649,7 +667,8 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         if indexPath.row == tableView.numberOfRows(inSection: indexPath.section) - 1 {
-            if tabBarTitle != "Test" && tabBarTitle != "today"{
+            // if tabBarTitle != "Test" && tabBarTitle != "today"{
+            if isTrendingDetail == 0{
                 var submenu = UserDefaults.standard.value(forKey: "submenu") as! String
                 if ShowArticle.count >= 20{
                     if isAPICalled == false{

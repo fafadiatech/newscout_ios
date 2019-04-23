@@ -208,6 +208,7 @@ class HomeParentVC: ButtonBarPagerTabStripViewController{
                 self.headingIds.append(Int(i.headingId))
             }
             headingArr.insert("Trending", at: 0)
+            headingIds.insert(00, at: 0)
             self.menuCV.reloadData()
             for heading in headingData{
                 let subresult = DBManager().fetchSubMenu(headingId: Int(heading.headingId))
@@ -285,14 +286,12 @@ class HomeParentVC: ButtonBarPagerTabStripViewController{
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         viewOptions.isHidden = true
-        
-        
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        let selectedIndexPath = IndexPath(item: 0, section: 0)
-        menuCV.selectItem(at: selectedIndexPath, animated: false, scrollPosition: .left)
+//        let selectedIndexPath = IndexPath(item: 0, section: 0)
+//        menuCV.selectItem(at: selectedIndexPath, animated: false, scrollPosition: .left)
     }
     
     override func viewControllers(for pagerTabStripController: PagerTabStripViewController) -> [UIViewController] {
