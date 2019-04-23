@@ -394,6 +394,7 @@ class ShuffleDetailVC: UIViewController , UIScrollViewDelegate, TAPageControlDel
         
         if shuffleData.count > 0{
             fetchBookmarkDataFromDB()
+            if shuffleData[currentIndex].title != nil {
             let currentArticle = shuffleData[currentIndex]
             let newDate = dateFormatter.date(from: currentArticle.published_on!)
             var agoDate = ""
@@ -444,6 +445,10 @@ class ShuffleDetailVC: UIViewController , UIScrollViewDelegate, TAPageControlDel
         
         if imgNews.image == nil{
             imgNews.image = UIImage(named: AssetConstants.NoImage)
+        }
+        }
+        else{
+            getShuffleData()
         }
         activityIndicator.stopAnimating()
     }

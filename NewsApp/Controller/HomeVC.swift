@@ -582,7 +582,6 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
             }
         }
         else {
-            
             currentArticle = ShowArticle[indexPath.row]
             let cellCluster = tableView.dequeueReusableCell(withIdentifier: "ClusterTVCellID", for:indexPath) as! ClusterTVCell
             imgWidth = String(describing : Int(cellCluster.imgNews.frame.width))
