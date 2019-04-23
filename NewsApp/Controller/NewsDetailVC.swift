@@ -1548,7 +1548,7 @@ extension NewsDetailVC:UICollectionViewDelegate, UICollectionViewDataSource, UIC
                 UserDefaults.standard.set("recommend", forKey: "isSearch")
             }
             newsDetailvc.newsCurrentIndex = indexPath.row - 1
-            if ShowArticle.count > 0{
+            if RecommendationArticle.count > 0{
                 newsDetailvc.ShowArticle =  RecommendationArticle //RecomArticleData[0].body!.articles
                 newsDetailvc.articleId = Int(RecommendationArticle[indexPath.row].article_id)  //RecomArticleData[0].body!.articles[indexPath.row - 1].article_id!
             }

@@ -207,15 +207,7 @@ class HomeParentVC: ButtonBarPagerTabStripViewController{
                 self.headingArr.append(i.headingName!)
                 self.headingIds.append(Int(i.headingId))
             }
-            headingArr.append("Trending")
-            headingIds.append(0)
-            var temp  = headingArr.count / 2 - 1
-            print("temp:\(temp)")
-            headingArr.rearrange(from: headingArr.count - 1, to: temp)
-            headingIds.rearrange(from: headingArr.count - 1, to: temp)
-//            headingArr.rearrange(from: headingArr.count - 1, to: temp)
-//            headingArr.rearrange(from: headingArr.count - 1, to: temp)
-            print("headingArr after rearrange: \(headingArr)")
+            headingArr.insert("Trending", at: 0)
             self.menuCV.reloadData()
             for heading in headingData{
                 let subresult = DBManager().fetchSubMenu(headingId: Int(heading.headingId))
@@ -230,7 +222,6 @@ class HomeParentVC: ButtonBarPagerTabStripViewController{
                     self.subMenuArr.append(self.submenu)
                     self.fetchSubmenuId(submenu:self.subMenuArr[self.HeadingRow][self.subMenuRow] )
                     UserDefaults.standard.set(self.subMenuArr[self.HeadingRow][self.subMenuRow], forKey: "submenu")
-                    self.reloadPagerTabStripView()
                     
                 case .Failure(let error):
                     print(error)
@@ -240,10 +231,8 @@ class HomeParentVC: ButtonBarPagerTabStripViewController{
         case .Failure(let error) :
             print(error)
         }
-        var temp  = headingArr.count / 2 - 1
-        subMenuArr.append(["today"])
-        print(subMenuArr)
-        subMenuArr.rearrange(from: subMenuArr.count - 1, to: temp)
+        subMenuArr.insert(["today"], at: 0)
+        reloadPagerTabStripView()
     }
     
     func fetchSubmenuId(submenu : String){
@@ -251,7 +240,6 @@ class HomeParentVC: ButtonBarPagerTabStripViewController{
         switch tagresult{
         case .Success(let id) :
             var url = APPURL.ArticleByIdURL + "\(id)"
-            print(url)
             UserDefaults.standard.setValue(id, forKey: "subMenuId")
             UserDefaults.standard.setValue(url, forKey: "submenuURL")
         case .Failure(let error):
@@ -297,15 +285,13 @@ class HomeParentVC: ButtonBarPagerTabStripViewController{
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         viewOptions.isHidden = true
-       
+        
         
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        HeadingRow = 2
-        reloadPagerTabStripView()
-        let selectedIndexPath = IndexPath(item: 2, section: 0)
+        let selectedIndexPath = IndexPath(item: 0, section: 0)
         menuCV.selectItem(at: selectedIndexPath, animated: false, scrollPosition: .left)
     }
     
@@ -313,7 +299,7 @@ class HomeParentVC: ButtonBarPagerTabStripViewController{
         
         //Clear children viewcontrollers
         childrenVC.removeAll()
-        if headingArr.count > 0{
+        if headingArr.count > 0 {
             if UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad && statusBarOrientation.isPortrait{
                 for cat in subMenuArr[HeadingRow]{
                     let childVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "HomeiPadVC") as! HomeiPadVC
@@ -351,12 +337,12 @@ class HomeParentVC: ButtonBarPagerTabStripViewController{
         if containerViewTopConstraint != nil{
             NSLayoutConstraint.deactivate([containerViewTopConstraint])
             containerViewTopConstraint = NSLayoutConstraint (item: containerView,
-                                                        attribute: NSLayoutAttribute.top,
-                                                        relatedBy: NSLayoutRelation.equal,
-                                                        toItem: menuCV,
-                                                        attribute: NSLayoutAttribute.bottom,
-                                                        multiplier: 1,
-                                                        constant: 0)
+                                                             attribute: NSLayoutAttribute.top,
+                                                             relatedBy: NSLayoutRelation.equal,
+                                                             toItem: menuCV,
+                                                             attribute: NSLayoutAttribute.bottom,
+                                                             multiplier: 1,
+                                                             constant: 0)
             NSLayoutConstraint.activate([containerViewTopConstraint])
         }
     }
@@ -425,17 +411,17 @@ class HomeParentVC: ButtonBarPagerTabStripViewController{
                 SubmenuId = UserDefaults.standard.value(forKey: "subMenuId") as! Int
             }
             if subMenuArr[HeadingRow][indexPath.row] != "today"{
-            Helper().getMenuEvents(action: "sub_menu_click", menuId: SubmenuId, menuName: subMenuArr[HeadingRow][indexPath.row])
+                Helper().getMenuEvents(action: "sub_menu_click", menuId: SubmenuId, menuName: subMenuArr[HeadingRow][indexPath.row])
             }
             return super.collectionView(collectionView,didSelectItemAt: indexPath)
         }
         else{
             HeadingRow = indexPath.row
-            if indexPath.row ==  2{
-            Helper().getMenuEvents(action: "menu_click", menuId: 0, menuName: headingArr[indexPath.row])
-        }
+            if indexPath.row ==  0{
+                Helper().getMenuEvents(action: "menu_click", menuId: 0, menuName: headingArr[indexPath.row])
+            }
             else{
-                  Helper().getMenuEvents(action: "menu_click", menuId: headingIds[indexPath.row], menuName: headingArr[indexPath.row])
+                Helper().getMenuEvents(action: "menu_click", menuId: headingIds[indexPath.row], menuName: headingArr[indexPath.row])
             }
             reloadPagerTabStripView()
         }
@@ -451,7 +437,7 @@ class HomeParentVC: ButtonBarPagerTabStripViewController{
     
     @IBAction func btnBackAction(_ sender: Any) {
         //self.dismiss(animated: false)
-    reloadPagerTabStripView()
+        reloadPagerTabStripView()
         
     }
     
@@ -506,7 +492,6 @@ extension HomeParentVC: TrendingBack{
     func isTrendingTVLoaded(status: Bool) {
         if status == true{
             btnBack.isHidden = false
-            //reloadPagerTabStripView()
         }else{
             btnBack.isHidden = true
         }
