@@ -297,10 +297,16 @@ class HomeParentVC: ButtonBarPagerTabStripViewController{
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         viewOptions.isHidden = true
+       
+        
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        HeadingRow = 2
+        reloadPagerTabStripView()
+        let selectedIndexPath = IndexPath(item: 2, section: 0)
+        menuCV.selectItem(at: selectedIndexPath, animated: false, scrollPosition: .left)
     }
     
     override func viewControllers(for pagerTabStripController: PagerTabStripViewController) -> [UIViewController] {
@@ -425,12 +431,11 @@ class HomeParentVC: ButtonBarPagerTabStripViewController{
         }
         else{
             HeadingRow = indexPath.row
-            let count = headingArr.count - 1
-            if indexPath.row < count{
-            Helper().getMenuEvents(action: "menu_click", menuId: headingIds[indexPath.row], menuName: headingArr[indexPath.row])
+            if indexPath.row ==  2{
+            Helper().getMenuEvents(action: "menu_click", menuId: 0, menuName: headingArr[indexPath.row])
         }
             else{
-                  Helper().getMenuEvents(action: "menu_click", menuId: 0, menuName: headingArr[indexPath.row])
+                  Helper().getMenuEvents(action: "menu_click", menuId: headingIds[indexPath.row], menuName: headingArr[indexPath.row])
             }
             reloadPagerTabStripView()
         }
