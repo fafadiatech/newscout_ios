@@ -13,6 +13,7 @@ class ClusterTVCell: UITableViewCell {
     @IBOutlet weak var lblSource: UILabel!
     @IBOutlet weak var lblNewsHeading: UILabel!
     @IBOutlet weak var imgNews: UIImageView!
+    @IBOutlet weak var lblCount: UILabel!
     
     override func awakeFromNib() {
         super.awakeFromNib()

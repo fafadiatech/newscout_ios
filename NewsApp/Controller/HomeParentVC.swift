@@ -185,12 +185,61 @@ class HomeParentVC: ButtonBarPagerTabStripViewController{
         }
     }
     
+    func fetchMenuFromAPI(){
+        var menuData =  [Menu]()
+        APICall().getMenu{
+            response  in
+            switch response {
+            case .Success(let data) :
+                menuData = data
+                if  menuData[0].header.status == "1"{
+                    for res in menuData[0].body.results{
+                        self.headingArr.append(res.heading.headingName)
+                        self.headingIds.append(res.heading.headingId)
+                        self.submenu.removeAll()
+                        for sub in res.heading.submenu{
+                            self.submenu.append(sub.name)
+                            var id = sub.category_id
+                            var url = APPURL.ArticleByIdURL + "\(id)"
+                            UserDefaults.standard.setValue(id, forKey: "subMenuId")
+                            UserDefaults.standard.setValue(url, forKey: "submenuURL")
+                        }
+                        self.subMenuArr.append(self.submenu)
+                        
+                        UserDefaults.standard.set(self.subMenuArr[self.HeadingRow][self.subMenuRow], forKey: "submenu")
+                        
+                    }
+                    self.headingArr.insert("Trending", at: 0)
+                    self.headingIds.insert(00, at: 0)
+                    self.menuCV.reloadData()
+                }
+                
+            case .Failure(let errormessage) :
+                print(errormessage)
+            }
+            self.subMenuArr.insert(["today"], at: 0)
+            self.reloadPagerTabStripView()
+        }
+    }
+    
     func saveFetchMenu(){
         var coredataRecordCount = DBManager().IsCoreDataEmpty(entity: "MenuHeadings")
-        if coredataRecordCount != 0 {
-            fetchMenuFromDB()
-        }
-        else{
+
+        if coredataRecordCount > 0 {
+            if Reachability.isConnectedToNetwork(){
+             DBManager().deleteAllData(entity: "MenuHeadings")
+             DBManager().deleteAllData(entity: "HeadingSubMenu")
+             DBManager().deleteAllData(entity: "MenuHashTag")
+                DBManager().saveMenu(){response in
+                    if response == true{
+                        self.fetchMenuFromDB()
+                    }
+                }
+            }
+            else{
+                  self.fetchMenuFromDB()
+            }
+        }else{
             DBManager().saveMenu(){response in
                 if response == true{
                     self.fetchMenuFromDB()
@@ -235,6 +284,7 @@ class HomeParentVC: ButtonBarPagerTabStripViewController{
         subMenuArr.insert(["today"], at: 0)
         reloadPagerTabStripView()
     }
+    
     
     func fetchSubmenuId(submenu : String){
         let tagresult = DBManager().fetchsubmenuId(subMenuName: submenu)
@@ -290,8 +340,8 @@ class HomeParentVC: ButtonBarPagerTabStripViewController{
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-//        let selectedIndexPath = IndexPath(item: 0, section: 0)
-//        menuCV.selectItem(at: selectedIndexPath, animated: false, scrollPosition: .left)
+        //        let selectedIndexPath = IndexPath(item: 0, section: 0)
+        //        menuCV.selectItem(at: selectedIndexPath, animated: false, scrollPosition: .left)
     }
     
     override func viewControllers(for pagerTabStripController: PagerTabStripViewController) -> [UIViewController] {
@@ -470,6 +520,7 @@ class HomeParentVC: ButtonBarPagerTabStripViewController{
         self.present(searchvc, animated: true, completion: nil)
     }
 }
+
 
 extension HomeParentVC : UIGestureRecognizerDelegate {
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {

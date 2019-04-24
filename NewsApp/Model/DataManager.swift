@@ -214,12 +214,13 @@ class DBManager{
             case .Failure(let errormessage) :
                 print(errormessage)
             }
-            
+            var clusterNewsCount = Dictionary<Int, Int>()
             if TrendingData.count > 0{
                 if TrendingData[0].header.status == "1" {
                     for result in 0..<TrendingData[0].body.results.count {
                         for news in TrendingData[0].body.results[result].articles{
-                            
+                            //clusterNewsCount = [TrendingData[0].body.results[result].id : TrendingData[0].body.results[result].articles.count ]
+                            clusterNewsCount.updateValue(TrendingData[0].body.results[result].articles.count, forKey: TrendingData[0].body.results[result].id)
                             let newArticle = NewsArticle(context: managedContext!)
                             let newTrending  = TrendingCategory(context: managedContext!)
                             //if self.someIDExist(id: news.article_id) == false{
@@ -263,6 +264,9 @@ class DBManager{
                         
                         self.saveBlock()
                         }
+                        
+                       // UserDefaults.standard.setValue(clusterNewsCount, forKey: "clusterNewsCount")
+                       // print("clusterNewsCount: \(clusterNewsCount)")
                         completion(true)
                     }
                 }
@@ -278,6 +282,7 @@ class DBManager{
     func fetchTrendingArticle() -> ArticleDBfetchResult{
         var trendingArticleIDs = [TrendingCategory]()
         var trendingArticles = [NewsArticle]()
+    
         let managedContext =
             appDelegate?.persistentContainer.viewContext
         let fetchRequest =
@@ -294,15 +299,45 @@ class DBManager{
             do {
                 let article = try (managedContext?.fetch(fetchRequest))!
                 if article.count > 0{
-                    if !trendingArticles.contains(article[0]){
                     trendingArticles.append(article[0])
-                    }
                 }
             }catch let error as NSError {
                 return ArticleDBfetchResult.Failure(error.localizedDescription)
             }
         }
         return ArticleDBfetchResult.Success(trendingArticles)
+    }
+    
+    func fetchClusterArticlesCount() -> FetchTrendingFromDB {
+        var  trendingData = [TrendingCategory]()
+        var trendingIDs = [Int]()
+        let managedContext =
+            appDelegate?.persistentContainer.viewContext
+        let trendingRequest =  NSFetchRequest<TrendingCategory>(entityName: "TrendingCategory")
+        do {
+            trendingData = try (managedContext?.fetch(trendingRequest))!
+        }catch let error as NSError {
+            return FetchTrendingFromDB.Failure(error.localizedDescription)
+        }
+        for trend in trendingData{
+            if !trendingIDs.contains(Int(trend.trendingID)){
+                trendingIDs.append(Int(trend.trendingID))
+            }
+        }
+        UserDefaults.standard.set(trendingIDs, forKey: "trendingArray")
+        trendingData.removeAll()
+        for trend in trendingIDs{
+            trendingRequest.predicate = NSPredicate(format: "trendingID = %d", trend)
+            trendingRequest.fetchLimit = 1
+            do {
+                let article = try (managedContext?.fetch(trendingRequest))!
+                trendingData.append(article[0])
+            }
+            catch let error as NSError {
+                return FetchTrendingFromDB.Failure(error.localizedDescription)
+            }
+        }
+        return FetchTrendingFromDB.Success(trendingData)
     }
     
     func fetchTrendingNewsIDs() -> FetchTrendingFromDB{

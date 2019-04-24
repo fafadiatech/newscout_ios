@@ -39,6 +39,7 @@ class HomeVC: UIViewController{
     
     @IBOutlet weak var HomeNewsTV: UITableView!
     @IBOutlet weak var lblNonews: UILabel!
+    @IBOutlet weak var btnTopNews: UIButton!
     var protocolObj : ScrollDelegate?
     var trendingProtocol : TrendingBack?
     var tabBarTitle: String = ""
@@ -61,12 +62,16 @@ class HomeVC: UIViewController{
     var cellHeight:CGFloat = CGFloat()
     var isTrendingDetail = 0
     
+   
     override func viewDidLoad(){
         super.viewDidLoad()
         HomeNewsTV.tableFooterView = UIView(frame: .zero)
         protocolObj?.isNavigate(status: true)
         trendingProtocol?.isTrendingTVLoaded(status: false)
         lblNonews.isHidden = true
+        btnTopNews.layer.cornerRadius = 0.5 * btnTopNews.bounds.size.width
+        btnTopNews.clipsToBounds = true
+        btnTopNews.backgroundColor = colorConstants.redColor
         NotificationCenter.default.addObserver(self, selector: #selector(darkModeEnabled(_:)), name: .darkModeEnabled, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(darkModeDisabled(_:)), name: .darkModeDisabled, object: nil)
         activityIndicator.cycleColors = [.blue]
@@ -137,6 +142,10 @@ class HomeVC: UIViewController{
             }
         }
         
+    }
+    
+    @IBAction func btnTopNewsActn(_ sender: Any) {
+        scrollToFirstRow()
     }
     
     func fetchTrending(){
@@ -278,16 +287,18 @@ class HomeVC: UIViewController{
     }
     
     @objc func refreshNews(refreshControl: UIRefreshControl) {
-        if isTrendingDetail == 0{
-            saveArticlesInDB()
-            refreshControl.endRefreshing()
+        activityIndicator.startAnimating()
+        DispatchQueue.global(qos: .userInitiated).async {
+            if self.isTrendingDetail == 0{
+                self.saveArticlesInDB()
         }
-        else if isTrendingDetail == 1{
-            saveTrending()
-            refreshControl.endRefreshing()
+            else if self.isTrendingDetail == 1{
+                self.saveTrending()
         }
-        else{
-            refreshControl.endRefreshing()
+        }
+        DispatchQueue.main.async {
+             refreshControl.endRefreshing()
+            self.activityIndicator.stopAnimating()
         }
     }
     
@@ -407,7 +418,7 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
         }
         else{
             var id = UserDefaults.standard.array(forKey: "trendingArray") as! [Int]
-            let selectedCluster = id[indexPath.row + 1]
+            let selectedCluster = id[indexPath.row]
             fetchClusterIdArticles(clusterID: selectedCluster)
             trendingProtocol?.isTrendingTVLoaded(status: true)
             isTrendingDetail = 2
@@ -419,7 +430,7 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
+       
         var currentArticle = NewsArticle()
         
         let dateFormatter = DateFormatter()
@@ -433,7 +444,7 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
         var dateSubString = ""
         var agoDate = ""
         if  isTrendingDetail == 0 || isTrendingDetail == 2{
-            print(ShowArticle[indexPath.row])
+            //print(ShowArticle[indexPath.row])
             sortedData = ShowArticle.sorted{ $0.published_on! > $1.published_on! }
             currentArticle = sortedData[indexPath.row]
             if indexPath.row % 2 != 0{
@@ -442,7 +453,7 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
                 imgHeight = String(describing : Int(cell.imgNews.frame.height))
                 cell.imgNews.layer.cornerRadius = 10.0
                 cell.imgNews.clipsToBounds = true
-                
+              
                 //display data from DB
                 cell.lblNewsHeading.text = currentArticle.title
                 
@@ -606,8 +617,8 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
                 cellCluster.lblNewsHeading.textColor = colorConstants.blackColor
                 NightNight.theme =  .normal
             }
-            print(currentArticle)
-            print(indexPath.row)
+           // print(currentArticle)
+           // print(indexPath.row)
             if (currentArticle.published_on?.count)! <= 20 {
                 if !(currentArticle.published_on?.contains("Z"))!{
                     currentArticle.published_on?.append("Z")
