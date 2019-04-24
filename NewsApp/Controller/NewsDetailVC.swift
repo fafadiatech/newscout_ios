@@ -62,7 +62,7 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
     var RecomArticleData = [ArticleStatus]()
     var ArticleData = [ArticleStatus]()
     var RecomData = [NewsArticle]()
-    var searchRecomData = [SearchArticles]()
+    var searchRecomData = [NewsArticle]()
     var sourceRecomData = [Article]()
     var bookmarkedArticle = [BookmarkArticles]()
     var ShowArticle = [NewsArticle]()
@@ -157,7 +157,12 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
         //newsDetailAPICall(currentIndex: articleId)
         
         ShowNews(currentIndex: newsCurrentIndex)
-        RecommendationDBCall()
+        if Reachability.isConnectedToNetwork(){
+            RecommendationDBCall()
+        }else{
+            filterRecommendation()
+        }
+        
         // MediaData = DBManager().fetchArticleMedia(articleId: Int(ShowArticle[newsCurrentIndex].article_id))
         let swipeUp = UISwipeGestureRecognizer(target: self, action: #selector(self.respondToSwipeGesture))
         swipeUp.direction = UISwipeGestureRecognizerDirection.up
@@ -173,7 +178,7 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
         
         let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapped(gestureRecognizer:)))
         viewNewsArea.addGestureRecognizer(tapRecognizer)
-        tapRecognizer.delegate = self as UIGestureRecognizerDelegate
+        tapRecognizer.delegate = self as! UIGestureRecognizerDelegate
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -204,7 +209,6 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
     
     func filterRecommendation(){
         RecomData.removeAll()
-        sourceRecomData.removeAll()
         searchRecomData.removeAll()
         if ShowArticle.count > 0{
             articleId = Int(ShowArticle[newsCurrentIndex].article_id)
@@ -213,25 +217,24 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
                     RecomData.append(news)
                 }
             }
-        }else if sourceArticle.count > 0{
-            articleId = (sourceArticle[newsCurrentIndex].article_id)!
-            for news in sourceArticle{
-                if news.article_id != articleId{
-                    sourceRecomData.append(news)
-                }
-            }
-        }
-        else{
-            for news in SearchArticle{
-                articleId  = Int(SearchArticle[newsCurrentIndex].article_id)
-                if news.article_id != articleId{
-                    searchRecomData.append(news)
-                }
-            }
+        }else if sourceArticle.count > 0 || SearchArticle.count > 0{
+            fetchRandomRecommendation()
         }
         suggestedCV.reloadData()
     }
     
+    func fetchRandomRecommendation(){
+        let result = DBManager().fetchSearchBookmarkRecommendation()
+        switch result {
+        case .Success(let DBData) :
+            searchRecomData = DBData
+            if searchRecomData.count > 0{
+                suggestedCV.reloadData()
+            }
+        case .Failure(let errorMsg) :
+            print(errorMsg)
+        }
+    }
     func taPageControl(_ pageControl: TAPageControl!, didSelectPageAt currentIndex: Int) {
         index =  currentIndex
         imgScrollView.scrollRectToVisible(CGRect(x: view.frame.size.width * CGFloat(currentIndex), y:0, width: view.frame.width, height: imgScrollView.frame.height), animated: true)
@@ -254,7 +257,7 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
                 suggestedCV.reloadData()
             }
             else{
-               // filterRecommendation()
+                filterRecommendation()
                 activityIndicator.stopAnimating()
             }
         case .Failure(let errorMsg) :
@@ -1386,10 +1389,10 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
     @IBAction func btnSourceActn(_ sender: Any) {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let sourcevc:SourceVC = storyboard.instantiateViewController(withIdentifier: "SourceID") as! SourceVC
-
+        
         if currentEntity == "SearchArticles"{
             sourcevc.url = APPURL.SourceURL + SearchArticle[newsCurrentIndex].source!
-              Helper().getMenuEvents(action: "item_view_source", menuId: 0, menuName: SearchArticle[newsCurrentIndex].source!)
+            Helper().getMenuEvents(action: "item_view_source", menuId: 0, menuName: SearchArticle[newsCurrentIndex].source!)
             sourcevc.source = SearchArticle[newsCurrentIndex].source!
         }else if currentEntity == "source"{
             sourcevc.url = APPURL.SourceURL + sourceArticle[newsCurrentIndex].source!
@@ -1460,22 +1463,21 @@ extension NewsDetailVC:UICollectionViewDelegate, UICollectionViewDataSource, UIC
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return (self.RecommendationArticle.count > 0) ? self.RecommendationArticle.count + 1 : 0 //.count + 1 : 0
-        /* if RecomData.count == 0 && searchRecomData.count == 0 && sourceRecomData.count == 0{
-         return 0
-         }
-         else if RecomData.count >= 5 || searchRecomData.count >= 5 || sourceRecomData.count >= 5{
-         return 6
-         }else{
-         if RecomData.count > 0{
-         return RecomData.count + 1
-         }else if searchRecomData.count > 0 {
-         return searchRecomData.count + 1
-         }else{
-         return sourceRecomData.count + 1
-         }
-         }*/
-        // return ShowArticle.count != 0 ? ShowArticle.count : 0
+        if RecommendationArticle.count > 0{
+            return (self.RecommendationArticle.count > 0) ? self.RecommendationArticle.count + 1 : 0
+        }
+        if RecomData.count == 0 && searchRecomData.count == 0 && RecommendationArticle.count == 0{
+            return 0
+        }
+        else if RecomData.count >= 5 || searchRecomData.count >= 5{
+            return 6
+        }else{
+            if RecomData.count > 0{
+                return RecomData.count + 1
+            }else{
+                return searchRecomData.count + 1
+            }
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -1508,13 +1510,27 @@ extension NewsDetailVC:UICollectionViewDelegate, UICollectionViewDataSource, UIC
             cell.imgNews.isHidden = false
             cell.lblTitle.isHidden = false
             cell.lblMoreStories.isHidden = true
-            
-            let currentArticle =  RecommendationArticle[indexPath.row - 1]
-            cell.lblTitle.text = currentArticle.title
-            if currentArticle.imageURL != nil{
-                cell.imgNews.sd_setImage(with: URL(string: currentArticle.imageURL!), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
+            if RecommendationArticle.count > 0{
+                let currentArticle =  RecommendationArticle[indexPath.row - 1]
+                cell.lblTitle.text = currentArticle.title
+                if currentArticle.imageURL != nil{
+                    cell.imgNews.sd_setImage(with: URL(string: currentArticle.imageURL!), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
+                }
             }
-            
+            else if RecomData.count > 0{
+                let currentArticle =  RecomData[indexPath.row - 1]
+                cell.lblTitle.text = currentArticle.title
+                if currentArticle.imageURL != nil{
+                    cell.imgNews.sd_setImage(with: URL(string: currentArticle.imageURL!), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
+                }
+            }
+            else if searchRecomData.count > 0{
+                let currentArticle =  searchRecomData[indexPath.row - 1]
+                cell.lblTitle.text = currentArticle.title
+                if currentArticle.imageURL != nil{
+                    cell.imgNews.sd_setImage(with: URL(string: currentArticle.imageURL!), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
+                }
+            }
             
             if cell.imgNews.image == nil{
                 cell.imgNews.image = UIImage(named: AssetConstants.NoImage)
@@ -1529,6 +1545,7 @@ extension NewsDetailVC:UICollectionViewDelegate, UICollectionViewDataSource, UIC
         
         return cell
     }
+    
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if indexPath.row != 0{
@@ -1549,8 +1566,16 @@ extension NewsDetailVC:UICollectionViewDelegate, UICollectionViewDataSource, UIC
             }
             newsDetailvc.newsCurrentIndex = indexPath.row - 1
             if RecommendationArticle.count > 0{
-                newsDetailvc.ShowArticle =  RecommendationArticle //RecomArticleData[0].body!.articles
-                newsDetailvc.articleId = Int(RecommendationArticle[indexPath.row].article_id)  //RecomArticleData[0].body!.articles[indexPath.row - 1].article_id!
+                newsDetailvc.ShowArticle =  RecommendationArticle
+                newsDetailvc.articleId = Int(RecommendationArticle[indexPath.row].article_id)
+            }
+            else if RecomData.count > 0{
+                newsDetailvc.ShowArticle =  RecomData
+                newsDetailvc.articleId = Int(RecomData[indexPath.row + 1].article_id)
+            }
+            else if searchRecomData.count > 0 {
+                newsDetailvc.ShowArticle =  searchRecomData
+                newsDetailvc.articleId = Int(searchRecomData[indexPath.row].article_id)
             }
             present(newsDetailvc, animated: true, completion: nil)
         }

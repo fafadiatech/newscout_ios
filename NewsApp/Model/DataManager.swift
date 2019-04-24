@@ -115,6 +115,22 @@ class DBManager{
         }
     }
     
+    func fetchSearchBookmarkRecommendation() -> ArticleDBfetchResult{
+        let managedContext =
+            appDelegate?.persistentContainer.viewContext
+        let fetchRequest =
+            NSFetchRequest<NewsArticle>(entityName: "NewsArticle")
+        
+        do {
+            let ShowArticle = try (managedContext?.fetch(fetchRequest))!
+            return ArticleDBfetchResult.Success(ShowArticle )
+            
+        } catch let error as NSError {
+            print("Could not fetch. \(error), \(error.userInfo)")
+            return ArticleDBfetchResult.Failure(error.localizedDescription)
+        }
+    }
+    
     func saveRecommendation(articleId : Int,_ completion : @escaping (Bool) -> ()){
         var RecomArticleData = [Recommendation]()
         let managedContext = appDelegate?.persistentContainer.viewContext
@@ -145,7 +161,7 @@ class DBManager{
                             newArticle.source_url = news.url
                             newArticle.published_on = news.published_on
                             newArticle.category = news.category
-                            
+                            newArticle.categoryId = Int64(news.category_id)
                             self.saveBlock()
                         }
                         
@@ -235,7 +251,7 @@ class DBManager{
                                 newArticle.source_url = news.url
                                 newArticle.published_on = news.published_on
                                 newArticle.blurb = news.blurb
-                                
+                                newArticle.categoryId = Int64(news.category_id)
                                 /* if news.article_media!.count > 0 {
                                  for media in news.article_media!{
                                  if self.someEntityExists(id: media.media_id, entity: "Media", keyword: "") == false {
