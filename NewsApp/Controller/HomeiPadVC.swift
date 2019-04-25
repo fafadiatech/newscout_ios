@@ -18,6 +18,7 @@ class HomeiPadVC: UIViewController{
     @IBOutlet weak var HomeNewsCV: UICollectionView!
     @IBOutlet weak var lblNonews: UILabel!
     
+    @IBOutlet weak var btnTopNews: UIButton!
     var protocolObj : ScrollDelegate?
     var tabBarTitle: String = ""
     var ShowArticle = [NewsArticle]()
@@ -35,14 +36,17 @@ class HomeiPadVC: UIViewController{
     var isAPICalled = false
     var imgWidth = ""
     var imgHeight = ""
-    
+    var cellHeight:CGFloat = CGFloat()
+    var isTrendingDetail = 0
     
     override func viewDidLoad(){
         super.viewDidLoad()
         
         protocolObj?.isNavigate(status: true)
         lblNonews.isHidden = true
-        
+        btnTopNews.layer.cornerRadius = 0.5 * btnTopNews.bounds.size.width
+        btnTopNews.clipsToBounds = true
+        btnTopNews.backgroundColor = colorConstants.redColor
         NotificationCenter.default.addObserver(self, selector: #selector(darkModeEnabled(_:)), name: .darkModeEnabled, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(darkModeDisabled(_:)), name: .darkModeDisabled, object: nil)
         activityIndicator.cycleColors = [.blue]
@@ -61,6 +65,7 @@ class HomeiPadVC: UIViewController{
         
         //change data on swipe
         if tabBarTitle != "Test" && tabBarTitle != "today"{
+            
             fetchSubmenuId(submenu: tabBarTitle)
             coredataRecordCount = DBManager().IsCoreDataEmpty(entity: "NewsArticle")
             if self.coredataRecordCount > 0 {

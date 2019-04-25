@@ -193,10 +193,13 @@ class LoginVC: UIViewController, GIDSignInUIDelegate, FBSDKLoginButtonDelegate {
                          "password" : txtPassword.text!,
                          "device_id" : id,
                          "device_name": "ios"]
+            print("Login PAram: \(param)")
             APICall().LoginAPI(param : param){(status,response) in
                 print("Login response:\(response)")
                 if response == "1"{
                     UserDefaults.standard.set(true, forKey: "isWalkthroughShown")
+//                    DBManager().deleteAllData(entity: "LikeDislike")
+//                    DBManager().deleteAllData(entity: "BookmarkArticles")
                     let check = UserDefaults.standard.value(forKey: "isSettingsLogin") as! Bool
                     if check == true{
                         let storyboard = UIStoryboard(name: "Main", bundle: nil)

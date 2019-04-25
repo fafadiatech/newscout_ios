@@ -167,7 +167,7 @@ class SettingsTVC: UITableViewController, GIDSignInUIDelegate {
             let defaultList = ["FBToken", "first_name", "last_name", "email", "token"]
             Helper().clearDefaults(list : defaultList)
             self.lblLogin.text = "Login"
-            print("google sign out successful..")
+            print("FB sign out successful..")
         }
         else{
             APICall().LogoutAPI{(status, response) in
@@ -175,7 +175,6 @@ class SettingsTVC: UITableViewController, GIDSignInUIDelegate {
                 if status == "1"{
                     print("Logout response:\(response)")
                     self.view.makeToast("successfully logged out", duration: 1.0, position: .center)
-                    
                     self.btnLogout.isHidden = true
                     self.lblLogin.text = "Login"
                     

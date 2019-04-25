@@ -217,7 +217,8 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
                     RecomData.append(news)
                 }
             }
-        }else if sourceArticle.count > 0 || SearchArticle.count > 0{
+        }
+        else{
             fetchRandomRecommendation()
         }
         suggestedCV.reloadData()
@@ -1223,13 +1224,28 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
                         DBManager().deleteBookmarkedArticle(id: self.articleId)
                         if self.currentEntity == "ShowArticle"{
                             self.ShowArticle.remove(at: self.newsCurrentIndex)
-                        }else if self.currentEntity == "SearchArticles"{
-                            self.SearchArticle.remove(at: self.newsCurrentIndex)
-                        }else if self.currentEntity == "source"{
-                            self.sourceArticle.remove(at: self.newsCurrentIndex)
-                        }
-                        self.newsCurrentIndex = self.newsCurrentIndex - 1
+                        
+//                        }else if self.currentEntity == "SearchArticles"{
+//                            self.SearchArticle.remove(at: self.newsCurrentIndex)
+//                        }else if self.currentEntity == "source"{
+//                            self.sourceArticle.remove(at: self.newsCurrentIndex)
+//                        }
+                        if self.indexCount > 1{
                         self.indexCount = self.indexCount - 1
+                            if self.newsCurrentIndex == self.indexCount {
+                                self.newsCurrentIndex = self.newsCurrentIndex - 1
+                            }
+                            self.ShowNews(currentIndex: self.newsCurrentIndex)
+                        }else{
+                            let isSearch = UserDefaults.standard.value(forKey: "isSearch") as! String
+                            if isSearch == "bookmark"{
+                                let storyboard = UIStoryboard(name: "Main", bundle: nil)
+                                let vc:BookmarkVC = storyboard.instantiateViewController(withIdentifier: "BookmarkID") as! BookmarkVC
+                                self.present(vc, animated: true, completion: nil)
+                            }
+                        }
+                        }
+                        
                     }
                 }
             }
@@ -1567,15 +1583,15 @@ extension NewsDetailVC:UICollectionViewDelegate, UICollectionViewDataSource, UIC
             newsDetailvc.newsCurrentIndex = indexPath.row - 1
             if RecommendationArticle.count > 0{
                 newsDetailvc.ShowArticle =  RecommendationArticle
-                newsDetailvc.articleId = Int(RecommendationArticle[indexPath.row].article_id)
+                newsDetailvc.articleId = Int(RecommendationArticle[indexPath.row - 1].article_id)
             }
             else if RecomData.count > 0{
                 newsDetailvc.ShowArticle =  RecomData
-                newsDetailvc.articleId = Int(RecomData[indexPath.row + 1].article_id)
+                newsDetailvc.articleId = Int(RecomData[indexPath.row - 1].article_id)
             }
             else if searchRecomData.count > 0 {
                 newsDetailvc.ShowArticle =  searchRecomData
-                newsDetailvc.articleId = Int(searchRecomData[indexPath.row].article_id)
+                newsDetailvc.articleId = Int(searchRecomData[indexPath.row - 1].article_id)
             }
             present(newsDetailvc, animated: true, completion: nil)
         }

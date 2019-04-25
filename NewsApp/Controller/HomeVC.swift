@@ -61,7 +61,7 @@ class HomeVC: UIViewController{
     var imgHeight = ""
     var cellHeight:CGFloat = CGFloat()
     var isTrendingDetail = 0
-    
+   
    
     override func viewDidLoad(){
         super.viewDidLoad()
@@ -241,7 +241,9 @@ class HomeVC: UIViewController{
             subMenuURL =  UserDefaults.standard.value(forKey: "submenuURL") as! String
         }
         DBManager().SaveDataDB(nextUrl: subMenuURL ){response in
+            if response == true{
             self.fetchArticlesFromDB()
+            }
         }
     }
     
@@ -304,7 +306,9 @@ class HomeVC: UIViewController{
     
     func saveTrending(){
         DBManager().saveTrending{response in
+            if response == true{
             self.fetchTrending()
+            }
         }
     }
     
@@ -526,7 +530,7 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
                 cellOdd.imgNews.layer.cornerRadius = 10.0
                 cellOdd.imgNews.clipsToBounds = true
                 //display data from DB
-                // let currentArticle = sortedData[indexPath.row]
+    
                 cellOdd.lblNewsHeading.text = currentArticle.title
                 
                 if  darkModeStatus == true{
@@ -617,8 +621,8 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
                 cellCluster.lblNewsHeading.textColor = colorConstants.blackColor
                 NightNight.theme =  .normal
             }
-           // print(currentArticle)
-           // print(indexPath.row)
+            print(currentArticle)
+            print(indexPath.row)
             if (currentArticle.published_on?.count)! <= 20 {
                 if !(currentArticle.published_on?.contains("Z"))!{
                     currentArticle.published_on?.append("Z")
@@ -678,7 +682,7 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         if indexPath.row == tableView.numberOfRows(inSection: indexPath.section) - 1 {
             // if tabBarTitle != "Test" && tabBarTitle != "today"{
-            if isTrendingDetail == 0{
+            if isTrendingDetail == 0 &&  tabBarTitle != "Test"{
                 var submenu = UserDefaults.standard.value(forKey: "submenu") as! String
                 if ShowArticle.count >= 20{
                     if isAPICalled == false{

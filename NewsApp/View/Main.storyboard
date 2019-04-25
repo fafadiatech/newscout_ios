@@ -1916,6 +1916,20 @@
                                     <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="30"/>
                                 </variation>
                             </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HVx-KL-aB7">
+                                <rect key="frame" x="676" y="960" width="56" height="48"/>
+                                <color key="backgroundColor" red="0.92941176469999998" green="0.10980392160000001" blue="0.14117647059999999" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="48" id="7Br-wq-3F9"/>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="56" id="La5-rT-0VH"/>
+                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="48" id="Rxe-31-7oA"/>
+                                    <constraint firstAttribute="width" constant="56" id="YqH-TP-iTr"/>
+                                </constraints>
+                                <state key="normal" backgroundImage="top1"/>
+                                <connections>
+                                    <action selector="btnTopNewsActn:" destination="BYZ-38-t0r" eventType="touchUpInside" id="10X-Z5-Qha"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <constraints>
                             <constraint firstItem="pa3-Vj-ccf" firstAttribute="leading" secondItem="7dC-of-uue" secondAttribute="leading" id="88f-dq-0Re"/>
@@ -1924,10 +1938,13 @@
                             <constraint firstItem="wFO-oA-kmX" firstAttribute="centerY" secondItem="pa3-Vj-ccf" secondAttribute="centerY" id="ZXA-Rp-Lbb"/>
                             <constraint firstItem="pa3-Vj-ccf" firstAttribute="top" secondItem="7dC-of-uue" secondAttribute="top" id="eGp-XX-lHk"/>
                             <constraint firstAttribute="trailing" secondItem="pa3-Vj-ccf" secondAttribute="trailing" id="gPi-gC-hJO"/>
+                            <constraint firstItem="Pmi-U7-o24" firstAttribute="top" secondItem="HVx-KL-aB7" secondAttribute="bottom" constant="16" id="nbu-3C-eCy"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="HVx-KL-aB7" secondAttribute="trailing" constant="16" id="wvC-mj-ceE"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="HomeNewsCV" destination="pa3-Vj-ccf" id="tPf-5w-yol"/>
+                        <outlet property="btnTopNews" destination="HVx-KL-aB7" id="f13-fz-cTn"/>
                         <outlet property="lblNonews" destination="wFO-oA-kmX" id="pfQ-4v-XVz"/>
                     </connections>
                 </viewController>

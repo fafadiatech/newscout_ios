@@ -120,7 +120,8 @@ class DBManager{
             appDelegate?.persistentContainer.viewContext
         let fetchRequest =
             NSFetchRequest<NewsArticle>(entityName: "NewsArticle")
-        
+        fetchRequest.fetchLimit = 6
+        fetchRequest.predicate = NSPredicate( format: "title.length > 0")
         do {
             let ShowArticle = try (managedContext?.fetch(fetchRequest))!
             return ArticleDBfetchResult.Success(ShowArticle )
@@ -1014,6 +1015,19 @@ class DBManager{
                         newArticle.blurb = news.blurb
                         newArticle.category = news.category!
                         
+                        self.saveBlock()
+                    }
+                    if  self.someEntityExists(id: Int(news.article_id!), entity: "NewsArticle", keyword: "") == false {
+                        let newArticle = NewsArticle(context: managedContext!)
+                        newArticle.article_id = Int64(news.article_id!)
+                        newArticle.title = news.title
+                        newArticle.source = news.source!
+                        newArticle.imageURL = news.imageURL
+                        newArticle.source_url = news.url
+                        newArticle.published_on = news.published_on
+                        newArticle.blurb = news.blurb
+                        newArticle.category = news.category!
+                        newArticle.categoryId = Int64(news.category_id)
                         self.saveBlock()
                     }
                 }

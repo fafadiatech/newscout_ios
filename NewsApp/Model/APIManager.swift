@@ -300,6 +300,8 @@ class APICall{
                             }
                         }
                         else{
+                            DBManager().deleteAllData(entity: "LikeDislike")
+                            DBManager().deleteAllData(entity: "BookmarkArticles")
                             UserDefaults.standard.set(jsonData.body!.user!.token, forKey: "token")
                             UserDefaults.standard.set(jsonData.body!.user!.first_name, forKey: "first_name")
                             UserDefaults.standard.set(jsonData.body!.user!.last_name, forKey: "last_name")

@@ -28,6 +28,7 @@ class BookmarkVC: UIViewController {
     var imgWidth = ""
     var imgHeight = ""
     var statusBarOrientation: UIInterfaceOrientation = UIApplication.shared.statusBarOrientation
+    var sortedData = [NewsArticle]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -224,14 +225,14 @@ extension BookmarkVC: UITableViewDelegate, UITableViewDataSource{
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let newsDetailvc:NewsDetailVC = storyboard.instantiateViewController(withIdentifier: "NewsDetailID") as! NewsDetailVC
         newsDetailvc.newsCurrentIndex = indexPath.row
-        newsDetailvc.ShowArticle = ShowArticle
+        newsDetailvc.ShowArticle = sortedData
         UserDefaults.standard.set("bookmark", forKey: "isSearch")
-        newsDetailvc.articleId = Int(ShowArticle[indexPath.row].article_id)
+        newsDetailvc.articleId = Int(sortedData[indexPath.row].article_id)
         present(newsDetailvc, animated: true, completion: nil)
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
+        var currentArticle = NewsArticle()
         let cell = tableView.dequeueReusableCell(withIdentifier: "bookmarkResultID", for:indexPath) as! BookmarkTVCell
         let cellOdd = tableView.dequeueReusableCell(withIdentifier: "bookmarkZigzagID", for:indexPath) as! BookmarkZigzagTVCell
         imgWidth = String(describing : Int(cell.imgNews.frame.width))
@@ -239,19 +240,21 @@ extension BookmarkVC: UITableViewDelegate, UITableViewDataSource{
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
         dateFormatter.timeZone = NSTimeZone.local
+        sortedData.removeAll()
         let darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
         let textSizeSelected = UserDefaults.standard.value(forKey: "textSize") as! Int
         var sourceColor = UIColor()
         var fullTxt = ""
         var dateSubString = ""
         var agoDate = ""
+        sortedData = ShowArticle.sorted{ $0.published_on! > $1.published_on! }
+        currentArticle = sortedData[indexPath.row]
         if indexPath.row % 2 != 0{
             
             cell.imgNews.layer.cornerRadius = 10.0
             cell.imgNews.clipsToBounds = true
             
             //display data from DB
-            let currentArticle = ShowArticle[indexPath.row]
             cell.lblNewsDescription.text = currentArticle.title
             
             if  darkModeStatus == true{
@@ -320,7 +323,6 @@ extension BookmarkVC: UITableViewDelegate, UITableViewDataSource{
             cellOdd.imgNews.layer.cornerRadius = 10.0
             cellOdd.imgNews.clipsToBounds = true
             //display data from DB
-            let currentArticle = ShowArticle[indexPath.row]
             cellOdd.lblNewsDescription.text = currentArticle.title
             
             if  darkModeStatus == true{
@@ -391,7 +393,7 @@ extension BookmarkVC: UITableViewDelegate, UITableViewDataSource{
     func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
         if targetContentOffset.pointee.y < scrollView.contentOffset.y {
             if nextURL != "" {
-                self.activityIndicator.startAnimating()
+    
                 APICall().BookmarkedArticlesAPI(url: nextURL){ response in
                     switch response {
                     case .Success(let data) :
@@ -411,13 +413,11 @@ extension BookmarkVC: UITableViewDelegate, UITableViewDataSource{
                             }
                         }
                     case .Failure(let errormessage) :
-                        self.activityIndicator.startAnimating()
                         print(errormessage)
                     case .Change(let code):
                         print(code)
                     }
                 }
-                self.activityIndicator.stopAnimating()
             }
         }
     }
@@ -549,6 +549,9 @@ extension BookmarkVC: UICollectionViewDelegate, UICollectionViewDataSource, UISc
                     }
                     self.activityIndicator.stopAnimating()
                 }
+            }
+            else{
+                activityIndicator.stopAnimating()
             }
         }
     }
