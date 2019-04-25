@@ -17,7 +17,6 @@ import NightNight
 class HomeiPadVC: UIViewController{
     @IBOutlet weak var HomeNewsCV: UICollectionView!
     @IBOutlet weak var lblNonews: UILabel!
-    
     @IBOutlet weak var btnTopNews: UIButton!
     var protocolObj : ScrollDelegate?
     var tabBarTitle: String = ""
@@ -38,6 +37,7 @@ class HomeiPadVC: UIViewController{
     var imgHeight = ""
     var cellHeight:CGFloat = CGFloat()
     var isTrendingDetail = 0
+    var clusterArticles = [NewsArticle]()
     
     override func viewDidLoad(){
         super.viewDidLoad()
@@ -65,7 +65,7 @@ class HomeiPadVC: UIViewController{
         
         //change data on swipe
         if tabBarTitle != "Test" && tabBarTitle != "today"{
-            
+            isTrendingDetail = 0
             fetchSubmenuId(submenu: tabBarTitle)
             coredataRecordCount = DBManager().IsCoreDataEmpty(entity: "NewsArticle")
             if self.coredataRecordCount > 0 {
@@ -85,6 +85,7 @@ class HomeiPadVC: UIViewController{
         }
         
         if tabBarTitle == "today"{
+            isTrendingDetail = 1
             var records = DBManager().IsCoreDataEmpty(entity: "TrendingCategory")
             if records <= 0{
                 DBManager().saveTrending{response in
@@ -108,7 +109,10 @@ class HomeiPadVC: UIViewController{
                 }
             }
         }
-
+        
+    }
+    
+    @IBAction func btnTopNewsActn(_ sender: Any) {
     }
     
     func fetchTrending(){
@@ -130,6 +134,7 @@ class HomeiPadVC: UIViewController{
             print(errorMsg)
         }
     }
+    
     func fetchSubmenuId(submenu : String){
         let tagresult = DBManager().fetchsubmenuId(subMenuName: submenu)
         switch tagresult{
@@ -141,6 +146,32 @@ class HomeiPadVC: UIViewController{
         case .Failure(let error):
             print(error)
         }
+    }
+    //fetch articles of selected cluster
+    func fetchClusterIdArticles(clusterID: Int){
+        let result = DBManager().fetchClusterArticles(trendingId: clusterID)
+        switch result {
+        case .Success(let DBData) :
+            self.clusterArticles = DBData
+            if self.clusterArticles.count > 0{
+                self.lblNonews.isHidden = true
+                ShowArticle = DBData
+                self.HomeNewsCV.reloadData()
+                scrollToFirstRow()
+            }
+            else{
+                self.HomeNewsCV.reloadData()
+                self.lblNonews.isHidden =  false
+                self.activityIndicator.stopAnimating()
+            }
+        case .Failure(let errorMsg) :
+            print(errorMsg)
+        }
+    }
+    
+    func scrollToFirstRow() {
+        let indexPath = NSIndexPath(row: 0, section: 0)
+        // self.HomeNewsCV.scrollToRow(at: indexPath as IndexPath, at: .top, animated: true)
     }
     
     func fetchsubMenuTags(submenu : String){
@@ -182,7 +213,9 @@ class HomeiPadVC: UIViewController{
             subMenuURL =  UserDefaults.standard.value(forKey: "submenuURL") as! String
         }
         DBManager().SaveDataDB(nextUrl: subMenuURL ){response in
-            self.fetchArticlesFromDB()
+            if response == true{
+                self.fetchArticlesFromDB()
+            }
         }
     }
     
@@ -228,10 +261,34 @@ class HomeiPadVC: UIViewController{
     }
     
     @objc func refreshNews(refreshControl: UIRefreshControl) {
-        saveArticlesInDB()
-        refreshControl.endRefreshing()
+        activityIndicator.startAnimating()
+        DispatchQueue.global(qos: .userInitiated).async {
+            if self.isTrendingDetail == 0{
+                self.saveArticlesInDB()
+            }
+            else if self.isTrendingDetail == 1{
+                self.saveTrending()
+            }
+        }
+        DispatchQueue.main.async {
+            refreshControl.endRefreshing()
+            self.activityIndicator.stopAnimating()
+        }
     }
     
+    func saveTrending(){
+        DBManager().saveTrending{response in
+            if response == true{
+                self.fetchTrending()
+            }
+        }
+    }
+    func retainClusterData(){
+        if isTrendingDetail ==  2{
+            ShowArticle = clusterArticles
+            HomeNewsCV.reloadData()
+        }
+    }
     func filterNews(selectedTag : String){
         let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "NewsArticle")
         let managedContext =
@@ -246,7 +303,7 @@ class HomeiPadVC: UIViewController{
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        if tabBarTitle != "Test" && tabBarTitle != "today"{
+        if isTrendingDetail == 0 {
             if Reachability.isConnectedToNetwork(){
                 activityIndicator.startAnimating()
                 if UserDefaults.standard.value(forKey: "submenuURL") != nil{
@@ -263,7 +320,7 @@ class HomeiPadVC: UIViewController{
                 }
             }
         }
-        if tabBarTitle == "today"{
+        if isTrendingDetail == 1 {
             var records = DBManager().IsCoreDataEmpty(entity: "TrendingCategory")
             if records <= 0{
                 DBManager().saveTrending{response in
@@ -272,6 +329,9 @@ class HomeiPadVC: UIViewController{
             }else{
                 self.fetchTrending()
             }
+        }
+        else if isTrendingDetail == 2{
+            retainClusterData()
         }
     }
     
@@ -310,16 +370,16 @@ extension HomeiPadVC: UICollectionViewDelegate, UICollectionViewDataSource, UISc
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         var width = CGFloat()
         if tabBarTitle != "today" ||  tabBarTitle != "test"{
-     width = HomeNewsCV.frame.width/3
+            width = HomeNewsCV.frame.width/3
         }
         else{
-             width = HomeNewsCV.frame.width/2
+            width = HomeNewsCV.frame.width/2
         }
-    let height : CGFloat = 305.0
-    return CGSize(width: width, height: height)
+        let height : CGFloat = 305.0
+        return CGSize(width: width, height: height)
     }
     
-   
+    
     //these methods are to configure the spacing between items
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
@@ -349,7 +409,7 @@ extension HomeiPadVC: UICollectionViewDelegate, UICollectionViewDataSource, UISc
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "HomeIpadID", for:indexPath) as! HomeipadCVCell
-         var currentArticle = NewsArticle()
+        var currentArticle = NewsArticle()
         imgWidth = String(describing : Int(cell.imgNews.frame.width))
         imgHeight = String(describing : Int(cell.imgNews.frame.height))
         let dateFormatter = DateFormatter()
@@ -363,7 +423,7 @@ extension HomeiPadVC: UICollectionViewDelegate, UICollectionViewDataSource, UISc
         else{
             currentArticle = ShowArticle[indexPath.row]
         }
-       
+        
         let textSizeSelected = UserDefaults.standard.value(forKey: "textSize") as! Int
         var sourceColor = UIColor()
         var fullTxt = ""
@@ -440,32 +500,32 @@ extension HomeiPadVC: UICollectionViewDelegate, UICollectionViewDataSource, UISc
         
         if (scrollView.bounds.maxY) == scrollView.contentSize.height{
             activityIndicator.startAnimating()
-             if tabBarTitle != "Test" && tabBarTitle != "today"{
-            var submenu = UserDefaults.standard.value(forKey: "submenu") as! String
-            if ShowArticle.count >= 20{
-                if isAPICalled == false{
-                    let result =  DBManager().FetchNextURL(category: submenu)
-                    switch result {
-                    case .Success(let DBData) :
-                        let nextURL = DBData
-                        
-                        if nextURL.count != 0{
-                            isAPICalled = false
-                            if nextURL[0].category == submenu {
-                                let nexturl = nextURL[0].nextURL
-                                UserDefaults.standard.set(nexturl, forKey: "submenuURL")
-                                self.saveArticlesInDB()
+            if tabBarTitle != "Test" && tabBarTitle != "today"{
+                var submenu = UserDefaults.standard.value(forKey: "submenu") as! String
+                if ShowArticle.count >= 20{
+                    if isAPICalled == false{
+                        let result =  DBManager().FetchNextURL(category: submenu)
+                        switch result {
+                        case .Success(let DBData) :
+                            let nextURL = DBData
+                            
+                            if nextURL.count != 0{
+                                isAPICalled = false
+                                if nextURL[0].category == submenu {
+                                    let nexturl = nextURL[0].nextURL
+                                    UserDefaults.standard.set(nexturl, forKey: "submenuURL")
+                                    self.saveArticlesInDB()
+                                }
                             }
+                            else{
+                                isAPICalled = true
+                                activityIndicator.stopAnimating()
+                            }
+                        case .Failure(let errorMsg) :
+                            print(errorMsg)
                         }
-                        else{
-                            isAPICalled = true
-                            activityIndicator.stopAnimating()
-                        }
-                    case .Failure(let errorMsg) :
-                        print(errorMsg)
                     }
                 }
-            }
             }
         }
     }

@@ -1928,6 +1928,7 @@
                                 <state key="normal" backgroundImage="top1"/>
                                 <connections>
                                     <action selector="btnTopNewsActn:" destination="BYZ-38-t0r" eventType="touchUpInside" id="10X-Z5-Qha"/>
+                                    <action selector="btnTopNewsActn:" destination="Y9K-8t-U0w" eventType="touchUpInside" id="4le-kA-jXl"/>
                                 </connections>
                             </button>
                         </subviews>
