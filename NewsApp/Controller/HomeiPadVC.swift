@@ -14,7 +14,7 @@ import MaterialComponents.MaterialActivityIndicator
 import SDWebImage
 import NightNight
 
-class HomeiPadVC: UIViewController{
+class HomeiPadVC: UIViewController {
     @IBOutlet weak var HomeNewsCV: UICollectionView!
     @IBOutlet weak var lblNonews: UILabel!
     @IBOutlet weak var btnTopNews: UIButton!
@@ -38,10 +38,11 @@ class HomeiPadVC: UIViewController{
     var cellHeight:CGFloat = CGFloat()
     var isTrendingDetail = 0
     var clusterArticles = [NewsArticle]()
+    var trendingProtocol : TrendingBack?
     
     override func viewDidLoad(){
         super.viewDidLoad()
-        
+        trendingProtocol?.isTrendingTVLoaded(status: false)
         protocolObj?.isNavigate(status: true)
         lblNonews.isHidden = true
         btnTopNews.layer.cornerRadius = 0.5 * btnTopNews.bounds.size.width
@@ -113,6 +114,7 @@ class HomeiPadVC: UIViewController{
     }
     
     @IBAction func btnTopNewsActn(_ sender: Any) {
+        scrollToFirstRow()
     }
     
     func fetchTrending(){
@@ -171,7 +173,9 @@ class HomeiPadVC: UIViewController{
     
     func scrollToFirstRow() {
         let indexPath = NSIndexPath(row: 0, section: 0)
-        // self.HomeNewsCV.scrollToRow(at: indexPath as IndexPath, at: .top, animated: true)
+        self.HomeNewsCV?.scrollToItem(at: NSIndexPath(item: 0, section: 0) as IndexPath,
+                                      at: .top,
+                                                     animated: true)
     }
     
     func fetchsubMenuTags(submenu : String){
@@ -366,33 +370,35 @@ class HomeiPadVC: UIViewController{
     }
 }
 
-extension HomeiPadVC: UICollectionViewDelegate, UICollectionViewDataSource, UIScrollViewDelegate, UICollectionViewDelegateFlowLayout{
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        var width = CGFloat()
-        if tabBarTitle != "today" ||  tabBarTitle != "test"{
-            width = HomeNewsCV.frame.width/3
-        }
-        else{
-            width = HomeNewsCV.frame.width/2
-        }
-        let height : CGFloat = 305.0
-        return CGSize(width: width, height: height)
-    }
+extension HomeiPadVC: UICollectionViewDelegate, UICollectionViewDataSource, UIScrollViewDelegate {
+
     
-    
-    //these methods are to configure the spacing between items
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-        return UIEdgeInsetsMake(0,0,0,0)
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
-        return 0
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-        return 0
-    }
+//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+//        var width = CGFloat()
+//        if tabBarTitle != "today" ||  tabBarTitle != "test"{
+//            width = HomeNewsCV.frame.width/3
+//        }
+//        else{
+//            width = HomeNewsCV.frame.width/2
+//        }
+//        let height : CGFloat = 305.0
+//        return CGSize(width: width, height: height)
+//    }
+//
+//
+//    //these methods are to configure the spacing between items
+//
+//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+//        return UIEdgeInsetsMake(0,0,0,0)
+//    }
+//
+//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+//        return 0
+//    }
+//
+//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+//        return 0
+//    }
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return (ShowArticle.count > 0) ? self.ShowArticle.count : 0
     }
@@ -400,36 +406,45 @@ extension HomeiPadVC: UICollectionViewDelegate, UICollectionViewDataSource, UISc
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let newsDetailvc:NewsDetailVC = storyboard.instantiateViewController(withIdentifier: "NewsDetailID") as! NewsDetailVC
-        newsDetailvc.newsCurrentIndex = indexPath.row
-        newsDetailvc.ShowArticle = sortedData as! [NewsArticle]
-        newsDetailvc.articleId = Int(sortedData[indexPath.row].article_id)
-        UserDefaults.standard.set("home", forKey: "isSearch")
-        present(newsDetailvc, animated: true, completion: nil)
+        if isTrendingDetail == 0{
+            UserDefaults.standard.set("home", forKey: "isSearch")
+        }else{
+            UserDefaults.standard.set("cluster", forKey: "isSearch")
+        }
+        if isTrendingDetail == 0 || isTrendingDetail == 2{
+            if sortedData.count > 0 {
+                newsDetailvc.newsCurrentIndex = indexPath.row
+                newsDetailvc.ShowArticle = sortedData as! [NewsArticle]
+                newsDetailvc.articleId = Int(sortedData[indexPath.row].article_id)
+                present(newsDetailvc, animated: true, completion: nil)
+            }
+        }
+        else{
+            isTrendingDetail = 2
+            trendingProtocol?.isTrendingTVLoaded(status: true)
+            var id = UserDefaults.standard.array(forKey: "trendingArray") as! [Int]
+            let selectedCluster = id[indexPath.row]
+            fetchClusterIdArticles(clusterID: selectedCluster)
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "HomeIpadID", for:indexPath) as! HomeipadCVCell
+        
         var currentArticle = NewsArticle()
-        imgWidth = String(describing : Int(cell.imgNews.frame.width))
-        imgHeight = String(describing : Int(cell.imgNews.frame.height))
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
         dateFormatter.timeZone = NSTimeZone.local
         let darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
-        if tabBarTitle != "today"{
-            sortedData = ShowArticle.sorted{ $0.published_on! > $1.published_on! }
-            currentArticle = sortedData[indexPath.row]
-        }
-        else{
-            currentArticle = ShowArticle[indexPath.row]
-        }
         
         let textSizeSelected = UserDefaults.standard.value(forKey: "textSize") as! Int
         var sourceColor = UIColor()
         var fullTxt = ""
         var dateSubString = ""
         var agoDate = ""
-        
+        if  isTrendingDetail == 0 || isTrendingDetail == 2{
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "HomeIpadID", for:indexPath) as! HomeipadCVCell
+            sortedData = ShowArticle.sorted{ $0.published_on! > $1.published_on! }
+            currentArticle = sortedData[indexPath.row]
         //display data from DB
         cell.lblTitle.text = currentArticle.title
         
@@ -493,6 +508,75 @@ extension HomeiPadVC: UICollectionViewDelegate, UICollectionViewDataSource, UISc
         activityIndicator.stopAnimating()
         lblNonews.isHidden = true
         return cell
+        }else{
+            //isTrendingDetail = 1
+            let cellCluster = collectionView.dequeueReusableCell(withReuseIdentifier: "HomeIpadClusterID", for:indexPath) as! HomeiPadClusterCVCell
+             //sortedData = ShowArticle.sorted{ $0.published_on! > $1.published_on! }
+            currentArticle = ShowArticle[indexPath.row]
+            //display data from DB
+            cellCluster.lblTitle.text = currentArticle.title
+            
+            if  darkModeStatus == true{
+                cellCluster.lblSource.textColor = colorConstants.nightModeText
+                cellCluster.lblTitle.textColor = colorConstants.nightModeText
+                NightNight.theme =  .night
+            }
+            else{
+                cellCluster.lblSource.textColor = colorConstants.blackColor
+                cellCluster.lblTitle.textColor = colorConstants.blackColor
+                NightNight.theme =  .normal
+            }
+            
+            if ((currentArticle.published_on?.count)!) <= 20{
+                if !(currentArticle.published_on?.contains("Z"))!{
+                    currentArticle.published_on?.append("Z")
+                }
+                let newDate = dateFormatter.date(from: currentArticle.published_on!)
+                if newDate != nil{
+                    agoDate = try Helper().timeAgoSinceDate(newDate!)
+                    fullTxt = "\(agoDate)" + " via " + currentArticle.source!
+                    let attributedWithTextColor: NSAttributedString = fullTxt.attributedStringWithColor([currentArticle.source!], color: UIColor.red)
+                    cellCluster.lblSource.attributedText = attributedWithTextColor
+                }
+            }
+            else{
+                dateSubString = String(currentArticle.published_on!.prefix(19))
+                if !(dateSubString.contains("Z")){
+                    dateSubString.append("Z")
+                }
+                let newDate = dateFormatter.date(from: dateSubString
+                )
+                if newDate != nil{
+                    agoDate = try Helper().timeAgoSinceDate(newDate!)
+                    fullTxt = "\(agoDate)" + " via " + currentArticle.source!
+                    let attributedWithTextColor: NSAttributedString = fullTxt.attributedStringWithColor([currentArticle.source!], color: UIColor.red)
+                    cellCluster.lblSource.attributedText = attributedWithTextColor
+                }
+            }
+            let imgURL = APPURL.imageServer + imgWidth + "x" + imgHeight + "/smart/" + currentArticle.imageURL!
+            cellCluster.imgNews.sd_setImage(with: URL(string: imgURL), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
+            
+            if textSizeSelected == 0{
+                cellCluster.lblSource.font = FontConstants.smallFontContent
+                cellCluster.lblTitle.font = FontConstants.smallFontHeadingBold
+            }
+            else if textSizeSelected == 2{
+                cellCluster.lblSource.font = FontConstants.LargeFontContent
+                cellCluster.lblTitle.font = FontConstants.LargeFontHeadingBold
+            }
+            else{
+                cellCluster.lblSource.font =  FontConstants.NormalFontContent
+                cellCluster.lblTitle.font = FontConstants.NormalFontHeadingBold
+            }
+            
+            if cellCluster.imgNews.image == nil{
+                cellCluster.imgNews.image = UIImage(named: AssetConstants.NoImage)
+            }
+            
+            activityIndicator.stopAnimating()
+            lblNonews.isHidden = true
+            return cellCluster
+        }
         
     }
     
@@ -500,7 +584,7 @@ extension HomeiPadVC: UICollectionViewDelegate, UICollectionViewDataSource, UISc
         
         if (scrollView.bounds.maxY) == scrollView.contentSize.height{
             activityIndicator.startAnimating()
-            if tabBarTitle != "Test" && tabBarTitle != "today"{
+           if isTrendingDetail == 0 &&  tabBarTitle != "Test"{
                 var submenu = UserDefaults.standard.value(forKey: "submenu") as! String
                 if ShowArticle.count >= 20{
                     if isAPICalled == false{
@@ -535,4 +619,19 @@ extension HomeiPadVC: IndicatorInfoProvider{
     func indicatorInfo(for pagerTabStripController: PagerTabStripViewController) -> IndicatorInfo {
         return IndicatorInfo(title: tabBarTitle)
     }
+}
+extension HomeiPadVC: UICollectionViewDelegateFlowLayout {
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        
+        //let padding: CGFloat = 25
+        let collectionCellSize = HomeNewsCV.frame.size.width //- padding
+        if isTrendingDetail == 0 || isTrendingDetail == 2{
+        return CGSize(width: collectionCellSize/3.4, height: collectionCellSize/3)
+        }else{
+            return CGSize(width: collectionCellSize/2.2, height: collectionCellSize/2)
+        }
+        
+    }
+    
 }

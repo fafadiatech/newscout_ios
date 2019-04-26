@@ -138,6 +138,8 @@ class HomeParentVC: ButtonBarPagerTabStripViewController{
     }
     
     func changeTheme(){
+        btnSearch.setImage(UIImage(named:AssetConstants.searchBlack), for: .normal)
+        btnSettings.setImage(UIImage(named:AssetConstants.menuBlack), for: .normal)
         viewNightMode.backgroundColor = colorConstants.grayBackground1
         viewBookmark.backgroundColor = colorConstants.grayBackground1
         viewSettings.backgroundColor = colorConstants.grayBackground1
@@ -325,6 +327,8 @@ class HomeParentVC: ButtonBarPagerTabStripViewController{
         btnNightModeImg.setImage(nil, for: .normal)
         btnNightModeImg.setImage(UIImage(named: AssetConstants.moon), for: .normal)
         btnBookmarkImg.setImage(UIImage(named:AssetConstants.bookmark), for: .normal)
+        btnSettings.setImage(UIImage(named:AssetConstants.menuWhite), for: .normal)
+        btnSearch.setImage(UIImage(named:AssetConstants.searchWhite), for: .normal)
         reloadPagerTabStripView()
         activityIndicator.stopAnimating()
     }
@@ -354,6 +358,14 @@ class HomeParentVC: ButtonBarPagerTabStripViewController{
                     let childVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "HomeiPadVC") as! HomeiPadVC
                     childVC.tabBarTitle = cat
                     childrenVC.append(childVC)
+                    childVC.trendingProtocol = self
+                    if childVC.tabBarTitle == "today"{
+                        buttonBarView.isHidden = true
+                        HideButtonBarView()
+                    }else{
+                        buttonBarView.isHidden = false
+                        unhideButtonBarView()
+                    }
                     
                 }
             }else{
