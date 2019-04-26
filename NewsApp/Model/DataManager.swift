@@ -218,6 +218,21 @@ class DBManager{
             return RecommendationDBFetchResult.Failure(error as! String)
         }
     }
+    
+    func showCount(articleId: Int) -> Int {
+          var  trendingData = [TrendingCategory]()
+        let managedContext =
+            appDelegate?.persistentContainer.viewContext
+        let trendingRequest =  NSFetchRequest<TrendingCategory>(entityName: "TrendingCategory")
+        trendingRequest.predicate = NSPredicate(format: "articleID = %d", articleId)
+        do {
+            trendingData = try (managedContext?.fetch(trendingRequest))!
+        }catch let error as NSError {
+            return 0
+        }
+        return Int(trendingData[0].count)
+    }
+    
     //save trending articles
     func saveTrending(_ completion : @escaping (Bool) -> ()){
         var URLData = [NewsURL]()
@@ -231,19 +246,17 @@ class DBManager{
             case .Failure(let errormessage) :
                 print(errormessage)
             }
-            var clusterNewsCount = Dictionary<Int, Int>()
+
             if TrendingData.count > 0{
                 if TrendingData[0].header.status == "1" {
                     for result in 0..<TrendingData[0].body.results.count {
                         for news in TrendingData[0].body.results[result].articles{
-                            //clusterNewsCount = [TrendingData[0].body.results[result].id : TrendingData[0].body.results[result].articles.count ]
-                            clusterNewsCount.updateValue(TrendingData[0].body.results[result].articles.count, forKey: TrendingData[0].body.results[result].id)
                             let newArticle = NewsArticle(context: managedContext!)
                             let newTrending  = TrendingCategory(context: managedContext!)
                             //if self.someIDExist(id: news.article_id) == false{
                                 newTrending.trendingID = Int64(TrendingData[0].body.results[result].id)
                                 newTrending.articleID = Int64(news.article_id)
-                               
+                            newTrending.count = Int64(TrendingData[0].body.results[result].articles.count)
                             if  self.someEntityExists(id: Int(news.article_id), entity: "NewsArticle", keyword: "") == false{
                                 newArticle.article_id = Int64(news.article_id)
                                 newArticle.title = news.title
@@ -281,9 +294,6 @@ class DBManager{
                         
                         self.saveBlock()
                         }
-                        
-                       // UserDefaults.standard.setValue(clusterNewsCount, forKey: "clusterNewsCount")
-                       // print("clusterNewsCount: \(clusterNewsCount)")
                         completion(true)
                     }
                 }

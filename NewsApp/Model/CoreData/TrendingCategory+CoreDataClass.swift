@@ -1,8 +1,8 @@
 //
-//  Trending+CoreDataClass.swift
+//  TrendingCategory+CoreDataClass.swift
 //  NewsApp
 //
-//  Created by Jayashri on 16/04/19.
+//  Created by Jayashree on 26/04/19.
 //  Copyright © 2019 Fafadia Tech. All rights reserved.
 //
 //

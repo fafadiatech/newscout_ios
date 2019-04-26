@@ -515,7 +515,6 @@ extension HomeiPadVC: UICollectionViewDelegate, UICollectionViewDataSource, UISc
             currentArticle = ShowArticle[indexPath.row]
             //display data from DB
             cellCluster.lblTitle.text = currentArticle.title
-            
             if  darkModeStatus == true{
                 cellCluster.lblSource.textColor = colorConstants.nightModeText
                 cellCluster.lblTitle.textColor = colorConstants.nightModeText

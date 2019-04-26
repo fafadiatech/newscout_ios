@@ -599,6 +599,7 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
         else {
             currentArticle = ShowArticle[indexPath.row]
             let cellCluster = tableView.dequeueReusableCell(withIdentifier: "ClusterTVCellID", for:indexPath) as! ClusterTVCell
+            var count = DBManager().showCount(articleId: Int(currentArticle.article_id))
             imgWidth = String(describing : Int(cellCluster.imgNews.frame.width))
             imgHeight = String(describing : Int(cellCluster.imgNews.frame.height))
             cellCluster.imgNews.layer.cornerRadius = 10.0
@@ -608,7 +609,7 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
             cellHeight = 350
             
             cellCluster.lblNewsHeading.text = currentArticle.title
-            
+        
             if  darkModeStatus == true{
                 cellCluster.ViewCellBackground.backgroundColor = colorConstants.grayBackground2
                 cellCluster.lblSource.textColor = colorConstants.nightModeText
@@ -651,18 +652,21 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
             }
             let imgURL = APPURL.imageServer + imgWidth + "x" + imgHeight + "/smart/" + currentArticle.imageURL!
             cellCluster.imgNews.sd_setImage(with: URL(string: imgURL), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
-            
+             cellCluster.lblCount.text = String(count)
             if textSizeSelected == 0{
                 cellCluster.lblSource.font = FontConstants.smallFontContent
                 cellCluster.lblNewsHeading.font = FontConstants.smallFontHeadingBold
+                cellCluster.lblCount.font = FontConstants.smallFontHeadingBold
             }
             else if textSizeSelected == 2{
                 cellCluster.lblSource.font = FontConstants.LargeFontContent
                 cellCluster.lblNewsHeading.font = FontConstants.LargeFontHeadingBold
+                cellCluster.lblCount.font = FontConstants.LargeFontHeadingBold
             }
             else{
                 cellCluster.lblSource.font =  FontConstants.NormalFontContent
                 cellCluster.lblNewsHeading.font = FontConstants.NormalFontHeadingBold
+                 cellCluster.lblCount.font = FontConstants.NormalFontHeadingBold
             }
             
             if cellCluster.imgNews.image == nil{

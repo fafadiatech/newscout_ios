@@ -1,8 +1,8 @@
 //
-//  Trending+CoreDataProperties.swift
+//  TrendingCategory+CoreDataProperties.swift
 //  NewsApp
 //
-//  Created by Jayashri on 16/04/19.
+//  Created by Jayashree on 26/04/19.
 //  Copyright © 2019 Fafadia Tech. All rights reserved.
 //
 //
@@ -17,7 +17,8 @@ extension TrendingCategory {
         return NSFetchRequest<TrendingCategory>(entityName: "TrendingCategory")
     }
 
-    @NSManaged public var trendingID: Int64
     @NSManaged public var articleID: Int64
+    @NSManaged public var trendingID: Int64
+    @NSManaged public var count: Int64
 
 }

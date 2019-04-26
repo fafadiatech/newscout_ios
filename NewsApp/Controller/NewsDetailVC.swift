@@ -1224,12 +1224,8 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
                         DBManager().deleteBookmarkedArticle(id: self.articleId)
                         if self.currentEntity == "ShowArticle"{
                             self.ShowArticle.remove(at: self.newsCurrentIndex)
-                        
-//                        }else if self.currentEntity == "SearchArticles"{
-//                            self.SearchArticle.remove(at: self.newsCurrentIndex)
-//                        }else if self.currentEntity == "source"{
-//                            self.sourceArticle.remove(at: self.newsCurrentIndex)
-//                        }
+                           let isSearch = UserDefaults.standard.value(forKey: "isSearch") as! String
+                             if isSearch == "bookmark"{
                         if self.indexCount > 1{
                         self.indexCount = self.indexCount - 1
                             if self.newsCurrentIndex == self.indexCount {
@@ -1237,13 +1233,14 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
                             }
                             self.ShowNews(currentIndex: self.newsCurrentIndex)
                         }else{
-                            let isSearch = UserDefaults.standard.value(forKey: "isSearch") as! String
+                           
                             if isSearch == "bookmark"{
                                 let storyboard = UIStoryboard(name: "Main", bundle: nil)
                                 let vc:BookmarkVC = storyboard.instantiateViewController(withIdentifier: "BookmarkID") as! BookmarkVC
                                 self.present(vc, animated: true, completion: nil)
                             }
                         }
+                            }
                         }
                         
                     }

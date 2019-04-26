@@ -15,6 +15,7 @@ class ClusterTVCell: UITableViewCell {
     @IBOutlet weak var imgNews: UIImageView!
     @IBOutlet weak var lblCount: UILabel!
     
+    @IBOutlet weak var imgCount: UIImageView!
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code

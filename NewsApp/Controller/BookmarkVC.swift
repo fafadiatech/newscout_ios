@@ -393,7 +393,7 @@ extension BookmarkVC: UITableViewDelegate, UITableViewDataSource{
     func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
         if targetContentOffset.pointee.y < scrollView.contentOffset.y {
             if nextURL != "" {
-    
+                
                 APICall().BookmarkedArticlesAPI(url: nextURL){ response in
                     switch response {
                     case .Success(let data) :
@@ -433,9 +433,9 @@ extension BookmarkVC: UICollectionViewDelegate, UICollectionViewDataSource, UISc
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let newsDetailvc:NewsDetailVC = storyboard.instantiateViewController(withIdentifier: "NewsDetailID") as! NewsDetailVC
         newsDetailvc.newsCurrentIndex = indexPath.row
-        newsDetailvc.ShowArticle = ShowArticle
+        newsDetailvc.ShowArticle = sortedData
         UserDefaults.standard.set("bookmark", forKey: "isSearch")
-        newsDetailvc.articleId = Int(ShowArticle[indexPath.row].article_id)
+        newsDetailvc.articleId = Int(sortedData[indexPath.row].article_id)
         present(newsDetailvc, animated: true, completion: nil)
     }
     
@@ -453,7 +453,9 @@ extension BookmarkVC: UICollectionViewDelegate, UICollectionViewDataSource, UISc
         var dateSubString = ""
         var agoDate = ""
         //display data from DB
-        let currentArticle = ShowArticle[indexPath.row]
+        sortedData.removeAll()
+        sortedData = ShowArticle.sorted{ $0.published_on! > $1.published_on! }
+        let currentArticle = sortedData[indexPath.row]
         cell.lblTitle.text = currentArticle.title
         
         if  darkModeStatus == true{
