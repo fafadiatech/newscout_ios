@@ -366,7 +366,7 @@ class HomeParentVC: ButtonBarPagerTabStripViewController{
                         buttonBarView.isHidden = false
                         unhideButtonBarView()
                     }
-                    
+                   
                 }
             }else{
                 for cat in subMenuArr[HeadingRow]{
@@ -384,10 +384,15 @@ class HomeParentVC: ButtonBarPagerTabStripViewController{
                     }
                 }
             }
+            activityIndicator.stopAnimating()
+            containerView.isHidden = false
         }
         else{
             let childVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "HomeVC") as! HomeVC
             childVC.tabBarTitle = "Test"
+            containerView.isHidden = true
+            buttonBarView.isHidden = true
+            activityIndicator.startAnimating()
             childrenVC.append(childVC)
         }
         

@@ -447,6 +447,7 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
         var fullTxt = ""
         var dateSubString = ""
         var agoDate = ""
+        
         if  isTrendingDetail == 0 || isTrendingDetail == 2{
             //print(ShowArticle[indexPath.row])
             sortedData = ShowArticle.sorted{ $0.published_on! > $1.published_on! }

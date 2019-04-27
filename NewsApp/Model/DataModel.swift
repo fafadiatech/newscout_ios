@@ -333,7 +333,7 @@ struct DailyTagBody: Decodable {
 
 struct GetLikeBookmarkList: Decodable{
     let header : Header
-    let body : Body?
+    let body : Body
     let errors : ErrorList?
 }
 struct LikeBookmarkList: Decodable{

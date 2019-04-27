@@ -220,7 +220,7 @@ class DBManager{
     }
     
     func showCount(articleId: Int) -> Int {
-          var  trendingData = [TrendingCategory]()
+        var  trendingData = [TrendingCategory]()
         let managedContext =
             appDelegate?.persistentContainer.viewContext
         let trendingRequest =  NSFetchRequest<TrendingCategory>(entityName: "TrendingCategory")
@@ -246,7 +246,7 @@ class DBManager{
             case .Failure(let errormessage) :
                 print(errormessage)
             }
-
+            
             if TrendingData.count > 0{
                 if TrendingData[0].header.status == "1" {
                     for result in 0..<TrendingData[0].body.results.count {
@@ -254,8 +254,8 @@ class DBManager{
                             let newArticle = NewsArticle(context: managedContext!)
                             let newTrending  = TrendingCategory(context: managedContext!)
                             //if self.someIDExist(id: news.article_id) == false{
-                                newTrending.trendingID = Int64(TrendingData[0].body.results[result].id)
-                                newTrending.articleID = Int64(news.article_id)
+                            newTrending.trendingID = Int64(TrendingData[0].body.results[result].id)
+                            newTrending.articleID = Int64(news.article_id)
                             newTrending.count = Int64(TrendingData[0].body.results[result].articles.count)
                             if  self.someEntityExists(id: Int(news.article_id), entity: "NewsArticle", keyword: "") == false{
                                 newArticle.article_id = Int64(news.article_id)
@@ -291,8 +291,8 @@ class DBManager{
                                  }*/
                                 
                             }
-                        
-                        self.saveBlock()
+                            
+                            self.saveBlock()
                         }
                         completion(true)
                     }
@@ -309,7 +309,7 @@ class DBManager{
     func fetchTrendingArticle() -> ArticleDBfetchResult{
         var trendingArticleIDs = [TrendingCategory]()
         var trendingArticles = [NewsArticle]()
-    
+        
         let managedContext =
             appDelegate?.persistentContainer.viewContext
         let fetchRequest =
@@ -433,8 +433,8 @@ class DBManager{
             fetchRequest.predicate = NSPredicate(format: "article_id = %d", id.articleID)
             do {
                 let article = try (managedContext?.fetch(fetchRequest))!
-                 if !trendingArticles.contains(article[0]){
-                trendingArticles.append(article[0])
+                if !trendingArticles.contains(article[0]){
+                    trendingArticles.append(article[0])
                 }
             }catch let error as NSError {
                 return ArticleDBfetchResult.Failure(error.localizedDescription)
@@ -763,21 +763,22 @@ class DBManager{
                 print(errormessage)
                 
             }
-            
-            if (BookmarkData.body?.listResult!.count)! > 0{
-                for news in (BookmarkData.body?.listResult)!{
-                    if  self.someEntityExists(id: Int(news.article_id), entity: "BookmarkArticles", keyword: "") == false
-                    {
-                        let newArticle = BookmarkArticles(context: managedContext!)
-                        newArticle.article_id = Int64(news.article_id)
-                        newArticle.isBookmark = Int16(news.status!)
-                        //newArticle.row_id = Int16(news.row_id)
-                        self.saveBlock()
+            if BookmarkData != nil{
+                if (BookmarkData.body.listResult!.count) > 0{
+                    for news in (BookmarkData.body.listResult)!{
+                        if  self.someEntityExists(id: Int(news.article_id), entity: "BookmarkArticles", keyword: "") == false
+                        {
+                            let newArticle = BookmarkArticles(context: managedContext!)
+                            newArticle.article_id = Int64(news.article_id)
+                            newArticle.isBookmark = Int16(news.status!)
+                            //newArticle.row_id = Int16(news.row_id)
+                            self.saveBlock()
+                        }
                     }
+                    completion(true)
+                }else{
+                    completion(false)
                 }
-                completion(true)
-            }else{
-                completion(false)
             }
         }
     }
@@ -796,21 +797,22 @@ class DBManager{
             case .Failure(let errormessage) :
                 print(errormessage)
             }
-            
-            if (LikeData.body?.listResult!.count)! > 0{
-                for news in (LikeData.body?.listResult)!{
-                    if  self.someEntityExists(id: Int(news.article_id), entity: "LikeDislike", keyword: "") == false
-                    {
-                        let newArticle = LikeDislike(context: managedContext!)
-                        newArticle.article_id = Int64(news.article_id)
-                        newArticle.isLike = Int16(news.isLike!)
-                        //  newArticle.row_id = Int16(news.row_id)
-                        self.saveBlock()
+            if LikeData != nil{
+                if (LikeData.body.listResult!.count) > 0{
+                    for news in (LikeData.body.listResult)!{
+                        if  self.someEntityExists(id: Int(news.article_id), entity: "LikeDislike", keyword: "") == false
+                        {
+                            let newArticle = LikeDislike(context: managedContext!)
+                            newArticle.article_id = Int64(news.article_id)
+                            newArticle.isLike = Int16(news.isLike!)
+                            //  newArticle.row_id = Int16(news.row_id)
+                            self.saveBlock()
+                        }
                     }
+                    completion(true)
+                }else{
+                    completion(false)
                 }
-                completion(true)
-            }else{
-                completion(false)
             }
         }
     }
