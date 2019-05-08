@@ -141,7 +141,7 @@ class ShuffleDetailVC: UIViewController , UIScrollViewDelegate, TAPageControlDel
     @objc func respondToSwipeGesture(gesture: UIGestureRecognizer) {
         
         let transition = CATransition()
-        transition.duration = 0.5
+        transition.duration = 0.6
         
         if let swipeGesture = gesture as? UISwipeGestureRecognizer {
             
