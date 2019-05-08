@@ -421,6 +421,7 @@ extension HomeiPadVC: UICollectionViewDelegate, UICollectionViewDataSource, UISc
             cell.lblTitle.text = currentArticle.title
             
             if  darkModeStatus == true{
+                cell.containerView.backgroundColor = colorConstants.grayBackground2
                 cell.lblSource.textColor = colorConstants.nightModeText
                 cell.lblTitle.textColor = colorConstants.nightModeText
                 NightNight.theme =  .night
@@ -487,6 +488,7 @@ extension HomeiPadVC: UICollectionViewDelegate, UICollectionViewDataSource, UISc
             //display data from DB
             cellCluster.lblTitle.text = currentArticle.title
             if  darkModeStatus == true{
+                cellCluster.containerView.backgroundColor = colorConstants.grayBackground2
                 cellCluster.lblSource.textColor = colorConstants.nightModeText
                 cellCluster.lblTitle.textColor = colorConstants.nightModeText
                 NightNight.theme =  .night

@@ -345,6 +345,7 @@ extension SourceVC: UICollectionViewDelegate, UICollectionViewDataSource, UIScro
         cell.lblTitle.text = currentArticle.title
         
         if  darkModeStatus == true{
+            cell.containerView.backgroundColor = colorConstants.grayBackground2
             cell.lblSource.textColor = colorConstants.nightModeText
             cell.lblTitle.textColor = colorConstants.nightModeText
             NightNight.theme =  .night
@@ -436,5 +437,13 @@ extension SourceVC: UICollectionViewDelegate, UICollectionViewDataSource, UIScro
                 }
             }
         }
+    }
+}
+
+extension SourceVC: UICollectionViewDelegateFlowLayout {
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        let collectionCellSize = sourceCV.frame.size.width
+        return CGSize(width: collectionCellSize/3.4, height: collectionCellSize/3)
     }
 }

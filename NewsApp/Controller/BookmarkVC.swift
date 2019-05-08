@@ -457,6 +457,7 @@ extension BookmarkVC: UICollectionViewDelegate, UICollectionViewDataSource, UISc
         cell.lblTitle.text = currentArticle.title
         
         if  darkModeStatus == true{
+            cell.containerView.backgroundColor = colorConstants.grayBackground2
             cell.lblSource.textColor = colorConstants.nightModeText
             cell.lblTitle.textColor = colorConstants.nightModeText
             NightNight.theme =  .night
@@ -554,5 +555,13 @@ extension BookmarkVC: UICollectionViewDelegate, UICollectionViewDataSource, UISc
                 activityIndicator.stopAnimating()
             }
         }
+    }
+}
+
+extension BookmarkVC: UICollectionViewDelegateFlowLayout {
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        let collectionCellSize = bookmarkCV.frame.size.width
+            return CGSize(width: collectionCellSize/3.4, height: collectionCellSize/3)
     }
 }

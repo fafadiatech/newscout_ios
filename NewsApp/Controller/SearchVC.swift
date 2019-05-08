@@ -409,6 +409,7 @@ extension SearchVC: UICollectionViewDelegate, UICollectionViewDataSource{
         cell.lblTitle.text = currentArticle.title
         
         if  darkModeStatus == true{
+            cell.containerView.backgroundColor = colorConstants.grayBackground2
             cell.lblSource.textColor = colorConstants.nightModeText
             cell.lblTitle.textColor = colorConstants.nightModeText
             NightNight.theme =  .night
@@ -634,4 +635,12 @@ extension SearchVC: UITextFieldDelegate{
         }
     }
     
+}
+
+extension SearchVC: UICollectionViewDelegateFlowLayout {
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        let collectionCellSize = searchResultCV.frame.size.width
+        return CGSize(width: collectionCellSize/3.4, height: collectionCellSize/3)
+    }
 }

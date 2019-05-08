@@ -1266,7 +1266,8 @@ class DBManager{
             appDelegate?.persistentContainer.viewContext
         let headingfetchRequest =
             NSFetchRequest<MenuHeadings>(entityName: "MenuHeadings")
-        
+        let sort = NSSortDescriptor(key: "headingId", ascending: true)
+        headingfetchRequest.sortDescriptors = [sort]
         do {
             headingsData = try (managedContext?.fetch(headingfetchRequest))!
             return HeadingsDBFetchResult.Success(headingsData)
@@ -1274,8 +1275,6 @@ class DBManager{
             return HeadingsDBFetchResult.Failure(error as! String)
         }
     }
-    
-    
     
     func fetchSubMenu(headingId : Int) -> SubMenuDBFetchResult{
         var subMenuData = [HeadingSubMenu]()
