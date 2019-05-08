@@ -404,9 +404,6 @@ extension SearchVC: UICollectionViewDelegate, UICollectionViewDataSource{
         var fullTxt = ""
         var dateSubString = ""
         var agoDate = ""
-        //        cell.imgNews.layer.cornerRadius = 10.0
-        //        cell.imgNews.clipsToBounds = true
-        
         //display data from DB
         let currentArticle = Searchresults[indexPath.row]
         cell.lblTitle.text = currentArticle.title
@@ -604,11 +601,7 @@ extension SearchVC: UITextFieldDelegate{
                 lblNoNews.isHidden = false
             }
             else{
-                if searchResultTV.isHidden == false{
-                    searchResultTV.reloadData()
-                }else{
-                    searchResultCV.reloadData()
-                }
+                searchResultTV.reloadData()
             }
         case .Failure( _) :
             self.searchResultTV.makeToast("Please try again later", duration: 2.0, position: .center)
@@ -627,11 +620,7 @@ extension SearchVC: UITextFieldDelegate{
             if recordCount == 0 {
                 lblNoNews.isHidden = false
             }
-            if searchResultTV.isHidden == false{
-                searchResultTV.reloadData()
-            }else{
-                searchResultCV.reloadData()
-            }
+            searchResultTV.reloadData()
         }
         catch {
             self.searchResultTV.makeToast("Please try again later", duration: 2.0, position: .center)

@@ -61,8 +61,8 @@ class HomeVC: UIViewController{
     var imgHeight = ""
     var cellHeight:CGFloat = CGFloat()
     var isTrendingDetail = 0
-   
-   
+    
+    
     override func viewDidLoad(){
         super.viewDidLoad()
         HomeNewsTV.tableFooterView = UIView(frame: .zero)
@@ -194,7 +194,6 @@ class HomeVC: UIViewController{
         switch tagresult{
         case .Success(let id) :
             var url = APPURL.ArticleByIdURL + "\(id)"
-            print(url)
             UserDefaults.standard.setValue(id, forKey: "subMenuId")
             UserDefaults.standard.setValue(url, forKey: "submenuURL")
         case .Failure(let error):
@@ -242,7 +241,7 @@ class HomeVC: UIViewController{
         }
         DBManager().SaveDataDB(nextUrl: subMenuURL ){response in
             if response == true{
-            self.fetchArticlesFromDB()
+                self.fetchArticlesFromDB()
             }
         }
     }
@@ -293,13 +292,13 @@ class HomeVC: UIViewController{
         DispatchQueue.global(qos: .userInitiated).async {
             if self.isTrendingDetail == 0{
                 self.saveArticlesInDB()
-        }
+            }
             else if self.isTrendingDetail == 1{
                 self.saveTrending()
-        }
+            }
         }
         DispatchQueue.main.async {
-             refreshControl.endRefreshing()
+            refreshControl.endRefreshing()
             self.activityIndicator.stopAnimating()
         }
     }
@@ -307,7 +306,7 @@ class HomeVC: UIViewController{
     func saveTrending(){
         DBManager().saveTrending{response in
             if response == true{
-            self.fetchTrending()
+                self.fetchTrending()
             }
         }
     }
@@ -333,7 +332,6 @@ class HomeVC: UIViewController{
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        //if tabBarTitle != "Test" && tabBarTitle != "today"{
         if isTrendingDetail == 0 {
             if Reachability.isConnectedToNetwork(){
                 activityIndicator.startAnimating()
@@ -351,7 +349,6 @@ class HomeVC: UIViewController{
                 }
             }
         }
-        //if tabBarTitle == "today"{
         if isTrendingDetail == 1 {
             var records = DBManager().IsCoreDataEmpty(entity: "TrendingCategory")
             if records <= 0{
@@ -434,7 +431,7 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-       
+        
         var currentArticle = NewsArticle()
         
         let dateFormatter = DateFormatter()
@@ -449,7 +446,6 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
         var agoDate = ""
         
         if  isTrendingDetail == 0 || isTrendingDetail == 2{
-            //print(ShowArticle[indexPath.row])
             sortedData = ShowArticle.sorted{ $0.published_on! > $1.published_on! }
             currentArticle = sortedData[indexPath.row]
             if indexPath.row % 2 != 0{
@@ -458,7 +454,7 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
                 imgHeight = String(describing : Int(cell.imgNews.frame.height))
                 cell.imgNews.layer.cornerRadius = 10.0
                 cell.imgNews.clipsToBounds = true
-              
+                
                 //display data from DB
                 cell.lblNewsHeading.text = currentArticle.title
                 
@@ -531,7 +527,7 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
                 cellOdd.imgNews.layer.cornerRadius = 10.0
                 cellOdd.imgNews.clipsToBounds = true
                 //display data from DB
-    
+                
                 cellOdd.lblNewsHeading.text = currentArticle.title
                 
                 if  darkModeStatus == true{
@@ -610,7 +606,7 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
             cellHeight = 350
             
             cellCluster.lblNewsHeading.text = currentArticle.title
-        
+            
             if  darkModeStatus == true{
                 cellCluster.ViewCellBackground.backgroundColor = colorConstants.grayBackground2
                 cellCluster.lblSource.textColor = colorConstants.nightModeText
@@ -623,8 +619,6 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
                 cellCluster.lblNewsHeading.textColor = colorConstants.blackColor
                 NightNight.theme =  .normal
             }
-            print(currentArticle)
-            print(indexPath.row)
             if (currentArticle.published_on?.count)! <= 20 {
                 if !(currentArticle.published_on?.contains("Z"))!{
                     currentArticle.published_on?.append("Z")
@@ -653,7 +647,7 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
             }
             let imgURL = APPURL.imageServer + imgWidth + "x" + imgHeight + "/smart/" + currentArticle.imageURL!
             cellCluster.imgNews.sd_setImage(with: URL(string: imgURL), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
-             cellCluster.lblCount.text = String(count)
+            cellCluster.lblCount.text = String(count)
             if textSizeSelected == 0{
                 cellCluster.lblSource.font = FontConstants.smallFontContent
                 cellCluster.lblNewsHeading.font = FontConstants.smallFontHeadingBold
@@ -667,7 +661,7 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
             else{
                 cellCluster.lblSource.font =  FontConstants.NormalFontContent
                 cellCluster.lblNewsHeading.font = FontConstants.NormalFontHeadingBold
-                 cellCluster.lblCount.font = FontConstants.NormalFontHeadingBold
+                cellCluster.lblCount.font = FontConstants.NormalFontHeadingBold
             }
             
             if cellCluster.imgNews.image == nil{
@@ -686,7 +680,6 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         if indexPath.row == tableView.numberOfRows(inSection: indexPath.section) - 1 {
-            // if tabBarTitle != "Test" && tabBarTitle != "today"{
             if isTrendingDetail == 0 &&  tabBarTitle != "Test"{
                 var submenu = UserDefaults.standard.value(forKey: "submenu") as! String
                 if ShowArticle.count >= 20{

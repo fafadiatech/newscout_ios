@@ -337,8 +337,6 @@ extension BookmarkVC: UITableViewDelegate, UITableViewDataSource{
                 cellOdd.lblNewsDescription.textColor = colorConstants.blackColor
                 NightNight.theme =  .normal
             }
-            print(indexPath.row)
-            print(currentArticle)
             if ((currentArticle.published_on?.count)!) <= 20{
                 if !(currentArticle.published_on?.contains("Z"))!{
                     currentArticle.published_on?.append("Z")

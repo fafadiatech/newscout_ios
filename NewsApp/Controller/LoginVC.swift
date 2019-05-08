@@ -53,8 +53,6 @@ class LoginVC: UIViewController, GIDSignInUIDelegate, FBSDKLoginButtonDelegate {
         btnFBLogin.readPermissions = ["public_profile", "email"]
         tryFBlogin.isHidden = true
         if FBSDKAccessToken.current() != nil{
-            print("FBSDKAccessToken.current():")
-            print(FBSDKAccessToken.current())
             UserDefaults.standard.set(FBSDKAccessToken.current()?.tokenString, forKey: "FBToken")
             fetchProfile()
         }
@@ -83,7 +81,6 @@ class LoginVC: UIViewController, GIDSignInUIDelegate, FBSDKLoginButtonDelegate {
                      "device_id" : UserDefaults.standard.value(forKey: "deviceToken") as! String,
                      "device_name": "ios"]
         APICall().SocialLoginAPI(param : param){(status,response) in
-            print("FB Login response:\(response)")
             if response == "1"{
                 UserDefaults.standard.set(true, forKey: "isWalkthroughShown")
                 let check = UserDefaults.standard.value(forKey: "isSettingsLogin") as! Bool
@@ -135,7 +132,6 @@ class LoginVC: UIViewController, GIDSignInUIDelegate, FBSDKLoginButtonDelegate {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         if FBSDKAccessToken.current() != nil{
-            print(FBSDKAccessToken.current())
             UserDefaults.standard.set(FBSDKAccessToken.current()?.tokenString, forKey: "FBToken")
             fetchProfile()
         }
@@ -147,7 +143,6 @@ class LoginVC: UIViewController, GIDSignInUIDelegate, FBSDKLoginButtonDelegate {
             FBSDKGraphRequest(graphPath: "me", parameters: ["fields": "id, name, first_name, last_name, picture.type(large), email"]).start(completionHandler: { (connection, result, error) -> Void in
                 if (error == nil){
                     if let dictionary = result as? [String: AnyObject]{
-                        print(dictionary)
                         UserDefaults.standard.set(dictionary["email"] as! String?, forKey: "email")
                         UserDefaults.standard.set(dictionary["first_name"] as! String?, forKey: "first_name")
                         UserDefaults.standard.set(dictionary["last_name"] as! String?, forKey: "last_name")
@@ -193,13 +188,9 @@ class LoginVC: UIViewController, GIDSignInUIDelegate, FBSDKLoginButtonDelegate {
                          "password" : txtPassword.text!,
                          "device_id" : id,
                          "device_name": "ios"]
-            print("Login PAram: \(param)")
             APICall().LoginAPI(param : param){(status,response) in
-                print("Login response:\(response)")
                 if response == "1"{
                     UserDefaults.standard.set(true, forKey: "isWalkthroughShown")
-//                    DBManager().deleteAllData(entity: "LikeDislike")
-//                    DBManager().deleteAllData(entity: "BookmarkArticles")
                     let check = UserDefaults.standard.value(forKey: "isSettingsLogin") as! Bool
                     if check == true{
                         let storyboard = UIStoryboard(name: "Main", bundle: nil)
@@ -258,8 +249,7 @@ class LoginVC: UIViewController, GIDSignInUIDelegate, FBSDKLoginButtonDelegate {
 }
 
 extension LoginVC : UITextFieldDelegate{
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool
-    {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool{
         // Try to find next responder
         if let nextField = textField.superview?.viewWithTag(textField.tag + 1) as? UITextField {
             nextField.becomeFirstResponder()

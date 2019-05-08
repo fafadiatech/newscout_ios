@@ -541,10 +541,10 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
             switch swipeGesture.direction {
             case UISwipeGestureRecognizerDirection.right:
                 ViewWebContainer.isHidden = true
+                backNavigation()
                 
             case UISwipeGestureRecognizerDirection.down:
-                if newsCurrentIndex > 0
-                {
+                if newsCurrentIndex > 0{
                     suggestedView.isHidden = true
                     newsCurrentIndex = newsCurrentIndex - 1
                     ShowNews(currentIndex : newsCurrentIndex)
@@ -559,8 +559,7 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
                 }
                 
             case UISwipeGestureRecognizerDirection.up:
-                if newsCurrentIndex < indexCount - 1
-                {
+                if newsCurrentIndex < indexCount - 1{
                     newsCurrentIndex = newsCurrentIndex + 1
                     suggestedView.isHidden = true
                     ShowNews(currentIndex : newsCurrentIndex)
@@ -752,8 +751,7 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
         dateFormatter.timeZone = NSTimeZone.local
         playbackSlider.removeFromSuperview()
         // avPlayerView.isHidden = true
-        
-        
+    
         if ShowArticle.count > 0{
             fetchBookmarkDataFromDB()
             currentEntity = "ShowArticle"
@@ -775,7 +773,6 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
             if currentArticle.imageURL != ""{
                 
                 let imgURL = APPURL.imageServer + imgWidth + "x" + imgHeight + "/smart/" + currentArticle.imageURL!
-                print("newImage URL : \(imgURL)")
                 imgNews.sd_setImage(with: URL(string: imgURL), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
             }
             else{
@@ -992,7 +989,6 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
             if currentArticle.imageURL != ""{
                 
                 let imgURL = APPURL.imageServer + imgWidth + "x" + imgHeight + "/smart/" + currentArticle.imageURL!
-                print("newImage URL : \(imgURL)")
                 imgNews.sd_setImage(with: URL(string: imgURL), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
             }
             else{
@@ -1098,7 +1094,6 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
             if currentArticle.imageURL != ""{
                 
                 let imgURL = APPURL.imageServer + imgWidth + "x" + imgHeight + "/smart/" + currentArticle.imageURL!
-                print("newImage URL : \(imgURL)")
                 imgNews.sd_setImage(with: URL(string: imgURL), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
             }
             else{
@@ -1355,7 +1350,7 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
         
     }
     
-    @IBAction func btnBackAction(_ sender: Any) {
+    func backNavigation(){
         let isSearch = UserDefaults.standard.value(forKey: "isSearch") as! String
         if isSearch == "search"{
             self.dismiss(animated: false)
@@ -1385,6 +1380,10 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
         else if isSearch == "home" || isSearch == "shuffle" || isSearch == "cluster"{
             self.dismiss(animated: false)
         }
+    }
+    
+    @IBAction func btnBackAction(_ sender: Any) {
+       backNavigation()
     }
     
     @IBAction func btnWebBackAction(_ sender: Any) {
@@ -1425,7 +1424,6 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
         WKWebView.addSubview(activityIndicator)
         ViewWebContainer.isHidden = false
         let url = URL(string: sourceURL)
-        print(sourceURL)
         let domain = url?.host
         lblWebSource.text = "\(domain!)"
         let myURL = URL(string: sourceURL)!

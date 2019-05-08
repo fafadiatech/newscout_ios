@@ -226,12 +226,12 @@ class HomeParentVC: ButtonBarPagerTabStripViewController{
     
     func saveFetchMenu(){
         var coredataRecordCount = DBManager().IsCoreDataEmpty(entity: "MenuHeadings")
-
+        
         if coredataRecordCount > 0 {
             if Reachability.isConnectedToNetwork(){
-             DBManager().deleteAllData(entity: "MenuHeadings")
-             DBManager().deleteAllData(entity: "HeadingSubMenu")
-             DBManager().deleteAllData(entity: "MenuHashTag")
+                DBManager().deleteAllData(entity: "MenuHeadings")
+                DBManager().deleteAllData(entity: "HeadingSubMenu")
+                DBManager().deleteAllData(entity: "MenuHashTag")
                 DBManager().saveMenu(){response in
                     if response == true{
                         self.fetchMenuFromDB()
@@ -239,7 +239,7 @@ class HomeParentVC: ButtonBarPagerTabStripViewController{
                 }
             }
             else{
-                  self.fetchMenuFromDB()
+                self.fetchMenuFromDB()
             }
         }else{
             DBManager().saveMenu(){response in
@@ -344,8 +344,6 @@ class HomeParentVC: ButtonBarPagerTabStripViewController{
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        //        let selectedIndexPath = IndexPath(item: 0, section: 0)
-        //        menuCV.selectItem(at: selectedIndexPath, animated: false, scrollPosition: .left)
     }
     
     override func viewControllers(for pagerTabStripController: PagerTabStripViewController) -> [UIViewController] {
@@ -366,7 +364,7 @@ class HomeParentVC: ButtonBarPagerTabStripViewController{
                         buttonBarView.isHidden = false
                         unhideButtonBarView()
                     }
-                   
+                    
                 }
             }else{
                 for cat in subMenuArr[HeadingRow]{
@@ -504,7 +502,6 @@ class HomeParentVC: ButtonBarPagerTabStripViewController{
     @IBAction func btnBackAction(_ sender: Any) {
         //self.dismiss(animated: false)
         reloadPagerTabStripView()
-        
     }
     
     @IBAction func btnSettingsActn(_ sender: Any) {

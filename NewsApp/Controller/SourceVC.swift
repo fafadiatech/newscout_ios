@@ -423,11 +423,7 @@ extension SourceVC: UICollectionViewDelegate, UICollectionViewDataSource, UIScro
                                 if data[0].body?.next != ""{
                                     self.nextURL = (data[0].body?.next)!
                                 }
-                                if self.sourceTV.isHidden == false{
-                                    self.sourceTV.reloadData()
-                                }else{
-                                    self.sourceCV.reloadData()
-                                }
+                                self.sourceTV.reloadData()
                             }
                             self.activityIndicator.stopAnimating()
                         case .Failure(let errormessage) :
