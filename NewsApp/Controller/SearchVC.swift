@@ -46,8 +46,14 @@ class SearchVC: UIViewController {
             txtSearch.text = (UserDefaults.standard.value(forKey: "searchTxt") as! String)
         }
         if UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad && statusBarOrientation.isPortrait{
-            searchResultTV.isHidden = true
-            searchResultCV.isHidden = false
+            if Searchresults.count <= 0{
+            searchResultTV.isHidden = false
+            searchResultCV.isHidden = true
+            
+            }else{
+                searchResultTV.isHidden = true
+                searchResultCV.isHidden = false
+            }
         }
         else{
             searchResultTV.isHidden = false
@@ -414,7 +420,10 @@ extension SearchVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDele
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         if indexPath.row == tableView.numberOfRows(inSection: indexPath.section) - 1 {
-            let keyword =  UserDefaults.standard.value(forKey: "searchTxt") as! String
+            var keyword = ""
+            if UserDefaults.standard.value(forKey: "searchTxt") != nil{
+             keyword =  UserDefaults.standard.value(forKey: "searchTxt") as! String
+            }
             let result =  DBManager().FetchNextURL(category: keyword)
             switch result {
             case .Success(let DBData) :
@@ -677,7 +686,11 @@ extension SearchVC: UITextFieldDelegate{
             }
             else{
                 // isResultLoaded = false
-                searchResultTV.reloadData()
+                if searchResultTV.isHidden == false{
+                    searchResultTV.reloadData()
+                }else{
+                    searchResultCV.reloadData()
+                }
             }
         case .Failure( _) :
             self.searchResultTV.makeToast("Please try again later", duration: 2.0, position: .center)
@@ -696,15 +709,17 @@ extension SearchVC: UITextFieldDelegate{
             if recordCount == 0 {
                 lblNoNews.isHidden = false
             }
-            searchResultTV.reloadData()
+            if searchResultTV.isHidden == false{
+                searchResultTV.reloadData()
+            }else{
+                searchResultCV.reloadData()
+            }
         }
         catch {
             self.searchResultTV.makeToast("Please try again later", duration: 2.0, position: .center)
         }
         
     }
-    
-    
     
     func textFieldDidBeginEditing(_ textField: UITextField) {
         if textField == txtSearch {
