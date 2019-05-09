@@ -563,6 +563,9 @@ class DBManager{
             }else if entity == "PeriodicTags"{
                 fetchRequest.predicate = NSPredicate(format: "tagName contains[c] %@ AND type contains[c] %@", keyword, tagType)
             }
+            else if entity == "SearchHistory"{
+                fetchRequest.predicate = NSPredicate(format : "keyword contains[c] %@", keyword)
+            }
             else{
                 fetchRequest.predicate = NSPredicate(format: "category contains[c] %@",keyword)
             }
@@ -969,6 +972,31 @@ class DBManager{
             print("Could not save \(error)")
         }
     }
+    //SearchHistory
+    func saveSearchHistory(keyword: String){
+        let managedContext = appDelegate?.persistentContainer.viewContext
+        if  self.someEntityExists(id: 0, entity: "SearchHistory", keyword: keyword) == false{
+            let newKeyWord = SearchHistory(context: managedContext!)
+            newKeyWord.keyword = keyword
+            self.saveBlock()
+        }
+    }
+    
+    func fetchSearchHistory() -> SearchHistoryDBFetchResult {
+        var result = [SearchHistory]()
+        let managedContext =
+            appDelegate?.persistentContainer.viewContext
+        let fetchRequest =
+            NSFetchRequest<SearchHistory>(entityName: "SearchHistory")
+        
+        do {
+            result = try (managedContext?.fetch(fetchRequest))!
+        } catch let error as NSError {
+            print("Could not fetch. \(error), \(error.userInfo)")
+            return SearchHistoryDBFetchResult.Failure(error as! String)
+        }
+        return SearchHistoryDBFetchResult.Success(result)
+    }
     
     func SaveSearchDataDB(nextUrl:String,_ completion : @escaping (Bool) -> ())
     {
@@ -1048,8 +1076,25 @@ class DBManager{
                 completion(false)
             }
         }
+    }
+    
+    func fetchResult(keyword : String)-> ArticleDBfetchResult{
+        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "NewsArticle")
+        fetchRequest.predicate = NSPredicate(format: "title CONTAINS[c] %@",keyword)
+        let managedContext =
+            appDelegate?.persistentContainer.viewContext
+        do {
+            let ShowArticle  = (try managedContext?.fetch(fetchRequest))
+            
+            return ArticleDBfetchResult.Success(ShowArticle as! [NewsArticle] )
+        }
+        catch let error as NSError {
+            print("Could not fetch. \(error), \(error.userInfo)")
+            return ArticleDBfetchResult.Failure(error as! String)
+        }
         
     }
+    
     func FetchSearchDataFromDB(entity: String) -> SearchDBfetchResult
     {
         let managedContext =

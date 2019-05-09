@@ -464,3 +464,8 @@ enum RecommendationDBFetchResult {
     case Success([RecommendationID])
     case Failure(String)
 }
+
+enum SearchHistoryDBFetchResult {
+    case Success([SearchHistory])
+    case Failure(String)
+}

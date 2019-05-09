@@ -89,6 +89,9 @@
         <relationship name="bookmark" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="BookmarkArticles" inverseName="searchArticle" inverseEntity="BookmarkArticles" syncable="YES"/>
         <relationship name="likeDislike" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="LikeDislike" inverseName="searchlikeArticles" inverseEntity="LikeDislike" syncable="YES"/>
     </entity>
+    <entity name="SearchHistory" representedClassName="SearchHistory" syncable="YES">
+        <attribute name="keyword" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
     <entity name="TrendingCategory" representedClassName="TrendingCategory" syncable="YES">
         <attribute name="articleID" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="count" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
@@ -108,6 +111,7 @@
         <element name="PeriodicTags" positionX="405" positionY="90" width="128" height="90"/>
         <element name="RecommendationID" positionX="414" positionY="99" width="128" height="75"/>
         <element name="SearchArticles" positionX="405" positionY="54" width="128" height="195"/>
+        <element name="SearchHistory" positionX="405" positionY="90" width="128" height="60"/>
         <element name="TrendingCategory" positionX="405" positionY="90" width="128" height="90"/>
     </elements>
 </model>
