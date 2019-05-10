@@ -10,6 +10,17 @@ import UIKit
 import XLPagerTabStrip
 import NightNight
 import MaterialComponents.MaterialActivityIndicator
+
+struct Platform {
+    static let isSimulator: Bool = {
+        var isSim = false
+        #if arch(i386) || arch(x86_64)
+        isSim = true
+        #endif
+        return isSim
+    }()
+}
+
 extension UISwitch {
     
     func set(width: CGFloat, height: CGFloat) {
@@ -70,10 +81,14 @@ class HomeParentVC: ButtonBarPagerTabStripViewController{
         activityIndicator.progress = 2.0
         view.addSubview(activityIndicator)
         
-        let switchStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
-        if UserDefaults.standard.value(forKey: "deviceToken") == nil{
-            UserDefaults.standard.set("41ea0aaa15323ae5012992392e4edd6b8a6ee4547a8dc6fd1f3b31aab9839208", forKey: "deviceToken")
+        if Platform.isSimulator {
+            if UserDefaults.standard.value(forKey: "deviceToken") == nil{
+                UserDefaults.standard.set("41ea0aaa15323ae5012992392e4edd6b8a6ee4547a8dc6fd1f3b31aab9839208", forKey: "deviceToken")
+            }
         }
+        
+        let switchStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
+        
         if UserDefaults.standard.value(forKey: "daily") == nil{
             UserDefaults.standard.set(false, forKey: "daily")
         }

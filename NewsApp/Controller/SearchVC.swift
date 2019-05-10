@@ -444,7 +444,7 @@ extension SearchVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDele
             }
         }
     }
-    
+
 }
 
 extension SearchVC: UICollectionViewDelegate, UICollectionViewDataSource{
