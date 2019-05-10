@@ -82,9 +82,9 @@ class SearchVC: UIViewController {
     }
     
     @objc func textFieldDidChange(textField: UITextField) {
-        print(txtSearch.text?.count)
         fecthSerchedKeywords()
     }
+    
     @objc private func darkModeEnabled(_ notification: Notification){
         NightNight.theme = .night
         searchResultTV.backgroundColor = colorConstants.grayBackground3
@@ -617,7 +617,6 @@ extension SearchVC: UITextFieldDelegate{
     func textFieldShouldReturn(_ textField: UITextField) -> Bool{
         txtSearch.resignFirstResponder()
         isResultLoaded = false
-        //  searchResultTV.reloadData()
         if !(txtSearch.text?.isEmpty)!{
             if txtSearch.text != ""{
                 var search = txtSearch.text!
@@ -685,7 +684,6 @@ extension SearchVC: UITextFieldDelegate{
                 lblNoNews.isHidden = false
             }
             else{
-                // isResultLoaded = false
                 if searchResultTV.isHidden == false{
                     searchResultTV.reloadData()
                 }else{
@@ -724,7 +722,7 @@ extension SearchVC: UITextFieldDelegate{
     func textFieldDidBeginEditing(_ textField: UITextField) {
         if textField == txtSearch {
             lblNoNews.isHidden = true
-            //fecthSerchedKeywords()
+            fecthSerchedKeywords()
         }
     }
     
