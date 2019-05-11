@@ -52,7 +52,6 @@ class HomeParentVC: ButtonBarPagerTabStripViewController{
     @IBOutlet weak var btnBookmarkImg: UIButton!
     @IBOutlet weak var btnSettingImg: UIButton!
     @IBOutlet weak var containerViewTopConstraint: NSLayoutConstraint!
-    
     var statusBarOrientation: UIInterfaceOrientation = UIApplication.shared.statusBarOrientation
     let activityIndicator = MDCActivityIndicator()
     var childrenVC = [UIViewController]()
@@ -115,31 +114,11 @@ class HomeParentVC: ButtonBarPagerTabStripViewController{
             changeTheme()
         }
         else{
-            buttonBarView.backgroundColor = .white
             buttonBarView.backgroundView?.backgroundColor = .white
             buttonBarView.selectedBar.backgroundColor = .red
         }
         lblAppName.text = Constants.AppName
-        changeCurrentIndexProgressive = {[weak self](oldCell:ButtonBarViewCell?, newCell: ButtonBarViewCell?, progressPercentage:CGFloat, changeCurrentIndex:Bool, animated:Bool)-> Void in
-            guard changeCurrentIndex == true else {return}
-            let darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
-            if  darkModeStatus == true{
-                oldCell?.label.textColor = colorConstants.whiteColor
-                oldCell?.label.backgroundColor = colorConstants.grayBackground1
-                newCell?.label.backgroundColor = colorConstants.grayBackground1
-                newCell?.label.textColor =  colorConstants.whiteColor
-                oldCell?.backgroundColor = colorConstants.grayBackground1
-                newCell?.backgroundColor = colorConstants.grayBackground1
-            }
-            else{
-                oldCell?.label.textColor = colorConstants.blackColor
-                oldCell?.label.backgroundColor = colorConstants.whiteColor
-                newCell?.label.backgroundColor = colorConstants.whiteColor
-                newCell?.label.textColor =  colorConstants.redColor
-                oldCell?.backgroundColor = colorConstants.whiteColor
-                newCell?.backgroundColor = colorConstants.whiteColor
-            }
-        }
+        changeCelltheme()
         
         let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapped(gestureRecognizer:)))
         viewAppTitle.addGestureRecognizer(tapRecognizer)
@@ -165,28 +144,28 @@ class HomeParentVC: ButtonBarPagerTabStripViewController{
         btnBookmarkImg.setImage(UIImage(named:AssetConstants.Bookmark_white), for: .normal)
         menuCV.backgroundColor = colorConstants.subTVgrayBackground
         viewOptions.backgroundColor = colorConstants.txtlightGrayColor
-        buttonBarView.backgroundColor = colorConstants.grayBackground1
-        buttonBarView.backgroundView?.backgroundColor = colorConstants.grayBackground1
-        buttonBarView.selectedBar.backgroundColor = .red
         reloadPagerTabStripView()
+        changeCelltheme()
+    }
+    
+    func changeCelltheme(){
         changeCurrentIndexProgressive = {[weak self](oldCell:ButtonBarViewCell?, newCell: ButtonBarViewCell?, progressPercentage:CGFloat, changeCurrentIndex:Bool, animated:Bool)-> Void in
             guard changeCurrentIndex == true else {return}
+            oldCell?.label.textColor = colorConstants.blackColor
+            oldCell?.label.backgroundColor = colorConstants.whiteColor
+            oldCell?.backgroundColor = colorConstants.whiteColor
             let darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
             if  darkModeStatus == true{
-                oldCell?.label.textColor = colorConstants.whiteColor
-                oldCell?.label.backgroundColor = colorConstants.grayBackground1
                 newCell?.label.backgroundColor = colorConstants.grayBackground1
                 newCell?.label.textColor =  colorConstants.whiteColor
-                oldCell?.backgroundColor = colorConstants.grayBackground1
+                
                 newCell?.backgroundColor = colorConstants.grayBackground1
             }
             else{
-                oldCell?.label.textColor = colorConstants.blackColor
-                oldCell?.label.backgroundColor = colorConstants.whiteColor
-                newCell?.label.backgroundColor = colorConstants.whiteColor
+                newCell?.label.backgroundColor = colorConstants.cardNormalBackground
                 newCell?.label.textColor =  colorConstants.redColor
-                oldCell?.backgroundColor = colorConstants.whiteColor
-                newCell?.backgroundColor = colorConstants.whiteColor
+                
+                newCell?.backgroundColor = colorConstants.cardNormalBackground
             }
         }
     }
@@ -330,7 +309,6 @@ class HomeParentVC: ButtonBarPagerTabStripViewController{
     @objc private func darkModeDisabled(_ notification: Notification) {
         self.activityIndicator.startAnimating()
         NightNight.theme = .normal
-        buttonBarView.backgroundColor = colorConstants.whiteColor
         buttonBarView.selectedBar.backgroundColor = .red
         btnBookmark.setTitleColor(.black, for: UIControlState.normal)
         btnNightMode.setTitleColor(.black, for: UIControlState.normal)
@@ -421,10 +399,11 @@ class HomeParentVC: ButtonBarPagerTabStripViewController{
                                                              toItem: menuCV,
                                                              attribute: NSLayoutAttribute.bottom,
                                                              multiplier: 1,
-                                                             constant: 0)
+                                                             constant: 10)
             NSLayoutConstraint.activate([containerViewTopConstraint])
         }
     }
+    
     func unhideButtonBarView(){
         if containerViewTopConstraint != nil{
             NSLayoutConstraint.deactivate([containerViewTopConstraint])
@@ -434,7 +413,7 @@ class HomeParentVC: ButtonBarPagerTabStripViewController{
                                                              toItem: buttonBarView,
                                                              attribute: NSLayoutAttribute.bottom,
                                                              multiplier: 1,
-                                                             constant: 0)
+                                                             constant: 10)
             NSLayoutConstraint.activate([containerViewTopConstraint])
         }
     }

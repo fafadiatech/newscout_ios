@@ -153,23 +153,23 @@
                                 </connections>
                             </collectionView>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="ocm-su-HUj" customClass="ButtonBarView" customModule="XLPagerTabStrip">
-                                <rect key="frame" x="0.0" y="150" width="768" height="40"/>
-                                <color key="backgroundColor" white="0.91300223209999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <rect key="frame" x="20" y="160" width="728" height="40"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="40" id="gIZ-q3-Ycy"/>
                                 </constraints>
                                 <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="16" minimumInteritemSpacing="25" id="HBf-F8-1gV">
-                                    <size key="itemSize" width="110" height="50"/>
+                                    <size key="itemSize" width="110" height="40"/>
                                     <size key="headerReferenceSize" width="0.0" height="0.0"/>
                                     <size key="footerReferenceSize" width="0.0" height="0.0"/>
                                     <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 </collectionViewFlowLayout>
                                 <cells>
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="" id="sHF-J4-gFQ">
-                                        <rect key="frame" x="0.0" y="-5" width="110" height="50"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="110" height="40"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
-                                            <rect key="frame" x="0.0" y="0.0" width="110" height="50"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="110" height="40"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                         </view>
                                     </collectionViewCell>
@@ -180,7 +180,7 @@
                                 </connections>
                             </collectionView>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="T1n-KR-odW">
-                                <rect key="frame" x="0.0" y="156" width="375" height="511"/>
+                                <rect key="frame" x="0.0" y="222" width="375" height="454"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vYr-jl-1vn">
                                         <rect key="frame" x="362" y="26" width="44" height="37"/>
@@ -343,17 +343,17 @@
                             <constraint firstItem="T1n-KR-odW" firstAttribute="leading" secondItem="M4R-z8-CWN" secondAttribute="leading" id="1Gt-p9-EYD"/>
                             <constraint firstItem="vYM-Wx-vng" firstAttribute="top" secondItem="ao8-14-oL8" secondAttribute="bottom" id="4mt-Zh-pmz"/>
                             <constraint firstItem="ao8-14-oL8" firstAttribute="top" secondItem="rZl-5b-kds" secondAttribute="bottom" id="7BN-1f-SRy"/>
-                            <constraint firstAttribute="trailing" secondItem="ocm-su-HUj" secondAttribute="trailing" id="Bak-y5-wfR"/>
+                            <constraint firstAttribute="trailing" secondItem="ocm-su-HUj" secondAttribute="trailing" constant="20" id="Bak-y5-wfR"/>
                             <constraint firstItem="T1n-KR-odW" firstAttribute="trailing" secondItem="M4R-z8-CWN" secondAttribute="trailing" id="HZX-f8-YrB"/>
+                            <constraint firstItem="T1n-KR-odW" firstAttribute="top" secondItem="ocm-su-HUj" secondAttribute="bottom" constant="10" id="OhR-SJ-l66"/>
                             <constraint firstItem="PfP-yG-u4f" firstAttribute="top" secondItem="uzw-Xq-ysg" secondAttribute="bottom" id="Poe-gA-1ob"/>
-                            <constraint firstItem="T1n-KR-odW" firstAttribute="top" secondItem="ocm-su-HUj" secondAttribute="bottom" id="PwR-Q7-p8c"/>
                             <constraint firstItem="PfP-yG-u4f" firstAttribute="height" secondItem="ao8-14-oL8" secondAttribute="height" multiplier="2.4" id="STt-vx-urT"/>
                             <constraint firstItem="vYM-Wx-vng" firstAttribute="leading" secondItem="M4R-z8-CWN" secondAttribute="leading" id="Sbv-Rb-U0X"/>
                             <constraint firstAttribute="trailing" secondItem="PfP-yG-u4f" secondAttribute="trailing" constant="10" id="ZA2-3K-Oj9"/>
                             <constraint firstItem="sUJ-CI-G9s" firstAttribute="top" secondItem="T1n-KR-odW" secondAttribute="bottom" id="Zs5-qW-Qic"/>
                             <constraint firstItem="ao8-14-oL8" firstAttribute="leading" secondItem="M4R-z8-CWN" secondAttribute="leading" id="fus-hq-rCW"/>
-                            <constraint firstItem="ocm-su-HUj" firstAttribute="top" secondItem="vYM-Wx-vng" secondAttribute="bottom" id="nG6-UY-hIb"/>
-                            <constraint firstItem="ocm-su-HUj" firstAttribute="leading" secondItem="M4R-z8-CWN" secondAttribute="leading" id="rax-KR-ceC"/>
+                            <constraint firstItem="ocm-su-HUj" firstAttribute="top" secondItem="vYM-Wx-vng" secondAttribute="bottom" constant="10" id="nG6-UY-hIb"/>
+                            <constraint firstItem="ocm-su-HUj" firstAttribute="leading" secondItem="M4R-z8-CWN" secondAttribute="leading" constant="20" id="rax-KR-ceC"/>
                             <constraint firstItem="vYM-Wx-vng" firstAttribute="trailing" secondItem="M4R-z8-CWN" secondAttribute="trailing" id="tmU-Vp-UyX"/>
                             <constraint firstItem="PfP-yG-u4f" firstAttribute="width" secondItem="ao8-14-oL8" secondAttribute="width" multiplier="0.4" constant="34" id="v6S-cP-33v">
                                 <variation key="heightClass=regular-widthClass=regular" constant="8"/>
@@ -374,7 +374,7 @@
                         <outlet property="btnSettingsNav" destination="Ven-a5-ngg" id="L2c-M3-lpz"/>
                         <outlet property="buttonBarView" destination="ocm-su-HUj" id="5Ig-B9-2lv"/>
                         <outlet property="containerView" destination="T1n-KR-odW" id="5uc-hW-IkO"/>
-                        <outlet property="containerViewTopConstraint" destination="PwR-Q7-p8c" id="YBa-zs-wUY"/>
+                        <outlet property="containerViewTopConstraint" destination="OhR-SJ-l66" id="n19-kl-MO4"/>
                         <outlet property="lblAppName" destination="pzB-EX-EQD" id="QSu-57-LfK"/>
                         <outlet property="menuCV" destination="vYM-Wx-vng" id="f5T-vd-82T"/>
                         <outlet property="viewAppTitle" destination="ao8-14-oL8" id="ko8-sk-Rjl"/>
@@ -703,12 +703,16 @@
                                     <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="30"/>
                                 </variation>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ySt-Ei-t9Z">
-                                <rect key="frame" x="699" y="954" width="45" height="50"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ySt-Ei-t9Z">
+                                <rect key="frame" x="694" y="954" width="50" height="50"/>
                                 <color key="backgroundColor" red="0.92941176470588238" green="0.10980392156862745" blue="0.14117647058823529" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="50" id="07l-ce-ell"/>
-                                    <constraint firstAttribute="width" constant="45" id="IGe-Hg-H7e"/>
+                                    <constraint firstAttribute="height" constant="50" id="07l-ce-ell">
+                                        <variation key="heightClass=regular-widthClass=compact" constant="45"/>
+                                    </constraint>
+                                    <constraint firstAttribute="width" constant="50" id="IGe-Hg-H7e">
+                                        <variation key="heightClass=regular-widthClass=compact" constant="45"/>
+                                    </constraint>
                                 </constraints>
                                 <state key="normal" backgroundImage="upward"/>
                                 <connections>
@@ -1849,11 +1853,11 @@
                                     <size key="itemSize" width="310" height="420"/>
                                     <size key="headerReferenceSize" width="0.0" height="0.0"/>
                                     <size key="footerReferenceSize" width="0.0" height="0.0"/>
-                                    <inset key="sectionInset" minX="20" minY="15" maxX="20" maxY="15"/>
+                                    <inset key="sectionInset" minX="20" minY="0.0" maxX="20" maxY="15"/>
                                 </collectionViewFlowLayout>
                                 <cells>
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="HomeIpadID" id="Arl-QY-D6k" customClass="HomeipadCVCell" customModule="NewsApp" customModuleProvider="target">
-                                        <rect key="frame" x="20" y="33" width="231" height="375"/>
+                                        <rect key="frame" x="20" y="18" width="231" height="375"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
                                             <rect key="frame" x="0.0" y="0.0" width="231" height="375"/>
@@ -1922,7 +1926,7 @@
                                         </connections>
                                     </collectionViewCell>
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="HomeIpadClusterID" id="Kfm-Dv-R8P" customClass="HomeiPadClusterCVCell" customModule="NewsApp" customModuleProvider="target">
-                                        <rect key="frame" x="251" y="15" width="400" height="411"/>
+                                        <rect key="frame" x="251" y="0.0" width="400" height="411"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
                                             <rect key="frame" x="0.0" y="0.0" width="400" height="411"/>

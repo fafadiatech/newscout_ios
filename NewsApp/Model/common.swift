@@ -22,6 +22,7 @@ struct colorConstants{
     static let TVgrayBackground = UIColor(hexFromString: "FAF9F8")
     static let subTVgrayBackground = UIColor(hexFromString: "A6ACAF") //A6ACAF
     static let MenugrayBackground = UIColor(hexFromString: "F3EFED")
+    static let cardNormalBackground = UIColor(hexFromString: "E7E8E6")
 }
 
 struct FontConstants{
