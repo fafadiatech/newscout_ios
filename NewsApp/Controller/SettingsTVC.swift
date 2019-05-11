@@ -128,17 +128,14 @@ class SettingsTVC: UITableViewController, GIDSignInUIDelegate {
         switch segmentTextSize.selectedSegmentIndex
         {
         case 0:
-            print("small Segment Selected")
             textSizeSelected = 0
             UserDefaults.standard.set(0, forKey: "textSize")
             
         case 1:
-            print("normal Segment Selected")
             textSizeSelected = 1
             UserDefaults.standard.set(1, forKey: "textSize")
             
         case 2:
-            print("large Segment Selected")
             textSizeSelected = 2
             UserDefaults.standard.set(2, forKey: "textSize")
             
@@ -156,7 +153,6 @@ class SettingsTVC: UITableViewController, GIDSignInUIDelegate {
             Helper().clearDefaults(list : defaultList)
             self.btnLogout.isHidden = true
             self.lblLogin.text = "Login"
-            print("google sign out successful..")
         }
         else if UserDefaults.standard.value(forKey: "FBToken") != nil{
             let manager = FBSDKLoginManager()
@@ -167,13 +163,10 @@ class SettingsTVC: UITableViewController, GIDSignInUIDelegate {
             let defaultList = ["FBToken", "first_name", "last_name", "email", "token"]
             Helper().clearDefaults(list : defaultList)
             self.lblLogin.text = "Login"
-            print("FB sign out successful..")
         }
         else{
             APICall().LogoutAPI{(status, response) in
-                print(status,response)
                 if status == "1"{
-                    print("Logout response:\(response)")
                     self.view.makeToast("successfully logged out", duration: 1.0, position: .center)
                     self.btnLogout.isHidden = true
                     self.lblLogin.text = "Login"
@@ -204,7 +197,6 @@ class SettingsTVC: UITableViewController, GIDSignInUIDelegate {
                 UserDefaults.standard.set(true, forKey: "isSettingsLogin")
                 let storyboard = UIStoryboard(name: "Main", bundle: nil)
                 let vc:LoginVC = storyboard.instantiateViewController(withIdentifier: "LoginID") as! LoginVC
-                print(indexPath.section)
                 present(vc, animated: true, completion: nil)
             }
         }

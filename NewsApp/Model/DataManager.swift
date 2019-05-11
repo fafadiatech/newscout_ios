@@ -127,7 +127,6 @@ class DBManager{
             return ArticleDBfetchResult.Success(ShowArticle )
             
         } catch let error as NSError {
-            print("Could not fetch. \(error), \(error.userInfo)")
             return ArticleDBfetchResult.Failure(error.localizedDescription)
         }
     }
@@ -487,7 +486,8 @@ class DBManager{
                         }
                     }
                 }catch let error as NSError {
-                    print("Could not fetch. \(error), \(error.userInfo)")
+                    return ArticleDBfetchResult.Failure(error.localizedDescription)
+                   
                 }
             }
         }
@@ -601,7 +601,6 @@ class DBManager{
             return ArticleDBfetchResult.Success(ShowArticle as! [NewsArticle])
             
         } catch let error as NSError {
-            print("Could not fetch. \(error), \(error.userInfo)")
             return ArticleDBfetchResult.Failure(error.localizedDescription)
         }
     }
@@ -729,7 +728,6 @@ class DBManager{
                 }
                 
             } catch let error as NSError {
-                print("Could not fetch. \(error), \(error.userInfo)")
                 return ArticleDBfetchResult.Failure(error.localizedDescription)
             }
         }
@@ -743,7 +741,6 @@ class DBManager{
                 }
                 
             } catch let error as NSError {
-                print("Could not fetch. \(error), \(error.userInfo)")
                 return ArticleDBfetchResult.Failure(error.localizedDescription)
             }
         }
@@ -901,7 +898,6 @@ class DBManager{
             completion(true)
         }
         catch let error as NSError  {
-            print("Could not save \(error)")
             completion(false)
         }
     }
@@ -961,8 +957,7 @@ class DBManager{
         saveBlock()
     }
     
-    func saveBlock()
-    {
+    func saveBlock(){
         let managedContext =
             appDelegate?.persistentContainer.viewContext
         do {
@@ -992,7 +987,6 @@ class DBManager{
         do {
             result = try (managedContext?.fetch(fetchRequest))!
         } catch let error as NSError {
-            print("Could not fetch. \(error), \(error.userInfo)")
             return SearchHistoryDBFetchResult.Failure(error as! String)
         }
         return SearchHistoryDBFetchResult.Success(result)
@@ -1089,7 +1083,6 @@ class DBManager{
             return ArticleDBfetchResult.Success(ShowArticle as! [NewsArticle] )
         }
         catch let error as NSError {
-            print("Could not fetch. \(error), \(error.userInfo)")
             return ArticleDBfetchResult.Failure(error as! String)
         }
         
@@ -1106,7 +1099,6 @@ class DBManager{
             let ShowArticle = try (managedContext?.fetch(fetchRequest))!
             return SearchDBfetchResult.Success(ShowArticle as! [SearchArticles])
         } catch let error as NSError {
-            print("Could not fetch. \(error), \(error.userInfo)")
             return SearchDBfetchResult.Failure(error as! String)
         }
     }
@@ -1147,7 +1139,6 @@ class DBManager{
                 }
                 
             } catch let error as NSError {
-                print("Could not fetch. \(error), \(error.userInfo)")
                 return SearchDBfetchResult.Failure(error as! String)
             }
         }
@@ -1161,7 +1152,6 @@ class DBManager{
                 }
                 
             } catch let error as NSError {
-                print("Could not fetch. \(error), \(error.userInfo)")
                 return SearchDBfetchResult.Failure(error as! String)
             }
         }

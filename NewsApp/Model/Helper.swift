@@ -65,7 +65,7 @@ class Helper{
             if (numericDates){
                 return "one minute ago"
             } else {
-                return "one minute ago"
+                return "about a minute ago"
             }
         } else if (components.second! >= 3) {
             return "\(components.second!) seconds ago"
