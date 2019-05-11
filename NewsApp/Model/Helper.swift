@@ -10,70 +10,70 @@ import Foundation
 import UIKit
 
 class Helper{
-//for conversion of timestamp
-func timeAgoSinceDate(_ date:Date, numericDates:Bool = false) -> String {
-    let calendar = NSCalendar.current
-    let unitFlags: Set<Calendar.Component> = [.minute, .hour, .day, .weekOfYear, .month, .year, .second]
-    let now = Date()
-    let earliest = now < date ? now : date
-    let latest = (earliest == now) ? date : now
-    let components = calendar.dateComponents(unitFlags, from: earliest,  to: latest)
-    
-    if (components.year! >= 2) {
-        return "almost \(components.year!) years ago"
-    } else if (components.year! >= 1){
-        if (numericDates){
-            return "1 year ago"
+    //for conversion of timestamp
+    func timeAgoSinceDate(_ date:Date, numericDates:Bool = false) -> String {
+        let calendar = NSCalendar.current
+        let unitFlags: Set<Calendar.Component> = [.minute, .hour, .day, .weekOfYear, .month, .year, .second]
+        let now = Date()
+        let earliest = now < date ? now : date
+        let latest = (earliest == now) ? date : now
+        let components = calendar.dateComponents(unitFlags, from: earliest,  to: latest)
+        
+        if (components.year! >= 2) {
+            return "almost \(components.year!) years ago"
+        } else if (components.year! >= 1){
+            if (numericDates){
+                return "1 year ago"
+            } else {
+                return "over a year ago"
+            }
+        } else if (components.month! >= 2) {
+            return "\(components.month!) months ago"
+        } else if (components.month! >= 1){
+            if (numericDates){
+                return "1 month ago"
+            } else {
+                return "about a month ago"
+            }
+        } else if (components.weekOfYear! >= 2) {
+            return "\(components.weekOfYear!) weeks ago"
+        } else if (components.weekOfYear! >= 1){
+            if (numericDates){
+                return "1 week ago"
+            } else {
+                return "a week ago"
+            }
+        } else if (components.day! >= 2) {
+            return "\(components.day!) days ago"
+        } else if (components.day! >= 1){
+            if (numericDates){
+                return "1 day ago"
+            } else {
+                return "yesterday"
+            }
+        } else if (components.hour! >= 2) {
+            return "\(components.hour!) hours ago"
+        } else if (components.hour! >= 1){
+            if (numericDates){
+                return "1 hour ago"
+            } else {
+                return "about an hour ago"
+            }
+        } else if (components.minute! >= 2) {
+            return "\(components.minute!) minutes ago"
+        } else if (components.minute! >= 1){
+            if (numericDates){
+                return "one minute ago"
+            } else {
+                return "about a minute ago"
+            }
+        } else if (components.second! >= 3) {
+            return "\(components.second!) seconds ago"
         } else {
-            return "over a year ago"
+            return "just now"
         }
-    } else if (components.month! >= 2) {
-        return "\(components.month!) months ago"
-    } else if (components.month! >= 1){
-        if (numericDates){
-            return "1 month ago"
-        } else {
-            return "about a month ago"
-        }
-    } else if (components.weekOfYear! >= 2) {
-        return "\(components.weekOfYear!) weeks ago"
-    } else if (components.weekOfYear! >= 1){
-        if (numericDates){
-            return "1 week ago"
-        } else {
-            return "a week ago"
-        }
-    } else if (components.day! >= 2) {
-        return "\(components.day!) days ago"
-    } else if (components.day! >= 1){
-        if (numericDates){
-            return "1 day ago"
-        } else {
-            return "yesterday"
-        }
-    } else if (components.hour! >= 2) {
-        return "\(components.hour!) hours ago"
-    } else if (components.hour! >= 1){
-        if (numericDates){
-            return "1 hour ago"
-        } else {
-            return "about an hour ago"
-        }
-    } else if (components.minute! >= 2) {
-        return "\(components.minute!) minutes ago"
-    } else if (components.minute! >= 1){
-        if (numericDates){
-            return "one minute ago"
-        } else {
-            return "one minute ago"
-        }
-    } else if (components.second! >= 3) {
-        return "\(components.second!) seconds ago"
-    } else {
-        return "just now"
     }
-}
-
+    
     func clearDefaults(list : [String]){
         let userDefaults = UserDefaults.standard
         for key in list {
@@ -82,14 +82,43 @@ func timeAgoSinceDate(_ date:Date, numericDates:Bool = false) -> String {
         userDefaults.synchronize()
     }
     
-//email validation
-func validateEmail(enteredEmail:String) -> Bool {
+    func getMenuEvents(action : String, menuId : Int, menuName: String){
+        var id = ""
+        if UserDefaults.standard.value(forKey: "deviceToken") != nil{
+            id = UserDefaults.standard.value(forKey: "deviceToken") as! String
+        }
+        let param = ["action" : action,
+                     "platform" : Constants.platform,
+                     "device_id" : id,
+                     "item_id": menuId ,
+                     "item_name": menuName] as! [String : Any]
+        APICall().trackingEventsAPI(param : param){response in
+            if response == true{
+                print("event captured")
+            }
+        }
+    }
     
-    let emailFormat = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}"
-    let emailPredicate = NSPredicate(format:"SELF MATCHES %@", emailFormat)
-    return emailPredicate.evaluate(with: enteredEmail)
-    
+    //email validation
+    func validateEmail(enteredEmail:String) -> Bool {
+        
+        let emailFormat = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}"
+        let emailPredicate = NSPredicate(format:"SELF MATCHES %@", emailFormat)
+        return emailPredicate.evaluate(with: enteredEmail)
+        
+    }
 }
+
+extension RangeReplaceableCollection where Indices: Equatable {
+    mutating func rearrange(from: Index, to: Index) {
+        precondition(from != to && indices.contains(from) && indices.contains(to), "invalid indices")
+        insert(remove(at: from), at: to)
+    }
+}
+extension Array {
+    mutating func rearrange(from: Int, to: Int) {
+        insert(remove(at: from), at: to)
+    }
 }
 //show an image from url
 extension UIImageView {

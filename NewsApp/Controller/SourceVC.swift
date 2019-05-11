@@ -345,6 +345,7 @@ extension SourceVC: UICollectionViewDelegate, UICollectionViewDataSource, UIScro
         cell.lblTitle.text = currentArticle.title
         
         if  darkModeStatus == true{
+            cell.containerView.backgroundColor = colorConstants.grayBackground2
             cell.lblSource.textColor = colorConstants.nightModeText
             cell.lblTitle.textColor = colorConstants.nightModeText
             NightNight.theme =  .night
@@ -423,11 +424,7 @@ extension SourceVC: UICollectionViewDelegate, UICollectionViewDataSource, UIScro
                                 if data[0].body?.next != ""{
                                     self.nextURL = (data[0].body?.next)!
                                 }
-                                if self.sourceTV.isHidden == false{
-                                    self.sourceTV.reloadData()
-                                }else{
-                                    self.sourceCV.reloadData()
-                                }
+                                self.sourceTV.reloadData()
                             }
                             self.activityIndicator.stopAnimating()
                         case .Failure(let errormessage) :
@@ -440,5 +437,13 @@ extension SourceVC: UICollectionViewDelegate, UICollectionViewDataSource, UIScro
                 }
             }
         }
+    }
+}
+
+extension SourceVC: UICollectionViewDelegateFlowLayout {
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        let collectionCellSize = sourceCV.frame.size.width
+        return CGSize(width: collectionCellSize/3.4, height: collectionCellSize/3)
     }
 }

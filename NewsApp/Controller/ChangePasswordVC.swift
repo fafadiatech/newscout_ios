@@ -90,7 +90,6 @@ class ChangePasswordVC: UIViewController {
     }
     
     @IBAction func btnSubmitActn(_ sender: Any) {
-        
         if txtOldPswd.text != "" && txtOldPswd.text != "" && txtNewPswd.text != ""{
             let param = ["old_password" : txtOldPswd.text!,
                          "password" : txtNewPswd.text!,

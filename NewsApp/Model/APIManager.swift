@@ -91,29 +91,71 @@ class APICall{
         }
     }
     
-    func loadRecommendationNewsAPI(articleId : Int,_ completion : @escaping (String, ArticleAPIResult) -> ()){
+    func loadRecommendationNewsAPI(articleId : Int,_ completion : @escaping (String, RecommendationAPIResult) -> ()){
         let url = APPURL.recommendationURL + "\(articleId)" + "/recommendations/"
-        Alamofire.request(url,method: .post).responseJSON{
+        Alamofire.request(url,method: .get).responseJSON{
             response in
             if(response.result.isSuccess){
                 if let data = response.data {
                     let jsonDecoder = JSONDecoder()
                     do {
-                        let jsonData = try jsonDecoder.decode(ArticleStatus.self, from: data)
-                        completion(String((response.response?.statusCode)!),ArticleAPIResult.Success([jsonData]))
+                        let jsonData = try jsonDecoder.decode(Recommendation.self, from: data)
+                        completion(String((response.response?.statusCode)!),RecommendationAPIResult.Success([jsonData]))
                     }
                     catch {
-                        completion(String((response.response?.statusCode)!), ArticleAPIResult.Failure(error.localizedDescription))
+                        completion(String((response.response?.statusCode)!), RecommendationAPIResult.Failure(error.localizedDescription))
                     }
                 }
                 
             }
             else{
                 if let err = response.result.error as? URLError, err.code == .notConnectedToInternet {
-                    completion("no net", ArticleAPIResult.Failure(err.localizedDescription))
+                    completion("no net", RecommendationAPIResult.Failure(err.localizedDescription))
                 }
                 else{
-                    completion(String((response.response?.statusCode)!), ArticleAPIResult.Failure("\(String(describing: response.response?.statusCode))"))
+                    completion(String((response.response?.statusCode)!), RecommendationAPIResult.Failure("\(String(describing: response.response?.statusCode))"))
+                }
+            }
+        }
+    }
+    
+    func trackingEventsAPI(param : Dictionary<String, Any>,_ completion : @escaping (Bool) -> ()){
+        Alamofire.request(APPURL.trackingURL, method: .get, parameters: param).responseString{
+            response in
+            if(response.result.isSuccess){
+                if response.response?.statusCode == 200{
+                    completion(true)
+                }
+                else{
+                    completion(false)
+                }
+            }
+        }
+    }
+    
+    func loadTrendingArticles(completion : @escaping (String, TrendingAPIResult) -> ()){
+        Alamofire.request(APPURL.trendingURL ,method: .get).responseJSON{
+            response in
+            if(response.result.isSuccess){
+                if let data = response.data {
+                    let  jsonDecoder = JSONDecoder()
+                    do {
+                        let jsonData = try jsonDecoder.decode(Trending.self, from: data)
+                        if jsonData.header.status == "1" {
+                            completion(String((response.response?.statusCode)!), TrendingAPIResult.Success([jsonData]))
+                        }
+                    }
+                    catch {
+                        completion(String((response.response?.statusCode)!), TrendingAPIResult.Failure(error as! String))
+                    }
+                }
+                else{
+                    completion(String((response.response?.statusCode)!), TrendingAPIResult.Failure("\(response.response?.statusCode)"))
+                }
+            }
+            else{
+                if let err = response.result.error as? URLError, err.code == .notConnectedToInternet {
+                    completion("no net", TrendingAPIResult.Failure(err.localizedDescription))
                 }
             }
         }
@@ -123,7 +165,6 @@ class APICall{
         Alamofire.request(url,method: .get, encoding: URLEncoding.default).responseJSON{
             response in
             if(response.result.isSuccess){
-                //if response.response?.statusCode == 200{
                 if let data = response.data {
                     let  jsonDecoder = JSONDecoder()
                     do {
@@ -138,7 +179,6 @@ class APICall{
                         completion(String((response.response?.statusCode)!), ArticleAPIResult.Failure(error as! String))
                     }
                 }
-                    // }
                 else{
                     completion(String((response.response?.statusCode)!), ArticleAPIResult.Failure("\(response.response?.statusCode)"))
                 }
@@ -260,6 +300,8 @@ class APICall{
                             }
                         }
                         else{
+                            DBManager().deleteAllData(entity: "LikeDislike")
+                            DBManager().deleteAllData(entity: "BookmarkArticles")
                             UserDefaults.standard.set(jsonData.body!.user!.token, forKey: "token")
                             UserDefaults.standard.set(jsonData.body!.user!.first_name, forKey: "first_name")
                             UserDefaults.standard.set(jsonData.body!.user!.last_name, forKey: "last_name")
@@ -301,7 +343,7 @@ class APICall{
                             else{
                                 completion((response.response?.statusCode)!,(jsonData.errors?.Msg)!)
                             }
-                           
+                            
                         }
                         else{
                             UserDefaults.standard.set(jsonData.body!.user!.token, forKey: "token")

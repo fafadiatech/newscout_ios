@@ -37,6 +37,68 @@ struct articleBody : Decodable{
     }
 }
 
+struct Trending : Decodable{
+    let header : Header
+    var body: TrendingBody
+}
+
+struct TrendingBody : Decodable{
+    let results : [TrendingResult]
+}
+
+struct TrendingResult : Decodable{
+    let id  : Int
+    let created_at : String
+    let modified_at : String
+    let active : Bool
+    let score : Int
+    let articles : [Article]
+}
+struct TrendingArticle: Decodable{
+    var article_id : Int!
+    var category : String?
+    var source: String?
+    var title : String?
+    var imageURL : String?
+    var url : String?
+    var published_on : String?
+    var blurb : String?
+    var hash_tags : [TrendingHashTag]
+    var article_media : [ArticleMedia]?
+    var category_id : Int
+    
+    enum CodingKeys: String, CodingKey{
+        case article_id = "id"
+        case imageURL = "cover_image"
+        case url = "source_url"
+        case category
+        case source
+        case title
+        case published_on
+        case blurb
+        case hash_tags
+        case article_media
+        case category_id
+    }
+}
+
+struct TrendingHashTag : Decodable{
+    var id : Int
+    var name : String
+    var count : Int
+}
+
+struct Recommendation : Decodable{
+    let header : Header
+    var body: RecomResult
+}
+
+struct RecomResult : Decodable{
+    var results : [Article]
+}
+
+
+
 struct ArticleFilter : Decodable{
     let category : [FilterCategory]?
     let source : [FilterCategory]?
@@ -271,7 +333,7 @@ struct DailyTagBody: Decodable {
 
 struct GetLikeBookmarkList: Decodable{
     let header : Header
-    let body : Body?
+    let body : Body
     let errors : ErrorList?
 }
 struct LikeBookmarkList: Decodable{
@@ -298,6 +360,11 @@ enum ArticleAPIResult {
     case Change(Int)
 }
 
+enum RecommendationAPIResult {
+    case Success([Recommendation])
+    case Failure(String)
+}
+
 enum ArticleDetailAPIResult {
     case Success(ArticleDetails)
     case Failure(String)
@@ -305,6 +372,16 @@ enum ArticleDetailAPIResult {
 
 enum ArticleDBfetchResult {
     case Success([NewsArticle])
+    case Failure(String)
+}
+
+enum TrendingAPIResult {
+    case Success([Trending])
+    case Failure(String)
+}
+
+enum FetchTrendingFromDB{
+    case Success([TrendingCategory])
     case Failure(String)
 }
 
@@ -378,8 +455,17 @@ enum submenuIdDBFetchResult {
     case Failure(String)
 }
 
-
 enum MediaDBFetchResult {
     case Success([Media])
+    case Failure(String)
+}
+
+enum RecommendationDBFetchResult {
+    case Success([RecommendationID])
+    case Failure(String)
+}
+
+enum SearchHistoryDBFetchResult {
+    case Success([SearchHistory])
     case Failure(String)
 }

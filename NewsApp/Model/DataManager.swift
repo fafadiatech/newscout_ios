@@ -15,12 +15,13 @@ class DBManager{
     var ArticleData = [ArticleStatus]()
     var CategoryData = [CategoryList]()
     var tagType = ""
+    
     //save articles in DB
     func SaveDataDB(nextUrl:String,_ completion : @escaping (Bool) -> ())
     {
         var URLData = [NewsURL]()
         let managedContext = appDelegate?.persistentContainer.viewContext
-         APICall().loadNewsbyCategoryAPI(url : nextUrl){
+        APICall().loadNewsbyCategoryAPI(url : nextUrl){
             (status, response)  in
             switch response {
             case .Success(let data) :
@@ -36,7 +37,7 @@ class DBManager{
                 if self.ArticleData[0].header.status == "1" {
                     if self.ArticleData[0].body?.next != nil{
                         var submenu = UserDefaults.standard.value(forKey: "submenu") as! String
-
+                        
                         if self.someEntityExists(id: 0, entity: "NewsURL", keyword: submenu) == false {
                             let newUrl = NewsURL(context: managedContext!)
                             newUrl.category = submenu
@@ -114,6 +115,333 @@ class DBManager{
         }
     }
     
+    func fetchSearchBookmarkRecommendation() -> ArticleDBfetchResult{
+        let managedContext =
+            appDelegate?.persistentContainer.viewContext
+        let fetchRequest =
+            NSFetchRequest<NewsArticle>(entityName: "NewsArticle")
+        fetchRequest.fetchLimit = 6
+        fetchRequest.predicate = NSPredicate( format: "title.length > 0")
+        do {
+            let ShowArticle = try (managedContext?.fetch(fetchRequest))!
+            return ArticleDBfetchResult.Success(ShowArticle )
+            
+        } catch let error as NSError {
+            return ArticleDBfetchResult.Failure(error.localizedDescription)
+        }
+    }
+    
+    func saveRecommendation(articleId : Int,_ completion : @escaping (Bool) -> ()){
+        var RecomArticleData = [Recommendation]()
+        let managedContext = appDelegate?.persistentContainer.viewContext
+        APICall().loadRecommendationNewsAPI(articleId: articleId){ (status,response) in
+            switch response {
+            case .Success(let data) :
+                RecomArticleData = data
+            case .Failure(let errormessage) :
+                print(errormessage)
+            }
+            
+            if RecomArticleData.count > 0{
+                
+                if RecomArticleData[0].header.status == "1" {
+                    
+                    for news in RecomArticleData[0].body.results{
+                        if  self.someEntityExists(id: Int(news.article_id), entity: "NewsArticle", keyword: "") == false
+                        {
+                            let newArticle = NewsArticle(context: managedContext!)
+                            let newRecom = RecommendationID(context: managedContext!)
+                            newRecom.articleID = Int64(articleId)
+                            newRecom.recomArticleID = Int64(news.article_id)
+                            newArticle.article_id = Int64(news.article_id)
+                            newArticle.title = news.title
+                            newArticle.blurb = news.blurb
+                            newArticle.imageURL = news.imageURL
+                            newArticle.source = news.source!
+                            newArticle.source_url = news.url
+                            newArticle.published_on = news.published_on
+                            newArticle.category = news.category
+                            newArticle.categoryId = Int64(news.category_id)
+                            self.saveBlock()
+                        }
+                        
+                    }
+                    completion(true)
+                }
+                else{
+                    completion(false)
+                }
+            }else{
+                completion(false)
+            }
+        }
+    }
+    
+    func fetchRecommendation(articleId : Int) -> ArticleDBfetchResult{
+        var IDs = [RecommendationID]()
+        var ShowArticle = [NewsArticle]()
+        let managedContext =
+            appDelegate?.persistentContainer.viewContext
+        let fetchRequest =
+            NSFetchRequest<NewsArticle>(entityName: "NewsArticle")
+        let result = DBManager().fetchRecomIds(articleId: articleId)
+        switch(result){
+        case .Success(let DBData) :
+            IDs = DBData
+        case .Failure(let errorMsg) :
+            print(errorMsg)
+        }
+        for ID in IDs{
+            fetchRequest.predicate = NSPredicate(format: "article_id = %d", ID.recomArticleID)
+            do {
+                let article  =  try (managedContext?.fetch(fetchRequest))!
+                ShowArticle.append(article[0])
+            }catch let error as NSError {
+                return ArticleDBfetchResult.Failure(error.localizedDescription)
+            }
+        }
+        return ArticleDBfetchResult.Success(ShowArticle)
+        
+    }
+    
+    func fetchRecomIds(articleId : Int) -> RecommendationDBFetchResult{
+        let managedContext =
+            appDelegate?.persistentContainer.viewContext
+        let fetchRequest =
+            NSFetchRequest<RecommendationID>(entityName: "RecommendationID")
+        fetchRequest.predicate = NSPredicate(format: "articleID = %d",articleId)
+        do {
+            let IDs = try (managedContext?.fetch(fetchRequest))!
+            return RecommendationDBFetchResult.Success(IDs)
+        } catch let error as NSError {
+            return RecommendationDBFetchResult.Failure(error as! String)
+        }
+    }
+    
+    func showCount(articleId: Int) -> Int {
+        var  trendingData = [TrendingCategory]()
+        let managedContext =
+            appDelegate?.persistentContainer.viewContext
+        let trendingRequest =  NSFetchRequest<TrendingCategory>(entityName: "TrendingCategory")
+        trendingRequest.predicate = NSPredicate(format: "articleID = %d", articleId)
+        do {
+            trendingData = try (managedContext?.fetch(trendingRequest))!
+        }catch let error as NSError {
+            return 0
+        }
+        return Int(trendingData[0].count)
+    }
+    
+    //save trending articles
+    func saveTrending(_ completion : @escaping (Bool) -> ()){
+        var URLData = [NewsURL]()
+        var TrendingData = [Trending]()
+        let managedContext = appDelegate?.persistentContainer.viewContext
+        APICall().loadTrendingArticles{
+            (status, response)  in
+            switch response {
+            case .Success(let data) :
+                TrendingData = data
+            case .Failure(let errormessage) :
+                print(errormessage)
+            }
+            
+            if TrendingData.count > 0{
+                if TrendingData[0].header.status == "1" {
+                    for result in 0..<TrendingData[0].body.results.count {
+                        for news in TrendingData[0].body.results[result].articles{
+                            let newArticle = NewsArticle(context: managedContext!)
+                            let newTrending  = TrendingCategory(context: managedContext!)
+                            //if self.someIDExist(id: news.article_id) == false{
+                            newTrending.trendingID = Int64(TrendingData[0].body.results[result].id)
+                            newTrending.articleID = Int64(news.article_id)
+                            newTrending.count = Int64(TrendingData[0].body.results[result].articles.count)
+                            if  self.someEntityExists(id: Int(news.article_id), entity: "NewsArticle", keyword: "") == false{
+                                newArticle.article_id = Int64(news.article_id)
+                                newArticle.title = news.title
+                                newArticle.source = news.source!
+                                newArticle.imageURL = news.imageURL
+                                newArticle.source_url = news.url
+                                newArticle.published_on = news.published_on
+                                newArticle.blurb = news.blurb
+                                newArticle.categoryId = Int64(news.category_id)
+                                /* if news.article_media!.count > 0 {
+                                 for media in news.article_media!{
+                                 if self.someEntityExists(id: media.media_id, entity: "Media", keyword: "") == false {
+                                 let newMedia =  Media(context: managedContext!)
+                                 newMedia.articleId = Int64(news.article_id)
+                                 newMedia.imageURL =   media.img_url
+                                 newMedia.videoURL = media.video_url
+                                 newMedia.type = media.category
+                                 newMedia.mediaId =  Int64(media.media_id)
+                                 }
+                                 
+                                 }
+                                 }*/
+                                /* if news.hash_tags.count > 0 {
+                                 for tag in news.hash_tags {
+                                 let newTag = HashTag(context: managedContext!)
+                                 newTag.articleId = Int64(news.article_id!)
+                                 newTag.name = tag
+                                 newTag.addToArticleTags(newArticle)
+                                 //newArticle.addToHashTags(newTag)
+                                 }
+                                 
+                                 }*/
+                                
+                            }
+                            
+                            self.saveBlock()
+                        }
+                        completion(true)
+                    }
+                }
+                else{
+                    completion(false)
+                }
+            }else{
+                completion(false)
+            }
+        }
+    }
+    
+    func fetchTrendingArticle() -> ArticleDBfetchResult{
+        var trendingArticleIDs = [TrendingCategory]()
+        var trendingArticles = [NewsArticle]()
+        
+        let managedContext =
+            appDelegate?.persistentContainer.viewContext
+        let fetchRequest =
+            NSFetchRequest<NewsArticle>(entityName: "NewsArticle")
+        let result = DBManager().fetchTrendingNewsIDs()
+        switch result {
+        case .Success(let DBData) :
+            trendingArticleIDs = DBData
+        case .Failure(let errorMsg) :
+            print(errorMsg)
+        }
+        for article in trendingArticleIDs{
+            fetchRequest.predicate = NSPredicate(format: "article_id = %d", article.articleID)
+            do {
+                let article = try (managedContext?.fetch(fetchRequest))!
+                if article.count > 0{
+                    trendingArticles.append(article[0])
+                }
+            }catch let error as NSError {
+                return ArticleDBfetchResult.Failure(error.localizedDescription)
+            }
+        }
+        return ArticleDBfetchResult.Success(trendingArticles)
+    }
+    
+    func fetchClusterArticlesCount() -> FetchTrendingFromDB {
+        var  trendingData = [TrendingCategory]()
+        var trendingIDs = [Int]()
+        let managedContext =
+            appDelegate?.persistentContainer.viewContext
+        let trendingRequest =  NSFetchRequest<TrendingCategory>(entityName: "TrendingCategory")
+        do {
+            trendingData = try (managedContext?.fetch(trendingRequest))!
+        }catch let error as NSError {
+            return FetchTrendingFromDB.Failure(error.localizedDescription)
+        }
+        for trend in trendingData{
+            if !trendingIDs.contains(Int(trend.trendingID)){
+                trendingIDs.append(Int(trend.trendingID))
+            }
+        }
+        UserDefaults.standard.set(trendingIDs, forKey: "trendingArray")
+        trendingData.removeAll()
+        for trend in trendingIDs{
+            trendingRequest.predicate = NSPredicate(format: "trendingID = %d", trend)
+            trendingRequest.fetchLimit = 1
+            do {
+                let article = try (managedContext?.fetch(trendingRequest))!
+                trendingData.append(article[0])
+            }
+            catch let error as NSError {
+                return FetchTrendingFromDB.Failure(error.localizedDescription)
+            }
+        }
+        return FetchTrendingFromDB.Success(trendingData)
+    }
+    
+    func fetchTrendingNewsIDs() -> FetchTrendingFromDB{
+        var  trendingData = [TrendingCategory]()
+        var trendingIDs = [Int]()
+        let managedContext =
+            appDelegate?.persistentContainer.viewContext
+        let trendingRequest =  NSFetchRequest<TrendingCategory>(entityName: "TrendingCategory")
+        do {
+            trendingData = try (managedContext?.fetch(trendingRequest))!
+        }catch let error as NSError {
+            return FetchTrendingFromDB.Failure(error.localizedDescription)
+        }
+        for trend in trendingData{
+            if !trendingIDs.contains(Int(trend.trendingID)){
+                trendingIDs.append(Int(trend.trendingID))
+            }
+        }
+        UserDefaults.standard.set(trendingIDs, forKey: "trendingArray")
+        trendingData.removeAll()
+        for trend in trendingIDs{
+            trendingRequest.predicate = NSPredicate(format: "trendingID = %d", trend)
+            trendingRequest.fetchLimit = 1
+            do {
+                let article = try (managedContext?.fetch(trendingRequest))!
+                trendingData.append(article[0])
+            }
+            catch let error as NSError {
+                return FetchTrendingFromDB.Failure(error.localizedDescription)
+            }
+        }
+        return FetchTrendingFromDB.Success(trendingData)
+    }
+    //fetch Article Ids of specific trending id
+    func fetchTrendingNewsIds(trendingId: Int) -> FetchTrendingFromDB{
+        var  trendingData = [TrendingCategory]()
+        var trendingIDs = [Int]()
+        let managedContext =
+            appDelegate?.persistentContainer.viewContext
+        let trendingRequest =  NSFetchRequest<TrendingCategory>(entityName: "TrendingCategory")
+        trendingRequest.predicate = NSPredicate(format: "trendingID = %d", trendingId)
+        do {
+            trendingData = try (managedContext?.fetch(trendingRequest))!
+        }catch let error as NSError {
+            return FetchTrendingFromDB.Failure(error.localizedDescription)
+        }
+        return FetchTrendingFromDB.Success(trendingData)
+    }
+    
+    func fetchClusterArticles(trendingId: Int)-> ArticleDBfetchResult{
+        var  trendingData = [TrendingCategory]()
+        var trendingArticles = [NewsArticle]()
+        let managedContext =
+            appDelegate?.persistentContainer.viewContext
+        let fetchRequest =
+            NSFetchRequest<NewsArticle>(entityName: "NewsArticle")
+        let result = DBManager().fetchTrendingNewsIds(trendingId : trendingId)
+        switch result {
+        case .Success(let DBData) :
+            trendingData = DBData
+        case .Failure(let errorMsg) :
+            print(errorMsg)
+        }
+        
+        for id in trendingData{
+            fetchRequest.predicate = NSPredicate(format: "article_id = %d", id.articleID)
+            do {
+                let article = try (managedContext?.fetch(fetchRequest))!
+                if !trendingArticles.contains(article[0]){
+                    trendingArticles.append(article[0])
+                }
+            }catch let error as NSError {
+                return ArticleDBfetchResult.Failure(error.localizedDescription)
+            }
+        }
+        return ArticleDBfetchResult.Success(trendingArticles)
+    }
+    
     //fetch article media
     func fetchArticleMedia(articleId : Int) -> MediaDBFetchResult{
         var  mediaData = [Media]()
@@ -158,7 +486,8 @@ class DBManager{
                         }
                     }
                 }catch let error as NSError {
-                    print("Could not fetch. \(error), \(error.userInfo)")
+                    return ArticleDBfetchResult.Failure(error.localizedDescription)
+                   
                 }
             }
         }
@@ -174,8 +503,8 @@ class DBManager{
         let fetchRequest =
             NSFetchRequest<NewsArticle>(entityName: "NewsArticle")
         if UserDefaults.standard.value(forKey: "subMenuId") != nil{
-        var subMenuId = UserDefaults.standard.value(forKey: "subMenuId") as! Int
-        fetchRequest.predicate = NSPredicate(format: "categoryId = %d ", subMenuId)
+            var subMenuId = UserDefaults.standard.value(forKey: "subMenuId") as! Int
+            fetchRequest.predicate = NSPredicate(format: "categoryId = %d ", subMenuId)
         }
         do {
             ShowArticle =  try (managedContext?.fetch(fetchRequest))!
@@ -185,6 +514,26 @@ class DBManager{
         return ArticleDBfetchResult.Success(ShowArticle)
     }
     
+    func someIDExist(id: Int)-> Bool {
+        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "TrendingCategory")
+        let managedContext =
+            appDelegate?.persistentContainer.viewContext
+        var results: [NSManagedObject] = []
+        fetchRequest.predicate = NSPredicate(format: "articleID = %d", id)
+        do {
+            results = (try managedContext?.fetch(fetchRequest))!
+        }
+        catch {
+            print("error executing fetch request: \(error)")
+        }
+        if results.count == 0{
+            return false
+        }
+        else{
+            return true
+        }
+        
+    }
     //check for existing entry in DB
     func someEntityExists(id: Int, entity : String, keyword: String) -> Bool {
         let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: entity)
@@ -213,6 +562,9 @@ class DBManager{
                 fetchRequest.predicate = NSPredicate(format: "name contains[c] %@", keyword)
             }else if entity == "PeriodicTags"{
                 fetchRequest.predicate = NSPredicate(format: "tagName contains[c] %@ AND type contains[c] %@", keyword, tagType)
+            }
+            else if entity == "SearchHistory"{
+                fetchRequest.predicate = NSPredicate(format : "keyword contains[c] %@", keyword)
             }
             else{
                 fetchRequest.predicate = NSPredicate(format: "category contains[c] %@",keyword)
@@ -249,7 +601,6 @@ class DBManager{
             return ArticleDBfetchResult.Success(ShowArticle as! [NewsArticle])
             
         } catch let error as NSError {
-            print("Could not fetch. \(error), \(error.userInfo)")
             return ArticleDBfetchResult.Failure(error.localizedDescription)
         }
     }
@@ -311,6 +662,16 @@ class DBManager{
             }
             recordCount = records.count
         }
+        else if entity == "TrendingCategory"{
+            var records = [TrendingCategory]()
+            do {
+                records = (try managedContext?.fetch(fetchRequest)) as! [TrendingCategory]
+            }
+            catch {
+                print("error executing fetch request: \(error)")
+            }
+            recordCount = records.count
+        }
         return recordCount
     }
     
@@ -362,12 +723,11 @@ class DBManager{
                 let ShowArticle1 = try (managedContext?.fetch(fetchRequest))!
                 ShowArticle.append(contentsOf: ShowArticle1)
                 
-                if ShowArticle1.count != 0 {
+                if ShowArticle1.count > 0 {
                     book.addToArticle(ShowArticle1[0])
                 }
                 
             } catch let error as NSError {
-                print("Could not fetch. \(error), \(error.userInfo)")
                 return ArticleDBfetchResult.Failure(error.localizedDescription)
             }
         }
@@ -376,12 +736,11 @@ class DBManager{
             fetchRequest.predicate = NSPredicate(format: "article_id  = %d", like.article_id)
             do {
                 let ShowArticle1 = try (managedContext?.fetch(fetchRequest))!
-                if ShowArticle1.count != 0 {
+                if ShowArticle1.count > 0 {
                     like.addToLikedArticle(ShowArticle1[0])
                 }
                 
             } catch let error as NSError {
-                print("Could not fetch. \(error), \(error.userInfo)")
                 return ArticleDBfetchResult.Failure(error.localizedDescription)
             }
         }
@@ -404,21 +763,22 @@ class DBManager{
                 print(errormessage)
                 
             }
-            
-            if (BookmarkData.body?.listResult!.count)! > 0{
-                for news in (BookmarkData.body?.listResult)!{
-                    if  self.someEntityExists(id: Int(news.article_id), entity: "BookmarkArticles", keyword: "") == false
-                    {
-                        let newArticle = BookmarkArticles(context: managedContext!)
-                        newArticle.article_id = Int64(news.article_id)
-                        newArticle.isBookmark = Int16(news.status!)
-                        //newArticle.row_id = Int16(news.row_id)
-                        self.saveBlock()
+            if BookmarkData != nil{
+                if (BookmarkData.body.listResult!.count) > 0{
+                    for news in (BookmarkData.body.listResult)!{
+                        if  self.someEntityExists(id: Int(news.article_id), entity: "BookmarkArticles", keyword: "") == false
+                        {
+                            let newArticle = BookmarkArticles(context: managedContext!)
+                            newArticle.article_id = Int64(news.article_id)
+                            newArticle.isBookmark = Int16(news.status!)
+                            //newArticle.row_id = Int16(news.row_id)
+                            self.saveBlock()
+                        }
                     }
+                    completion(true)
+                }else{
+                    completion(false)
                 }
-                completion(true)
-            }else{
-                completion(false)
             }
         }
     }
@@ -437,21 +797,22 @@ class DBManager{
             case .Failure(let errormessage) :
                 print(errormessage)
             }
-            
-            if LikeData.body?.listResult!.count != 0{
-                for news in (LikeData.body?.listResult)!{
-                    if  self.someEntityExists(id: Int(news.article_id), entity: "LikeDislike", keyword: "") == false
-                    {
-                        let newArticle = LikeDislike(context: managedContext!)
-                        newArticle.article_id = Int64(news.article_id)
-                        newArticle.isLike = Int16(news.isLike!)
-                        //  newArticle.row_id = Int16(news.row_id)
-                        self.saveBlock()
+            if LikeData != nil{
+                if (LikeData.body.listResult!.count) > 0{
+                    for news in (LikeData.body.listResult)!{
+                        if  self.someEntityExists(id: Int(news.article_id), entity: "LikeDislike", keyword: "") == false
+                        {
+                            let newArticle = LikeDislike(context: managedContext!)
+                            newArticle.article_id = Int64(news.article_id)
+                            newArticle.isLike = Int16(news.isLike!)
+                            //  newArticle.row_id = Int16(news.row_id)
+                            self.saveBlock()
+                        }
                     }
+                    completion(true)
+                }else{
+                    completion(false)
                 }
-                completion(true)
-            }else{
-                completion(false)
             }
         }
     }
@@ -537,7 +898,6 @@ class DBManager{
             completion(true)
         }
         catch let error as NSError  {
-            print("Could not save \(error)")
             completion(false)
         }
     }
@@ -597,8 +957,7 @@ class DBManager{
         saveBlock()
     }
     
-    func saveBlock()
-    {
+    func saveBlock(){
         let managedContext =
             appDelegate?.persistentContainer.viewContext
         do {
@@ -607,6 +966,30 @@ class DBManager{
         catch let error as NSError  {
             print("Could not save \(error)")
         }
+    }
+    //SearchHistory
+    func saveSearchHistory(keyword: String){
+        let managedContext = appDelegate?.persistentContainer.viewContext
+        if  self.someEntityExists(id: 0, entity: "SearchHistory", keyword: keyword) == false{
+            let newKeyWord = SearchHistory(context: managedContext!)
+            newKeyWord.keyword = keyword
+            self.saveBlock()
+        }
+    }
+    
+    func fetchSearchHistory() -> SearchHistoryDBFetchResult {
+        var result = [SearchHistory]()
+        let managedContext =
+            appDelegate?.persistentContainer.viewContext
+        let fetchRequest =
+            NSFetchRequest<SearchHistory>(entityName: "SearchHistory")
+        
+        do {
+            result = try (managedContext?.fetch(fetchRequest))!
+        } catch let error as NSError {
+            return SearchHistoryDBFetchResult.Failure(error as! String)
+        }
+        return SearchHistoryDBFetchResult.Success(result)
     }
     
     func SaveSearchDataDB(nextUrl:String,_ completion : @escaping (Bool) -> ())
@@ -624,7 +1007,7 @@ class DBManager{
             }
             let search = UserDefaults.standard.value(forKey: "searchTxt") as! String
             var URLData = [NewsURL]()
-            if self.ArticleData.count != 0{
+            if self.ArticleData.count > 0{
                 if self.ArticleData[0].header.status == "1" {
                     if self.ArticleData[0].body?.next != nil{
                         if self.someEntityExists(id: 0, entity: "NewsURL", keyword: search) == false{
@@ -652,7 +1035,7 @@ class DBManager{
                     }
                 }
             }
-            if self.ArticleData.count != 0{
+            if self.ArticleData.count > 0{
                 for news in self.ArticleData[0].body!.articles{
                     if  self.someEntityExists(id: Int(news.article_id!), entity: "SearchArticles", keyword: "") == false
                     {
@@ -668,14 +1051,43 @@ class DBManager{
                         
                         self.saveBlock()
                     }
+                    if  self.someEntityExists(id: Int(news.article_id!), entity: "NewsArticle", keyword: "") == false {
+                        let newArticle = NewsArticle(context: managedContext!)
+                        newArticle.article_id = Int64(news.article_id!)
+                        newArticle.title = news.title
+                        newArticle.source = news.source!
+                        newArticle.imageURL = news.imageURL
+                        newArticle.source_url = news.url
+                        newArticle.published_on = news.published_on
+                        newArticle.blurb = news.blurb
+                        newArticle.category = news.category!
+                        newArticle.categoryId = Int64(news.category_id)
+                        self.saveBlock()
+                    }
                 }
                 completion(true)
             }else{
                 completion(false)
             }
         }
+    }
+    
+    func fetchResult(keyword : String)-> ArticleDBfetchResult{
+        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "NewsArticle")
+        fetchRequest.predicate = NSPredicate(format: "title CONTAINS[c] %@",keyword)
+        let managedContext =
+            appDelegate?.persistentContainer.viewContext
+        do {
+            let ShowArticle  = (try managedContext?.fetch(fetchRequest))
+            
+            return ArticleDBfetchResult.Success(ShowArticle as! [NewsArticle] )
+        }
+        catch let error as NSError {
+            return ArticleDBfetchResult.Failure(error as! String)
+        }
         
     }
+    
     func FetchSearchDataFromDB(entity: String) -> SearchDBfetchResult
     {
         let managedContext =
@@ -687,7 +1099,6 @@ class DBManager{
             let ShowArticle = try (managedContext?.fetch(fetchRequest))!
             return SearchDBfetchResult.Success(ShowArticle as! [SearchArticles])
         } catch let error as NSError {
-            print("Could not fetch. \(error), \(error.userInfo)")
             return SearchDBfetchResult.Failure(error as! String)
         }
     }
@@ -723,12 +1134,11 @@ class DBManager{
                 let ShowArticle1 = try (managedContext?.fetch(fetchRequest))!
                 ShowArticle.append(contentsOf: ShowArticle1)
                 
-                if ShowArticle1.count != 0 {
+                if ShowArticle1.count > 0 {
                     book.addToSearchArticle(ShowArticle1[0])
                 }
                 
             } catch let error as NSError {
-                print("Could not fetch. \(error), \(error.userInfo)")
                 return SearchDBfetchResult.Failure(error as! String)
             }
         }
@@ -737,12 +1147,11 @@ class DBManager{
             fetchRequest.predicate = NSPredicate(format: "article_id  = %d", like.article_id)
             do {
                 let ShowArticle1 = try (managedContext?.fetch(fetchRequest))!
-                if ShowArticle1.count != 0 {
+                if ShowArticle1.count > 0 {
                     like.addToSearchlikeArticles(ShowArticle1[0])
                 }
                 
             } catch let error as NSError {
-                print("Could not fetch. \(error), \(error.userInfo)")
                 return SearchDBfetchResult.Failure(error as! String)
             }
         }
@@ -892,7 +1301,8 @@ class DBManager{
             appDelegate?.persistentContainer.viewContext
         let headingfetchRequest =
             NSFetchRequest<MenuHeadings>(entityName: "MenuHeadings")
-        
+        let sort = NSSortDescriptor(key: "headingId", ascending: true)
+        headingfetchRequest.sortDescriptors = [sort]
         do {
             headingsData = try (managedContext?.fetch(headingfetchRequest))!
             return HeadingsDBFetchResult.Success(headingsData)
@@ -900,8 +1310,6 @@ class DBManager{
             return HeadingsDBFetchResult.Failure(error as! String)
         }
     }
-    
-    
     
     func fetchSubMenu(headingId : Int) -> SubMenuDBFetchResult{
         var subMenuData = [HeadingSubMenu]()

@@ -22,6 +22,7 @@ struct colorConstants{
     static let TVgrayBackground = UIColor(hexFromString: "FAF9F8")
     static let subTVgrayBackground = UIColor(hexFromString: "A6ACAF") //A6ACAF
     static let MenugrayBackground = UIColor(hexFromString: "F3EFED")
+    static let cardNormalBackground = UIColor(hexFromString: "E7E8E6")
 }
 
 struct FontConstants{
@@ -30,15 +31,15 @@ struct FontConstants{
     static let fontxLarge:CGFloat = isPhone ? 16:22 //16
     static let fontxNormal:CGFloat = isPhone ? 15 :20 //14
     static let fontxSmall:CGFloat = isPhone ? 12 :18 //12
-    static let fontLargeHeading:CGFloat = isPhone ? 21:18 //25
-    static let fontNormalHeading:CGFloat = isPhone ? 19 :16 //22
-    static let fontSmallHeading:CGFloat = isPhone ? 17 :14 //18
+    static let fontLargeHeading:CGFloat = isPhone ? 21:24 //25
+    static let fontNormalHeading:CGFloat = isPhone ? 19 :22 //22
+    static let fontSmallHeading:CGFloat = isPhone ? 17 :21 //18
     static let fontLargeTitle:CGFloat = isPhone ? 21:26 //21
     static let fontNormalTitle:CGFloat = isPhone ? 17 :25//18
     static let fontSmallTitle:CGFloat = isPhone ? 14 :20 //14
-    static let fontLargeContent:CGFloat = isPhone ? 18 :16 //18
-    static let fontNormalContent:CGFloat = isPhone ? 16 :14 //14
-    static let fontSmallContent:CGFloat = isPhone ? 14 :12 //10
+    static let fontLargeContent:CGFloat = isPhone ? 18 :21 //18
+    static let fontNormalContent:CGFloat = isPhone ? 16 :19 //14
+    static let fontSmallContent:CGFloat = isPhone ? 14 :17 //10
     static let fontNormalBtn: CGFloat = isPhone ? 18 :26
     static let fontViewTitle:CGFloat = isPhone ? 23 : 35
     static let fontSettingsTVHeader:CGFloat = isPhone ? 20 : 23
@@ -97,6 +98,7 @@ struct FontConstants{
 struct Constants{
     static let AppName = "NewScout"
     static let InternetErrorMsg = "The Internet connection appears to be offline"
+    static let platform = "ios"
 }
 
 struct AssetConstants{
@@ -136,6 +138,10 @@ struct AssetConstants{
     static let screen4 = "More_Stories_Section"
     static let screen5 = "Share_screen"
     static let screen6 = "Search_screen"
+    static let searchWhite = "search_white"
+    static let searchBlack = "search_black"
+    static let menuBlack = "menublack"
+    static let menuWhite = "menuwhite"
 }
 
 struct AppFontName {
@@ -155,6 +161,7 @@ struct APPURL {
         static let searchServer = "http://www.newscout.in"
         static let Server = ""
         static let version = "/api/v1/"
+        static let tracking = "http://t.fafadiatech.com"
     }
     
     private  struct Routes {
@@ -184,6 +191,8 @@ struct APPURL {
         static let deviceDetails = Domains.version + "device/"
         static let NotificationDetails = Domains.version + "notification/"
         static let socialLogin = Domains.version + "social-login/"
+        static let trending = Domains.version + "trending/"
+        static let tracking = Domains.version + "track?"
     }
     
     static let ArticlesURL = Domains.Local + Routes.Articles
@@ -212,7 +221,9 @@ struct APPURL {
     static let sendNotificationDetails = Domains.Local + Routes.NotificationDetails
     static let ArticleByIdURL = Domains.Local + Routes.ArticleById
     static let socialLoginURL = Domains.Local + Routes.socialLogin
+    static let trendingURL = Domains.Local + Routes.trending
     static let imageServer = "http://images.newscout.in/unsafe/"
+    static let trackingURL = Domains.tracking + Routes.tracking
     
 }
 

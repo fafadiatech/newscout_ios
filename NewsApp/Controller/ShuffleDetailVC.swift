@@ -119,13 +119,15 @@ class ShuffleDetailVC: UIViewController , UIScrollViewDelegate, TAPageControlDel
         viewBack.backgroundColor = colorConstants.redColor
         ViewWebContainer.isHidden = true
         
-        
         NotificationCenter.default.addObserver(self, selector: #selector(darkModeEnabled(_:)), name: .darkModeEnabled, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(darkModeDisabled(_:)), name: .darkModeDisabled, object: nil)
         darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
         if  darkModeStatus == true{
             changeTheme()
         }
+        let swipeRight = UISwipeGestureRecognizer(target: self, action: #selector(self.respondToSwipeGesture))
+        swipeRight.direction = UISwipeGestureRecognizerDirection.right
+        self.newsView.addGestureRecognizer(swipeRight)
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -136,6 +138,22 @@ class ShuffleDetailVC: UIViewController , UIScrollViewDelegate, TAPageControlDel
         timer.invalidate()
     }
     
+    @objc func respondToSwipeGesture(gesture: UIGestureRecognizer) {
+        
+        let transition = CATransition()
+        transition.duration = 0.6
+        
+        if let swipeGesture = gesture as? UISwipeGestureRecognizer {
+            
+            switch swipeGesture.direction {
+            case UISwipeGestureRecognizerDirection.right:
+                ViewWebContainer.isHidden = true
+                self.view.window!.rootViewController?.dismiss(animated: false, completion: nil)
+            default:
+                break
+            }
+        }
+    }
     @objc func runImages(){
         customPagecontrol.currentPage = index
         if index == MediaData.count - 1{
@@ -168,26 +186,6 @@ class ShuffleDetailVC: UIViewController , UIScrollViewDelegate, TAPageControlDel
     func taPageControl(_ pageControl: TAPageControl!, didSelectPageAt currentIndex: Int) {
         index =  currentIndex
         imgScrollView.scrollRectToVisible(CGRect(x: view.frame.size.width * CGFloat(currentIndex), y:0, width: view.frame.width, height: imgScrollView.frame.height), animated: true)
-    }
-    
-    func RecommendationAPICall(){
-        APICall().loadRecommendationNewsAPI(articleId: articleId){ (status,response) in
-            switch response {
-            case .Success(let data) :
-                self.RecomArticleData = data
-                self.suggestedCV.reloadData()
-            case .Failure(let errormessage) :
-                if errormessage == "no net"{
-                    self.view.makeToast(errormessage, duration: 2.0, position: .center)
-                }
-            case .Change(let code):
-                if code == 404{
-                    let defaultList = ["googleToken","FBToken","token", "first_name", "last_name", "user_id", "email"]
-                    Helper().clearDefaults(list : defaultList)
-                    self.NavigationToLogin()
-                }
-            }
-        }
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -394,56 +392,68 @@ class ShuffleDetailVC: UIViewController , UIScrollViewDelegate, TAPageControlDel
         
         if shuffleData.count > 0{
             fetchBookmarkDataFromDB()
-            let currentArticle = shuffleData[currentIndex]
-            let newDate = dateFormatter.date(from: currentArticle.published_on!)
-            var agoDate = ""
-            if newDate != nil{
-                agoDate = Helper().timeAgoSinceDate(newDate!)
-            }
-            articleId = Int(currentArticle.article_id)
-            lblNewsHeading.text = currentArticle.title
-            txtViewNewsDesc.text = currentArticle.blurb
-            var fullTxt = "\(agoDate)" + " via " + currentArticle.source!
-            let attributedWithTextColor: NSAttributedString = fullTxt.attributedStringWithColor([currentArticle.source!], color: UIColor.red)
-            
-            btnSource.setAttributedTitle(attributedWithTextColor, for: .normal)
-            sourceURL = currentArticle.source_url!
-            if currentArticle.imageURL != ""{
-                
-                let imgURL = APPURL.imageServer + imgWidth + "x" + imgHeight + "/smart/" + currentArticle.imageURL!
-                print("newImage URL : \(imgURL)")
-                imgNews.sd_setImage(with: URL(string: imgURL), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
-            }
-            else{
-                imgNews.image = UIImage(named: AssetConstants.NoImage)
-            }
-            if UserDefaults.standard.value(forKey: "token") != nil{
-                if currentArticle.likeDislike?.isLike == 0 {
-                    btnLike.setImage(UIImage(named: AssetConstants.thumb_up_filled), for: .normal)
-                    btnDislike.setImage(UIImage(named: AssetConstants.thumb_down), for: .normal)
+            if shuffleData[currentIndex].title != nil {
+                let currentArticle = shuffleData[currentIndex]
+                let newDate = dateFormatter.date(from: currentArticle.published_on!)
+                var agoDate = ""
+                if newDate != nil{
+                    agoDate = Helper().timeAgoSinceDate(newDate!)
                 }
-                else if currentArticle.likeDislike?.isLike == 1{
-                    btnLike.setImage(UIImage(named: AssetConstants.thumb_up), for: .normal)
-                    btnDislike.setImage(UIImage(named: AssetConstants.thumb_down_filled), for: .normal)
+                articleId = Int(currentArticle.article_id)
+                lblNewsHeading.text = currentArticle.title
+                txtViewNewsDesc.text = currentArticle.blurb
+                var fullTxt = "\(agoDate)" + " via " + currentArticle.source!
+                let attributedWithTextColor: NSAttributedString = fullTxt.attributedStringWithColor([currentArticle.source!], color: UIColor.red)
+                
+                btnSource.setAttributedTitle(attributedWithTextColor, for: .normal)
+                sourceURL = currentArticle.source_url!
+                if currentArticle.imageURL != ""{
+                    
+                    let imgURL = APPURL.imageServer + imgWidth + "x" + imgHeight + "/smart/" + currentArticle.imageURL!
+                    imgNews.sd_setImage(with: URL(string: imgURL), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
                 }
                 else{
+                    imgNews.image = UIImage(named: AssetConstants.NoImage)
+                }
+                if UserDefaults.standard.value(forKey: "token") != nil{
+                    if currentArticle.likeDislike?.isLike == 0 {
+                        btnLike.setImage(UIImage(named: AssetConstants.thumb_up_filled), for: .normal)
+                        btnDislike.setImage(UIImage(named: AssetConstants.thumb_down), for: .normal)
+                    }
+                    else if currentArticle.likeDislike?.isLike == 1{
+                        btnLike.setImage(UIImage(named: AssetConstants.thumb_up), for: .normal)
+                        btnDislike.setImage(UIImage(named: AssetConstants.thumb_down_filled), for: .normal)
+                    }
+                    else{
+                        btnLike.setImage(UIImage(named: AssetConstants.thumb_up), for: .normal)
+                        btnDislike.setImage(UIImage(named: AssetConstants.thumb_down), for: .normal)
+                    }
+                    if currentArticle.bookmark?.isBookmark == 1 {
+                        setBookmarkImg()
+                    }else{
+                        ResetBookmarkImg()
+                    }
+                }else{
                     btnLike.setImage(UIImage(named: AssetConstants.thumb_up), for: .normal)
                     btnDislike.setImage(UIImage(named: AssetConstants.thumb_down), for: .normal)
-                }
-                if currentArticle.bookmark?.isBookmark == 1 {
-                    setBookmarkImg()
-                }else{
                     ResetBookmarkImg()
                 }
-            }else{
-                btnLike.setImage(UIImage(named: AssetConstants.thumb_up), for: .normal)
-                btnDislike.setImage(UIImage(named: AssetConstants.thumb_down), for: .normal)
-                ResetBookmarkImg()
+            }
+            else{
+                getShuffleData()
+                if shuffleData.count > 0{
+                    let randomInt = Int.random(in: 0..<shuffleData.count)
+                    activityIndicator.stopAnimating()
+                    ShowNews(currentIndex: randomInt)
+                }
+            }
+            
+            if imgNews.image == nil{
+                imgNews.image = UIImage(named: AssetConstants.NoImage)
             }
         }
-        
-        if imgNews.image == nil{
-            imgNews.image = UIImage(named: AssetConstants.NoImage)
+        else{
+            getShuffleData()
         }
         activityIndicator.stopAnimating()
     }
@@ -464,7 +474,6 @@ class ShuffleDetailVC: UIViewController , UIScrollViewDelegate, TAPageControlDel
                             self.btnDislike.setImage(UIImage(named: AssetConstants.thumb_down), for: .normal)
                             
                         }
-                        self.view.makeToast(response, duration: 1.0, position: .center)
                         DBManager().addLikedArticle(tempentity: "NewsArticle", id: self.articleId, status: 0)
                     }
                 }
@@ -508,8 +517,7 @@ class ShuffleDetailVC: UIViewController , UIScrollViewDelegate, TAPageControlDel
                         if (self.btnLike.currentImage?.isEqual(UIImage(named: AssetConstants.thumb_up_filled)))! {
                             self.btnLike.setImage(UIImage(named: AssetConstants.thumb_up), for: .normal)
                         }
-                        self.view.makeToast(response, duration: 1.0, position: .center)
-                        DBManager().addLikedArticle(tempentity:"NewsArticle", id: self.articleId, status: 1)
+                    DBManager().addLikedArticle(tempentity:"NewsArticle", id: self.articleId, status: 1)
                     }
                 }
             }
@@ -548,7 +556,6 @@ class ShuffleDetailVC: UIViewController , UIScrollViewDelegate, TAPageControlDel
                     else{
                         self.setBookmarkImg()
                         DBManager().addBookmarkedArticles(currentEntity: "NewsArticle", id: self.articleId)
-                        self.view.makeToast(response, duration: 1.0, position: .center)
                     }
                 }
             }
@@ -561,7 +568,6 @@ class ShuffleDetailVC: UIViewController , UIScrollViewDelegate, TAPageControlDel
                     else{
                         self.ResetBookmarkImg()
                         DBManager().deleteBookmarkedArticle(id: self.articleId)
-                        self.view.makeToast(response, duration: 1.0, position: .center)
                     }
                 }
             }
@@ -658,7 +664,6 @@ class ShuffleDetailVC: UIViewController , UIScrollViewDelegate, TAPageControlDel
         WKWebView.addSubview(activityIndicator)
         ViewWebContainer.isHidden = false
         let url = URL(string: sourceURL)
-        print(sourceURL)
         let domain = url?.host
         lblWebSource.text = "\(domain!)"
         let myURL = URL(string: sourceURL)!
@@ -675,7 +680,6 @@ class ShuffleDetailVC: UIViewController , UIScrollViewDelegate, TAPageControlDel
                 let randomInt = Int.random(in: 0..<DBData.count)
                 activityIndicator.stopAnimating()
                 ShowNews(currentIndex: randomInt)
-                filterRecommendation()
             }
         case .Failure(let errorMsg) : break
         }

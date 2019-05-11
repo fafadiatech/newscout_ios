@@ -17,6 +17,7 @@ class BookmarkVC: UIViewController {
     @IBOutlet weak var titleView: UIView!
     @IBOutlet weak var bookmarkResultTV: UITableView!
     @IBOutlet weak var btnBack: UIButton!
+    @IBOutlet weak var lblNoBookmark: UILabel!
     let activityIndicator = MDCActivityIndicator()
     let appDelegate = UIApplication.shared.delegate as? AppDelegate
     let textSizeSelected = UserDefaults.standard.value(forKey: "textSize") as! Int
@@ -27,9 +28,11 @@ class BookmarkVC: UIViewController {
     var imgWidth = ""
     var imgHeight = ""
     var statusBarOrientation: UIInterfaceOrientation = UIApplication.shared.statusBarOrientation
+    var sortedData = [NewsArticle]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        lblNoBookmark.isHidden = true
         bookmarkResultTV.tableFooterView = UIView(frame: .zero)
         NotificationCenter.default.addObserver(self, selector: #selector(darkModeEnabled(_:)), name: .darkModeEnabled, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(darkModeDisabled(_:)), name: .darkModeDisabled, object: nil)
@@ -58,8 +61,8 @@ class BookmarkVC: UIViewController {
         }
         else{
             activityIndicator.stopAnimating()
-            self.showMsg(title: "Please login to continue..", msg: "")
-            self.view.makeToast("You need to login", duration: 1.0, position: .center)
+            lblNoBookmark.text = "Login to see bookmark list"
+            lblNoBookmark.isHidden = false
         }
         let refreshControl = UIRefreshControl()
         if UserDefaults.standard.value(forKey: "token") != nil{
@@ -114,7 +117,9 @@ class BookmarkVC: UIViewController {
             ShowArticle = DBData
             if ShowArticle.count == 0{
                 activityIndicator.stopAnimating()
-                self.bookmarkResultTV.makeToast("No news found", duration: 3.0, position: .center)
+                lblNoBookmark.text = "No bookmarks"
+                lblNoBookmark.isHidden = false
+                //self.bookmarkResultTV.makeToast("No news found", duration: 3.0, position: .center)
             }
             if bookmarkResultTV.isHidden == false{
                 bookmarkResultTV.reloadData()
@@ -122,7 +127,7 @@ class BookmarkVC: UIViewController {
                 bookmarkCV.reloadData()
             }
         case .Failure(let errorMsg) :
-            self.bookmarkResultTV.makeToast(errorMsg, duration: 1.0, position: .center)
+            print(errorMsg)
         }
     }
     
@@ -180,7 +185,8 @@ class BookmarkVC: UIViewController {
                     }
                     if data[0].body!.articles.count == 0{
                         self.activityIndicator.stopAnimating()
-                        self.bookmarkResultTV.makeToast("There is not any article bookmarked yet...", duration: 1.0, position: .center)
+                        self.lblNoBookmark.text = "No bookmarks"
+                        self.lblNoBookmark.isHidden = false
                     }else{
                         if self.bookmarkResultTV.isHidden == false{
                             self.bookmarkResultTV.reloadData()
@@ -191,7 +197,7 @@ class BookmarkVC: UIViewController {
                 }
             case .Failure(let errormessage) :
                 self.activityIndicator.startAnimating()
-                self.bookmarkResultTV.makeToast(errormessage, duration: 2.0, position: .center)
+                print(errormessage)
             case .Change(let code) :
                 print(code)
             }
@@ -219,14 +225,14 @@ extension BookmarkVC: UITableViewDelegate, UITableViewDataSource{
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let newsDetailvc:NewsDetailVC = storyboard.instantiateViewController(withIdentifier: "NewsDetailID") as! NewsDetailVC
         newsDetailvc.newsCurrentIndex = indexPath.row
-        newsDetailvc.ShowArticle = ShowArticle
+        newsDetailvc.ShowArticle = sortedData
         UserDefaults.standard.set("bookmark", forKey: "isSearch")
-        newsDetailvc.articleId = Int(ShowArticle[indexPath.row].article_id)
+        newsDetailvc.articleId = Int(sortedData[indexPath.row].article_id)
         present(newsDetailvc, animated: true, completion: nil)
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
+        var currentArticle = NewsArticle()
         let cell = tableView.dequeueReusableCell(withIdentifier: "bookmarkResultID", for:indexPath) as! BookmarkTVCell
         let cellOdd = tableView.dequeueReusableCell(withIdentifier: "bookmarkZigzagID", for:indexPath) as! BookmarkZigzagTVCell
         imgWidth = String(describing : Int(cell.imgNews.frame.width))
@@ -234,19 +240,21 @@ extension BookmarkVC: UITableViewDelegate, UITableViewDataSource{
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
         dateFormatter.timeZone = NSTimeZone.local
+        sortedData.removeAll()
         let darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
         let textSizeSelected = UserDefaults.standard.value(forKey: "textSize") as! Int
         var sourceColor = UIColor()
         var fullTxt = ""
         var dateSubString = ""
         var agoDate = ""
+        sortedData = ShowArticle.sorted{ $0.published_on! > $1.published_on! }
+        currentArticle = sortedData[indexPath.row]
         if indexPath.row % 2 != 0{
             
             cell.imgNews.layer.cornerRadius = 10.0
             cell.imgNews.clipsToBounds = true
             
             //display data from DB
-            let currentArticle = ShowArticle[indexPath.row]
             cell.lblNewsDescription.text = currentArticle.title
             
             if  darkModeStatus == true{
@@ -315,7 +323,6 @@ extension BookmarkVC: UITableViewDelegate, UITableViewDataSource{
             cellOdd.imgNews.layer.cornerRadius = 10.0
             cellOdd.imgNews.clipsToBounds = true
             //display data from DB
-            let currentArticle = ShowArticle[indexPath.row]
             cellOdd.lblNewsDescription.text = currentArticle.title
             
             if  darkModeStatus == true{
@@ -330,7 +337,6 @@ extension BookmarkVC: UITableViewDelegate, UITableViewDataSource{
                 cellOdd.lblNewsDescription.textColor = colorConstants.blackColor
                 NightNight.theme =  .normal
             }
-            
             if ((currentArticle.published_on?.count)!) <= 20{
                 if !(currentArticle.published_on?.contains("Z"))!{
                     currentArticle.published_on?.append("Z")
@@ -385,7 +391,7 @@ extension BookmarkVC: UITableViewDelegate, UITableViewDataSource{
     func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
         if targetContentOffset.pointee.y < scrollView.contentOffset.y {
             if nextURL != "" {
-                self.activityIndicator.startAnimating()
+                
                 APICall().BookmarkedArticlesAPI(url: nextURL){ response in
                     switch response {
                     case .Success(let data) :
@@ -405,13 +411,11 @@ extension BookmarkVC: UITableViewDelegate, UITableViewDataSource{
                             }
                         }
                     case .Failure(let errormessage) :
-                        self.activityIndicator.startAnimating()
-                        self.bookmarkResultTV.makeToast(errormessage, duration: 2.0, position: .center)
+                        print(errormessage)
                     case .Change(let code):
                         print(code)
                     }
                 }
-                self.activityIndicator.stopAnimating()
             }
         }
     }
@@ -427,9 +431,9 @@ extension BookmarkVC: UICollectionViewDelegate, UICollectionViewDataSource, UISc
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let newsDetailvc:NewsDetailVC = storyboard.instantiateViewController(withIdentifier: "NewsDetailID") as! NewsDetailVC
         newsDetailvc.newsCurrentIndex = indexPath.row
-        newsDetailvc.ShowArticle = ShowArticle
+        newsDetailvc.ShowArticle = sortedData
         UserDefaults.standard.set("bookmark", forKey: "isSearch")
-        newsDetailvc.articleId = Int(ShowArticle[indexPath.row].article_id)
+        newsDetailvc.articleId = Int(sortedData[indexPath.row].article_id)
         present(newsDetailvc, animated: true, completion: nil)
     }
     
@@ -447,10 +451,13 @@ extension BookmarkVC: UICollectionViewDelegate, UICollectionViewDataSource, UISc
         var dateSubString = ""
         var agoDate = ""
         //display data from DB
-        let currentArticle = ShowArticle[indexPath.row]
+        sortedData.removeAll()
+        sortedData = ShowArticle.sorted{ $0.published_on! > $1.published_on! }
+        let currentArticle = sortedData[indexPath.row]
         cell.lblTitle.text = currentArticle.title
         
         if  darkModeStatus == true{
+            cell.containerView.backgroundColor = colorConstants.grayBackground2
             cell.lblSource.textColor = colorConstants.nightModeText
             cell.lblTitle.textColor = colorConstants.nightModeText
             NightNight.theme =  .night
@@ -536,7 +543,7 @@ extension BookmarkVC: UICollectionViewDelegate, UICollectionViewDataSource, UISc
                             }
                         case .Failure(let errormessage) :
                             self.activityIndicator.startAnimating()
-                            self.bookmarkResultTV.makeToast(errormessage, duration: 2.0, position: .center)
+                            print(errormessage)
                         case .Change(let code):
                             print(code)
                         }
@@ -544,6 +551,17 @@ extension BookmarkVC: UICollectionViewDelegate, UICollectionViewDataSource, UISc
                     self.activityIndicator.stopAnimating()
                 }
             }
+            else{
+                activityIndicator.stopAnimating()
+            }
         }
+    }
+}
+
+extension BookmarkVC: UICollectionViewDelegateFlowLayout {
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        let collectionCellSize = bookmarkCV.frame.size.width
+            return CGSize(width: collectionCellSize/3.4, height: collectionCellSize/3)
     }
 }

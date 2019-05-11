@@ -22,8 +22,11 @@ class SearchVC: UIViewController {
     @IBOutlet weak var lblTitle: UILabel!
     @IBOutlet weak var lblNoNews: UILabel!
     @IBOutlet weak var searchResultCV: UICollectionView!
+    @IBOutlet weak var autoSuggestionView: UIView!
+    @IBOutlet weak var autoSuggestionTV: UITableView!
     let activityIndicator = MDCActivityIndicator()
     //variables
+    var isResultLoaded = false
     var Searchresults = [SearchArticles]()
     var nextURL = ""
     let appDelegate = UIApplication.shared.delegate as? AppDelegate
@@ -34,6 +37,7 @@ class SearchVC: UIViewController {
     var imgWidth = ""
     var imgHeight = ""
     var statusBarOrientation: UIInterfaceOrientation = UIApplication.shared.statusBarOrientation
+    var keywordArray = [String]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -42,13 +46,20 @@ class SearchVC: UIViewController {
             txtSearch.text = (UserDefaults.standard.value(forKey: "searchTxt") as! String)
         }
         if UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad && statusBarOrientation.isPortrait{
-            searchResultTV.isHidden = true
-            searchResultCV.isHidden = false
+            if Searchresults.count <= 0{
+                searchResultTV.isHidden = false
+                searchResultCV.isHidden = true
+                
+            }else{
+                searchResultTV.isHidden = true
+                searchResultCV.isHidden = false
+            }
         }
         else{
             searchResultTV.isHidden = false
             searchResultCV.isHidden = true
         }
+        txtSearch.addTarget(self, action: #selector(self.textFieldDidChange), for: UIControlEvents.editingChanged)
         lblNoNews.isHidden = true
         NotificationCenter.default.addObserver(self, selector: #selector(darkModeEnabled(_:)), name: .darkModeEnabled, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(darkModeDisabled(_:)), name: .darkModeDisabled, object: nil)
@@ -68,6 +79,10 @@ class SearchVC: UIViewController {
         else {
             searchResultTV.rowHeight = 129;
         }
+    }
+    
+    @objc func textFieldDidChange(textField: UITextField) {
+        fecthSerchedKeywords()
     }
     
     @objc private func darkModeEnabled(_ notification: Notification){
@@ -114,6 +129,7 @@ class SearchVC: UIViewController {
     override var prefersStatusBarHidden: Bool {
         return true
     }
+    
     
     func changeFont(){
         if textSizeSelected == 0{
@@ -163,7 +179,7 @@ class SearchVC: UIViewController {
                     
                     let BookmarkRecordCount = DBManager().IsCoreDataEmpty(entity: "BookmarkArticles")
                     let LikeRecordCount = DBManager().IsCoreDataEmpty(entity: "LikeDislike")
-                    if BookmarkRecordCount != 0 || LikeRecordCount != 0{
+                    if BookmarkRecordCount > 0 || LikeRecordCount > 0{
                         self.fetchBookmarkDataFromDB()
                     }
                 }
@@ -174,30 +190,74 @@ class SearchVC: UIViewController {
             }
         }
     }
+    
+    func fecthSerchedKeywords(){
+        if txtSearch.text!.count < 2{
+            var result = DBManager().fetchSearchHistory()
+            keywordArray.removeAll()
+            switch result {
+            case .Success(let DBData) :
+                if DBData.count > 0{
+                    for i in DBData{
+                        keywordArray.append(i.keyword!)
+                    }
+                    isResultLoaded = true
+                }
+                recordCount = keywordArray.count
+                searchResultTV.reloadData()
+            case .Failure( _) :
+                self.searchResultTV.makeToast("Please try again later", duration: 2.0, position: .center)
+            }
+        }else{
+            let result = DBManager().fetchResult(keyword: txtSearch.text!)
+            keywordArray.removeAll()
+            switch result {
+            case .Success(let DBData) :
+                for i in DBData{
+                    keywordArray.append(i.title!)
+                }
+                recordCount = keywordArray.count
+                isResultLoaded = true
+                searchResultTV.reloadData()
+                
+            case .Failure( _) :
+                self.searchResultTV.makeToast("Please try again later", duration: 2.0, position: .center)
+            }
+        }
+    }
 }
 
 extension SearchVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelegate {
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        if isResultLoaded == false{
+            return 137
+        }else{
+            return 60
+        }
+    }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return recordCount != 0 ? recordCount : 0
+        return recordCount > 0 ? recordCount : 0
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        let newsDetailvc:NewsDetailVC = storyboard.instantiateViewController(withIdentifier: "NewsDetailID") as! NewsDetailVC
-        newsDetailvc.newsCurrentIndex = indexPath.row
-        newsDetailvc.SearchArticle = Searchresults
-        newsDetailvc.articleId = Int(Searchresults[indexPath.row].article_id)
-        UserDefaults.standard.set("search", forKey: "isSearch")
-        present(newsDetailvc, animated: true, completion: nil)
-        searchResultTV.deselectRow(at: indexPath, animated: true)
+        if isResultLoaded == false{
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let newsDetailvc:NewsDetailVC = storyboard.instantiateViewController(withIdentifier: "NewsDetailID") as! NewsDetailVC
+            newsDetailvc.newsCurrentIndex = indexPath.row
+            newsDetailvc.SearchArticle = Searchresults
+            newsDetailvc.articleId = Int(Searchresults[indexPath.row].article_id)
+            UserDefaults.standard.set("search", forKey: "isSearch")
+            present(newsDetailvc, animated: true, completion: nil)
+            searchResultTV.deselectRow(at: indexPath, animated: true)
+        }else{
+            txtSearch.text = keywordArray[indexPath.row]
+        }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let cell = tableView.dequeueReusableCell(withIdentifier: "search", for:indexPath) as! SearchResultTVCell
-        let cellOdd = tableView.dequeueReusableCell(withIdentifier: "searchZigzagID", for:indexPath) as! searchZigzagTVCell
-        imgWidth = String(describing : Int(cell.imgNews.frame.width))
-        imgHeight = String(describing : Int(cell.imgNews.frame.height))
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
         dateFormatter.timeZone = NSTimeZone.local
@@ -207,159 +267,175 @@ extension SearchVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDele
         var fullTxt = ""
         var dateSubString = ""
         var agoDate = ""
-        if indexPath.row % 2 != 0{
-            
-            cell.imgNews.layer.cornerRadius = 10.0
-            cell.imgNews.clipsToBounds = true
-            
-            //display data from DB
-            var currentArticle = Searchresults[indexPath.row]
-            cell.lblNewsDescription.text = currentArticle.title
-            
-            if  darkModeStatus == true{
-                cell.ViewCellBackground.backgroundColor = colorConstants.grayBackground2
-                cell.lblSource.textColor = colorConstants.nightModeText
-                cell.lblNewsDescription.textColor = colorConstants.nightModeText
-                NightNight.theme =  .night
+        if isResultLoaded == false{
+            if indexPath.row % 2 != 0{
+                let cell = tableView.dequeueReusableCell(withIdentifier: "search", for:indexPath) as! SearchResultTVCell
+                cell.imgNews.layer.cornerRadius = 10.0
+                cell.imgNews.clipsToBounds = true
+                imgWidth = String(describing : Int(cell.imgNews.frame.width))
+                imgHeight = String(describing : Int(cell.imgNews.frame.height))
+                //display data from DB
+                var currentArticle = Searchresults[indexPath.row]
+                cell.lblNewsDescription.text = currentArticle.title
+                
+                if  darkModeStatus == true{
+                    cell.ViewCellBackground.backgroundColor = colorConstants.grayBackground2
+                    cell.lblSource.textColor = colorConstants.nightModeText
+                    cell.lblNewsDescription.textColor = colorConstants.nightModeText
+                    NightNight.theme =  .night
+                }
+                else{
+                    cell.ViewCellBackground.backgroundColor = .white
+                    cell.lblSource.textColor = colorConstants.blackColor
+                    cell.lblNewsDescription.textColor = colorConstants.blackColor
+                    NightNight.theme =  .normal
+                }
+                
+                if ((currentArticle.published_on?.count)!) <= 20{
+                    if !(currentArticle.published_on?.contains("Z"))!{
+                        currentArticle.published_on?.append("Z")
+                    }
+                    let newDate = dateFormatter.date(from: currentArticle.published_on!)
+                    if newDate != nil{
+                        agoDate = try Helper().timeAgoSinceDate(newDate!)
+                        fullTxt = "\(agoDate)" + " via " + currentArticle.source!
+                        let attributedWithTextColor: NSAttributedString = fullTxt.attributedStringWithColor([currentArticle.source!], color: UIColor.red)
+                        cell.lblSource.attributedText = attributedWithTextColor
+                    }
+                }
+                else{
+                    dateSubString = String(currentArticle.published_on!.prefix(19))
+                    if !(dateSubString.contains("Z")){
+                        dateSubString.append("Z")
+                    }
+                    let newDate = dateFormatter.date(from: dateSubString
+                    )
+                    if newDate != nil{
+                        agoDate = try Helper().timeAgoSinceDate(newDate!)
+                        fullTxt = "\(agoDate)" + " via " + currentArticle.source!
+                        let attributedWithTextColor: NSAttributedString = fullTxt.attributedStringWithColor([currentArticle.source!], color: UIColor.red)
+                        cell.lblSource.attributedText = attributedWithTextColor
+                    }
+                }
+                let imgURL = APPURL.imageServer + imgWidth + "x" + imgHeight + "/smart/" + currentArticle.imageURL!
+                cell.imgNews.sd_setImage(with: URL(string: imgURL), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
+                
+                if textSizeSelected == 0{
+                    cell.lblSource.font = FontConstants.smallFontContent
+                    cell.lblNewsDescription.font = FontConstants.smallFontHeadingBold
+                }
+                else if textSizeSelected == 2{
+                    cell.lblSource.font = FontConstants.LargeFontContent
+                    cell.lblNewsDescription.font = FontConstants.LargeFontHeadingBold
+                }
+                else{
+                    cell.lblSource.font =  FontConstants.NormalFontContent
+                    cell.lblNewsDescription.font = FontConstants.NormalFontHeadingBold
+                }
+                
+                if cell.imgNews.image == nil{
+                    cell.imgNews.image = UIImage(named: AssetConstants.NoImage)
+                }
+                activityIndicator.stopAnimating()
+                return cell
             }
             else{
-                cell.ViewCellBackground.backgroundColor = .white
-                cell.lblSource.textColor = colorConstants.blackColor
-                cell.lblNewsDescription.textColor = colorConstants.blackColor
-                NightNight.theme =  .normal
-            }
-            
-            if ((currentArticle.published_on?.count)!) <= 20{
-                if !(currentArticle.published_on?.contains("Z"))!{
-                    currentArticle.published_on?.append("Z")
+                let cellOdd = tableView.dequeueReusableCell(withIdentifier: "searchZigzagID", for:indexPath) as! searchZigzagTVCell
+                cellOdd.imgNews.layer.cornerRadius = 10.0
+                cellOdd.imgNews.clipsToBounds = true
+                //display data from DB
+                var currentArticle = Searchresults[indexPath.row]
+                cellOdd.lblNewsDescription.text = currentArticle.title
+                
+                if  darkModeStatus == true{
+                    cellOdd.ViewCellBackground.backgroundColor = colorConstants.grayBackground2
+                    cellOdd.lblSource.textColor = colorConstants.nightModeText
+                    cellOdd.lblNewsDescription.textColor = colorConstants.nightModeText
+                    NightNight.theme =  .night
                 }
-                let newDate = dateFormatter.date(from: currentArticle.published_on!)
-                if newDate != nil{
-                    agoDate = try Helper().timeAgoSinceDate(newDate!)
-                    fullTxt = "\(agoDate)" + " via " + currentArticle.source!
-                    let attributedWithTextColor: NSAttributedString = fullTxt.attributedStringWithColor([currentArticle.source!], color: UIColor.red)
-                    cell.lblSource.attributedText = attributedWithTextColor
+                else{
+                    cellOdd.ViewCellBackground.backgroundColor = .white
+                    cellOdd.lblSource.textColor = colorConstants.blackColor
+                    cellOdd.lblNewsDescription.textColor = colorConstants.blackColor
+                    NightNight.theme =  .normal
                 }
-            }
-            else{
-                dateSubString = String(currentArticle.published_on!.prefix(19))
-                if !(dateSubString.contains("Z")){
-                    dateSubString.append("Z")
+                
+                if ((currentArticle.published_on?.count)!) <= 20{
+                    if !(currentArticle.published_on?.contains("Z"))!{
+                        currentArticle.published_on?.append("Z")
+                    }
+                    let newDate = dateFormatter.date(from: currentArticle.published_on!)
+                    if newDate != nil{
+                        agoDate = try Helper().timeAgoSinceDate(newDate!)
+                        fullTxt = "\(agoDate)" + " via " + currentArticle.source!
+                        let attributedWithTextColor: NSAttributedString = fullTxt.attributedStringWithColor([currentArticle.source!], color: UIColor.red)
+                        cellOdd.lblSource.attributedText = attributedWithTextColor
+                    }
                 }
-                let newDate = dateFormatter.date(from: dateSubString
-                )
-                if newDate != nil{
-                    agoDate = try Helper().timeAgoSinceDate(newDate!)
-                    fullTxt = "\(agoDate)" + " via " + currentArticle.source!
-                    let attributedWithTextColor: NSAttributedString = fullTxt.attributedStringWithColor([currentArticle.source!], color: UIColor.red)
-                    cell.lblSource.attributedText = attributedWithTextColor
+                else{
+                    dateSubString = String(currentArticle.published_on!.prefix(19))
+                    if !(dateSubString.contains("Z")){
+                        dateSubString.append("Z")
+                    }
+                    let newDate = dateFormatter.date(from: dateSubString
+                    )
+                    if newDate != nil{
+                        agoDate = try Helper().timeAgoSinceDate(newDate!)
+                        fullTxt = "\(agoDate)" + " via " + currentArticle.source!
+                        let attributedWithTextColor: NSAttributedString = fullTxt.attributedStringWithColor([currentArticle.source!], color: UIColor.red)
+                        cellOdd.lblSource.attributedText = attributedWithTextColor
+                    }
                 }
+                
+                let imgURL = APPURL.imageServer + imgWidth + "x" + imgHeight + "/smart/" + currentArticle.imageURL!
+                cellOdd.imgNews.sd_setImage(with: URL(string: imgURL), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
+                if textSizeSelected == 0{
+                    cellOdd.lblSource.font = FontConstants.smallFontContent
+                    cellOdd.lblNewsDescription.font = FontConstants.smallFontHeadingBold
+                }
+                else if textSizeSelected == 2{
+                    cellOdd.lblSource.font = FontConstants.LargeFontContent
+                    cellOdd.lblNewsDescription.font = FontConstants.LargeFontHeadingBold
+                }
+                else{
+                    cellOdd.lblSource.font =  FontConstants.NormalFontContent
+                    cellOdd.lblNewsDescription.font = FontConstants.NormalFontHeadingBold
+                }
+                
+                if cellOdd.imgNews.image == nil{
+                    cellOdd.imgNews.image = UIImage(named: AssetConstants.NoImage)
+                }
+                
+                activityIndicator.stopAnimating()
+                return cellOdd
             }
-            let imgURL = APPURL.imageServer + imgWidth + "x" + imgHeight + "/smart/" + currentArticle.imageURL!
-            cell.imgNews.sd_setImage(with: URL(string: imgURL), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
-            
-            if textSizeSelected == 0{
-                cell.lblSource.font = FontConstants.smallFontContent
-                cell.lblNewsDescription.font = FontConstants.smallFontHeadingBold
-            }
-            else if textSizeSelected == 2{
-                cell.lblSource.font = FontConstants.LargeFontContent
-                cell.lblNewsDescription.font = FontConstants.LargeFontHeadingBold
-            }
-            else{
-                cell.lblSource.font =  FontConstants.NormalFontContent
-                cell.lblNewsDescription.font = FontConstants.NormalFontHeadingBold
-            }
-            
-            if cell.imgNews.image == nil{
-                cell.imgNews.image = UIImage(named: AssetConstants.NoImage)
-            }
-            activityIndicator.stopAnimating()
-            return cell
         }
         else{
-            
-            cellOdd.imgNews.layer.cornerRadius = 10.0
-            cellOdd.imgNews.clipsToBounds = true
-            //display data from DB
-            var currentArticle = Searchresults[indexPath.row]
-            cellOdd.lblNewsDescription.text = currentArticle.title
-            
-            if  darkModeStatus == true{
-                cellOdd.ViewCellBackground.backgroundColor = colorConstants.grayBackground2
-                cellOdd.lblSource.textColor = colorConstants.nightModeText
-                cellOdd.lblNewsDescription.textColor = colorConstants.nightModeText
-                NightNight.theme =  .night
-            }
-            else{
-                cellOdd.ViewCellBackground.backgroundColor = .white
-                cellOdd.lblSource.textColor = colorConstants.blackColor
-                cellOdd.lblNewsDescription.textColor = colorConstants.blackColor
-                NightNight.theme =  .normal
-            }
-            
-            if ((currentArticle.published_on?.count)!) <= 20{
-                if !(currentArticle.published_on?.contains("Z"))!{
-                    currentArticle.published_on?.append("Z")
-                }
-                let newDate = dateFormatter.date(from: currentArticle.published_on!)
-                if newDate != nil{
-                    agoDate = try Helper().timeAgoSinceDate(newDate!)
-                    fullTxt = "\(agoDate)" + " via " + currentArticle.source!
-                    let attributedWithTextColor: NSAttributedString = fullTxt.attributedStringWithColor([currentArticle.source!], color: UIColor.red)
-                    cellOdd.lblSource.attributedText = attributedWithTextColor
-                }
-            }
-            else{
-                dateSubString = String(currentArticle.published_on!.prefix(19))
-                if !(dateSubString.contains("Z")){
-                    dateSubString.append("Z")
-                }
-                let newDate = dateFormatter.date(from: dateSubString
-                )
-                if newDate != nil{
-                    agoDate = try Helper().timeAgoSinceDate(newDate!)
-                    fullTxt = "\(agoDate)" + " via " + currentArticle.source!
-                    let attributedWithTextColor: NSAttributedString = fullTxt.attributedStringWithColor([currentArticle.source!], color: UIColor.red)
-                    cellOdd.lblSource.attributedText = attributedWithTextColor
-                }
-            }
-            
-            let imgURL = APPURL.imageServer + imgWidth + "x" + imgHeight + "/smart/" + currentArticle.imageURL!
-            cellOdd.imgNews.sd_setImage(with: URL(string: imgURL), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
-            if textSizeSelected == 0{
-                cellOdd.lblSource.font = FontConstants.smallFontContent
-                cellOdd.lblNewsDescription.font = FontConstants.smallFontHeadingBold
-            }
-            else if textSizeSelected == 2{
-                cellOdd.lblSource.font = FontConstants.LargeFontContent
-                cellOdd.lblNewsDescription.font = FontConstants.LargeFontHeadingBold
-            }
-            else{
-                cellOdd.lblSource.font =  FontConstants.NormalFontContent
-                cellOdd.lblNewsDescription.font = FontConstants.NormalFontHeadingBold
-            }
-            
-            if cellOdd.imgNews.image == nil{
-                cellOdd.imgNews.image = UIImage(named: AssetConstants.NoImage)
-            }
-            
+            let cellWord = tableView.dequeueReusableCell(withIdentifier: "suggestID", for:indexPath) as! searchSuggestionTVCell
+            cellWord.lblNewsDescription.text = keywordArray[indexPath.row]
             activityIndicator.stopAnimating()
-            return cellOdd
+            return cellWord
         }
     }
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         if indexPath.row == tableView.numberOfRows(inSection: indexPath.section) - 1 {
-            let keyword =  UserDefaults.standard.value(forKey: "searchTxt") as! String
+            var keyword = ""
+            if UserDefaults.standard.value(forKey: "searchTxt") != nil{
+                keyword =  UserDefaults.standard.value(forKey: "searchTxt") as! String
+            }
             let result =  DBManager().FetchNextURL(category: keyword)
             switch result {
             case .Success(let DBData) :
                 let nextURL = DBData
-                if nextURL.count != 0{
+                if nextURL.count > 0{
                     if nextURL[0].category == keyword{
                         let nexturl = nextURL[0].nextURL
-                        self.saveArticlesInDB(url : nexturl!)
+                        if isResultLoaded == false{
+                            if Reachability.isConnectedToNetwork(){
+                                self.saveArticlesInDB(url : nexturl!)
+                            }
+                        }
                     }
                 }
                 else{
@@ -403,14 +479,12 @@ extension SearchVC: UICollectionViewDelegate, UICollectionViewDataSource{
         var fullTxt = ""
         var dateSubString = ""
         var agoDate = ""
-        //        cell.imgNews.layer.cornerRadius = 10.0
-        //        cell.imgNews.clipsToBounds = true
-        
         //display data from DB
         let currentArticle = Searchresults[indexPath.row]
         cell.lblTitle.text = currentArticle.title
         
         if  darkModeStatus == true{
+            cell.containerView.backgroundColor = colorConstants.grayBackground2
             cell.lblSource.textColor = colorConstants.nightModeText
             cell.lblTitle.textColor = colorConstants.nightModeText
             NightNight.theme =  .night
@@ -479,9 +553,11 @@ extension SearchVC: UICollectionViewDelegate, UICollectionViewDataSource{
             let contentYoffset = scrollView.contentOffset.y
             let distanceFromBottom = scrollView.contentSize.height - contentYoffset
             if distanceFromBottom < height {
-                if recordCount > 0 {
-                    activityIndicator.startAnimating()
-                }
+                //                if recordCount > 0 {
+                //                    if isResultLoaded == false{
+                //                        activityIndicator.startAnimating()
+                //                    }
+                //                }
             }
             
         }else{
@@ -494,7 +570,11 @@ extension SearchVC: UICollectionViewDelegate, UICollectionViewDataSource{
                     if nextURL.count != 0{
                         if nextURL[0].category == keyword{
                             let nexturl = nextURL[0].nextURL
-                            self.saveArticlesInDB(url : nexturl!)
+                            if isResultLoaded == false{
+                                if Reachability.isConnectedToNetwork(){
+                                    self.saveArticlesInDB(url : nexturl!)
+                                }
+                            }
                         }
                     }
                     else{
@@ -522,12 +602,29 @@ extension String {
 }
 
 extension SearchVC: UITextFieldDelegate{
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool
-    {
+    func getSearchEvents(query: String){
+        var id = ""
+        if UserDefaults.standard.value(forKey: "deviceToken") != nil{
+            id = UserDefaults.standard.value(forKey: "deviceToken") as! String
+        }
+        let param = ["action" : "search",
+                     "platform" : Constants.platform,
+                     "device_id" : id,
+                     "q": query] as! [String : Any]
+        APICall().trackingEventsAPI(param : param){response in
+            if response == true{
+                print("event captured")
+            }
+        }
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool{
         txtSearch.resignFirstResponder()
+        isResultLoaded = false
         if !(txtSearch.text?.isEmpty)!{
             if txtSearch.text != ""{
                 var search = txtSearch.text!
+                getSearchEvents(query: search)
                 activityIndicator.startAnimating()
                 search = search.trimmingCharacters(in: .whitespaces)
                 
@@ -537,30 +634,34 @@ extension SearchVC: UITextFieldDelegate{
                     search = escapedString
                 }
                 UserDefaults.standard.set(search, forKey: "searchTxt")
+                
                 if search == ""{
                     self.activityIndicator.stopAnimating()
                     self.searchResultTV.makeToast("Enter keyword to search", duration: 2.0, position: .center)
                 }else{
                     Searchresults.removeAll()
                     recordCount = 0
-                    if searchResultTV.isHidden == false{
-                        searchResultTV.reloadData()
-                    }else{
-                        searchResultCV.reloadData()
-                    }
-                    DBManager().deleteSearchNextURl()
-                    search = search.replacingOccurrences(of: " ", with: "%20")
-                    let url = APPURL.SearchURL + search
-                    
-                    DBManager().deleteAllData(entity: "SearchArticles")
-                    saveArticlesInDB(url: url)
-                    if UserDefaults.standard.value(forKey: "token") != nil{
-                        let BookmarkRecordCount = DBManager().IsCoreDataEmpty(entity: "BookmarkArticles")
-                        let LikeRecordCount = DBManager().IsCoreDataEmpty(entity: "LikeDislike")
-                        if BookmarkRecordCount != 0 || LikeRecordCount != 0{
-                            fetchBookmarkDataFromDB()
-                            
+                    DBManager().saveSearchHistory(keyword: txtSearch.text!)
+                    searchResultCV.reloadData()
+                    if Reachability.isConnectedToNetwork(){
+                        DBManager().deleteSearchNextURl()
+                        search = search.replacingOccurrences(of: " ", with: "%20")
+                        let url = APPURL.SearchURL + search
+                        
+                        DBManager().deleteAllData(entity: "SearchArticles")
+                        if isResultLoaded == false{
+                            saveArticlesInDB(url: url)
                         }
+                        if UserDefaults.standard.value(forKey: "token") != nil{
+                            let BookmarkRecordCount = DBManager().IsCoreDataEmpty(entity: "BookmarkArticles")
+                            let LikeRecordCount = DBManager().IsCoreDataEmpty(entity: "LikeDislike")
+                            if BookmarkRecordCount != 0 || LikeRecordCount != 0{
+                                fetchBookmarkDataFromDB()
+                                
+                            }
+                        }
+                    }else{
+                        fetchResult()
                     }
                 }
             }
@@ -587,6 +688,7 @@ extension SearchVC: UITextFieldDelegate{
             activityIndicator.startAnimating()
             if recordCount == 0 {
                 activityIndicator.stopAnimating()
+                isResultLoaded = false
                 lblNoNews.isHidden = false
             }
             else{
@@ -602,7 +704,7 @@ extension SearchVC: UITextFieldDelegate{
     }
     
     func fetchResult(){
-        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "NewsArticle")
+        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "SearchArticles")
         fetchRequest.predicate = NSPredicate(format: "title CONTAINS[c] %@ OR blurb CONTAINS[c] %@",txtSearch.text!, txtSearch.text!)
         let managedContext =
             appDelegate?.persistentContainer.viewContext
@@ -612,6 +714,9 @@ extension SearchVC: UITextFieldDelegate{
             recordCount = Searchresults.count
             if recordCount == 0 {
                 lblNoNews.isHidden = false
+                activityIndicator.stopAnimating()
+            }else{
+                lblNoNews.isHidden = true
             }
             if searchResultTV.isHidden == false{
                 searchResultTV.reloadData()
@@ -628,7 +733,16 @@ extension SearchVC: UITextFieldDelegate{
     func textFieldDidBeginEditing(_ textField: UITextField) {
         if textField == txtSearch {
             lblNoNews.isHidden = true
+            fecthSerchedKeywords()
         }
     }
     
+}
+
+extension SearchVC: UICollectionViewDelegateFlowLayout {
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        let collectionCellSize = searchResultCV.frame.size.width
+        return CGSize(width: collectionCellSize/3.4, height: collectionCellSize/3)
+    }
 }

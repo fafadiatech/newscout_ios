@@ -62,10 +62,11 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
     var RecomArticleData = [ArticleStatus]()
     var ArticleData = [ArticleStatus]()
     var RecomData = [NewsArticle]()
-    var searchRecomData = [SearchArticles]()
+    var searchRecomData = [NewsArticle]()
     var sourceRecomData = [Article]()
     var bookmarkedArticle = [BookmarkArticles]()
     var ShowArticle = [NewsArticle]()
+    var RecommendationArticle = [NewsArticle]()
     var SearchArticle = [SearchArticles]()
     var sourceArticle = [Article]()
     var shuffleData =  [NewsArticle]()
@@ -108,7 +109,6 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
         btnReadMore.layer.cornerRadius = 5
         btnReadMore.layer.borderWidth = 1
         btnReadMore.layer.borderColor = UIColor.gray.cgColor
-        filterRecommendation()
         btnPlayVideo.isHidden = true
         imgScrollView.delegate = self
         imgArray = [#imageLiteral(resourceName: "f3"),#imageLiteral(resourceName: "f1") ,#imageLiteral(resourceName: "f2")]
@@ -139,7 +139,7 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
         viewLikeDislike.backgroundColor = colorConstants.redColor
         viewBack.backgroundColor = colorConstants.redColor
         ViewWebContainer.isHidden = true
-        if ShowArticle.count != 0 {
+        if ShowArticle.count > 0 {
             indexCount = ShowArticle.count
         }else if sourceArticle.count > 0{
             indexCount = sourceArticle.count
@@ -157,6 +157,12 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
         //newsDetailAPICall(currentIndex: articleId)
         
         ShowNews(currentIndex: newsCurrentIndex)
+        if Reachability.isConnectedToNetwork(){
+            RecommendationDBCall()
+        }else{
+            filterRecommendation()
+        }
+        
         // MediaData = DBManager().fetchArticleMedia(articleId: Int(ShowArticle[newsCurrentIndex].article_id))
         let swipeUp = UISwipeGestureRecognizer(target: self, action: #selector(self.respondToSwipeGesture))
         swipeUp.direction = UISwipeGestureRecognizerDirection.up
@@ -172,7 +178,7 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
         
         let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapped(gestureRecognizer:)))
         viewNewsArea.addGestureRecognizer(tapRecognizer)
-        tapRecognizer.delegate = self as UIGestureRecognizerDelegate
+        tapRecognizer.delegate = self as! UIGestureRecognizerDelegate
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -203,7 +209,6 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
     
     func filterRecommendation(){
         RecomData.removeAll()
-        sourceRecomData.removeAll()
         searchRecomData.removeAll()
         if ShowArticle.count > 0{
             articleId = Int(ShowArticle[newsCurrentIndex].article_id)
@@ -212,47 +217,52 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
                     RecomData.append(news)
                 }
             }
-        }else if sourceArticle.count > 0{
-            articleId = (sourceArticle[newsCurrentIndex].article_id)!
-            for news in sourceArticle{
-                if news.article_id != articleId{
-                    sourceRecomData.append(news)
-                }
-            }
         }
         else{
-            for news in SearchArticle{
-                articleId  = Int(SearchArticle[newsCurrentIndex].article_id)
-                if news.article_id != articleId{
-                    searchRecomData.append(news)
-                }
-            }
+            fetchRandomRecommendation()
         }
         suggestedCV.reloadData()
     }
     
+    func fetchRandomRecommendation(){
+        let result = DBManager().fetchSearchBookmarkRecommendation()
+        switch result {
+        case .Success(let DBData) :
+            searchRecomData = DBData
+            if searchRecomData.count > 0{
+                suggestedCV.reloadData()
+            }
+        case .Failure(let errorMsg) :
+            print(errorMsg)
+        }
+    }
     func taPageControl(_ pageControl: TAPageControl!, didSelectPageAt currentIndex: Int) {
         index =  currentIndex
         imgScrollView.scrollRectToVisible(CGRect(x: view.frame.size.width * CGFloat(currentIndex), y:0, width: view.frame.width, height: imgScrollView.frame.height), animated: true)
     }
     
-    func RecommendationAPICall(){
-        APICall().loadRecommendationNewsAPI(articleId: articleId){ (status,response) in
-            switch response {
-            case .Success(let data) :
-                self.RecomArticleData = data
-                self.suggestedCV.reloadData()
-            case .Failure(let errormessage) :
-                if errormessage == "no net"{
-                    self.view.makeToast(errormessage, duration: 2.0, position: .center)
-                }
-            case .Change(let code):
-                if code == 404{
-                    let defaultList = ["googleToken","FBToken","token", "first_name", "last_name", "user_id", "email"]
-                    Helper().clearDefaults(list : defaultList)
-                    self.NavigationToLogin()
-                }
+    
+    func RecommendationDBCall(){
+        DBManager().saveRecommendation(articleId : articleId){
+            response in
+            self.fetchRecommendation()
+        }
+    }
+    
+    func fetchRecommendation() {
+        let result = DBManager().fetchRecommendation(articleId : articleId)
+        switch result {
+        case .Success(let DBData) :
+            RecommendationArticle = DBData
+            if RecommendationArticle.count > 0{
+                suggestedCV.reloadData()
             }
+            else{
+                filterRecommendation()
+                activityIndicator.stopAnimating()
+            }
+        case .Failure(let errorMsg) :
+            print(errorMsg)
         }
     }
     
@@ -524,43 +534,46 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
     @objc func respondToSwipeGesture(gesture: UIGestureRecognizer) {
         
         let transition = CATransition()
-        transition.duration = 0.5
+        transition.duration = 0.6
         
         if let swipeGesture = gesture as? UISwipeGestureRecognizer {
             
             switch swipeGesture.direction {
             case UISwipeGestureRecognizerDirection.right:
                 ViewWebContainer.isHidden = true
+                backNavigation()
                 
             case UISwipeGestureRecognizerDirection.down:
-                if newsCurrentIndex > 0
-                {
+                if newsCurrentIndex > 0{
                     suggestedView.isHidden = true
                     newsCurrentIndex = newsCurrentIndex - 1
                     ShowNews(currentIndex : newsCurrentIndex)
-                    filterRecommendation()
+                    RecommendationDBCall()
                     transition.type = kCATransitionPush
                     transition.subtype = kCATransitionFromBottom
                     view.window!.layer.add(transition, forKey: kCATransition)
+                    
                 }
                 else{
                     self.view.makeToast("No more news to show", duration: 1.0, position: .center)
                 }
                 
             case UISwipeGestureRecognizerDirection.up:
-                if newsCurrentIndex < indexCount - 1
-                {
+                if newsCurrentIndex < indexCount - 1{
                     newsCurrentIndex = newsCurrentIndex + 1
                     suggestedView.isHidden = true
                     ShowNews(currentIndex : newsCurrentIndex)
-                    filterRecommendation()
+                    RecommendationDBCall()
                     transition.type = kCATransitionPush
                     transition.subtype = kCATransitionFromTop
                     view.window!.layer.add(transition, forKey: kCATransition)
                 }
                 else{
-                    activityIndicator.startAnimating()
-                    pagination()
+                    let status =  UserDefaults.standard.value(forKey: "isSearch") as! String
+                    if status == "home"{
+                        activityIndicator.startAnimating()
+                        pagination()
+                    }
                 }
             default:
                 break
@@ -569,7 +582,7 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
     }
     
     func pagination(){
-         let isSearch = UserDefaults.standard.value(forKey: "isSearch") as! String
+        let isSearch = UserDefaults.standard.value(forKey: "isSearch") as! String
         if isSearch == "home"{
             if UserDefaults.standard.value(forKey: "homeNextURL") != nil{
                 DBManager().SaveDataDB(nextUrl: UserDefaults.standard.value(forKey: "homeNextURL") as! String ){response in
@@ -593,6 +606,7 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
             
         }
     }
+    
     func fetchArticlesFromDB(){
         let result = DBManager().ArticlesfetchByCatId()
         switch result {
@@ -603,9 +617,9 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
                 indexCount = ShowArticle.count
                 newsCurrentIndex = newsCurrentIndex + 1
                 if newsCurrentIndex < ShowArticle.count {
-                ShowNews(currentIndex : newsCurrentIndex)
-                filterRecommendation()
-            }
+                    ShowNews(currentIndex : newsCurrentIndex)
+                    filterRecommendation()
+                }
             }
             else{
                 self.view.makeToast("No more news to show", duration: 1.0, position: .center)
@@ -621,7 +635,7 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
         switch result {
         case .Success(let DBData) :
             if DBData.count > 0{
-               SearchArticle.removeAll()
+                SearchArticle.removeAll()
                 SearchArticle = DBData
                 indexCount = SearchArticle.count
                 newsCurrentIndex = newsCurrentIndex + 1
@@ -637,9 +651,11 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
             print(errorMsg)
         }
     }
+    
     func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
         activityIndicator.startAnimating()
     }
+    
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         activityIndicator.stopAnimating()
     }
@@ -647,9 +663,11 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
     func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
         activityIndicator.stopAnimating()
     }
+    
     func webViewDidFinishLoad(_ : WKWebView) {
         activityIndicator.stopAnimating()
     }
+    
     @IBAction func btnPlayVideo(_ sender: Any) {
         if player?.rate == 0
         {
@@ -733,11 +751,12 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
         dateFormatter.timeZone = NSTimeZone.local
         playbackSlider.removeFromSuperview()
         // avPlayerView.isHidden = true
-        
+    
         if ShowArticle.count > 0{
             fetchBookmarkDataFromDB()
             currentEntity = "ShowArticle"
             let currentArticle = ShowArticle[currentIndex]
+            Helper().getMenuEvents(action: "item_detail", menuId: articleId, menuName: currentArticle.title! )
             let newDate = dateFormatter.date(from: currentArticle.published_on!)
             var agoDate = ""
             if newDate != nil{
@@ -754,7 +773,6 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
             if currentArticle.imageURL != ""{
                 
                 let imgURL = APPURL.imageServer + imgWidth + "x" + imgHeight + "/smart/" + currentArticle.imageURL!
-                print("newImage URL : \(imgURL)")
                 imgNews.sd_setImage(with: URL(string: imgURL), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
             }
             else{
@@ -954,6 +972,7 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
             currentEntity = "SearchArticles"
             fetchSearchBookmarkDataFromDB()
             let currentArticle = SearchArticle[currentIndex]
+            Helper().getMenuEvents(action: "item_detail", menuId: articleId, menuName: currentArticle.title! )
             let newDate = dateFormatter.date(from: currentArticle.published_on!)
             var agoDate = ""
             if newDate != nil{
@@ -970,7 +989,6 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
             if currentArticle.imageURL != ""{
                 
                 let imgURL = APPURL.imageServer + imgWidth + "x" + imgHeight + "/smart/" + currentArticle.imageURL!
-                print("newImage URL : \(imgURL)")
                 imgNews.sd_setImage(with: URL(string: imgURL), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
             }
             else{
@@ -1060,6 +1078,7 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
         else if sourceArticle.count > 0{
             currentEntity = "source"
             let currentArticle = sourceArticle[currentIndex]
+            Helper().getMenuEvents(action: "item_detail", menuId: articleId, menuName: currentArticle.title! )
             let newDate = dateFormatter.date(from: currentArticle.published_on!)
             var agoDate = ""
             if newDate != nil{
@@ -1075,7 +1094,6 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
             if currentArticle.imageURL != ""{
                 
                 let imgURL = APPURL.imageServer + imgWidth + "x" + imgHeight + "/smart/" + currentArticle.imageURL!
-                print("newImage URL : \(imgURL)")
                 imgNews.sd_setImage(with: URL(string: imgURL), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
             }
             else{
@@ -1105,7 +1123,6 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
                             self.btnDislike.setImage(UIImage(named: AssetConstants.thumb_down), for: .normal)
                             
                         }
-                        self.view.makeToast(response, duration: 1.0, position: .center)
                         DBManager().addLikedArticle(tempentity: self.currentEntity, id: self.articleId, status: 0)
                     }
                 }
@@ -1149,7 +1166,6 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
                         if (self.btnLike.currentImage?.isEqual(UIImage(named: AssetConstants.thumb_up_filled)))! {
                             self.btnLike.setImage(UIImage(named: AssetConstants.thumb_up), for: .normal)
                         }
-                        self.view.makeToast(response, duration: 1.0, position: .center)
                         DBManager().addLikedArticle(tempentity:self.currentEntity, id: self.articleId, status: 1)
                     }
                 }
@@ -1189,7 +1205,6 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
                     else{
                         self.setBookmarkImg()
                         DBManager().addBookmarkedArticles(currentEntity: self.currentEntity, id: self.articleId)
-                        self.view.makeToast(response, duration: 1.0, position: .center)
                     }
                 }
             }
@@ -1204,14 +1219,25 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
                         DBManager().deleteBookmarkedArticle(id: self.articleId)
                         if self.currentEntity == "ShowArticle"{
                             self.ShowArticle.remove(at: self.newsCurrentIndex)
-                        }else if self.currentEntity == "SearchArticles"{
-                            self.SearchArticle.remove(at: self.newsCurrentIndex)
-                        }else if self.currentEntity == "source"{
-                            self.sourceArticle.remove(at: self.newsCurrentIndex)
-                        }
-                        self.newsCurrentIndex = self.newsCurrentIndex - 1
+                           let isSearch = UserDefaults.standard.value(forKey: "isSearch") as! String
+                             if isSearch == "bookmark"{
+                        if self.indexCount > 1{
                         self.indexCount = self.indexCount - 1
-                        self.view.makeToast(response, duration: 1.0, position: .center)
+                            if self.newsCurrentIndex == self.indexCount {
+                                self.newsCurrentIndex = self.newsCurrentIndex - 1
+                            }
+                            self.ShowNews(currentIndex: self.newsCurrentIndex)
+                        }else{
+                           
+                            if isSearch == "bookmark"{
+                                let storyboard = UIStoryboard(name: "Main", bundle: nil)
+                                let vc:BookmarkVC = storyboard.instantiateViewController(withIdentifier: "BookmarkID") as! BookmarkVC
+                                self.present(vc, animated: true, completion: nil)
+                            }
+                        }
+                            }
+                        }
+                        
                     }
                 }
             }
@@ -1324,7 +1350,7 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
         
     }
     
-    @IBAction func btnBackAction(_ sender: Any) {
+    func backNavigation(){
         let isSearch = UserDefaults.standard.value(forKey: "isSearch") as! String
         if isSearch == "search"{
             self.dismiss(animated: false)
@@ -1351,9 +1377,13 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
             let sourcevc:SourceVC = storyboard.instantiateViewController(withIdentifier: "SourceID") as! SourceVC
             self.present(sourcevc, animated: true, completion: nil)
         }
-        else if isSearch == "home" || isSearch == "shuffle"{
+        else if isSearch == "home" || isSearch == "shuffle" || isSearch == "cluster"{
             self.dismiss(animated: false)
         }
+    }
+    
+    @IBAction func btnBackAction(_ sender: Any) {
+       backNavigation()
     }
     
     @IBAction func btnWebBackAction(_ sender: Any) {
@@ -1371,15 +1401,19 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
     @IBAction func btnSourceActn(_ sender: Any) {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let sourcevc:SourceVC = storyboard.instantiateViewController(withIdentifier: "SourceID") as! SourceVC
+        
         if currentEntity == "SearchArticles"{
             sourcevc.url = APPURL.SourceURL + SearchArticle[newsCurrentIndex].source!
+            Helper().getMenuEvents(action: "item_view_source", menuId: 0, menuName: SearchArticle[newsCurrentIndex].source!)
             sourcevc.source = SearchArticle[newsCurrentIndex].source!
         }else if currentEntity == "source"{
             sourcevc.url = APPURL.SourceURL + sourceArticle[newsCurrentIndex].source!
+            Helper().getMenuEvents(action: "item_view_source", menuId: 0, menuName: sourceArticle[newsCurrentIndex].source!)
             sourcevc.source = sourceArticle[newsCurrentIndex].source!
         }
         else{
             sourcevc.url = APPURL.SourceURL + ShowArticle[newsCurrentIndex].source!
+            Helper().getMenuEvents(action: "item_view_source", menuId: 0, menuName: ShowArticle[newsCurrentIndex].source!)
             sourcevc.source = ShowArticle[newsCurrentIndex].source!
         }
         
@@ -1390,7 +1424,6 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
         WKWebView.addSubview(activityIndicator)
         ViewWebContainer.isHidden = false
         let url = URL(string: sourceURL)
-        print(sourceURL)
         let domain = url?.host
         lblWebSource.text = "\(domain!)"
         let myURL = URL(string: sourceURL)!
@@ -1415,6 +1448,7 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
             suggestedView.isHidden = true
         }
     }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
@@ -1440,22 +1474,21 @@ extension NewsDetailVC:UICollectionViewDelegate, UICollectionViewDataSource, UIC
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        // return (self.RecomArticleData.count != 0) ? self.RecomArticleData[0].body!.articles.count + 1 : 0
-        if RecomData.count == 0 && searchRecomData.count == 0 && sourceRecomData.count == 0{
+        if RecommendationArticle.count > 0{
+            return (self.RecommendationArticle.count > 0) ? self.RecommendationArticle.count + 1 : 0
+        }
+        if RecomData.count == 0 && searchRecomData.count == 0 && RecommendationArticle.count == 0{
             return 0
         }
-        else if RecomData.count >= 5 || searchRecomData.count >= 5 || sourceRecomData.count >= 5{
+        else if RecomData.count >= 5 || searchRecomData.count >= 5{
             return 6
         }else{
             if RecomData.count > 0{
                 return RecomData.count + 1
-            }else if searchRecomData.count > 0 {
-                return searchRecomData.count + 1
             }else{
-                return sourceRecomData.count + 1
+                return searchRecomData.count + 1
             }
         }
-        // return ShowArticle.count != 0 ? ShowArticle.count : 0
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -1488,21 +1521,22 @@ extension NewsDetailVC:UICollectionViewDelegate, UICollectionViewDataSource, UIC
             cell.imgNews.isHidden = false
             cell.lblTitle.isHidden = false
             cell.lblMoreStories.isHidden = true
-            if currentEntity == "SearchArticles"{
-                let currentArticle =  searchRecomData[indexPath.row - 1] //RecomArticleData[0].body!.articles[indexPath.row - 1]
-                cell.lblTitle.text = currentArticle.title
-                if currentArticle.imageURL != nil{
-                    cell.imgNews.sd_setImage(with: URL(string: currentArticle.imageURL!), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
-                }
-            }else if currentEntity == "source"{
-                let currentArticle =  sourceRecomData[indexPath.row - 1] //RecomArticleData[0].body!.articles[indexPath.row - 1]
+            if RecommendationArticle.count > 0{
+                let currentArticle =  RecommendationArticle[indexPath.row - 1]
                 cell.lblTitle.text = currentArticle.title
                 if currentArticle.imageURL != nil{
                     cell.imgNews.sd_setImage(with: URL(string: currentArticle.imageURL!), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
                 }
             }
-            else{
-                let currentArticle =  RecomData[indexPath.row - 1] //RecomArticleData[0].body!.articles[indexPath.row - 1]
+            else if RecomData.count > 0{
+                let currentArticle =  RecomData[indexPath.row - 1]
+                cell.lblTitle.text = currentArticle.title
+                if currentArticle.imageURL != nil{
+                    cell.imgNews.sd_setImage(with: URL(string: currentArticle.imageURL!), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
+                }
+            }
+            else if searchRecomData.count > 0{
+                let currentArticle =  searchRecomData[indexPath.row - 1]
                 cell.lblTitle.text = currentArticle.title
                 if currentArticle.imageURL != nil{
                     cell.imgNews.sd_setImage(with: URL(string: currentArticle.imageURL!), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
@@ -1523,6 +1557,7 @@ extension NewsDetailVC:UICollectionViewDelegate, UICollectionViewDataSource, UIC
         return cell
     }
     
+    
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if indexPath.row != 0{
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
@@ -1541,16 +1576,17 @@ extension NewsDetailVC:UICollectionViewDelegate, UICollectionViewDataSource, UIC
                 UserDefaults.standard.set("recommend", forKey: "isSearch")
             }
             newsDetailvc.newsCurrentIndex = indexPath.row - 1
-            if ShowArticle.count > 0{
-                newsDetailvc.ShowArticle =  RecomData //RecomArticleData[0].body!.articles
-                newsDetailvc.articleId = Int(RecomData[indexPath.row].article_id)  //RecomArticleData[0].body!.articles[indexPath.row - 1].article_id!
-            }else if sourceArticle.count > 0{
-                newsDetailvc.sourceArticle = sourceRecomData
-                newsDetailvc.articleId = Int(sourceRecomData[indexPath.row].article_id)
+            if RecommendationArticle.count > 0{
+                newsDetailvc.ShowArticle =  RecommendationArticle
+                newsDetailvc.articleId = Int(RecommendationArticle[indexPath.row - 1].article_id)
             }
-            else{
-                newsDetailvc.SearchArticle = searchRecomData
-                newsDetailvc.articleId = Int(searchRecomData[indexPath.row].article_id)
+            else if RecomData.count > 0{
+                newsDetailvc.ShowArticle =  RecomData
+                newsDetailvc.articleId = Int(RecomData[indexPath.row - 1].article_id)
+            }
+            else if searchRecomData.count > 0 {
+                newsDetailvc.ShowArticle =  searchRecomData
+                newsDetailvc.articleId = Int(searchRecomData[indexPath.row - 1].article_id)
             }
             present(newsDetailvc, animated: true, completion: nil)
         }

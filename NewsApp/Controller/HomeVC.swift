@@ -17,6 +17,9 @@ import NightNight
 protocol ScrollDelegate{
     func isNavigate(status: Bool)
 }
+protocol TrendingBack {
+    func isTrendingTVLoaded(status: Bool)
+}
 extension String {
     func attributedStringWithColor(_ strings: [String], color: UIColor, characterSpacing: UInt? = nil) -> NSAttributedString {
         let attributedString = NSMutableAttributedString(string: self)
@@ -36,9 +39,12 @@ class HomeVC: UIViewController{
     
     @IBOutlet weak var HomeNewsTV: UITableView!
     @IBOutlet weak var lblNonews: UILabel!
+    @IBOutlet weak var btnTopNews: UIButton!
     var protocolObj : ScrollDelegate?
+    var trendingProtocol : TrendingBack?
     var tabBarTitle: String = ""
     var ShowArticle = [NewsArticle]()
+    var clusterArticles = [NewsArticle]()
     let appDelegate = UIApplication.shared.delegate as? AppDelegate
     let activityIndicator = MDCActivityIndicator()
     var pageNum = 0
@@ -53,12 +59,19 @@ class HomeVC: UIViewController{
     var isAPICalled = false
     var imgWidth = ""
     var imgHeight = ""
+    var cellHeight:CGFloat = CGFloat()
+    var isTrendingDetail = 0
+    
     
     override func viewDidLoad(){
         super.viewDidLoad()
         HomeNewsTV.tableFooterView = UIView(frame: .zero)
         protocolObj?.isNavigate(status: true)
+        trendingProtocol?.isTrendingTVLoaded(status: false)
         lblNonews.isHidden = true
+        btnTopNews.layer.cornerRadius = 0.5 * btnTopNews.bounds.size.width
+        btnTopNews.clipsToBounds = true
+        btnTopNews.backgroundColor = colorConstants.redColor
         NotificationCenter.default.addObserver(self, selector: #selector(darkModeEnabled(_:)), name: .darkModeEnabled, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(darkModeDisabled(_:)), name: .darkModeDisabled, object: nil)
         activityIndicator.cycleColors = [.blue]
@@ -82,9 +95,38 @@ class HomeVC: UIViewController{
         }
         
         //change data on swipe
-        if tabBarTitle != "Test"{
+        if tabBarTitle != "Test" && tabBarTitle != "today"{
+            isTrendingDetail = 0
             fetchSubmenuId(submenu: tabBarTitle)
+            coredataRecordCount = DBManager().IsCoreDataEmpty(entity: "NewsArticle")
+            if self.coredataRecordCount > 0 {
+                self.fetchArticlesFromDB()
+            }
+            else{
+                if Reachability.isConnectedToNetwork(){
+                    activityIndicator.startAnimating()
+                    if UserDefaults.standard.value(forKey: "submenuURL") != nil{
+                        self.saveArticlesInDB()
+                    }
+                }else{
+                    activityIndicator.stopAnimating()
+                    lblNonews.isHidden = true
+                }
+            }
         }
+        
+        if tabBarTitle == "today"{
+            isTrendingDetail = 1
+            var records = DBManager().IsCoreDataEmpty(entity: "TrendingCategory")
+            if records <= 0{
+                DBManager().saveTrending{response in
+                    self.fetchTrending()
+                }
+            }else{
+                self.fetchTrending()
+            }
+        }
+        
         //save and fetch like and bookmark data from DB
         if UserDefaults.standard.value(forKey: "token") != nil{
             if Reachability.isConnectedToNetwork(){
@@ -99,29 +141,59 @@ class HomeVC: UIViewController{
                 }
             }
         }
-        coredataRecordCount = DBManager().IsCoreDataEmpty(entity: "NewsArticle")
-        if self.coredataRecordCount != 0 {
-            self.fetchArticlesFromDB()
-        }
-        else{
-            if Reachability.isConnectedToNetwork(){
-                activityIndicator.startAnimating()
-                if UserDefaults.standard.value(forKey: "submenuURL") != nil{
-                    self.saveArticlesInDB()
-                }
-            }else{
-                activityIndicator.stopAnimating()
-                lblNonews.isHidden = true
+        
+    }
+    
+    @IBAction func btnTopNewsActn(_ sender: Any) {
+        scrollToFirstRow()
+    }
+    
+    func fetchTrending(){
+        let result = DBManager().fetchTrendingArticle()
+        switch result {
+        case .Success(let DBData) :
+            self.ShowArticle.removeAll()
+            self.ShowArticle = DBData
+            if self.ShowArticle.count > 0{
+                self.lblNonews.isHidden = true
+                self.HomeNewsTV.reloadData()
             }
+            else{
+                self.HomeNewsTV.reloadData()
+                self.lblNonews.isHidden =  false
+                self.activityIndicator.stopAnimating()
+            }
+        case .Failure(let errorMsg) :
+            print(errorMsg)
         }
     }
     
+    //fetch articles of selected cluster
+    func fetchClusterIdArticles(clusterID: Int){
+        let result = DBManager().fetchClusterArticles(trendingId: clusterID)
+        switch result {
+        case .Success(let DBData) :
+            self.clusterArticles = DBData
+            if self.clusterArticles.count > 0{
+                self.lblNonews.isHidden = true
+                ShowArticle = DBData
+                self.HomeNewsTV.reloadData()
+                scrollToFirstRow()
+            }
+            else{
+                self.HomeNewsTV.reloadData()
+                self.lblNonews.isHidden =  false
+                self.activityIndicator.stopAnimating()
+            }
+        case .Failure(let errorMsg) :
+            print(errorMsg)
+        }
+    }
     func fetchSubmenuId(submenu : String){
         let tagresult = DBManager().fetchsubmenuId(subMenuName: submenu)
         switch tagresult{
         case .Success(let id) :
             var url = APPURL.ArticleByIdURL + "\(id)"
-            print(url)
             UserDefaults.standard.setValue(id, forKey: "subMenuId")
             UserDefaults.standard.setValue(url, forKey: "submenuURL")
         case .Failure(let error):
@@ -168,7 +240,9 @@ class HomeVC: UIViewController{
             subMenuURL =  UserDefaults.standard.value(forKey: "submenuURL") as! String
         }
         DBManager().SaveDataDB(nextUrl: subMenuURL ){response in
-            self.fetchArticlesFromDB()
+            if response == true{
+                self.fetchArticlesFromDB()
+            }
         }
     }
     
@@ -214,8 +288,27 @@ class HomeVC: UIViewController{
     }
     
     @objc func refreshNews(refreshControl: UIRefreshControl) {
-        saveArticlesInDB()
-        refreshControl.endRefreshing()
+        activityIndicator.startAnimating()
+        DispatchQueue.global(qos: .userInitiated).async {
+            if self.isTrendingDetail == 0{
+                self.saveArticlesInDB()
+            }
+            else if self.isTrendingDetail == 1{
+                self.saveTrending()
+            }
+        }
+        DispatchQueue.main.async {
+            refreshControl.endRefreshing()
+            self.activityIndicator.stopAnimating()
+        }
+    }
+    
+    func saveTrending(){
+        DBManager().saveTrending{response in
+            if response == true{
+                self.fetchTrending()
+            }
+        }
     }
     
     func filterNews(selectedTag : String){
@@ -230,22 +323,44 @@ class HomeVC: UIViewController{
         }
     }
     
+    func retainClusterData(){
+        if isTrendingDetail ==  2{
+            ShowArticle = clusterArticles
+            HomeNewsTV.reloadData()
+        }
+    }
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        if Reachability.isConnectedToNetwork(){
-            activityIndicator.startAnimating()
-            if UserDefaults.standard.value(forKey: "submenuURL") != nil{
-                self.saveArticlesInDB()
-                fetchArticlesFromDB()
+        if isTrendingDetail == 0 {
+            if Reachability.isConnectedToNetwork(){
+                activityIndicator.startAnimating()
+                if UserDefaults.standard.value(forKey: "submenuURL") != nil{
+                    self.saveArticlesInDB()
+                    fetchArticlesFromDB()
+                }
+            }else{
+                coredataRecordCount = DBManager().IsCoreDataEmpty(entity: "NewsArticle")
+                if self.coredataRecordCount != 0 {
+                    self.fetchArticlesFromDB()
+                }
+                else{
+                    activityIndicator.stopAnimating()
+                }
             }
-        }else{
-            coredataRecordCount = DBManager().IsCoreDataEmpty(entity: "NewsArticle")
-            if self.coredataRecordCount != 0 {
-                self.fetchArticlesFromDB()
+        }
+        if isTrendingDetail == 1 {
+            var records = DBManager().IsCoreDataEmpty(entity: "TrendingCategory")
+            if records <= 0{
+                DBManager().saveTrending{response in
+                    self.fetchTrending()
+                }
+            }else{
+                self.fetchTrending()
             }
-            else{
-                activityIndicator.stopAnimating()
-            }
+        }
+        else if isTrendingDetail == 2{
+            retainClusterData()
         }
     }
     
@@ -281,6 +396,7 @@ class HomeVC: UIViewController{
 }
 
 extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelegate{
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return (ShowArticle.count > 0) ? self.ShowArticle.count : 0
     }
@@ -288,121 +404,222 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let newsDetailvc:NewsDetailVC = storyboard.instantiateViewController(withIdentifier: "NewsDetailID") as! NewsDetailVC
-        newsDetailvc.newsCurrentIndex = indexPath.row
-        newsDetailvc.ShowArticle = sortedData as! [NewsArticle]
-        newsDetailvc.articleId = Int(sortedData[indexPath.row].article_id)
-        UserDefaults.standard.set("home", forKey: "isSearch")
-        present(newsDetailvc, animated: true, completion: nil)
+        if isTrendingDetail == 0{
+            UserDefaults.standard.set("home", forKey: "isSearch")
+        }else{
+            UserDefaults.standard.set("cluster", forKey: "isSearch")
+        }
+        if isTrendingDetail == 0 || isTrendingDetail == 2{
+            if sortedData.count > 0 {
+                newsDetailvc.newsCurrentIndex = indexPath.row
+                newsDetailvc.ShowArticle = sortedData as! [NewsArticle]
+                newsDetailvc.articleId = Int(sortedData[indexPath.row].article_id)
+                present(newsDetailvc, animated: true, completion: nil)
+            }
+        }
+        else{
+            var id = UserDefaults.standard.array(forKey: "trendingArray") as! [Int]
+            let selectedCluster = id[indexPath.row]
+            fetchClusterIdArticles(clusterID: selectedCluster)
+            trendingProtocol?.isTrendingTVLoaded(status: true)
+            isTrendingDetail = 2
+        }
+    }
+    func scrollToFirstRow() {
+        let indexPath = NSIndexPath(row: 0, section: 0)
+        self.HomeNewsTV.scrollToRow(at: indexPath as IndexPath, at: .top, animated: true)
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "HomeNewsTVCellID", for:indexPath) as! HomeNewsTVCell
-        let cellOdd = tableView.dequeueReusableCell(withIdentifier: "HomeImgTVCellID", for:indexPath) as! HomeImgTVCell
-        imgWidth = String(describing : Int(cell.imgNews.frame.width))
-        imgHeight = String(describing : Int(cell.imgNews.frame.height))
+        
+        var currentArticle = NewsArticle()
+        
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
         dateFormatter.timeZone = NSTimeZone.local
         let darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
-        sortedData = ShowArticle.sorted{ $0.published_on! > $1.published_on! }
+        sortedData.removeAll()
         let textSizeSelected = UserDefaults.standard.value(forKey: "textSize") as! Int
         var sourceColor = UIColor()
         var fullTxt = ""
         var dateSubString = ""
         var agoDate = ""
-        if indexPath.row % 2 != 0{
-            
-            cell.imgNews.layer.cornerRadius = 10.0
-            cell.imgNews.clipsToBounds = true
-            
-            //display data from DB
-            let currentArticle = sortedData[indexPath.row]
-            cell.lblNewsHeading.text = currentArticle.title
-            
-            if  darkModeStatus == true{
-                cell.ViewCellBackground.backgroundColor = colorConstants.grayBackground2
-                cell.lblSource.textColor = colorConstants.nightModeText
-                cell.lblNewsHeading.textColor = colorConstants.nightModeText
-                NightNight.theme =  .night
+        
+        if  isTrendingDetail == 0 || isTrendingDetail == 2{
+            sortedData = ShowArticle.sorted{ $0.published_on! > $1.published_on! }
+            currentArticle = sortedData[indexPath.row]
+            if indexPath.row % 2 != 0{
+                let cell = tableView.dequeueReusableCell(withIdentifier: "HomeNewsTVCellID", for:indexPath) as! HomeNewsTVCell
+                imgWidth = String(describing : Int(cell.imgNews.frame.width))
+                imgHeight = String(describing : Int(cell.imgNews.frame.height))
+                cell.imgNews.layer.cornerRadius = 10.0
+                cell.imgNews.clipsToBounds = true
+                
+                //display data from DB
+                cell.lblNewsHeading.text = currentArticle.title
+                
+                if  darkModeStatus == true{
+                    cell.ViewCellBackground.backgroundColor = colorConstants.grayBackground2
+                    cell.lblSource.textColor = colorConstants.nightModeText
+                    cell.lblNewsHeading.textColor = colorConstants.nightModeText
+                    NightNight.theme =  .night
+                }
+                else{
+                    cell.ViewCellBackground.backgroundColor = .white
+                    cell.lblSource.textColor = colorConstants.blackColor
+                    cell.lblNewsHeading.textColor = colorConstants.blackColor
+                    NightNight.theme =  .normal
+                }
+                
+                if ((currentArticle.published_on?.count)!) <= 20{
+                    if !(currentArticle.published_on?.contains("Z"))!{
+                        currentArticle.published_on?.append("Z")
+                    }
+                    let newDate = dateFormatter.date(from: currentArticle.published_on!)
+                    if newDate != nil{
+                        agoDate = try Helper().timeAgoSinceDate(newDate!)
+                        fullTxt = "\(agoDate)" + " via " + currentArticle.source!
+                        let attributedWithTextColor: NSAttributedString = fullTxt.attributedStringWithColor([currentArticle.source!], color: UIColor.red)
+                        cell.lblSource.attributedText = attributedWithTextColor
+                    }
+                }
+                else{
+                    dateSubString = String(currentArticle.published_on!.prefix(19))
+                    if !(dateSubString.contains("Z")){
+                        dateSubString.append("Z")
+                    }
+                    let newDate = dateFormatter.date(from: dateSubString
+                    )
+                    if newDate != nil{
+                        agoDate = try Helper().timeAgoSinceDate(newDate!)
+                        fullTxt = "\(agoDate)" + " via " + currentArticle.source!
+                        let attributedWithTextColor: NSAttributedString = fullTxt.attributedStringWithColor([currentArticle.source!], color: UIColor.red)
+                        cell.lblSource.attributedText = attributedWithTextColor
+                    }
+                }
+                let imgURL = APPURL.imageServer + imgWidth + "x" + imgHeight + "/smart/" + currentArticle.imageURL!
+                cell.imgNews.sd_setImage(with: URL(string: imgURL), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
+                
+                if textSizeSelected == 0{
+                    cell.lblSource.font = FontConstants.smallFontContent
+                    cell.lblNewsHeading.font = FontConstants.smallFontHeadingBold
+                }
+                else if textSizeSelected == 2{
+                    cell.lblSource.font = FontConstants.LargeFontContent
+                    cell.lblNewsHeading.font = FontConstants.LargeFontHeadingBold
+                }
+                else{
+                    cell.lblSource.font =  FontConstants.NormalFontContent
+                    cell.lblNewsHeading.font = FontConstants.NormalFontHeadingBold
+                }
+                
+                if cell.imgNews.image == nil{
+                    cell.imgNews.image = UIImage(named: AssetConstants.NoImage)
+                }
+                
+                activityIndicator.stopAnimating()
+                lblNonews.isHidden = true
+                return cell
             }
             else{
-                cell.ViewCellBackground.backgroundColor = .white
-                cell.lblSource.textColor = colorConstants.blackColor
-                cell.lblNewsHeading.textColor = colorConstants.blackColor
-                NightNight.theme =  .normal
-            }
-            
-            if ((currentArticle.published_on?.count)!) <= 20{
-                if !(currentArticle.published_on?.contains("Z"))!{
-                    currentArticle.published_on?.append("Z")
+                
+                let cellOdd = tableView.dequeueReusableCell(withIdentifier: "HomeImgTVCellID", for:indexPath) as! HomeImgTVCell
+                cellOdd.imgNews.layer.cornerRadius = 10.0
+                cellOdd.imgNews.clipsToBounds = true
+                //display data from DB
+                
+                cellOdd.lblNewsHeading.text = currentArticle.title
+                
+                if  darkModeStatus == true{
+                    cellOdd.ViewCellBackground.backgroundColor = colorConstants.grayBackground2
+                    cellOdd.lblSource.textColor = colorConstants.nightModeText
+                    cellOdd.lblNewsHeading.textColor = colorConstants.nightModeText
+                    NightNight.theme =  .night
                 }
-                let newDate = dateFormatter.date(from: currentArticle.published_on!)
-                if newDate != nil{
-                    agoDate = try Helper().timeAgoSinceDate(newDate!)
-                    fullTxt = "\(agoDate)" + " via " + currentArticle.source!
-                    let attributedWithTextColor: NSAttributedString = fullTxt.attributedStringWithColor([currentArticle.source!], color: UIColor.red)
-                    cell.lblSource.attributedText = attributedWithTextColor
+                else{
+                    cellOdd.ViewCellBackground.backgroundColor = .white
+                    cellOdd.lblSource.textColor = colorConstants.blackColor
+                    cellOdd.lblNewsHeading.textColor = colorConstants.blackColor
+                    NightNight.theme =  .normal
                 }
-            }
-            else{
-                dateSubString = String(currentArticle.published_on!.prefix(19))
-                if !(dateSubString.contains("Z")){
-                    dateSubString.append("Z")
+                
+                if ((currentArticle.published_on?.count)!) <= 20{
+                    if !(currentArticle.published_on?.contains("Z"))!{
+                        currentArticle.published_on?.append("Z")
+                    }
+                    let newDate = dateFormatter.date(from: currentArticle.published_on!)
+                    if newDate != nil{
+                        agoDate = try Helper().timeAgoSinceDate(newDate!)
+                        fullTxt = "\(agoDate)" + " via " + currentArticle.source!
+                        let attributedWithTextColor: NSAttributedString = fullTxt.attributedStringWithColor([currentArticle.source!], color: UIColor.red)
+                        cellOdd.lblSource.attributedText = attributedWithTextColor
+                    }
                 }
-                let newDate = dateFormatter.date(from: dateSubString
-                )
-                if newDate != nil{
-                    agoDate = try Helper().timeAgoSinceDate(newDate!)
-                    fullTxt = "\(agoDate)" + " via " + currentArticle.source!
-                    let attributedWithTextColor: NSAttributedString = fullTxt.attributedStringWithColor([currentArticle.source!], color: UIColor.red)
-                    cell.lblSource.attributedText = attributedWithTextColor
+                else{
+                    dateSubString = String(currentArticle.published_on!.prefix(19))
+                    if !(dateSubString.contains("Z")){
+                        dateSubString.append("Z")
+                    }
+                    let newDate = dateFormatter.date(from: dateSubString
+                    )
+                    if newDate != nil{
+                        agoDate = try Helper().timeAgoSinceDate(newDate!)
+                        fullTxt = "\(agoDate)" + " via " + currentArticle.source!
+                        let attributedWithTextColor: NSAttributedString = fullTxt.attributedStringWithColor([currentArticle.source!], color: UIColor.red)
+                        cellOdd.lblSource.attributedText = attributedWithTextColor
+                    }
                 }
+                let imgURL = APPURL.imageServer + imgWidth + "x" + imgHeight + "/smart/" + currentArticle.imageURL!
+                cellOdd.imgNews.sd_setImage(with: URL(string: imgURL), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
+                if textSizeSelected == 0{
+                    cellOdd.lblSource.font = FontConstants.smallFontContent
+                    cellOdd.lblNewsHeading.font = FontConstants.smallFontHeadingBold
+                }
+                else if textSizeSelected == 2{
+                    cellOdd.lblSource.font = FontConstants.LargeFontContent
+                    cellOdd.lblNewsHeading.font = FontConstants.LargeFontHeadingBold
+                }
+                else{
+                    cellOdd.lblSource.font =  FontConstants.NormalFontContent
+                    cellOdd.lblNewsHeading.font = FontConstants.NormalFontHeadingBold
+                }
+                
+                if cellOdd.imgNews.image == nil{
+                    cellOdd.imgNews.image = UIImage(named: AssetConstants.NoImage)
+                }
+                
+                activityIndicator.stopAnimating()
+                lblNonews.isHidden = true
+                return cellOdd
             }
-            let imgURL = APPURL.imageServer + imgWidth + "x" + imgHeight + "/smart/" + currentArticle.imageURL!
-            cell.imgNews.sd_setImage(with: URL(string: imgURL), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
-            
-            if textSizeSelected == 0{
-                cell.lblSource.font = FontConstants.smallFontContent
-                cell.lblNewsHeading.font = FontConstants.smallFontHeadingBold
-            }
-            else if textSizeSelected == 2{
-                cell.lblSource.font = FontConstants.LargeFontContent
-                cell.lblNewsHeading.font = FontConstants.LargeFontHeadingBold
-            }
-            else{
-                cell.lblSource.font =  FontConstants.NormalFontContent
-                cell.lblNewsHeading.font = FontConstants.NormalFontHeadingBold
-            }
-            
-            if cell.imgNews.image == nil{
-                cell.imgNews.image = UIImage(named: AssetConstants.NoImage)
-            }
-            
-            activityIndicator.stopAnimating()
-            lblNonews.isHidden = true
-            return cell
         }
-        else{
-            cellOdd.imgNews.layer.cornerRadius = 10.0
-            cellOdd.imgNews.clipsToBounds = true
+        else {
+            currentArticle = ShowArticle[indexPath.row]
+            let cellCluster = tableView.dequeueReusableCell(withIdentifier: "ClusterTVCellID", for:indexPath) as! ClusterTVCell
+            var count = DBManager().showCount(articleId: Int(currentArticle.article_id))
+            imgWidth = String(describing : Int(cellCluster.imgNews.frame.width))
+            imgHeight = String(describing : Int(cellCluster.imgNews.frame.height))
+            cellCluster.imgNews.layer.cornerRadius = 10.0
+            cellCluster.imgNews.clipsToBounds = true
+            
             //display data from DB
-            let currentArticle = sortedData[indexPath.row]
-            cellOdd.lblNewsHeading.text = currentArticle.title
+            cellHeight = 350
+            
+            cellCluster.lblNewsHeading.text = currentArticle.title
             
             if  darkModeStatus == true{
-                cellOdd.ViewCellBackground.backgroundColor = colorConstants.grayBackground2
-                cellOdd.lblSource.textColor = colorConstants.nightModeText
-                cellOdd.lblNewsHeading.textColor = colorConstants.nightModeText
+                cellCluster.ViewCellBackground.backgroundColor = colorConstants.grayBackground2
+                cellCluster.lblSource.textColor = colorConstants.nightModeText
+                cellCluster.lblNewsHeading.textColor = colorConstants.nightModeText
                 NightNight.theme =  .night
             }
             else{
-                cellOdd.ViewCellBackground.backgroundColor = .white
-                cellOdd.lblSource.textColor = colorConstants.blackColor
-                cellOdd.lblNewsHeading.textColor = colorConstants.blackColor
+                cellCluster.ViewCellBackground.backgroundColor = .white
+                cellCluster.lblSource.textColor = colorConstants.blackColor
+                cellCluster.lblNewsHeading.textColor = colorConstants.blackColor
                 NightNight.theme =  .normal
             }
-            
-            if ((currentArticle.published_on?.count)!) <= 20{
+            if (currentArticle.published_on?.count)! <= 20 {
                 if !(currentArticle.published_on?.contains("Z"))!{
                     currentArticle.published_on?.append("Z")
                 }
@@ -411,7 +628,7 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
                     agoDate = try Helper().timeAgoSinceDate(newDate!)
                     fullTxt = "\(agoDate)" + " via " + currentArticle.source!
                     let attributedWithTextColor: NSAttributedString = fullTxt.attributedStringWithColor([currentArticle.source!], color: UIColor.red)
-                    cellOdd.lblSource.attributedText = attributedWithTextColor
+                    cellCluster.lblSource.attributedText = attributedWithTextColor
                 }
             }
             else{
@@ -425,31 +642,35 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
                     agoDate = try Helper().timeAgoSinceDate(newDate!)
                     fullTxt = "\(agoDate)" + " via " + currentArticle.source!
                     let attributedWithTextColor: NSAttributedString = fullTxt.attributedStringWithColor([currentArticle.source!], color: UIColor.red)
-                    cellOdd.lblSource.attributedText = attributedWithTextColor
+                    cellCluster.lblSource.attributedText = attributedWithTextColor
                 }
             }
             let imgURL = APPURL.imageServer + imgWidth + "x" + imgHeight + "/smart/" + currentArticle.imageURL!
-            cellOdd.imgNews.sd_setImage(with: URL(string: imgURL), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
+            cellCluster.imgNews.sd_setImage(with: URL(string: imgURL), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
+            cellCluster.lblCount.text = String(count)
             if textSizeSelected == 0{
-                cellOdd.lblSource.font = FontConstants.smallFontContent
-                cellOdd.lblNewsHeading.font = FontConstants.smallFontHeadingBold
+                cellCluster.lblSource.font = FontConstants.smallFontContent
+                cellCluster.lblNewsHeading.font = FontConstants.smallFontHeadingBold
+                cellCluster.lblCount.font = FontConstants.smallFontHeadingBold
             }
             else if textSizeSelected == 2{
-                cellOdd.lblSource.font = FontConstants.LargeFontContent
-                cellOdd.lblNewsHeading.font = FontConstants.LargeFontHeadingBold
+                cellCluster.lblSource.font = FontConstants.LargeFontContent
+                cellCluster.lblNewsHeading.font = FontConstants.LargeFontHeadingBold
+                cellCluster.lblCount.font = FontConstants.LargeFontHeadingBold
             }
             else{
-                cellOdd.lblSource.font =  FontConstants.NormalFontContent
-                cellOdd.lblNewsHeading.font = FontConstants.NormalFontHeadingBold
+                cellCluster.lblSource.font =  FontConstants.NormalFontContent
+                cellCluster.lblNewsHeading.font = FontConstants.NormalFontHeadingBold
+                cellCluster.lblCount.font = FontConstants.NormalFontHeadingBold
             }
             
-            if cellOdd.imgNews.image == nil{
-                cellOdd.imgNews.image = UIImage(named: AssetConstants.NoImage)
+            if cellCluster.imgNews.image == nil{
+                cellCluster.imgNews.image = UIImage(named: AssetConstants.NoImage)
             }
             
             activityIndicator.stopAnimating()
             lblNonews.isHidden = true
-            return cellOdd
+            return cellCluster
         }
     }
     
@@ -459,32 +680,45 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         if indexPath.row == tableView.numberOfRows(inSection: indexPath.section) - 1 {
-            var submenu = UserDefaults.standard.value(forKey: "submenu") as! String
-            if ShowArticle.count >= 20{
-                if isAPICalled == false{
-                    let result =  DBManager().FetchNextURL(category: submenu)
-                    switch result {
-                    case .Success(let DBData) :
-                        let nextURL = DBData
-                        
-                        if nextURL.count != 0{
-                            isAPICalled = false
-                            if nextURL[0].category == submenu {
-                                let nexturl = nextURL[0].nextURL
-                                UserDefaults.standard.set(nexturl, forKey: "submenuURL")
-                                self.saveArticlesInDB()
+            if isTrendingDetail == 0 &&  tabBarTitle != "Test"{
+                var submenu = UserDefaults.standard.value(forKey: "submenu") as! String
+                if ShowArticle.count >= 20{
+                    if isAPICalled == false{
+                        let result =  DBManager().FetchNextURL(category: submenu)
+                        switch result {
+                        case .Success(let DBData) :
+                            let nextURL = DBData
+                            
+                            if nextURL.count != 0{
+                                isAPICalled = false
+                                if nextURL[0].category == submenu {
+                                    let nexturl = nextURL[0].nextURL
+                                    UserDefaults.standard.set(nexturl, forKey: "submenuURL")
+                                    self.saveArticlesInDB()
+                                }
                             }
+                            else{
+                                isAPICalled = true
+                                activityIndicator.stopAnimating()
+                            }
+                        case .Failure(let errorMsg) :
+                            print(errorMsg)
                         }
-                        else{
-                            isAPICalled = true
-                            activityIndicator.stopAnimating()
-                        }
-                    case .Failure(let errorMsg) :
-                        print(errorMsg)
                     }
                 }
             }
         }
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        var height:CGFloat = CGFloat()
+        if  isTrendingDetail == 0 || isTrendingDetail == 2{
+            height = 137
+        }
+        else{
+            height = 255
+        }
+        return height
     }
 }
 

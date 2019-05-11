@@ -92,7 +92,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
     
     func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
         let deviceTokenString = deviceToken.hexString
-        print("deviceTokenString: \(deviceTokenString)")
         UserDefaults.standard.set(deviceTokenString, forKey: "deviceToken")
     }
     
@@ -115,16 +114,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
             UserDefaults.standard.set(email, forKey: "email")
             UserDefaults.standard.set(givenName, forKey: "first_name")
             UserDefaults.standard.set(familyName, forKey: "last_name")
-            // ...
-            print("\(userId!) \n \(idToken) \n \(fullName!) \n \(email!) \n \(pic)")
-            print("google sign in successful..")
+
             if UserDefaults.standard.value(forKey: "googleToken") != nil{
                 let param = ["provider" : "google",
                              "token_id" : UserDefaults.standard.value(forKey: "googleToken") as! String,
                              "device_id" : UserDefaults.standard.value(forKey: "deviceToken") as! String,
                              "device_name": "ios"]
                 APICall().SocialLoginAPI(param : param){(status,response) in
-                    print("google Login response:\(response)")
                     if response == "1"{
                         UserDefaults.standard.set(true, forKey: "isWalkthroughShown")
                         let check = UserDefaults.standard.value(forKey: "isSettingsLogin") as! Bool
