@@ -86,6 +86,10 @@ class PageControlVC: UIViewController, UIScrollViewDelegate {
     @IBAction func btnGetStartedActn(_ sender: Any) {
         UserDefaults.standard.set(true, forKey: "isWalkthroughShown")
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
+      
+        let loginView: HomeParentVC = storyboard.instantiateViewController(withIdentifier: "HomeParentID") as! HomeParentVC
+        UIApplication.shared.keyWindow?.rootViewController = loginView
+       
         let parentvc:HomeParentVC = storyboard.instantiateViewController(withIdentifier: "HomeParentID") as! HomeParentVC
         
         present(parentvc, animated: true, completion: nil)

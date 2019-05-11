@@ -47,9 +47,9 @@ class SearchVC: UIViewController {
         }
         if UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad && statusBarOrientation.isPortrait{
             if Searchresults.count <= 0{
-            searchResultTV.isHidden = false
-            searchResultCV.isHidden = true
-            
+                searchResultTV.isHidden = false
+                searchResultCV.isHidden = true
+                
             }else{
                 searchResultTV.isHidden = true
                 searchResultCV.isHidden = false
@@ -422,17 +422,19 @@ extension SearchVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDele
         if indexPath.row == tableView.numberOfRows(inSection: indexPath.section) - 1 {
             var keyword = ""
             if UserDefaults.standard.value(forKey: "searchTxt") != nil{
-             keyword =  UserDefaults.standard.value(forKey: "searchTxt") as! String
+                keyword =  UserDefaults.standard.value(forKey: "searchTxt") as! String
             }
             let result =  DBManager().FetchNextURL(category: keyword)
             switch result {
             case .Success(let DBData) :
                 let nextURL = DBData
-                if nextURL.count != 0{
+                if nextURL.count > 0{
                     if nextURL[0].category == keyword{
                         let nexturl = nextURL[0].nextURL
                         if isResultLoaded == false{
-                            self.saveArticlesInDB(url : nexturl!)
+                            if Reachability.isConnectedToNetwork(){
+                                self.saveArticlesInDB(url : nexturl!)
+                            }
                         }
                     }
                 }
@@ -444,7 +446,7 @@ extension SearchVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDele
             }
         }
     }
-
+    
 }
 
 extension SearchVC: UICollectionViewDelegate, UICollectionViewDataSource{
@@ -551,11 +553,11 @@ extension SearchVC: UICollectionViewDelegate, UICollectionViewDataSource{
             let contentYoffset = scrollView.contentOffset.y
             let distanceFromBottom = scrollView.contentSize.height - contentYoffset
             if distanceFromBottom < height {
-                if recordCount > 0 {
-                    if isResultLoaded == false{
-                        activityIndicator.startAnimating()
-                    }
-                }
+                //                if recordCount > 0 {
+                //                    if isResultLoaded == false{
+                //                        activityIndicator.startAnimating()
+                //                    }
+                //                }
             }
             
         }else{
@@ -569,7 +571,9 @@ extension SearchVC: UICollectionViewDelegate, UICollectionViewDataSource{
                         if nextURL[0].category == keyword{
                             let nexturl = nextURL[0].nextURL
                             if isResultLoaded == false{
-                                self.saveArticlesInDB(url : nexturl!)
+                                if Reachability.isConnectedToNetwork(){
+                                    self.saveArticlesInDB(url : nexturl!)
+                                }
                             }
                         }
                     }
@@ -639,21 +643,25 @@ extension SearchVC: UITextFieldDelegate{
                     recordCount = 0
                     DBManager().saveSearchHistory(keyword: txtSearch.text!)
                     searchResultCV.reloadData()
-                    DBManager().deleteSearchNextURl()
-                    search = search.replacingOccurrences(of: " ", with: "%20")
-                    let url = APPURL.SearchURL + search
-                    
-                    DBManager().deleteAllData(entity: "SearchArticles")
-                    if isResultLoaded == false{
-                        saveArticlesInDB(url: url)
-                    }
-                    if UserDefaults.standard.value(forKey: "token") != nil{
-                        let BookmarkRecordCount = DBManager().IsCoreDataEmpty(entity: "BookmarkArticles")
-                        let LikeRecordCount = DBManager().IsCoreDataEmpty(entity: "LikeDislike")
-                        if BookmarkRecordCount != 0 || LikeRecordCount != 0{
-                            fetchBookmarkDataFromDB()
-                            
+                    if Reachability.isConnectedToNetwork(){
+                        DBManager().deleteSearchNextURl()
+                        search = search.replacingOccurrences(of: " ", with: "%20")
+                        let url = APPURL.SearchURL + search
+                        
+                        DBManager().deleteAllData(entity: "SearchArticles")
+                        if isResultLoaded == false{
+                            saveArticlesInDB(url: url)
                         }
+                        if UserDefaults.standard.value(forKey: "token") != nil{
+                            let BookmarkRecordCount = DBManager().IsCoreDataEmpty(entity: "BookmarkArticles")
+                            let LikeRecordCount = DBManager().IsCoreDataEmpty(entity: "LikeDislike")
+                            if BookmarkRecordCount != 0 || LikeRecordCount != 0{
+                                fetchBookmarkDataFromDB()
+                                
+                            }
+                        }
+                    }else{
+                        fetchResult()
                     }
                 }
             }
@@ -696,7 +704,7 @@ extension SearchVC: UITextFieldDelegate{
     }
     
     func fetchResult(){
-        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "NewsArticle")
+        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "SearchArticles")
         fetchRequest.predicate = NSPredicate(format: "title CONTAINS[c] %@ OR blurb CONTAINS[c] %@",txtSearch.text!, txtSearch.text!)
         let managedContext =
             appDelegate?.persistentContainer.viewContext
@@ -706,6 +714,9 @@ extension SearchVC: UITextFieldDelegate{
             recordCount = Searchresults.count
             if recordCount == 0 {
                 lblNoNews.isHidden = false
+                activityIndicator.stopAnimating()
+            }else{
+                lblNoNews.isHidden = true
             }
             if searchResultTV.isHidden == false{
                 searchResultTV.reloadData()
