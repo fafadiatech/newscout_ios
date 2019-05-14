@@ -332,7 +332,7 @@ open class ExampleBaseButtonBarPagerTabStripViewController: BaseButtonBarPagerTa
         buttonBarItemSpec = .nibFile(nibName: "ButtonCell", bundle: bundle, width: { [weak self] (childItemInfo) -> CGFloat in
             let label = UILabel()
             label.translatesAutoresizingMaskIntoConstraints = false
-            label.font = self?.settings.style.buttonBarItemFont ?? UIFont(name:"HelveticaNeue-Light", size: 20.0)
+            label.font = self?.settings.style.buttonBarItemFont ?? UIFont(name:"HelveticaNeue-Bold", size: 20.0)
             label.text = childItemInfo.title
             let labelSize = label.intrinsicContentSize
             return labelSize.width + CGFloat(self?.settings.style.buttonBarItemLeftRightMargin ?? 8 * 2)

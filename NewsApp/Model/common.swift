@@ -31,15 +31,15 @@ struct FontConstants{
     static let fontxLarge:CGFloat = isPhone ? 16:22 //16
     static let fontxNormal:CGFloat = isPhone ? 15 :20 //14
     static let fontxSmall:CGFloat = isPhone ? 12 :18 //12
-    static let fontLargeHeading:CGFloat = isPhone ? 21:24 //25
-    static let fontNormalHeading:CGFloat = isPhone ? 19 :22 //22
-    static let fontSmallHeading:CGFloat = isPhone ? 17 :21 //18
+    static let fontLargeHeading:CGFloat = isPhone ? 21:20 //25
+    static let fontNormalHeading:CGFloat = isPhone ? 19 :18 //22
+    static let fontSmallHeading:CGFloat = isPhone ? 17 :17 //18
     static let fontLargeTitle:CGFloat = isPhone ? 21:26 //21
     static let fontNormalTitle:CGFloat = isPhone ? 17 :25//18
     static let fontSmallTitle:CGFloat = isPhone ? 14 :20 //14
-    static let fontLargeContent:CGFloat = isPhone ? 18 :21 //18
-    static let fontNormalContent:CGFloat = isPhone ? 16 :19 //14
-    static let fontSmallContent:CGFloat = isPhone ? 14 :17 //10
+    static let fontLargeContent:CGFloat = isPhone ? 18 :19 //18
+    static let fontNormalContent:CGFloat = isPhone ? 16 :16 //14
+    static let fontSmallContent:CGFloat = isPhone ? 14 :15 //10
     static let fontNormalBtn: CGFloat = isPhone ? 18 :26
     static let fontViewTitle:CGFloat = isPhone ? 23 : 35
     static let fontSettingsTVHeader:CGFloat = isPhone ? 20 : 23
@@ -142,6 +142,7 @@ struct AssetConstants{
     static let searchBlack = "search_black"
     static let menuBlack = "menublack"
     static let menuWhite = "menuwhite"
+    static let submenuBackground = "submenuBack"
 }
 
 struct AppFontName {
