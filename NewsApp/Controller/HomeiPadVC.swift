@@ -588,7 +588,7 @@ extension HomeiPadVC: UICollectionViewDelegate, UICollectionViewDataSource, UISc
 
 extension HomeiPadVC: IndicatorInfoProvider{
     func indicatorInfo(for pagerTabStripController: PagerTabStripViewController) -> IndicatorInfo {
-        return IndicatorInfo(title: tabBarTitle)
+        return IndicatorInfo(title: tabBarTitle, image: UIImage(named: AssetConstants.submenuBackground))
     }
 }
 extension HomeiPadVC: UICollectionViewDelegateFlowLayout {
@@ -596,9 +596,9 @@ extension HomeiPadVC: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let collectionCellSize = HomeNewsCV.frame.size.width
         if isTrendingDetail == 0 || isTrendingDetail == 2{
-            return CGSize(width: collectionCellSize/3.4, height: collectionCellSize/3)
+            return CGSize(width: collectionCellSize/3.3, height: collectionCellSize/3)
         }else{
-            return CGSize(width: collectionCellSize/2.2, height: collectionCellSize/2)
+            return CGSize(width: collectionCellSize/2.15, height: collectionCellSize/2)
         }
     }
 }
