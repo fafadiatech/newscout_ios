@@ -356,6 +356,13 @@
 			path = "helvetica-neue-cufonfonts";
 			sourceTree = "<group>";
 		};
+		26B37236228BE13E00AD3F6C /* New Group */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = "New Group";
+			sourceTree = "<group>";
+		};
 		421ADFAC2156407400C00F6F = {
 			isa = PBXGroup;
 			children = (
@@ -504,6 +511,7 @@
 		751AA94FE954FC04A000ABB5 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
+				26B37236228BE13E00AD3F6C /* New Group */,
 				D2728CD09D4106E0B1B64696 /* Pods-NewsApp.debug.xcconfig */,
 				B4E2A515011B7DEE6BB2C6C0 /* Pods-NewsApp.release.xcconfig */,
 				25A121A35B86B7FFE6946B9D /* Pods-NewsAppTests.debug.xcconfig */,
