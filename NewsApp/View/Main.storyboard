@@ -181,6 +181,26 @@
                                     <outlet property="delegate" destination="SXV-EA-KWG" id="5MV-2o-zC2"/>
                                 </connections>
                             </collectionView>
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="T1n-KR-odW">
+                                <rect key="frame" x="20" y="285" width="375" height="454"/>
+                                <subviews>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vYr-jl-1vn">
+                                        <rect key="frame" x="362" y="26" width="44" height="37"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <accessibility key="accessibilityConfiguration">
+                                            <bool key="isElement" value="YES"/>
+                                        </accessibility>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="37" id="YyI-Fo-cHs"/>
+                                            <constraint firstAttribute="width" constant="44" id="tDO-pp-tAM"/>
+                                        </constraints>
+                                    </view>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstItem="vYr-jl-1vn" firstAttribute="top" secondItem="T1n-KR-odW" secondAttribute="top" constant="26" id="2wk-OL-IhB"/>
+                                    <constraint firstItem="vYr-jl-1vn" firstAttribute="centerX" secondItem="T1n-KR-odW" secondAttribute="centerX" id="S93-mw-aXI"/>
+                                </constraints>
+                            </scrollView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="PfP-yG-u4f">
                                 <rect key="frame" x="443" y="74.5" width="315" height="180"/>
                                 <subviews>
@@ -303,13 +323,13 @@
                                         </constraints>
                                     </view>
                                 </subviews>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="backgroundColor" red="0.75294117650000003" green="0.75294117650000003" blue="0.75294117650000003" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
+                                    <constraint firstItem="MPH-DH-2YJ" firstAttribute="height" secondItem="PfP-yG-u4f" secondAttribute="height" multiplier="0.33" id="1Lb-is-C08"/>
                                     <constraint firstItem="8Ip-GX-jOR" firstAttribute="top" secondItem="MtJ-Pr-sZa" secondAttribute="bottom" id="9Lt-Mw-11G"/>
                                     <constraint firstAttribute="trailing" secondItem="MPH-DH-2YJ" secondAttribute="trailing" id="A1m-bR-bmU"/>
                                     <constraint firstItem="8Ip-GX-jOR" firstAttribute="height" secondItem="MPH-DH-2YJ" secondAttribute="height" id="HqW-Xy-luT"/>
                                     <constraint firstAttribute="trailing" secondItem="MtJ-Pr-sZa" secondAttribute="trailing" id="QFc-bX-4f0"/>
-                                    <constraint firstItem="MPH-DH-2YJ" firstAttribute="height" secondItem="PfP-yG-u4f" secondAttribute="height" multiplier="0.33" id="RhG-Or-flD"/>
                                     <constraint firstItem="MtJ-Pr-sZa" firstAttribute="top" secondItem="MPH-DH-2YJ" secondAttribute="bottom" id="TLi-dw-ulD"/>
                                     <constraint firstAttribute="trailing" secondItem="8Ip-GX-jOR" secondAttribute="trailing" id="VfO-lR-t74"/>
                                     <constraint firstItem="MPH-DH-2YJ" firstAttribute="leading" secondItem="PfP-yG-u4f" secondAttribute="leading" id="fIr-p1-m8A"/>
@@ -319,26 +339,6 @@
                                     <constraint firstItem="MtJ-Pr-sZa" firstAttribute="leading" secondItem="PfP-yG-u4f" secondAttribute="leading" id="xDR-8C-HMS"/>
                                 </constraints>
                             </view>
-                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="T1n-KR-odW">
-                                <rect key="frame" x="20" y="285" width="375" height="454"/>
-                                <subviews>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vYr-jl-1vn">
-                                        <rect key="frame" x="362" y="26" width="44" height="37"/>
-                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        <accessibility key="accessibilityConfiguration">
-                                            <bool key="isElement" value="YES"/>
-                                        </accessibility>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="37" id="YyI-Fo-cHs"/>
-                                            <constraint firstAttribute="width" constant="44" id="tDO-pp-tAM"/>
-                                        </constraints>
-                                    </view>
-                                </subviews>
-                                <constraints>
-                                    <constraint firstItem="vYr-jl-1vn" firstAttribute="top" secondItem="T1n-KR-odW" secondAttribute="top" constant="26" id="2wk-OL-IhB"/>
-                                    <constraint firstItem="vYr-jl-1vn" firstAttribute="centerX" secondItem="T1n-KR-odW" secondAttribute="centerX" id="S93-mw-aXI"/>
-                                </constraints>
-                            </scrollView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
@@ -349,7 +349,7 @@
                             <constraint firstItem="T1n-KR-odW" firstAttribute="trailing" secondItem="M4R-z8-CWN" secondAttribute="trailing" id="HZX-f8-YrB"/>
                             <constraint firstItem="T1n-KR-odW" firstAttribute="top" secondItem="ocm-su-HUj" secondAttribute="bottom" constant="10" id="OhR-SJ-l66"/>
                             <constraint firstItem="PfP-yG-u4f" firstAttribute="top" secondItem="uzw-Xq-ysg" secondAttribute="bottom" id="Poe-gA-1ob"/>
-                            <constraint firstItem="PfP-yG-u4f" firstAttribute="height" secondItem="ao8-14-oL8" secondAttribute="height" multiplier="2.4" id="STt-vx-urT"/>
+                            <constraint firstItem="PfP-yG-u4f" firstAttribute="height" secondItem="ocm-su-HUj" secondAttribute="height" multiplier="3" id="STt-vx-urT"/>
                             <constraint firstItem="vYM-Wx-vng" firstAttribute="leading" secondItem="M4R-z8-CWN" secondAttribute="leading" id="Sbv-Rb-U0X"/>
                             <constraint firstAttribute="trailing" secondItem="PfP-yG-u4f" secondAttribute="trailing" constant="10" id="ZA2-3K-Oj9"/>
                             <constraint firstItem="sUJ-CI-G9s" firstAttribute="top" secondItem="T1n-KR-odW" secondAttribute="bottom" id="Zs5-qW-Qic"/>
