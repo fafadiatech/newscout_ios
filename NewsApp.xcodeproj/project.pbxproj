@@ -66,10 +66,13 @@
 		2685CF17216DDEB300C2CECF /* HelveticaNeueBoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2685CF0E216DDEB300C2CECF /* HelveticaNeueBoldItalic.ttf */; };
 		268C112321E4C0F300C76B9C /* BookmarkVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 268C112221E4C0F200C76B9C /* BookmarkVC.swift */; };
 		268C112521E4C36E00C76B9C /* BookmarkTVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 268C112421E4C36E00C76B9C /* BookmarkTVCell.swift */; };
+		268D4095228C447C0018C3EF /* ParentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 268D4094228C447C0018C3EF /* ParentViewController.swift */; };
 		2690F3CC21BF8C12003E65CA /* SettingsTVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2690F3CB21BF8C12003E65CA /* SettingsTVCell.swift */; };
 		26A98E8C2272CCBC0048CD93 /* HomeiPadClusterCVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26A98E8B2272CCBC0048CD93 /* HomeiPadClusterCVCell.swift */; };
 		26ACEA94216733BA000EF3C7 /* CategoryListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26ACEA93216733BA000EF3C7 /* CategoryListVC.swift */; };
 		26ACEA96216738BB000EF3C7 /* CategoryListTVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26ACEA95216738BB000EF3C7 /* CategoryListTVCell.swift */; };
+		26B0B8D5228D25E900012B05 /* menuCVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26B0B8D3228D25E900012B05 /* menuCVCell.swift */; };
+		26B0B8D8228D3D7800012B05 /* NewsubmenuCVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26B0B8D7228D3D7800012B05 /* NewsubmenuCVCell.swift */; };
 		26BEF806222E77700002DEBD /* MenuHashTag+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26BEF800222E77700002DEBD /* MenuHashTag+CoreDataClass.swift */; };
 		26BEF807222E77700002DEBD /* MenuHashTag+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26BEF801222E77700002DEBD /* MenuHashTag+CoreDataProperties.swift */; };
 		26BEF80A222E77700002DEBD /* MenuHeadings+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26BEF804222E77700002DEBD /* MenuHeadings+CoreDataClass.swift */; };
@@ -196,10 +199,13 @@
 		2685CF0E216DDEB300C2CECF /* HelveticaNeueBoldItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = HelveticaNeueBoldItalic.ttf; sourceTree = "<group>"; };
 		268C112221E4C0F200C76B9C /* BookmarkVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkVC.swift; sourceTree = "<group>"; };
 		268C112421E4C36E00C76B9C /* BookmarkTVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkTVCell.swift; sourceTree = "<group>"; };
+		268D4094228C447C0018C3EF /* ParentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParentViewController.swift; sourceTree = "<group>"; };
 		2690F3CB21BF8C12003E65CA /* SettingsTVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTVCell.swift; sourceTree = "<group>"; };
 		26A98E8B2272CCBC0048CD93 /* HomeiPadClusterCVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeiPadClusterCVCell.swift; sourceTree = "<group>"; };
 		26ACEA93216733BA000EF3C7 /* CategoryListVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryListVC.swift; sourceTree = "<group>"; };
 		26ACEA95216738BB000EF3C7 /* CategoryListTVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryListTVCell.swift; sourceTree = "<group>"; };
+		26B0B8D3228D25E900012B05 /* menuCVCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = menuCVCell.swift; sourceTree = "<group>"; };
+		26B0B8D7228D3D7800012B05 /* NewsubmenuCVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsubmenuCVCell.swift; sourceTree = "<group>"; };
 		26BEF800222E77700002DEBD /* MenuHashTag+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MenuHashTag+CoreDataClass.swift"; sourceTree = "<group>"; };
 		26BEF801222E77700002DEBD /* MenuHashTag+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MenuHashTag+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		26BEF804222E77700002DEBD /* MenuHeadings+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MenuHeadings+CoreDataClass.swift"; sourceTree = "<group>"; };
@@ -457,6 +463,7 @@
 				421ADFBA2156407400C00F6F /* HomeVC.swift */,
 				421ADFEF21566FE000C00F6F /* NewsDetailVC.swift */,
 				42D12BF1215A0AEB0085EF12 /* SearchVC.swift */,
+				268D4094228C447C0018C3EF /* ParentViewController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -464,6 +471,8 @@
 		421ADFEB2156553500C00F6F /* Cell */ = {
 			isa = PBXGroup;
 			children = (
+				26B0B8D7228D3D7800012B05 /* NewsubmenuCVCell.swift */,
+				26B0B8D3228D25E900012B05 /* menuCVCell.swift */,
 				26DFABFE2282F3BD00F7C106 /* searchSuggestionTVCell.swift */,
 				26A98E8B2272CCBC0048CD93 /* HomeiPadClusterCVCell.swift */,
 				263519822267427C00A99ACA /* ClusterTVCell.swift */,
@@ -839,6 +848,7 @@
 				421ADFB92156407400C00F6F /* AppDelegate.swift in Sources */,
 				263421F12162310D00C8510F /* LoginVC.swift in Sources */,
 				26DE849C2223CC1C000A32F7 /* PeriodicTags+CoreDataClass.swift in Sources */,
+				26B0B8D5228D25E900012B05 /* menuCVCell.swift in Sources */,
 				264E304B2229151E00F73147 /* submenuCVCell.swift in Sources */,
 				260FB9CC2221656F008B0291 /* HashTag+CoreDataProperties.swift in Sources */,
 				266C6B302158C2B6009A0A9D /* SearchResultTVCell.swift in Sources */,
@@ -850,6 +860,7 @@
 				260FB9D32221656F008B0291 /* SearchArticles+CoreDataClass.swift in Sources */,
 				26DFABFF2282F3BD00F7C106 /* searchSuggestionTVCell.swift in Sources */,
 				261AA131217F40D20044585C /* APIManager.swift in Sources */,
+				26B0B8D8228D3D7800012B05 /* NewsubmenuCVCell.swift in Sources */,
 				263D53FA22572A0B007A4781 /* HomeipadCVCell.swift in Sources */,
 				263421EF216230F900C8510F /* SignUpVC.swift in Sources */,
 				260FB9D02221656F008B0291 /* BookmarkArticles+CoreDataProperties.swift in Sources */,
@@ -872,6 +883,7 @@
 				26BEF80E222E7C9F0002DEBD /* HeadingSubMenu+CoreDataClass.swift in Sources */,
 				2651D7D5225F1A6D005FCE6B /* searchResultCVCell.swift in Sources */,
 				42D12BF4215A0FA60085EF12 /* common.swift in Sources */,
+				268D4095228C447C0018C3EF /* ParentViewController.swift in Sources */,
 				263F2D8F216B2DEE00764C45 /* DataModel.swift in Sources */,
 				26DFABFB2282E4F300F7C106 /* SearchHistory+CoreDataProperties.swift in Sources */,
 				26BEF80F222E7C9F0002DEBD /* HeadingSubMenu+CoreDataProperties.swift in Sources */,
