@@ -22,6 +22,7 @@ class ParentViewController: UIViewController {
     @IBOutlet var menuCV: UICollectionView!
     @IBOutlet var submenuCV: UICollectionView!
     @IBOutlet weak var lblNonews: UILabel!
+    @IBOutlet weak var HomeNewsTVTop: NSLayoutConstraint!
     let activityIndicator = MDCActivityIndicator()
     var headingArr : [String] = []
     var headingIds : [Int] = []
@@ -32,7 +33,6 @@ class ParentViewController: UIViewController {
     var submenuIndexArr = [[String]]()
     var submenuID = 0
     var protocolObj : ScrollDelegate?
-    var trendingProtocol : TrendingBack?
     var tabBarTitle: String = ""
     var ShowArticle = [NewsArticle]()
     var clusterArticles = [NewsArticle]()
@@ -52,12 +52,14 @@ class ParentViewController: UIViewController {
     var cellHeight:CGFloat = CGFloat()
     var isTrendingDetail = 0
     var submenuName = ""
+    var menuName = ""
     var isSwipeLeft = false
     var currentIndexPath: IndexPath?
     var menuIndexPath: IndexPath?
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        HideButtonBarView()
         btnBack.isHidden = true
         lblNonews.isHidden = true
         lblAppTitle.text = Constants.AppName
@@ -74,6 +76,7 @@ class ParentViewController: UIViewController {
         if UserDefaults.standard.value(forKey: "textSize") == nil{
             UserDefaults.standard.set(1, forKey: "textSize")
         }
+        saveTrending()
         saveFetchMenu()
             //Add a left swipe gesture recognizer
         var recognizer = UISwipeGestureRecognizer(target: self, action: #selector(self.handleSwipeLeft(_:)))
@@ -108,6 +111,11 @@ class ParentViewController: UIViewController {
        
         // Do any additional setup after loading the view.
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+     
+    }
     override var prefersStatusBarHidden: Bool {
         return true
     }
@@ -141,7 +149,33 @@ class ParentViewController: UIViewController {
         }
     }
   
-  
+    func HideButtonBarView(){
+        if HomeNewsTVTop != nil{
+            NSLayoutConstraint.deactivate([HomeNewsTVTop])
+            HomeNewsTVTop = NSLayoutConstraint (item: HomeNewsTV,
+                                                attribute: NSLayoutConstraint.Attribute.top,
+                                                relatedBy: NSLayoutConstraint.Relation.equal,
+                                                toItem: menuCV,
+                                                attribute: NSLayoutConstraint.Attribute.bottom,
+                                                multiplier: 1,
+                                                constant: 0)
+            NSLayoutConstraint.activate([HomeNewsTVTop])
+        }
+    }
+    
+    func unhideButtonBarView(){
+        if HomeNewsTVTop != nil{
+            NSLayoutConstraint.deactivate([HomeNewsTVTop])
+            HomeNewsTVTop = NSLayoutConstraint (item: HomeNewsTV as Any,
+                                                attribute: NSLayoutConstraint.Attribute.top,
+                                                relatedBy: NSLayoutConstraint.Relation.equal,
+                                                toItem: submenuCV,
+                                                attribute: NSLayoutConstraint.Attribute.bottom,
+                                                multiplier: 1,
+                                                constant: 10)
+            NSLayoutConstraint.activate([HomeNewsTVTop])
+        }
+    }
     func swipeActn(){
         lblNonews.isHidden = true
         activityIndicator.startAnimating()
@@ -185,18 +219,74 @@ class ParentViewController: UIViewController {
     @objc func refreshNews(refreshControl: UIRefreshControl) {
         activityIndicator.startAnimating()
         DispatchQueue.global(qos: .userInitiated).async {
-          //  if self.isTrendingDetail == 0{
+            if self.isTrendingDetail == 0{
                 self.saveArticlesInDB()
-//            }
-//            else if self.isTrendingDetail == 1{
-//                self.saveTrending()
-//            }
+            }
+            else if self.isTrendingDetail == 1{
+                self.saveTrending()
+            }
         }
         DispatchQueue.main.async {
             refreshControl.endRefreshing()
             self.activityIndicator.stopAnimating()
         }
     }
+    func retainClusterData(){
+        if isTrendingDetail ==  2{
+            ShowArticle = clusterArticles
+            HomeNewsTV.reloadData()
+        }
+    }
+    func saveTrending(){
+        DBManager().saveTrending{response in
+            if response == true{
+               // self.fetchTrending()
+            }
+        }
+    }
+    func fetchTrending(){
+        activityIndicator.startAnimating()
+        let result = DBManager().fetchTrendingArticle()
+        switch result {
+        case .Success(let DBData) :
+            self.ShowArticle.removeAll()
+            self.ShowArticle = DBData
+            if self.ShowArticle.count > 0{
+                self.lblNonews.isHidden = true
+                self.HomeNewsTV.reloadData()
+            }
+            else{
+                self.HomeNewsTV.reloadData()
+                self.lblNonews.isHidden =  false
+                self.activityIndicator.stopAnimating()
+            }
+        case .Failure(let errorMsg) :
+            print(errorMsg)
+        }
+    }
+    
+    //fetch articles of selected cluster
+    func fetchClusterIdArticles(clusterID: Int){
+        let result = DBManager().fetchClusterArticles(trendingId: clusterID)
+        switch result {
+        case .Success(let DBData) :
+            self.clusterArticles = DBData
+            if self.clusterArticles.count > 0{
+                self.lblNonews.isHidden = true
+                ShowArticle = DBData
+                self.HomeNewsTV.reloadData()
+                scrollToFirstRow()
+            }
+            else{
+                self.HomeNewsTV.reloadData()
+                self.lblNonews.isHidden =  false
+                self.activityIndicator.stopAnimating()
+            }
+        case .Failure(let errorMsg) :
+            print(errorMsg)
+        }
+    }
+    
     func saveFetchMenu(){
         let coredataRecordCount = DBManager().IsCoreDataEmpty(entity: "MenuHeadings")
         
@@ -231,6 +321,9 @@ class ParentViewController: UIViewController {
                 self.headingArr.append(i.headingName!)
                 self.headingIds.append(Int(i.headingId))
             }
+            headingArr.insert("Trending", at: 0)
+            headingIds.insert(00, at: 0)
+            isTrendingDetail = 1
             self.menuCV.reloadData()
             menuIndexPath = NSIndexPath(row: 0, section: 0) as IndexPath
             menuCV.selectItem(at: menuIndexPath, animated: true, scrollPosition: [])
@@ -256,10 +349,12 @@ class ParentViewController: UIViewController {
         case .Failure(let error) :
             print(error)
         }
-        submenuCV.reloadData()
-        currentIndexPath = NSIndexPath(row: 0, section: 0) as IndexPath
-        submenuCV.selectItem(at: currentIndexPath, animated: true, scrollPosition: [])
-        loadFirstNews()
+        
+//        submenuCV.reloadData()
+//        currentIndexPath = NSIndexPath(row: 0, section: 0) as IndexPath
+//        submenuCV.selectItem(at: currentIndexPath, animated: true, scrollPosition: [])
+//        loadFirstNews()
+        fetchTrending()
     }
     
     func loadFirstNews(){
@@ -354,7 +449,9 @@ class ParentViewController: UIViewController {
     @IBAction func btnSearchMenuActn(_ sender: Any) {
     }
     @IBAction func btnBackActn(_ sender: Any) {
-        self.dismiss(animated: false)
+        isTrendingDetail = 1
+        fetchTrending()
+        btnBack.isHidden = true
     }
 }
 
@@ -381,15 +478,26 @@ extension ParentViewController : UICollectionViewDelegate, UICollectionViewDataS
         }
     }
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        activityIndicator.startAnimating()
         if collectionView == menuCV{
-            HeadingRow = indexPath.row
-           // currentIndexPath = NSIndexPath(row: 0, section: 0) as IndexPath
+            
+            if headingArr[indexPath.row] != "Trending"{
+            currentIndexPath = NSIndexPath(row: 0, section: 0) as IndexPath
             //set first row selected by default
-            submenuCV.reloadData()
+                isTrendingDetail = 0
+                HeadingRow = indexPath.row - 1
+                unhideButtonBarView()
+                submenuCV.reloadData()
             subMenuRow = 0
             submenuName = subMenuArr[HeadingRow][subMenuRow]
             submenuCV.selectItem(at: currentIndexPath, animated: true, scrollPosition: [])
+                btnBack.isHidden = true
             reloadSubmenuNews()
+            }else{
+                HideButtonBarView()
+                isTrendingDetail = 1
+                fetchTrending()
+            }
         }else{
              self.currentIndexPath = indexPath
             subMenuRow = indexPath.row
@@ -427,14 +535,31 @@ extension ParentViewController: UITableViewDelegate, UITableViewDataSource, UISc
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let newsDetailvc:NewsDetailVC = storyboard.instantiateViewController(withIdentifier: "NewsDetailID") as! NewsDetailVC
+        
+        if isTrendingDetail == 0{
             UserDefaults.standard.set("home", forKey: "isSearch")
+        }else{
+            UserDefaults.standard.set("cluster", forKey: "isSearch")
+        }
+        if isTrendingDetail == 0 || isTrendingDetail == 2{
             if sortedData.count > 0 {
                 newsDetailvc.newsCurrentIndex = indexPath.row
-                newsDetailvc.ShowArticle = sortedData as! [NewsArticle]
+                newsDetailvc.ShowArticle = sortedData
                 newsDetailvc.articleId = Int(sortedData[indexPath.row].article_id)
                 present(newsDetailvc, animated: true, completion: nil)
-       
-    }
+            }
+        }
+        else{
+            var id = UserDefaults.standard.array(forKey: "trendingArray") as! [Int]
+            let selectedCluster = id[indexPath.row]
+            fetchClusterIdArticles(clusterID: selectedCluster)
+            isTrendingDetail = 2
+        }
+        if isTrendingDetail == 2 {
+            btnBack.isHidden = false
+        }else{
+            btnBack.isHidden = true
+        }
     }
         
     func scrollToFirstRow() {
@@ -456,7 +581,7 @@ extension ParentViewController: UITableViewDelegate, UITableViewDataSource, UISc
         var fullTxt = ""
         var dateSubString = ""
         var agoDate = ""
-        
+        if  isTrendingDetail == 0 || isTrendingDetail == 2{
             sortedData = ShowArticle.sorted{ $0.published_on! > $1.published_on! }
             currentArticle = sortedData[indexPath.row]
             if indexPath.row % 2 != 0{
@@ -469,13 +594,26 @@ extension ParentViewController: UITableViewDelegate, UITableViewDataSource, UISc
                 //display data from DB
                 cell.lblNewsHeading.text = currentArticle.title
                 
+                if  darkModeStatus == true{
+                    cell.ViewCellBackground.backgroundColor = colorConstants.grayBackground2
+                    cell.lblSource.textColor = colorConstants.nightModeText
+                    cell.lblNewsHeading.textColor = colorConstants.nightModeText
+                    
+                }
+                else{
+                    cell.ViewCellBackground.backgroundColor = .white
+                    cell.lblSource.textColor = colorConstants.blackColor
+                    cell.lblNewsHeading.textColor = colorConstants.blackColor
+                    
+                }
+                
                 if ((currentArticle.published_on?.count)!) <= 20{
                     if !(currentArticle.published_on?.contains("Z"))!{
                         currentArticle.published_on?.append("Z")
                     }
                     let newDate = dateFormatter.date(from: currentArticle.published_on!)
                     if newDate != nil{
-                        agoDate = try Helper().timeAgoSinceDate(newDate!)
+                        agoDate = Helper().timeAgoSinceDate(newDate!)
                         fullTxt = "\(agoDate)" + " via " + currentArticle.source!
                         let attributedWithTextColor: NSAttributedString = fullTxt.attributedStringWithColor([currentArticle.source!], color: UIColor.red)
                         cell.lblSource.attributedText = attributedWithTextColor
@@ -489,7 +627,7 @@ extension ParentViewController: UITableViewDelegate, UITableViewDataSource, UISc
                     let newDate = dateFormatter.date(from: dateSubString
                     )
                     if newDate != nil{
-                        agoDate = try Helper().timeAgoSinceDate(newDate!)
+                        agoDate = Helper().timeAgoSinceDate(newDate!)
                         fullTxt = "\(agoDate)" + " via " + currentArticle.source!
                         let attributedWithTextColor: NSAttributedString = fullTxt.attributedStringWithColor([currentArticle.source!], color: UIColor.red)
                         cell.lblSource.attributedText = attributedWithTextColor
@@ -528,6 +666,18 @@ extension ParentViewController: UITableViewDelegate, UITableViewDataSource, UISc
                 
                 cellOdd.lblNewsHeading.text = currentArticle.title
                 
+                if  darkModeStatus == true{
+                    cellOdd.ViewCellBackground.backgroundColor = colorConstants.grayBackground2
+                    cellOdd.lblSource.textColor = colorConstants.nightModeText
+                    cellOdd.lblNewsHeading.textColor = colorConstants.nightModeText
+                    // NightNight.theme =  .night
+                }
+                else{
+                    cellOdd.ViewCellBackground.backgroundColor = .white
+                    cellOdd.lblSource.textColor = colorConstants.blackColor
+                    cellOdd.lblNewsHeading.textColor = colorConstants.blackColor
+                    //NightNight.theme =  .normal
+                }
                 
                 if ((currentArticle.published_on?.count)!) <= 20{
                     if !(currentArticle.published_on?.contains("Z"))!{
@@ -535,7 +685,7 @@ extension ParentViewController: UITableViewDelegate, UITableViewDataSource, UISc
                     }
                     let newDate = dateFormatter.date(from: currentArticle.published_on!)
                     if newDate != nil{
-                        agoDate = try Helper().timeAgoSinceDate(newDate!)
+                        agoDate = Helper().timeAgoSinceDate(newDate!)
                         fullTxt = "\(agoDate)" + " via " + currentArticle.source!
                         let attributedWithTextColor: NSAttributedString = fullTxt.attributedStringWithColor([currentArticle.source!], color: UIColor.red)
                         cellOdd.lblSource.attributedText = attributedWithTextColor
@@ -549,7 +699,7 @@ extension ParentViewController: UITableViewDelegate, UITableViewDataSource, UISc
                     let newDate = dateFormatter.date(from: dateSubString
                     )
                     if newDate != nil{
-                        agoDate = try Helper().timeAgoSinceDate(newDate!)
+                        agoDate = Helper().timeAgoSinceDate(newDate!)
                         fullTxt = "\(agoDate)" + " via " + currentArticle.source!
                         let attributedWithTextColor: NSAttributedString = fullTxt.attributedStringWithColor([currentArticle.source!], color: UIColor.red)
                         cellOdd.lblSource.attributedText = attributedWithTextColor
@@ -578,6 +728,86 @@ extension ParentViewController: UITableViewDelegate, UITableViewDataSource, UISc
                 lblNonews.isHidden = true
                 return cellOdd
             }
+        }
+        else {
+            currentArticle = ShowArticle[indexPath.row]
+            let cellCluster = tableView.dequeueReusableCell(withIdentifier: "ClusterTVCellID", for:indexPath) as! ClusterTVCell
+            let count = DBManager().showCount(articleId: Int(currentArticle.article_id))
+            imgWidth = String(describing : Int(cellCluster.imgNews.frame.width))
+            imgHeight = String(describing : Int(cellCluster.imgNews.frame.height))
+            cellCluster.imgNews.layer.cornerRadius = 10.0
+            cellCluster.imgNews.clipsToBounds = true
+            
+            //display data from DB
+            cellHeight = 350
+            
+            cellCluster.lblNewsHeading.text = currentArticle.title
+            
+            if  darkModeStatus == true{
+                cellCluster.ViewCellBackground.backgroundColor = colorConstants.grayBackground2
+                cellCluster.lblSource.textColor = colorConstants.nightModeText
+                cellCluster.lblNewsHeading.textColor = colorConstants.nightModeText
+                // NightNight.theme =  .night
+            }
+            else{
+                cellCluster.ViewCellBackground.backgroundColor = .white
+                cellCluster.lblSource.textColor = colorConstants.blackColor
+                cellCluster.lblNewsHeading.textColor = colorConstants.blackColor
+                //NightNight.theme =  .normal
+            }
+            if (currentArticle.published_on?.count)! <= 20 {
+                if !(currentArticle.published_on?.contains("Z"))!{
+                    currentArticle.published_on?.append("Z")
+                }
+                let newDate = dateFormatter.date(from: currentArticle.published_on!)
+                if newDate != nil{
+                    agoDate = Helper().timeAgoSinceDate(newDate!)
+                    fullTxt = "\(agoDate)" + " via " + currentArticle.source!
+                    let attributedWithTextColor: NSAttributedString = fullTxt.attributedStringWithColor([currentArticle.source!], color: UIColor.red)
+                    cellCluster.lblSource.attributedText = attributedWithTextColor
+                }
+            }
+            else{
+                dateSubString = String(currentArticle.published_on!.prefix(19))
+                if !(dateSubString.contains("Z")){
+                    dateSubString.append("Z")
+                }
+                let newDate = dateFormatter.date(from: dateSubString
+                )
+                if newDate != nil{
+                    agoDate = Helper().timeAgoSinceDate(newDate!)
+                    fullTxt = "\(agoDate)" + " via " + currentArticle.source!
+                    let attributedWithTextColor: NSAttributedString = fullTxt.attributedStringWithColor([currentArticle.source!], color: UIColor.red)
+                    cellCluster.lblSource.attributedText = attributedWithTextColor
+                }
+            }
+            let imgURL = APPURL.imageServer + imgWidth + "x" + imgHeight + "/smart/" + currentArticle.imageURL!
+            cellCluster.imgNews.sd_setImage(with: URL(string: imgURL), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
+            cellCluster.lblCount.text = String(count)
+            if textSizeSelected == 0{
+                cellCluster.lblSource.font = FontConstants.smallFontContent
+                cellCluster.lblNewsHeading.font = FontConstants.smallFontHeadingBold
+                cellCluster.lblCount.font = FontConstants.smallFontHeadingBold
+            }
+            else if textSizeSelected == 2{
+                cellCluster.lblSource.font = FontConstants.LargeFontContent
+                cellCluster.lblNewsHeading.font = FontConstants.LargeFontHeadingBold
+                cellCluster.lblCount.font = FontConstants.LargeFontHeadingBold
+            }
+            else{
+                cellCluster.lblSource.font =  FontConstants.NormalFontContent
+                cellCluster.lblNewsHeading.font = FontConstants.NormalFontHeadingBold
+                cellCluster.lblCount.font = FontConstants.NormalFontHeadingBold
+            }
+            
+            if cellCluster.imgNews.image == nil{
+                cellCluster.imgNews.image = UIImage(named: AssetConstants.NoImage)
+            }
+            
+            activityIndicator.stopAnimating()
+            lblNonews.isHidden = true
+            return cellCluster
+        }
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
@@ -617,8 +847,21 @@ extension ParentViewController: UITableViewDelegate, UITableViewDataSource, UISc
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         var height:CGFloat = CGFloat()
+        if  isTrendingDetail == 0 || isTrendingDetail == 2{
             height = 137
+        }
+        else{
+            height = 255
+        }
         return height
     }
 }
-
+extension ParentViewController: TrendingBack{
+    func isTrendingTVLoaded(status: Bool) {
+        if status == true{
+            btnBack.isHidden = false
+        }else{
+            btnBack.isHidden = true
+        }
+    }
+}
