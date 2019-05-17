@@ -5517,7 +5517,7 @@
                             </view>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="CmX-5N-hcm">
                                 <rect key="frame" x="0.0" y="95" width="768" height="60"/>
-                                <color key="backgroundColor" white="0.66666666669999997" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="backgroundColor" red="0.90588235289999997" green="0.90980392160000001" blue="0.90196078430000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="60" id="eKR-3x-IcS"/>
                                 </constraints>
@@ -5536,21 +5536,33 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="   Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aWm-d9-t4w">
-                                                    <rect key="frame" x="8" y="28" width="202" height="14"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                                    <rect key="frame" x="44" y="28" width="67.5" height="14"/>
+                                                    <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="20"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
+                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="WA0-KA-JeU">
+                                                    <rect key="frame" x="4" y="10" width="30" height="30"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="25" id="OEk-aP-MwE">
+                                                            <variation key="heightClass=regular-widthClass=regular" constant="30"/>
+                                                        </constraint>
+                                                        <constraint firstAttribute="width" constant="25" id="q7i-Mn-Yhj">
+                                                            <variation key="heightClass=regular-widthClass=regular" constant="30"/>
+                                                        </constraint>
+                                                    </constraints>
+                                                </imageView>
                                             </subviews>
                                         </view>
-                                        <color key="backgroundColor" red="0.90588235289999997" green="0.90980392160000001" blue="0.90196078430000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <constraints>
                                             <constraint firstItem="aWm-d9-t4w" firstAttribute="top" secondItem="n0w-Ai-Y61" secondAttribute="topMargin" id="FjD-1d-xJc"/>
-                                            <constraint firstAttribute="trailingMargin" secondItem="aWm-d9-t4w" secondAttribute="trailing" id="JzC-JP-shc"/>
+                                            <constraint firstItem="WA0-KA-JeU" firstAttribute="centerY" secondItem="n0w-Ai-Y61" secondAttribute="centerY" id="Nfs-H0-ENE"/>
                                             <constraint firstAttribute="bottomMargin" secondItem="aWm-d9-t4w" secondAttribute="bottom" id="WpB-hA-hYo"/>
-                                            <constraint firstItem="aWm-d9-t4w" firstAttribute="leading" secondItem="n0w-Ai-Y61" secondAttribute="leadingMargin" id="kvk-VW-7Rx"/>
+                                            <constraint firstItem="WA0-KA-JeU" firstAttribute="leading" secondItem="n0w-Ai-Y61" secondAttribute="leading" constant="4" id="lHe-VP-UtG"/>
+                                            <constraint firstItem="aWm-d9-t4w" firstAttribute="leading" secondItem="WA0-KA-JeU" secondAttribute="trailing" constant="10" id="xaR-Ft-xsW"/>
                                         </constraints>
                                         <connections>
+                                            <outlet property="imgMenu" destination="WA0-KA-JeU" id="ho2-WW-6vX"/>
                                             <outlet property="lblMenu" destination="aWm-d9-t4w" id="Yvp-G8-LJ2"/>
                                         </connections>
                                     </collectionViewCell>
@@ -5562,38 +5574,43 @@
                             </collectionView>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="3DO-pu-E4f">
                                 <rect key="frame" x="0.0" y="155" width="768" height="60"/>
-                                <color key="backgroundColor" red="0.93725490570000003" green="0.93725490570000003" blue="0.95686274770000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="60" id="Tbn-Kw-f2y"/>
                                 </constraints>
                                 <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="10" minimumInteritemSpacing="10" id="dHS-3G-uKf">
-                                    <size key="itemSize" width="120" height="50"/>
+                                    <size key="itemSize" width="120" height="70"/>
                                     <size key="headerReferenceSize" width="0.0" height="0.0"/>
                                     <size key="footerReferenceSize" width="0.0" height="0.0"/>
                                     <inset key="sectionInset" minX="20" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 </collectionViewFlowLayout>
                                 <cells>
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="submenuID" id="tgE-Gq-Iv0" customClass="NewsubmenuCVCell" customModule="NewsApp" customModuleProvider="target">
-                                        <rect key="frame" x="20" y="5" width="120" height="50"/>
+                                        <rect key="frame" x="20" y="-5" width="120" height="70"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
-                                            <rect key="frame" x="0.0" y="0.0" width="120" height="50"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="120" height="70"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
+                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" alpha="0.25" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="submenuBack" translatesAutoresizingMaskIntoConstraints="NO" id="Emk-oU-soz">
+                                                    <rect key="frame" x="0.0" y="0.0" width="120" height="70"/>
+                                                </imageView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="   Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GC0-IK-jH0">
-                                                    <rect key="frame" x="0.0" y="0.0" width="120" height="50"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                                    <rect key="frame" x="26.5" y="40" width="67.5" height="24"/>
+                                                    <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="20"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
                                         </view>
-                                        <color key="backgroundColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
-                                            <constraint firstAttribute="trailing" secondItem="GC0-IK-jH0" secondAttribute="trailing" id="13M-lx-1NS"/>
-                                            <constraint firstItem="GC0-IK-jH0" firstAttribute="leading" secondItem="tgE-Gq-Iv0" secondAttribute="leading" id="IHF-Dp-Mde"/>
-                                            <constraint firstAttribute="bottom" secondItem="GC0-IK-jH0" secondAttribute="bottom" id="Vcx-aN-tRJ"/>
-                                            <constraint firstItem="GC0-IK-jH0" firstAttribute="top" secondItem="tgE-Gq-Iv0" secondAttribute="top" id="jcu-Up-REr"/>
+                                            <constraint firstAttribute="trailing" secondItem="Emk-oU-soz" secondAttribute="trailing" id="Ex0-sY-ddG"/>
+                                            <constraint firstItem="GC0-IK-jH0" firstAttribute="centerX" secondItem="tgE-Gq-Iv0" secondAttribute="centerX" id="Pcd-Zr-OrK"/>
+                                            <constraint firstAttribute="bottom" secondItem="Emk-oU-soz" secondAttribute="bottom" id="RVq-TO-5w0"/>
+                                            <constraint firstAttribute="bottom" secondItem="GC0-IK-jH0" secondAttribute="bottom" constant="6" id="Vcx-aN-tRJ"/>
+                                            <constraint firstItem="Emk-oU-soz" firstAttribute="leading" secondItem="tgE-Gq-Iv0" secondAttribute="leading" id="eee-h8-Ovd"/>
+                                            <constraint firstItem="Emk-oU-soz" firstAttribute="top" secondItem="tgE-Gq-Iv0" secondAttribute="top" id="fhV-4n-lX2"/>
                                         </constraints>
                                         <connections>
                                             <outlet property="lblSubmenu" destination="GC0-IK-jH0" id="lgq-GG-6g4"/>
@@ -5965,6 +5982,7 @@
         <image name="settings" width="512" height="512"/>
         <image name="share" width="512" height="512"/>
         <image name="shuffled" width="512" height="512"/>
+        <image name="submenuBack" width="640" height="426"/>
         <image name="top1" width="128" height="128"/>
         <image name="upward" width="54" height="54"/>
     </resources>

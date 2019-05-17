@@ -11,6 +11,7 @@ import UIKit
 class menuCVCell: UICollectionViewCell {
      var shouldTintBackgroundWhenSelected = true
     @IBOutlet var lblMenu: UILabel!
+    @IBOutlet weak var imgMenu: UIImageView!
     override var isHighlighted: Bool {
         willSet {
             onSelected(newValue)
@@ -25,6 +26,7 @@ class menuCVCell: UICollectionViewCell {
         guard selectedBackgroundView == nil else { return }
         if shouldTintBackgroundWhenSelected {
             lblMenu.textColor = newValue ? colorConstants.redColor : UIColor.black
+             imgMenu.setImageColor(color: newValue ? colorConstants.redColor : UIColor.black)
         }
     }
 }

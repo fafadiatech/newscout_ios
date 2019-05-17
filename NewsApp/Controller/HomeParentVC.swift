@@ -158,7 +158,7 @@ class HomeParentVC: ButtonBarPagerTabStripViewController{
             if  darkModeStatus == true{
                 newCell?.label.backgroundColor = colorConstants.grayBackground1
                 newCell?.label.textColor =  colorConstants.whiteColor
-                
+
                 newCell?.backgroundColor = colorConstants.grayBackground1
             }
             else{

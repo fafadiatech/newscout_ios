@@ -56,7 +56,7 @@ class ParentViewController: UIViewController {
     var isSwipeLeft = false
     var currentIndexPath: IndexPath?
     var menuIndexPath: IndexPath?
-    
+     var headingImg = [AssetConstants.sector, AssetConstants.regional, AssetConstants.finance, AssetConstants.economy, AssetConstants.misc, AssetConstants.sector]
     override func viewDidLoad() {
         super.viewDidLoad()
         HideButtonBarView()
@@ -468,12 +468,14 @@ extension ParentViewController : UICollectionViewDelegate, UICollectionViewDataS
         if collectionView == menuCV {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "menuID", for:indexPath) as! menuCVCell
             cell.lblMenu.text = headingArr[indexPath.item]
+            cell.imgMenu.image =  UIImage(named: headingImg[indexPath.row])
             return cell
         }else{
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "submenuID", for:indexPath) as! NewsubmenuCVCell
-           
+            cell.layer.borderWidth = 1.0
             cell.lblSubmenu.text = subMenuArr[HeadingRow][indexPath.row]
             submenuName = subMenuArr[HeadingRow][indexPath.row]
+           
             return cell
         }
     }
@@ -500,6 +502,7 @@ extension ParentViewController : UICollectionViewDelegate, UICollectionViewDataS
             }
         }else{
              self.currentIndexPath = indexPath
+            
             subMenuRow = indexPath.row
             submenuName = subMenuArr[HeadingRow][subMenuRow]
            reloadSubmenuNews()
@@ -863,5 +866,26 @@ extension ParentViewController: TrendingBack{
         }else{
             btnBack.isHidden = true
         }
+    }
+}
+
+extension ParentViewController: UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        var CVSize = CGFloat()
+        if collectionView == menuCV{
+            let label = UILabel(frame: CGRect.zero)
+            label.text = headingArr[indexPath.item]
+            label.sizeToFit()
+            CVSize = label.frame.width + 100.0
+             return CGSize(width:CVSize , height: 60)
+        }
+        else{
+            let label = UILabel(frame: CGRect.zero)
+            label.text = subMenuArr[HeadingRow][indexPath.item]
+            label.sizeToFit()
+            CVSize = label.frame.width + 140.0
+             return CGSize(width:CVSize , height: 60)
+        }
+       
     }
 }
