@@ -35,6 +35,7 @@ class ParentViewController: UIViewController {
     var protocolObj : ScrollDelegate?
     var tabBarTitle: String = ""
     var ShowArticle = [NewsArticle]()
+    var prevTrendingData = [NewsArticle]()
     var clusterArticles = [NewsArticle]()
     let appDelegate = UIApplication.shared.delegate as? AppDelegate
     var pageNum = 0
@@ -59,6 +60,15 @@ class ParentViewController: UIViewController {
      var headingImg = [AssetConstants.sector, AssetConstants.regional, AssetConstants.finance, AssetConstants.economy, AssetConstants.misc, AssetConstants.sector]
     override func viewDidLoad() {
         super.viewDidLoad()
+        DispatchQueue.global(qos: .userInitiated).async {
+            self.saveFetchMenu()
+            
+            self.saveTrending()
+        
+        }
+        DispatchQueue.main.async {
+            
+        }
         HideButtonBarView()
         btnBack.isHidden = true
         lblNonews.isHidden = true
@@ -76,8 +86,8 @@ class ParentViewController: UIViewController {
         if UserDefaults.standard.value(forKey: "textSize") == nil{
             UserDefaults.standard.set(1, forKey: "textSize")
         }
-        saveTrending()
-        saveFetchMenu()
+      
+        
             //Add a left swipe gesture recognizer
         var recognizer = UISwipeGestureRecognizer(target: self, action: #selector(self.handleSwipeLeft(_:)))
         recognizer.direction = .left
@@ -136,7 +146,9 @@ class ParentViewController: UIViewController {
         let indexPath: IndexPath? = HomeNewsTV.indexPathForRow(at: location ?? CGPoint.zero)
         if indexPath != nil {
             isSwipeLeft = true
+            if isTrendingDetail == 0{
             swipeActn()
+            }
         }
     }
     
@@ -145,7 +157,9 @@ class ParentViewController: UIViewController {
         let indexPath: IndexPath? = HomeNewsTV.indexPathForRow(at: location ?? CGPoint.zero)
         if indexPath != nil {
              isSwipeLeft = false
-            swipeActn()
+            if isTrendingDetail == 0{
+                swipeActn()
+            }
         }
     }
   
@@ -179,19 +193,27 @@ class ParentViewController: UIViewController {
     func swipeActn(){
         lblNonews.isHidden = true
         activityIndicator.startAnimating()
+        let transition = CATransition()
+        transition.duration = 0.9
         guard let indexPath = self.currentIndexPath else {
             return
         }
         var newIndex = indexPath
+        transition.type = kCATransitionMoveIn
+        
+       
         if isSwipeLeft == true{
             if subMenuRow < subMenuArr[HeadingRow].count - 1{
         subMenuRow = subMenuRow + 1
+                
                  newIndex = IndexPath(row: newIndex.row+1, section: newIndex.section)
+                transition.subtype = kCATransitionFromRight
             }
         }else{
             if subMenuRow > 0 {
             subMenuRow = subMenuRow - 1
                 newIndex = IndexPath(row: newIndex.row-1, section: self.currentIndexPath!.section)
+                transition.subtype = kCATransitionFromLeft
             }
         }
         
@@ -201,7 +223,7 @@ class ParentViewController: UIViewController {
         } else {
             print("You are tying to navigate to an invalid page")
         }
-        
+        view.window!.layer.add(transition, forKey: kCATransition)
         UserDefaults.standard.set(subMenuArr[HeadingRow][subMenuRow], forKey: "submenu")
         fetchSubmenuId(submenu: subMenuArr[HeadingRow][subMenuRow])
         coredataRecordCount = DBManager().IsCoreDataEmpty(entity: "NewsArticle")
@@ -250,7 +272,9 @@ class ParentViewController: UIViewController {
         switch result {
         case .Success(let DBData) :
             self.ShowArticle.removeAll()
+            prevTrendingData.removeAll()
             self.ShowArticle = DBData
+            prevTrendingData = DBData
             if self.ShowArticle.count > 0{
                 self.lblNonews.isHidden = true
                 self.HomeNewsTV.reloadData()
@@ -395,6 +419,7 @@ class ParentViewController: UIViewController {
             if ShowArticle.count > 0{
                 lblNonews.isHidden = true
                 self.HomeNewsTV.reloadData()
+                scrollToFirstRow()
             }
             else{
                 self.HomeNewsTV.reloadData()
@@ -450,7 +475,11 @@ class ParentViewController: UIViewController {
     }
     @IBAction func btnBackActn(_ sender: Any) {
         isTrendingDetail = 1
-        fetchTrending()
+        activityIndicator.startAnimating()
+        ShowArticle = prevTrendingData
+        HomeNewsTV.reloadData()
+        //fetchTrending()
+        
         btnBack.isHidden = true
     }
 }
@@ -490,15 +519,23 @@ extension ParentViewController : UICollectionViewDelegate, UICollectionViewDataS
                 HeadingRow = indexPath.row - 1
                 unhideButtonBarView()
                 submenuCV.reloadData()
+
             subMenuRow = 0
             submenuName = subMenuArr[HeadingRow][subMenuRow]
             submenuCV.selectItem(at: currentIndexPath, animated: true, scrollPosition: [])
+                submenuCV.scrollToItem(at: IndexPath(row: 0 , section: 0), at: .centeredHorizontally, animated: true)
                 btnBack.isHidden = true
             reloadSubmenuNews()
             }else{
+                activityIndicator.startAnimating()
                 HideButtonBarView()
                 isTrendingDetail = 1
-                fetchTrending()
+                if prevTrendingData.count > 0{
+                    ShowArticle = prevTrendingData
+                    HomeNewsTV.reloadData()
+                }else{
+                    fetchTrending()
+                }
             }
         }else{
              self.currentIndexPath = indexPath
@@ -567,7 +604,7 @@ extension ParentViewController: UITableViewDelegate, UITableViewDataSource, UISc
         
     func scrollToFirstRow() {
         let indexPath = NSIndexPath(row: 0, section: 0)
-        self.HomeNewsTV.scrollToRow(at: indexPath as IndexPath, at: .top, animated: true)
+        self.HomeNewsTV.scrollToRow(at: indexPath as IndexPath, at: .top, animated: false)
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
