@@ -3502,7 +3502,7 @@
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="749" image="NoImage" translatesAutoresizingMaskIntoConstraints="NO" id="95G-me-9y5">
-                                                            <rect key="frame" x="608" y="14" width="144" height="16"/>
+                                                            <rect key="frame" x="608" y="14" width="144" height="512"/>
                                                         </imageView>
                                                     </subviews>
                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -5613,6 +5613,7 @@
                                             <constraint firstItem="Emk-oU-soz" firstAttribute="top" secondItem="tgE-Gq-Iv0" secondAttribute="top" id="fhV-4n-lX2"/>
                                         </constraints>
                                         <connections>
+                                            <outlet property="imgSubmenuBackground" destination="Emk-oU-soz" id="fcT-S7-v7N"/>
                                             <outlet property="lblSubmenu" destination="GC0-IK-jH0" id="lgq-GG-6g4"/>
                                         </connections>
                                     </collectionViewCell>

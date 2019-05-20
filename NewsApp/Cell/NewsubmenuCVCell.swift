@@ -11,7 +11,8 @@ import UIKit
 class NewsubmenuCVCell: UICollectionViewCell {
      var shouldTintBackgroundWhenSelected = true
     @IBOutlet var lblSubmenu: UILabel!
-     let bottomLine = CALayer()
+    @IBOutlet weak var imgSubmenuBackground: UIImageView!
+    let bottomLine = CALayer()
     
     override var isHighlighted: Bool {
         willSet {
