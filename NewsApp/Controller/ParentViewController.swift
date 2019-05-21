@@ -10,9 +10,23 @@ import UIKit
 import CoreData
 import MaterialComponents.MaterialActivityIndicator
 import SDWebImage
+import NightNight
 
 class ParentViewController: UIViewController {
     
+    @IBOutlet weak var btnTopNews: UIButton!
+    @IBOutlet weak var HomeCVLeading: NSLayoutConstraint!
+    @IBOutlet weak var HomeNewsTVLeading: NSLayoutConstraint!
+    @IBOutlet weak var btnImgNightMode: UIButton!
+    @IBOutlet weak var btnNightMode: UIButton!
+    @IBOutlet weak var viewNightMode: UIView!
+    @IBOutlet weak var viewMyBookmark: UIView!
+    @IBOutlet weak var btnBookmark: UIButton!
+    @IBOutlet weak var btnImgBookmark: UIButton!
+    @IBOutlet weak var btnImgSettings: UIButton!
+    @IBOutlet weak var btnSettings: UIButton!
+    @IBOutlet weak var viewSettings: UIView!
+    @IBOutlet weak var viewOptions: UIView!
     @IBOutlet var viewAppTitle: UIView!
     @IBOutlet var lblAppTitle: UILabel!
     @IBOutlet var btnBack: UIButton!
@@ -65,16 +79,30 @@ class ParentViewController: UIViewController {
     [AssetConstants.appLogo, AssetConstants.appLogo, AssetConstants.appLogo, AssetConstants.appLogo, AssetConstants.appLogo, AssetConstants.appLogo, AssetConstants.appLogo, AssetConstants.appLogo, AssetConstants.crypto, AssetConstants.appLogo, AssetConstants.appLogo, AssetConstants.appLogo]]
     override func viewDidLoad() {
         super.viewDidLoad()
+        let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapped(gestureRecognizer:)))
+        viewAppTitle.addGestureRecognizer(tapRecognizer)
+        tapRecognizer.delegate = self as UIGestureRecognizerDelegate
+        
         DispatchQueue.global(qos: .userInitiated).async {
             self.saveFetchMenu()
-            
             self.saveTrending()
-        
         }
         DispatchQueue.main.async {
-            
+            self.activityIndicator.stopAnimating()
+        }
+        if UserDefaults.standard.value(forKey: "daily") == nil{
+            UserDefaults.standard.set(false, forKey: "daily")
+        }
+        if UserDefaults.standard.value(forKey: "breaking") == nil{
+            UserDefaults.standard.set(false, forKey: "breaking")
+        }
+        if UserDefaults.standard.value(forKey: "personalised") == nil{
+            UserDefaults.standard.set(false, forKey: "personalised")
         }
         HideButtonBarView()
+        btnTopNews.layer.cornerRadius = 0.5 * btnTopNews.bounds.size.width
+        btnTopNews.clipsToBounds = true
+        btnTopNews.backgroundColor = colorConstants.redColor
         btnBack.isHidden = true
         lblNonews.isHidden = true
         lblAppTitle.text = Constants.AppName
@@ -91,8 +119,16 @@ class ParentViewController: UIViewController {
         if UserDefaults.standard.value(forKey: "textSize") == nil{
             UserDefaults.standard.set(1, forKey: "textSize")
         }
-      
+        NotificationCenter.default.addObserver(self, selector: #selector(darkModeEnabled(_:)), name: .darkModeEnabled, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(darkModeDisabled(_:)), name: .darkModeDisabled, object: nil)
+        let darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
+        if  darkModeStatus == true{
+            changeTheme()
+        }
         
+        viewOptions.isHidden = true
+        viewOptions.layer.borderWidth = 0.5
+        viewOptions.layer.borderColor =  UIColor.darkGray.cgColor
             //Add a left swipe gesture recognizer
         var recognizer = UISwipeGestureRecognizer(target: self, action: #selector(self.handleSwipeLeft(_:)))
         recognizer.direction = .left
@@ -110,6 +146,7 @@ class ParentViewController: UIViewController {
         HomeNewsTV.refreshControl = refreshControl
         refreshControl.attributedTitle = NSAttributedString(string: "Pull  to Refresh...")
        
+        
         if UserDefaults.standard.value(forKey: "token") != nil{
             if Reachability.isConnectedToNetwork(){
                 saveBookmarkDataInDB(url : APPURL.bookmarkedArticlesURL)
@@ -129,12 +166,73 @@ class ParentViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        viewOptions.isHidden = true
      
     }
+    
+    @objc func tapped(gestureRecognizer: UITapGestureRecognizer) {
+        if viewOptions.isHidden == false{
+            viewOptions.isHidden = true
+        }
+    }
+    
     override var prefersStatusBarHidden: Bool {
         return true
     }
 
+    func resetTheme(){
+        self.activityIndicator.startAnimating()
+        btnBookmark.setTitleColor(.black, for: UIControlState.normal)
+        btnNightMode.setTitleColor(.black, for: UIControlState.normal)
+        btnSettings.setTitleColor(.black, for: UIControlState.normal)
+        viewNightMode.backgroundColor = colorConstants.txtlightGrayColor
+        viewSettings.backgroundColor = colorConstants.txtlightGrayColor
+        viewMyBookmark.backgroundColor = colorConstants.txtlightGrayColor
+        viewOptions.backgroundColor = colorConstants.txtlightGrayColor
+        btnImgNightMode.setImage(nil, for: .normal)
+        btnImgNightMode.setImage(UIImage(named: AssetConstants.moon), for: .normal)
+        btnImgBookmark.setImage(UIImage(named:AssetConstants.bookmark), for: .normal)
+        btnOptionMenu.setImage(UIImage(named:AssetConstants.menuWhite), for: .normal)
+        btnSearch.setImage(UIImage(named:AssetConstants.searchWhite), for: .normal)
+        HomeNewsTV.reloadData()
+        activityIndicator.stopAnimating()
+    }
+    
+    func changeTheme(){
+        btnSearch.setImage(UIImage(named:AssetConstants.searchBlack), for: .normal)
+        btnOptionMenu.setImage(UIImage(named:AssetConstants.menuBlack), for: .normal)
+        viewNightMode.backgroundColor = colorConstants.grayBackground1
+        viewMyBookmark.backgroundColor = colorConstants.grayBackground1
+        viewSettings.backgroundColor = colorConstants.grayBackground1
+        btnBookmark.setTitleColor(.white, for: UIControlState.normal)
+        btnNightMode.setTitleColor(.white, for: UIControlState.normal)
+        btnSettings.setTitleColor(.white, for: UIControlState.normal)
+        btnImgNightMode.setImage(UIImage(named: AssetConstants.whiteMoon), for: .normal)
+        btnImgBookmark.setImage(UIImage(named:AssetConstants.Bookmark_white), for: .normal)
+        menuCV.backgroundColor = colorConstants.subTVgrayBackground
+        submenuCV.backgroundColor = colorConstants.txtlightGrayColor
+        HomeNewsTV.backgroundColor =  colorConstants.backgroundGray
+        viewOptions.backgroundColor = colorConstants.txtlightGrayColor
+        HomeNewsTV.reloadData()
+    }
+    
+    @objc private func darkModeEnabled(_ notification: Notification){
+        self.activityIndicator.startAnimating()
+        NightNight.theme = .night
+        changeTheme()
+        activityIndicator.stopAnimating()
+    }
+    
+    @objc private func darkModeDisabled(_ notification: Notification) {
+        resetTheme()
+        NightNight.theme = .normal
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self, name: .darkModeEnabled, object: nil)
+        NotificationCenter.default.removeObserver(self, name: .darkModeDisabled, object: nil)
+    }
+    
     @objc func canPresentPageAt(indexPath: IndexPath) -> Bool {
       
         if indexPath.row < 0 || indexPath.row >= subMenuArr[HeadingRow].count {
@@ -191,7 +289,7 @@ class ParentViewController: UIViewController {
                                                 toItem: submenuCV,
                                                 attribute: NSLayoutConstraint.Attribute.bottom,
                                                 multiplier: 1,
-                                                constant: 10)
+                                                constant: 0)
             NSLayoutConstraint.activate([HomeNewsTVTop])
         }
     }
@@ -474,10 +572,48 @@ class ParentViewController: UIViewController {
         }
     }
     
+    @IBAction func btnSettingsActn(_ sender: Any) {
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let settingvc:SettingsVC = storyboard.instantiateViewController(withIdentifier: "SettingsID") as! SettingsVC
+        self.present(settingvc, animated: true, completion: nil)
+    }
+    
+    @IBAction func btnMyBookmarkActn(_ sender: Any) {
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let bookmarkvc:BookmarkVC = storyboard.instantiateViewController(withIdentifier: "BookmarkID") as! BookmarkVC
+        self.present(bookmarkvc, animated: true, completion: nil)
+    }
+    
+    @IBAction func btnNightModeActn(_ sender: Any) {
+        let Status = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
+        if Status == false {
+            UserDefaults.standard.setValue(true, forKey: "darkModeEnabled")
+            NotificationCenter.default.post(name: .darkModeEnabled, object: nil)
+        }
+        else {
+            UserDefaults.standard.setValue(false, forKey: "darkModeEnabled")
+            NotificationCenter.default.post(name: .darkModeDisabled, object: nil)
+        }
+    }
+    
     @IBAction func btnOptionMenuActn(_ sender: Any) {
+        if viewOptions.isHidden == true{
+            viewOptions.isHidden = false
+        }else{
+            viewOptions.isHidden = true
+        }
     }
+    
     @IBAction func btnSearchMenuActn(_ sender: Any) {
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let searchvc:SearchVC = storyboard.instantiateViewController(withIdentifier: "SearchID") as! SearchVC
+        self.present(searchvc, animated: true, completion: nil)
     }
+    
+    @IBAction func btnTopNewsActn(_ sender: Any) {
+        scrollToFirstRow()
+    }
+    
     @IBAction func btnBackActn(_ sender: Any) {
         isTrendingDetail = 1
         activityIndicator.startAnimating()
@@ -490,6 +626,7 @@ class ParentViewController: UIViewController {
 }
 
 extension ParentViewController : UICollectionViewDelegate, UICollectionViewDataSource{
+
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if collectionView == menuCV{
             return headingArr.count
@@ -515,6 +652,7 @@ extension ParentViewController : UICollectionViewDelegate, UICollectionViewDataS
         }
     }
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        viewOptions.isHidden = true
         activityIndicator.startAnimating()
         if collectionView == menuCV{
             
@@ -579,6 +717,7 @@ extension ParentViewController: UITableViewDelegate, UITableViewDataSource, UISc
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        viewOptions.isHidden = true
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let newsDetailvc:NewsDetailVC = storyboard.instantiateViewController(withIdentifier: "NewsDetailID") as! NewsDetailVC
         
@@ -610,7 +749,7 @@ extension ParentViewController: UITableViewDelegate, UITableViewDataSource, UISc
         
     func scrollToFirstRow() {
         let indexPath = NSIndexPath(row: 0, section: 0)
-        self.HomeNewsTV.scrollToRow(at: indexPath as IndexPath, at: .top, animated: false)
+        self.HomeNewsTV.scrollToRow(at: indexPath as IndexPath, at: .top, animated: true)
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -716,13 +855,13 @@ extension ParentViewController: UITableViewDelegate, UITableViewDataSource, UISc
                     cellOdd.ViewCellBackground.backgroundColor = colorConstants.grayBackground2
                     cellOdd.lblSource.textColor = colorConstants.nightModeText
                     cellOdd.lblNewsHeading.textColor = colorConstants.nightModeText
-                    // NightNight.theme =  .night
+                     NightNight.theme =  .night
                 }
                 else{
                     cellOdd.ViewCellBackground.backgroundColor = .white
                     cellOdd.lblSource.textColor = colorConstants.blackColor
                     cellOdd.lblNewsHeading.textColor = colorConstants.blackColor
-                    //NightNight.theme =  .normal
+                    NightNight.theme =  .normal
                 }
                 
                 if ((currentArticle.published_on?.count)!) <= 20{
@@ -793,13 +932,13 @@ extension ParentViewController: UITableViewDelegate, UITableViewDataSource, UISc
                 cellCluster.ViewCellBackground.backgroundColor = colorConstants.grayBackground2
                 cellCluster.lblSource.textColor = colorConstants.nightModeText
                 cellCluster.lblNewsHeading.textColor = colorConstants.nightModeText
-                // NightNight.theme =  .night
+                 NightNight.theme =  .night
             }
             else{
                 cellCluster.ViewCellBackground.backgroundColor = .white
                 cellCluster.lblSource.textColor = colorConstants.blackColor
                 cellCluster.lblNewsHeading.textColor = colorConstants.blackColor
-                //NightNight.theme =  .normal
+                NightNight.theme =  .normal
             }
             if (currentArticle.published_on?.count)! <= 20 {
                 if !(currentArticle.published_on?.contains("Z"))!{
@@ -902,6 +1041,7 @@ extension ParentViewController: UITableViewDelegate, UITableViewDataSource, UISc
         return height
     }
 }
+
 extension ParentViewController: TrendingBack{
     func isTrendingTVLoaded(status: Bool) {
         if status == true{
@@ -909,6 +1049,23 @@ extension ParentViewController: TrendingBack{
         }else{
             btnBack.isHidden = true
         }
+    }
+}
+
+extension ParentViewController: ScrollDelegate{
+    func isNavigate(status: Bool) {
+        if status == true{
+            viewOptions.isHidden = true
+        }
+    }
+}
+
+extension ParentViewController : UIGestureRecognizerDelegate {
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
+        if touch.view!.superview!.superclass! .isSubclass(of: UIButton.self) {
+            return false
+        }
+        return true
     }
 }
 
