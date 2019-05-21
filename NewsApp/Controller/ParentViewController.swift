@@ -194,13 +194,13 @@ class ParentViewController: UIViewController {
         btnImgBookmark.setImage(UIImage(named:AssetConstants.bookmark), for: .normal)
         btnOptionMenu.setImage(UIImage(named:AssetConstants.menuWhite), for: .normal)
         btnSearch.setImage(UIImage(named:AssetConstants.searchWhite), for: .normal)
+        submenuCV.backgroundColor = colorConstants.whiteColor
         HomeNewsTV.reloadData()
+        submenuCV.reloadData()
         activityIndicator.stopAnimating()
     }
     
     func changeTheme(){
-        btnSearch.setImage(UIImage(named:AssetConstants.searchBlack), for: .normal)
-        btnOptionMenu.setImage(UIImage(named:AssetConstants.menuBlack), for: .normal)
         viewNightMode.backgroundColor = colorConstants.grayBackground1
         viewMyBookmark.backgroundColor = colorConstants.grayBackground1
         viewSettings.backgroundColor = colorConstants.grayBackground1
@@ -214,6 +214,7 @@ class ParentViewController: UIViewController {
         HomeNewsTV.backgroundColor =  colorConstants.backgroundGray
         viewOptions.backgroundColor = colorConstants.txtlightGrayColor
         HomeNewsTV.reloadData()
+        submenuCV.reloadData()
     }
     
     @objc private func darkModeEnabled(_ notification: Notification){
@@ -326,7 +327,7 @@ class ParentViewController: UIViewController {
         } else {
             print("You are tying to navigate to an invalid page")
         }
-        view.window!.layer.add(transition, forKey: kCATransition)
+        HomeNewsTV.window!.layer.add(transition, forKey: kCATransition)
         UserDefaults.standard.set(subMenuArr[HeadingRow][subMenuRow], forKey: "submenu")
         fetchSubmenuId(submenu: subMenuArr[HeadingRow][subMenuRow])
         coredataRecordCount = DBManager().IsCoreDataEmpty(entity: "NewsArticle")
@@ -643,11 +644,20 @@ extension ParentViewController : UICollectionViewDelegate, UICollectionViewDataS
             return cell
         }else{
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "submenuID", for:indexPath) as! NewsubmenuCVCell
-            cell.layer.borderWidth = 1.0
+             let darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
+          
+            cell.lblSubmenu.layer.borderWidth = 1.0
+            cell.lblSubmenu.layer.cornerRadius = 20
+            cell.lblSubmenu.layer.masksToBounds = true
             cell.lblSubmenu.text = subMenuArr[HeadingRow][indexPath.row]
-            cell.imgSubmenuBackground.image = UIImage(named: submenuImgArr[HeadingRow][indexPath.row] )
+            //cell.imgSubmenuBackground.image = UIImage(named: submenuImgArr[HeadingRow][indexPath.row] )
             submenuName = subMenuArr[HeadingRow][indexPath.row]
-           
+            if  darkModeStatus == true{
+                cell.backgroundColor = colorConstants.txtlightGrayColor
+            }
+            else{
+                cell.backgroundColor = .white
+            }
             return cell
         }
     }
@@ -1083,8 +1093,8 @@ extension ParentViewController: UICollectionViewDelegateFlowLayout {
             let label = UILabel(frame: CGRect.zero)
             label.text = subMenuArr[HeadingRow][indexPath.item]
             label.sizeToFit()
-            CVSize = label.frame.width + 140.0
-             return CGSize(width:CVSize , height: 60)
+            CVSize = label.frame.width + 80.0
+             return CGSize(width:CVSize , height: 40)
         }
        
     }

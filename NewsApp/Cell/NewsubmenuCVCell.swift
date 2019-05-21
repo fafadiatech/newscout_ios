@@ -29,9 +29,9 @@ class NewsubmenuCVCell: UICollectionViewCell {
         if shouldTintBackgroundWhenSelected {
              bottomLine.frame = CGRect(x: 0.0, y: self.frame.height - 2, width: self.frame.width, height: 1.0)
             lblSubmenu.textColor = newValue ? colorConstants.redColor : UIColor.black
-            self.backgroundColor = newValue ? colorConstants.cardNormalBackground : .white
-            bottomLine.backgroundColor = newValue ? UIColor.red.cgColor : UIColor.white.cgColor
-            self.layer.addSublayer(bottomLine)
+          //  self.backgroundColor = newValue ? colorConstants.cardNormalBackground : .white
+          //  bottomLine.backgroundColor = newValue ? UIColor.red.cgColor : UIColor.white.cgColor
+           // self.layer.addSublayer(bottomLine)
         }
     }
     
