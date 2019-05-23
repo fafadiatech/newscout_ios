@@ -9,6 +9,7 @@
 import UIKit
 
 class ClusterTVCell: UITableViewCell {
+    @IBOutlet weak var viewCellContainer: UIView!
     @IBOutlet weak var ViewCellBackground: UIView!
     @IBOutlet weak var lblSource: UILabel!
     @IBOutlet weak var lblNewsHeading: UILabel!
@@ -21,6 +22,7 @@ class ClusterTVCell: UITableViewCell {
         // Initialization code
     }
 
+        
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
 
