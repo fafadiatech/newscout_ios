@@ -42,6 +42,10 @@ extension UIView {
 
 class ParentViewController: UIViewController {
     
+    @IBOutlet var mainViewLeading: UIView!
+    @IBOutlet weak var submenuLeading: NSLayoutConstraint!
+    @IBOutlet weak var containerCVTop: NSLayoutConstraint!
+    @IBOutlet weak var containerCV: UICollectionView!
     @IBOutlet weak var btnTopNews: UIButton!
     @IBOutlet weak var HomeCVLeading: NSLayoutConstraint!
     @IBOutlet weak var HomeNewsTVLeading: NSLayoutConstraint!
@@ -108,6 +112,7 @@ class ParentViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         HomeNewsTV.tableFooterView = UIView(frame: .zero)
+        HomeNewsTV.isHidden = true
         let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapped(gestureRecognizer:)))
         viewAppTitle.addGestureRecognizer(tapRecognizer)
         tapRecognizer.delegate = self as UIGestureRecognizerDelegate
@@ -196,7 +201,7 @@ class ParentViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         viewOptions.isHidden = true
-       
+        
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -232,6 +237,7 @@ class ParentViewController: UIViewController {
         submenuCV.backgroundColor = colorConstants.whiteColor
         HomeNewsTV.reloadData()
         submenuCV.reloadData()
+        containerCV.reloadData()
         activityIndicator.stopAnimating()
     }
     
@@ -303,30 +309,30 @@ class ParentViewController: UIViewController {
     }
     
     func HideButtonBarView(){
-        if HomeNewsTVTop != nil{
-            NSLayoutConstraint.deactivate([HomeNewsTVTop])
-            HomeNewsTVTop = NSLayoutConstraint (item: HomeNewsTV,
-                                                attribute: NSLayoutConstraint.Attribute.top,
-                                                relatedBy: NSLayoutConstraint.Relation.equal,
-                                                toItem: menuCV,
-                                                attribute: NSLayoutConstraint.Attribute.bottom,
-                                                multiplier: 1,
-                                                constant: 0)
-            NSLayoutConstraint.activate([HomeNewsTVTop])
+        if containerCVTop != nil{
+            NSLayoutConstraint.deactivate([containerCVTop])
+            containerCVTop = NSLayoutConstraint (item: containerCV,
+                                                 attribute: NSLayoutConstraint.Attribute.top,
+                                                 relatedBy: NSLayoutConstraint.Relation.equal,
+                                                 toItem: menuCV,
+                                                 attribute: NSLayoutConstraint.Attribute.bottom,
+                                                 multiplier: 1,
+                                                 constant: 0)
+            NSLayoutConstraint.activate([containerCVTop])
         }
     }
     
     func unhideButtonBarView(){
-        if HomeNewsTVTop != nil{
-            NSLayoutConstraint.deactivate([HomeNewsTVTop])
-            HomeNewsTVTop = NSLayoutConstraint (item: HomeNewsTV as Any,
-                                                attribute: NSLayoutConstraint.Attribute.top,
-                                                relatedBy: NSLayoutConstraint.Relation.equal,
-                                                toItem: submenuCV,
-                                                attribute: NSLayoutConstraint.Attribute.bottom,
-                                                multiplier: 1,
-                                                constant: 0)
-            NSLayoutConstraint.activate([HomeNewsTVTop])
+        if containerCVTop != nil{
+            NSLayoutConstraint.deactivate([containerCVTop])
+            containerCVTop = NSLayoutConstraint (item: containerCV as Any,
+                                                 attribute: NSLayoutConstraint.Attribute.top,
+                                                 relatedBy: NSLayoutConstraint.Relation.equal,
+                                                 toItem: submenuCV,
+                                                 attribute: NSLayoutConstraint.Attribute.bottom,
+                                                 multiplier: 1,
+                                                 constant: 0)
+            NSLayoutConstraint.activate([containerCVTop])
         }
     }
     func swipeActn(){
@@ -417,6 +423,7 @@ class ParentViewController: UIViewController {
             if self.ShowArticle.count > 0{
                 self.lblNonews.isHidden = true
                 self.HomeNewsTV.reloadData()
+                containerCV.reloadData()
             }
             else{
                 self.HomeNewsTV.reloadData()
@@ -517,7 +524,9 @@ class ParentViewController: UIViewController {
         //        currentIndexPath = NSIndexPath(row: 0, section: 0) as IndexPath
         //        submenuCV.selectItem(at: currentIndexPath, animated: true, scrollPosition: [])
         //        loadFirstNews()
+        HideButtonBarView()
         fetchTrending()
+        
     }
     
     func loadFirstNews(){
@@ -539,6 +548,7 @@ class ParentViewController: UIViewController {
             }
         }
     }
+    
     func fetchSubmenuId(submenu : String){
         let tagresult = DBManager().fetchsubmenuId(subMenuName: submenu)
         switch tagresult{
@@ -550,6 +560,7 @@ class ParentViewController: UIViewController {
             print(error)
         }
     }
+    
     func fetchArticlesFromDB(){
         let result = DBManager().ArticlesfetchByCatId()
         switch result {
@@ -558,10 +569,12 @@ class ParentViewController: UIViewController {
             if ShowArticle.count > 0{
                 lblNonews.isHidden = true
                 self.HomeNewsTV.reloadData()
+                containerCV.reloadData()
                 scrollToFirstRow()
             }
             else{
                 self.HomeNewsTV.reloadData()
+                containerCV.reloadData()
                 lblNonews.isHidden =  false
                 activityIndicator.stopAnimating()
             }
@@ -581,6 +594,7 @@ class ParentViewController: UIViewController {
             }
         }
     }
+    
     func fetchBookmarkDataFromDB(){
         let result = DBManager().FetchLikeBookmarkFromDB()
         switch result {
@@ -659,25 +673,58 @@ class ParentViewController: UIViewController {
         
         btnBack.isHidden = true
     }
+   
 }
 
 extension ParentViewController : UICollectionViewDelegate, UICollectionViewDataSource{
+//     func scrollViewDidScroll(_ scrollView: UIScrollView) {
+//
+//        print(scrollView.contentOffset.x)
+//       // submenuLeading.constant = scrollView.contentOffset.x / CGFloat(subMenuArr[HeadingRow].count)
+//        //submenuCV.submenuLeading.constant = scrollView.contentOffset.x
+//       // menuBar.horizontalBarLeftAnchorConstraint?.constant = scrollView.contentOffset.x / 4
+//    }
+   
+     func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
+        let index = Int(targetContentOffset.pointee.x / submenuCV.frame.width)
+        let indexPath = IndexPath(item: index, section: 0)
+        submenuCV.selectItem(at: indexPath, animated: true, scrollPosition: .centeredHorizontally)
+        self.currentIndexPath = indexPath
+        subMenuRow = indexPath.row
+        submenuName = subMenuArr[HeadingRow][subMenuRow]
+        UserDefaults.standard.set(subMenuArr[HeadingRow][subMenuRow], forKey: "submenu")
+        
+        reloadSubmenuNews()
+        containerCV.reloadData()
+    }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if collectionView == menuCV{
             return headingArr.count
-        }else{
+        }else if collectionView == containerCV{
+            return (subMenuArr.count > 0) ? subMenuArr[HeadingRow].count : 0
+        }
+        else{
             return (subMenuArr.count > 0) ? subMenuArr[HeadingRow].count : 0
         }
     }
+    
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        
+        var currentArticle = NewsArticle()
         if collectionView == menuCV {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "menuID", for:indexPath) as! menuCVCell
             cell.lblMenu.text = headingArr[indexPath.item]
             cell.imgMenu.image =  UIImage(named: headingImg[indexPath.row])
             return cell
-        }else{
+        }
+        else if collectionView == containerCV{
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "containerID", for:indexPath) as! ContainerCVCell
+            cell.ShowArticle = ShowArticle
+            cell.newsCV.reloadData()
+            //cell.fetchArticlesFromDB() //newsCV.reloadData()
+            return cell
+        }
+        else{
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "submenuID", for:indexPath) as! NewsubmenuCVCell
             let darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
             
@@ -696,6 +743,7 @@ extension ParentViewController : UICollectionViewDelegate, UICollectionViewDataS
             return cell
         }
     }
+    
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         viewOptions.isHidden = true
         activityIndicator.startAnimating()
@@ -715,6 +763,7 @@ extension ParentViewController : UICollectionViewDelegate, UICollectionViewDataS
                 submenuCV.scrollToItem(at: IndexPath(row: 0 , section: 0), at: .centeredHorizontally, animated: true)
                 btnBack.isHidden = true
                 reloadSubmenuNews()
+                containerCV.reloadData()
             }else{
                 activityIndicator.startAnimating()
                 HideButtonBarView()
@@ -722,22 +771,26 @@ extension ParentViewController : UICollectionViewDelegate, UICollectionViewDataS
                 if prevTrendingData.count > 0{
                     ShowArticle = prevTrendingData
                     HomeNewsTV.reloadData()
+                    containerCV.reloadData()
                 }else{
                     fetchTrending()
                 }
             }
-        }else{
+        }
+        else{
             self.currentIndexPath = indexPath
-            
             subMenuRow = indexPath.row
             submenuName = subMenuArr[HeadingRow][subMenuRow]
+            UserDefaults.standard.set(subMenuArr[HeadingRow][subMenuRow], forKey: "submenu")
+            
             reloadSubmenuNews()
+            containerCV.reloadData()
             
         }
     }
     
     func reloadSubmenuNews(){
-        
+    
         lblNonews.isHidden = true
         activityIndicator.startAnimating()
         UserDefaults.standard.set(subMenuArr[HeadingRow][subMenuRow], forKey: "submenu")
@@ -1062,9 +1115,10 @@ extension ParentViewController: UITableViewDelegate, UITableViewDataSource, UISc
         }
     }
     
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        // protocolObj?.isNavigate(status: true)
-    }
+//    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+//        // protocolObj?.isNavigate(status: true)
+//        //HomeCVLeading.constant = scrollView.contentOffset.x
+//    }
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         if indexPath.row == tableView.numberOfRows(inSection: indexPath.section) - 1 {
@@ -1146,13 +1200,18 @@ extension ParentViewController: UICollectionViewDelegateFlowLayout {
             CVSize = label.frame.width + 100.0
             return CGSize(width:CVSize , height: 60)
         }
-        else{
+        else if collectionView ==  submenuCV{
             let label = UILabel(frame: CGRect.zero)
             label.text = subMenuArr[HeadingRow][indexPath.item]
             label.sizeToFit()
             CVSize = label.frame.width + 80.0
             return CGSize(width:CVSize , height: 40)
         }
-        
+        else{
+            let screen = UIScreen.main.bounds
+            let totalHeight = viewAppTitle.frame.size.height + menuCV.frame.size.height + submenuCV.frame.size.height
+            return CGSize(width: screen.size.width, height: screen.size.height - totalHeight)
+
+        }
     }
 }
