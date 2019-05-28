@@ -103,12 +103,17 @@ class ParentViewController: UIViewController {
     var isSwipeLeft = false
     var currentIndexPath: IndexPath?
     var menuIndexPath: IndexPath?
+    var index = 0
+    var newShowArticle = [[NewsArticle]]()
+    var headingName = "Trending"
+    var isSwipe = false
     var headingImg = [AssetConstants.sector, AssetConstants.regional, AssetConstants.finance, AssetConstants.economy, AssetConstants.misc, AssetConstants.sector]
     var submenuImgArr = [[AssetConstants.banking, AssetConstants.retail,AssetConstants.retail, AssetConstants.tech, AssetConstants.transport, AssetConstants.energy, AssetConstants.food, AssetConstants.manufacturing, AssetConstants.fintech, AssetConstants.media],
                          [AssetConstants.us, AssetConstants.china, AssetConstants.asia, AssetConstants.japan, AssetConstants.india, AssetConstants.appLogo],
                          [AssetConstants.recession, AssetConstants.personal_finance, AssetConstants.funding, AssetConstants.ipo, AssetConstants.appLogo],
                          [AssetConstants.appLogo, AssetConstants.appLogo, AssetConstants.appLogo, AssetConstants.appLogo,  AssetConstants.appLogo,  AssetConstants.appLogo,  AssetConstants.appLogo],
                          [AssetConstants.appLogo, AssetConstants.appLogo, AssetConstants.appLogo, AssetConstants.appLogo, AssetConstants.appLogo, AssetConstants.appLogo, AssetConstants.appLogo, AssetConstants.appLogo, AssetConstants.crypto, AssetConstants.appLogo, AssetConstants.appLogo, AssetConstants.appLogo]]
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         HomeNewsTV.tableFooterView = UIView(frame: .zero)
@@ -138,6 +143,10 @@ class ParentViewController: UIViewController {
         }
         if UserDefaults.standard.value(forKey: "personalised") == nil{
             UserDefaults.standard.set(false, forKey: "personalised")
+        }
+        if let flowLayout = containerCV?.collectionViewLayout as? UICollectionViewFlowLayout {
+            flowLayout.minimumLineSpacing = 0
+            print("stup called")
         }
         HideButtonBarView()
         btnTopNews.layer.cornerRadius = 0.5 * btnTopNews.bounds.size.width
@@ -309,6 +318,7 @@ class ParentViewController: UIViewController {
     }
     
     func HideButtonBarView(){
+        submenuCV.isHidden = true
         if containerCVTop != nil{
             NSLayoutConstraint.deactivate([containerCVTop])
             containerCVTop = NSLayoutConstraint (item: containerCV,
@@ -323,6 +333,7 @@ class ParentViewController: UIViewController {
     }
     
     func unhideButtonBarView(){
+        submenuCV.isHidden = false
         if containerCVTop != nil{
             NSLayoutConstraint.deactivate([containerCVTop])
             containerCVTop = NSLayoutConstraint (item: containerCV as Any,
@@ -363,7 +374,7 @@ class ParentViewController: UIViewController {
         }
         
         if canPresentPageAt(indexPath: newIndex) {
-            self.submenuCV.selectItem(at: newIndex, animated: true, scrollPosition: UICollectionViewScrollPosition.centeredHorizontally)
+            self.submenuCV.selectItem(at: newIndex, animated: false, scrollPosition: UICollectionViewScrollPosition.centeredHorizontally)
             self.collectionView(self.submenuCV, didSelectItemAt: newIndex)
         } else {
             print("You are tying to navigate to an invalid page")
@@ -407,7 +418,7 @@ class ParentViewController: UIViewController {
     func saveTrending(){
         DBManager().saveTrending{response in
             if response == true{
-                // self.fetchTrending()
+                //self.fetchTrending()
             }
         }
     }
@@ -494,6 +505,7 @@ class ParentViewController: UIViewController {
             headingArr.insert("Trending", at: 0)
             headingIds.insert(00, at: 0)
             isTrendingDetail = 1
+            
             self.menuCV.reloadData()
             menuIndexPath = NSIndexPath(row: 0, section: 0) as IndexPath
             menuCV.selectItem(at: menuIndexPath, animated: true, scrollPosition: [])
@@ -524,6 +536,7 @@ class ParentViewController: UIViewController {
         //        currentIndexPath = NSIndexPath(row: 0, section: 0) as IndexPath
         //        submenuCV.selectItem(at: currentIndexPath, animated: true, scrollPosition: [])
         //        loadFirstNews()
+        SaveSubmenuNews()
         HideButtonBarView()
         fetchTrending()
         
@@ -562,22 +575,23 @@ class ParentViewController: UIViewController {
     }
     
     func fetchArticlesFromDB(){
+        ShowArticle.removeAll()
         let result = DBManager().ArticlesfetchByCatId()
         switch result {
         case .Success(let DBData) :
             ShowArticle = DBData
-            if ShowArticle.count > 0{
-                lblNonews.isHidden = true
-                self.HomeNewsTV.reloadData()
-                containerCV.reloadData()
-                scrollToFirstRow()
-            }
-            else{
-                self.HomeNewsTV.reloadData()
-                containerCV.reloadData()
-                lblNonews.isHidden =  false
-                activityIndicator.stopAnimating()
-            }
+            //            if ShowArticle.count > 0{
+            //                lblNonews.isHidden = true
+            //                self.HomeNewsTV.reloadData()
+            //                containerCV.reloadData()
+            //                scrollToFirstRow()
+            //            }
+            //            else{
+            //                self.HomeNewsTV.reloadData()
+            //                containerCV.reloadData()
+            //                lblNonews.isHidden =  false
+            //                activityIndicator.stopAnimating()
+        //            }
         case .Failure(let errorMsg) :
             print(errorMsg)
         }
@@ -590,7 +604,7 @@ class ParentViewController: UIViewController {
         }
         DBManager().SaveDataDB(nextUrl: subMenuURL ){response in
             if response == true{
-                self.fetchArticlesFromDB()
+                // self.fetchArticlesFromDB()
             }
         }
     }
@@ -673,36 +687,44 @@ class ParentViewController: UIViewController {
         
         btnBack.isHidden = true
     }
-   
+    
 }
 
 extension ParentViewController : UICollectionViewDelegate, UICollectionViewDataSource{
-//     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-//
-//        print(scrollView.contentOffset.x)
-//       // submenuLeading.constant = scrollView.contentOffset.x / CGFloat(subMenuArr[HeadingRow].count)
-//        //submenuCV.submenuLeading.constant = scrollView.contentOffset.x
-//       // menuBar.horizontalBarLeftAnchorConstraint?.constant = scrollView.contentOffset.x / 4
-//    }
-   
-     func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
-        let index = Int(targetContentOffset.pointee.x / submenuCV.frame.width)
-        let indexPath = IndexPath(item: index, section: 0)
-        submenuCV.selectItem(at: indexPath, animated: true, scrollPosition: .centeredHorizontally)
-        self.currentIndexPath = indexPath
-        subMenuRow = indexPath.row
-        submenuName = subMenuArr[HeadingRow][subMenuRow]
-        UserDefaults.standard.set(subMenuArr[HeadingRow][subMenuRow], forKey: "submenu")
-        
-        reloadSubmenuNews()
-        containerCV.reloadData()
+    //     func scrollViewDidScroll(_ scrollView: UIScrollView) {
+    //
+    //        print(scrollView.contentOffset.x)
+    //       // submenuLeading.constant = scrollView.contentOffset.x / CGFloat(subMenuArr[HeadingRow].count)
+    //        //submenuCV.submenuLeading.constant = scrollView.contentOffset.x
+    //       // menuBar.horizontalBarLeftAnchorConstraint?.constant = scrollView.contentOffset.x / 4
+    //    }
+    
+    func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
+        if headingName != "Trending"{
+            isSwipe = true
+            let index = Int(targetContentOffset.pointee.x / submenuCV.frame.width)
+            let indexPath = IndexPath(item: index, section: 0)
+            submenuCV.selectItem(at: indexPath, animated: true, scrollPosition: .centeredHorizontally)
+            //  self.currentIndexPath = indexPath
+            
+            //       subMenuRow = indexPath.row
+            //        submenuName = subMenuArr[HeadingRow][subMenuRow]
+            //        UserDefaults.standard.set(subMenuArr[HeadingRow][subMenuRow], forKey: "submenu")
+            
+            // reloadSubmenuNews()
+            containerCV.reloadData()
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if collectionView == menuCV{
             return headingArr.count
         }else if collectionView == containerCV{
-            return (subMenuArr.count > 0) ? subMenuArr[HeadingRow].count : 0
+            if isTrendingDetail == 1{
+                return 1
+            }else{
+                return (subMenuArr.count > 0) ? subMenuArr[HeadingRow].count : 0
+            }
         }
         else{
             return (subMenuArr.count > 0) ? subMenuArr[HeadingRow].count : 0
@@ -719,9 +741,27 @@ extension ParentViewController : UICollectionViewDelegate, UICollectionViewDataS
         }
         else if collectionView == containerCV{
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "containerID", for:indexPath) as! ContainerCVCell
-            cell.ShowArticle = ShowArticle
-            cell.newsCV.reloadData()
-            //cell.fetchArticlesFromDB() //newsCV.reloadData()
+            cell.newShowArticle.removeAll()
+            
+            if submenuCV.isHidden == false{
+                cell.isTrending = false
+                if isSwipe == true{
+                    cell.submenuCOunt = indexPath.row
+                }
+                else{
+                    cell.submenuCOunt = subMenuRow
+                }
+                fetchSubMenuNews()
+                cell.newShowArticle = newShowArticle
+                cell.newsCV.reloadData()
+            }
+            else{
+                cell.isTrending = true
+                fetchSubMenuNews()
+                cell.newShowArticle = newShowArticle
+                cell.newsCV.reloadData()
+            }
+            activityIndicator.stopAnimating()
             return cell
         }
         else{
@@ -733,13 +773,16 @@ extension ParentViewController : UICollectionViewDelegate, UICollectionViewDataS
             cell.lblSubmenu.layer.masksToBounds = true
             cell.lblSubmenu.text = subMenuArr[HeadingRow][indexPath.row]
             //cell.imgSubmenuBackground.image = UIImage(named: submenuImgArr[HeadingRow][indexPath.row] )
-            submenuName = subMenuArr[HeadingRow][indexPath.row]
+            
+            
+            
             if  darkModeStatus == true{
                 cell.backgroundColor = colorConstants.txtlightGrayColor
             }
             else{
                 cell.backgroundColor = .white
             }
+            containerCV.reloadData()
             return cell
         }
     }
@@ -748,25 +791,31 @@ extension ParentViewController : UICollectionViewDelegate, UICollectionViewDataS
         viewOptions.isHidden = true
         activityIndicator.startAnimating()
         if collectionView == menuCV{
-            
+            index = 0
+            headingName = headingArr[indexPath.row]
             if headingArr[indexPath.row] != "Trending"{
-                currentIndexPath = NSIndexPath(row: 0, section: 0) as IndexPath
+                //currentIndexPath = NSIndexPath(row: 0, section: 0) as IndexPath
                 //set first row selected by default
                 isTrendingDetail = 0
+                
                 HeadingRow = indexPath.row - 1
                 unhideButtonBarView()
                 submenuCV.reloadData()
-                
                 subMenuRow = 0
                 submenuName = subMenuArr[HeadingRow][subMenuRow]
-                submenuCV.selectItem(at: currentIndexPath, animated: true, scrollPosition: [])
+                submenuCV.selectItem(at: IndexPath(row: 0 , section: 0), animated: false, scrollPosition: [])
                 submenuCV.scrollToItem(at: IndexPath(row: 0 , section: 0), at: .centeredHorizontally, animated: true)
                 btnBack.isHidden = true
-                reloadSubmenuNews()
+                SaveSubmenuNews()
+                
+                // reloadSubmenuNews()
                 containerCV.reloadData()
+                containerCV.selectItem(at: IndexPath(row: 0 , section: 0), animated: false, scrollPosition: [])
+                containerCV.scrollToItem(at: IndexPath(row: 0 , section: 0), at: .centeredHorizontally, animated: true)
             }else{
                 activityIndicator.startAnimating()
                 HideButtonBarView()
+                index = subMenuRow
                 isTrendingDetail = 1
                 if prevTrendingData.count > 0{
                     ShowArticle = prevTrendingData
@@ -777,20 +826,61 @@ extension ParentViewController : UICollectionViewDelegate, UICollectionViewDataS
                 }
             }
         }
-        else{
+        else if collectionView == submenuCV{
+            //            let indexPath = IndexPath(item: index, section: 0)
+            //            submenuCV.selectItem(at: indexPath, animated: true, scrollPosition: .centeredHorizontally)
+            //            submenuCV.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
+            isSwipe = false
             self.currentIndexPath = indexPath
             subMenuRow = indexPath.row
             submenuName = subMenuArr[HeadingRow][subMenuRow]
             UserDefaults.standard.set(subMenuArr[HeadingRow][subMenuRow], forKey: "submenu")
             
             reloadSubmenuNews()
+            fetchSubMenuNews()
             containerCV.reloadData()
-            
+        }
+    }
+    func fetchSubMenuNews(){
+        newShowArticle.removeAll()
+        index = 0
+        if submenuCV.isHidden == false{
+            while index < subMenuArr[HeadingRow].count{
+                
+                submenuName = subMenuArr[HeadingRow][index]
+                UserDefaults.standard.set(subMenuArr[HeadingRow][index], forKey: "submenu")
+                fetchSubmenuId(submenu: subMenuArr[HeadingRow][index])
+                
+                fetchArticlesFromDB()
+                index = index + 1
+                newShowArticle.append(ShowArticle)
+            }
+        }
+        else{
+            newShowArticle.removeAll()
+            newShowArticle.append(ShowArticle)
+        }
+    }
+    
+    func SaveSubmenuNews(){
+        while index < subMenuArr[HeadingRow].count {
+            UserDefaults.standard.set(subMenuArr[HeadingRow][index], forKey: "submenu")
+            fetchSubmenuId(submenu: subMenuArr[HeadingRow][index])
+            coredataRecordCount = DBManager().IsCoreDataEmpty(entity: "NewsArticle")
+            if Reachability.isConnectedToNetwork(){
+                activityIndicator.startAnimating()
+                if UserDefaults.standard.value(forKey: "submenuURL") != nil{
+                    self.saveArticlesInDB()
+                }
+            }else{
+                lblNonews.isHidden = true
+            }
+            index = index + 1
         }
     }
     
     func reloadSubmenuNews(){
-    
+        
         lblNonews.isHidden = true
         activityIndicator.startAnimating()
         UserDefaults.standard.set(subMenuArr[HeadingRow][subMenuRow], forKey: "submenu")
@@ -801,6 +891,7 @@ extension ParentViewController : UICollectionViewDelegate, UICollectionViewDataS
             if UserDefaults.standard.value(forKey: "submenuURL") != nil{
                 self.saveArticlesInDB()
             }
+            
         }else{
             lblNonews.isHidden = true
         }
@@ -1115,10 +1206,10 @@ extension ParentViewController: UITableViewDelegate, UITableViewDataSource, UISc
         }
     }
     
-//    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-//        // protocolObj?.isNavigate(status: true)
-//        //HomeCVLeading.constant = scrollView.contentOffset.x
-//    }
+    //    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+    //        // protocolObj?.isNavigate(status: true)
+    //        //HomeCVLeading.constant = scrollView.contentOffset.x
+    //    }
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         if indexPath.row == tableView.numberOfRows(inSection: indexPath.section) - 1 {
@@ -1211,7 +1302,7 @@ extension ParentViewController: UICollectionViewDelegateFlowLayout {
             let screen = UIScreen.main.bounds
             let totalHeight = viewAppTitle.frame.size.height + menuCV.frame.size.height + submenuCV.frame.size.height
             return CGSize(width: screen.size.width, height: screen.size.height - totalHeight)
-
+            
         }
     }
 }

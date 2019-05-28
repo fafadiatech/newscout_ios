@@ -14,14 +14,19 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
     @IBOutlet weak var newsCV: UICollectionView!
     var sortedData = [NewsArticle]()
     var ShowArticle = [NewsArticle]()
+    var newShowArticle = [[NewsArticle]]()
     var rowCount = [0,9,6,5,7,12]
     var imgWidth = ""
     var imgHeight = ""
+    var submenuCOunt = 0
+    var isTrending = true
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder:aDecoder)
-       // setupViews()
+        //setupViews()
         print("init has been called")
+        
+        
     }
     
     func setupViews(){
@@ -31,11 +36,12 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
         if let flowLayout = newsCV?.collectionViewLayout as? UICollectionViewFlowLayout {
             flowLayout.scrollDirection = .vertical
             flowLayout.minimumLineSpacing = 0
-            print("stup called")
+            print("setup called")
         }
+        // newsCV.reloadData()
         //fetchArticlesFromDB()
     }
-//
+    //
     override func awakeFromNib() {
         super.awakeFromNib()
         setupViews()
@@ -58,11 +64,13 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
         }
     }
     
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        
-    }
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return (ShowArticle.count > 0) ? self.ShowArticle.count : 0
+        if isTrending == false{
+            return (newShowArticle.count > 0) ? self.newShowArticle[submenuCOunt].count : 0
+        }
+        else{
+            return (newShowArticle.count > 0) ? self.newShowArticle[0].count : 0
+        }
     }
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
         return 0
@@ -81,11 +89,11 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
         var fullTxt = ""
         var dateSubString = ""
         var agoDate = ""
-        if  indexPath.row > 0 {
+        if  isTrending == false {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "HomeIpadID", for:indexPath) as! HomeipadCVCell
             
             
-            sortedData = ShowArticle.sorted{ $0.published_on! > $1.published_on! }
+            sortedData = newShowArticle[submenuCOunt].sorted{ $0.published_on! > $1.published_on! }
             currentArticle = sortedData[indexPath.row]
             
             
@@ -157,7 +165,7 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
         else{
             let cellCluster = collectionView.dequeueReusableCell(withReuseIdentifier: "HomeIpadClusterID", for:indexPath) as! HomeiPadClusterCVCell
             // var currentArticle : Article!
-            currentArticle = ShowArticle[indexPath.row]
+            currentArticle = newShowArticle[0][indexPath.row] //ShowArticle[indexPath.row]
             // currentArticle = ShowArticle[indexPath.row]
             //display data from DB
             cellCluster.lblTitle.text = currentArticle.title
@@ -228,9 +236,9 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let screen = UIScreen.main.bounds
         if indexPath.section == 0{
-        return CGSize(width: screen.size.width, height: screen.size.height/2 )
+            return CGSize(width: screen.size.width, height: screen.size.height/2 )
         }else{
-             return CGSize(width: screen.size.width, height: screen.size.height/3.5 )
+            return CGSize(width: screen.size.width, height: screen.size.height/3.5 )
         }
     }
     
