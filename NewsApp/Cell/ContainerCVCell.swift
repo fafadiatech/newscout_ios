@@ -11,7 +11,6 @@ import CoreData
 import SDWebImage
 
 class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, ScrollToTopDelegate  {
-    
     @IBOutlet weak var newsCV: UICollectionView!
     var sortedData = [NewsArticle]()
     var ShowArticle = [NewsArticle]()
@@ -21,6 +20,8 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
     var imgHeight = ""
     var submenuCOunt = 0
     var isTrending = true
+    var isTrendingDetail = 0
+    var selectedObj : CellDelegate?
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder:aDecoder)
@@ -114,7 +115,11 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "HomeIphoneAlternateID", for:indexPath) as! HomeiPhoneAlternateCVCell
                 cell.imgNews.layer.cornerRadius = 10.0
                 cell.imgNews.clipsToBounds = true
-                
+                cell.outerView.layer.cornerRadius = 10
+                cell.outerView.layer.shadowColor = UIColor.black.cgColor
+                cell.outerView.layer.shadowOffset = CGSize(width: 3, height: 3)
+                cell.outerView.layer.shadowOpacity = 0.7
+                cell.outerView.layer.shadowRadius = 6.0
                 cell.lblTitle.text = currentArticle.title
                 
                 if  darkModeStatus == true{
@@ -183,7 +188,11 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "HomeIphoneID", for:indexPath) as! HomeiPhoneCVCell
                 cell.imgNews.layer.cornerRadius = 10.0
                 cell.imgNews.clipsToBounds = true
-                
+                cell.outerView.layer.cornerRadius = 10
+                cell.outerView.layer.shadowColor = UIColor.black.cgColor
+                cell.outerView.layer.shadowOffset = CGSize(width: 3, height: 3)
+                cell.outerView.layer.shadowOpacity = 0.7
+                cell.outerView.layer.shadowRadius = 6.0
                 cell.lblTitle.text = currentArticle.title
                 
                 if  darkModeStatus == true{
@@ -254,11 +263,18 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
         cellCluster.imgNews.layer.cornerRadius = 10.0
         cellCluster.imgNews.clipsToBounds = true
         
+        cellCluster.outerView.layer.cornerRadius = 10
+        cellCluster.outerView.layer.shadowColor = UIColor.black.cgColor
+        cellCluster.outerView.layer.shadowOffset = CGSize(width: 3, height: 3)
+        cellCluster.outerView.layer.shadowOpacity = 0.7
+        cellCluster.outerView.layer.shadowRadius = 6.0
             // var currentArticle : Article!
-            currentArticle = newShowArticle[0][indexPath.row] //ShowArticle[indexPath.row]
+            currentArticle = newShowArticle[0][indexPath.row]
+         let count = DBManager().showCount(articleId: Int(currentArticle.article_id))//ShowArticle[indexPath.row]
             // currentArticle = ShowArticle[indexPath.row]
             //display data from DB
             cellCluster.lblTitle.text = currentArticle.title
+            cellCluster.lblCount.text = String(count)
             if  darkModeStatus == true{
                 cellCluster.containerView.backgroundColor = colorConstants.grayBackground2
                 cellCluster.lblSource.textColor = colorConstants.nightModeText
@@ -303,20 +319,60 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
             if textSizeSelected == 0{
                 cellCluster.lblSource.font = FontConstants.smallFontContent
                 cellCluster.lblTitle.font = FontConstants.smallFontHeadingBold
+                cellCluster.lblCount.font = FontConstants.smallFontHeadingBold
             }
             else if textSizeSelected == 2{
                 cellCluster.lblSource.font = FontConstants.LargeFontContent
                 cellCluster.lblTitle.font = FontConstants.LargeFontHeadingBold
+                cellCluster.lblCount.font = FontConstants.LargeFontHeadingBold
             }
             else{
                 cellCluster.lblSource.font =  FontConstants.NormalFontContent
                 cellCluster.lblTitle.font = FontConstants.NormalFontHeadingBold
+                cellCluster.lblCount.font = FontConstants.NormalFontHeadingBold
             }
             
             if cellCluster.imgNews.image == nil{
                 cellCluster.imgNews.image = UIImage(named: AssetConstants.NoImage)
             }
             return cellCluster
+    }
+     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+//         let obj = ParentViewController()
+//        if isTrending == false{
+//            obj.sortedData = newShowArticle[submenuCOunt]
+//        }else{
+//            obj.sortedData = newShowArticle[0]
+//        }
+        if isTrending == false{
+            selectedObj?.colCategorySelected(indexPath, sortedData)
+        }else{
+           selectedObj?.colCategorySelected(indexPath, newShowArticle[0])
+        }
+        
+//        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+//        let newsDetailvc:NewsDetailVC = storyboard.instantiateViewController(withIdentifier: "NewsDetailID") as! NewsDetailVC
+//
+//        if isTrendingDetail == 0{
+//            UserDefaults.standard.set("home", forKey: "isSearch")
+//        }else{
+//            UserDefaults.standard.set("cluster", forKey: "isSearch")
+//        }
+//        if isTrendingDetail == 0 || isTrendingDetail == 2{
+//            if sortedData.count > 0 {
+//                newsDetailvc.newsCurrentIndex = indexPath.row
+//                newsDetailvc.ShowArticle = sortedData
+//                newsDetailvc.articleId = Int(sortedData[indexPath.row].article_id)
+//                present(newsDetailvc, animated: true, completion: nil)
+//            }
+//        }
+//        else{
+//            var id = UserDefaults.standard.array(forKey: "trendingArray") as! [Int]
+//            let selectedCluster = id[indexPath.row]
+//           //  fetchClusterIdArticles(clusterID: selectedCluster)
+//            isTrendingDetail = 2
+//        }
+//
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
@@ -325,7 +381,7 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
             if isTrending == true {
                 return CGSize(width: screen.size.width, height: screen.size.height/2 )
             }else{
-                return CGSize(width: screen.size.width, height: 120 )
+                return CGSize(width: screen.size.width, height: 140 )
             }
         }
         else{

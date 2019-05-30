@@ -39,7 +39,9 @@ extension UIView {
         layer.rasterizationScale = scale ? UIScreen.main.scale : 1
     }
 }
-
+protocol CellDelegate {
+    func colCategorySelected(_ indexPath : IndexPath, _ sortedData : [NewsArticle] )
+}
 protocol ScrollToTopDelegate{
     func topSelected(status: Bool)
 }
@@ -83,6 +85,7 @@ class ParentViewController: UIViewController {
     var submenuID = 0
     var protocolObj : ScrollDelegate?
     var scrollToTopObj : ScrollToTopDelegate?
+    
     var tabBarTitle: String = ""
     var ShowArticle = [NewsArticle]()
     var prevTrendingData = [NewsArticle]()
@@ -697,7 +700,7 @@ class ParentViewController: UIViewController {
     
 }
 
-extension ParentViewController : UICollectionViewDelegate, UICollectionViewDataSource{
+extension ParentViewController : UICollectionViewDelegate, UICollectionViewDataSource, CellDelegate{
     //     func scrollViewDidScroll(_ scrollView: UIScrollView) {
     //
     //        print(scrollView.contentOffset.x)
@@ -751,6 +754,7 @@ extension ParentViewController : UICollectionViewDelegate, UICollectionViewDataS
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "containerID", for:indexPath) as! ContainerCVCell
             cell.newShowArticle.removeAll()
             scrollToTopObj?.topSelected(status: false)
+            cell.selectedObj = self as! CellDelegate
             if submenuCV.isHidden == false{
                 cell.isTrending = false
                 if isSwipe == true{
@@ -795,6 +799,37 @@ extension ParentViewController : UICollectionViewDelegate, UICollectionViewDataS
         }
     }
     
+    //didselect for newsCV
+    func colCategorySelected(_ indexPath : IndexPath, _ sortedData : [NewsArticle]){
+        viewOptions.isHidden = true
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let newsDetailvc:NewsDetailVC = storyboard.instantiateViewController(withIdentifier: "NewsDetailID") as! NewsDetailVC
+        
+        if isTrendingDetail == 0{
+            UserDefaults.standard.set("home", forKey: "isSearch")
+        }else{
+            UserDefaults.standard.set("cluster", forKey: "isSearch")
+        }
+        if isTrendingDetail == 0 || isTrendingDetail == 2{
+            if sortedData.count > 0 {
+                newsDetailvc.newsCurrentIndex = indexPath.row
+                newsDetailvc.ShowArticle = sortedData
+                newsDetailvc.articleId = Int(sortedData[indexPath.row].article_id)
+                present(newsDetailvc, animated: true, completion: nil)
+            }
+        }
+        else{
+            var id = UserDefaults.standard.array(forKey: "trendingArray") as! [Int]
+            let selectedCluster = id[indexPath.row]
+            fetchClusterIdArticles(clusterID: selectedCluster)
+            isTrendingDetail = 2
+        }
+        if isTrendingDetail == 2 {
+            btnBack.isHidden = false
+        }else{
+            btnBack.isHidden = true
+        }
+    }
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         viewOptions.isHidden = true
         activityIndicator.startAnimating()
