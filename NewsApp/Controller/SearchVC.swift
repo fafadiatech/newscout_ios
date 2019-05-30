@@ -45,20 +45,16 @@ class SearchVC: UIViewController {
         if UserDefaults.standard.value(forKey: "searchTxt") != nil{
             txtSearch.text = (UserDefaults.standard.value(forKey: "searchTxt") as! String)
         }
-        if UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad && statusBarOrientation.isPortrait{
-            if Searchresults.count <= 0{
-                searchResultTV.isHidden = false
-                searchResultCV.isHidden = true
-                
+         if Searchresults.count <= 0{
+            if UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad && statusBarOrientation.isPortrait{
+            searchResultTV.isHidden = true
+            searchResultCV.isHidden = false
             }else{
-                searchResultTV.isHidden = true
-                searchResultCV.isHidden = false
-            }
-        }
-        else{
             searchResultTV.isHidden = false
             searchResultCV.isHidden = true
-        }
+            }
+         }    
+    
         txtSearch.addTarget(self, action: #selector(self.textFieldDidChange), for: UIControlEvents.editingChanged)
         lblNoNews.isHidden = true
         NotificationCenter.default.addObserver(self, selector: #selector(darkModeEnabled(_:)), name: .darkModeEnabled, object: nil)

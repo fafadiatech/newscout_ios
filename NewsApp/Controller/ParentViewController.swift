@@ -40,6 +40,9 @@ extension UIView {
     }
 }
 
+protocol ScrollToTopDelegate{
+    func topSelected(status: Bool)
+}
 class ParentViewController: UIViewController {
     
     @IBOutlet var mainViewLeading: UIView!
@@ -79,6 +82,7 @@ class ParentViewController: UIViewController {
     var submenuIndexArr = [[String]]()
     var submenuID = 0
     var protocolObj : ScrollDelegate?
+    var scrollToTopObj : ScrollToTopDelegate?
     var tabBarTitle: String = ""
     var ShowArticle = [NewsArticle]()
     var prevTrendingData = [NewsArticle]()
@@ -116,6 +120,7 @@ class ParentViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         HomeNewsTV.tableFooterView = UIView(frame: .zero)
         HomeNewsTV.isHidden = true
         let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapped(gestureRecognizer:)))
@@ -283,7 +288,7 @@ class ParentViewController: UIViewController {
         NotificationCenter.default.removeObserver(self, name: .darkModeEnabled, object: nil)
         NotificationCenter.default.removeObserver(self, name: .darkModeDisabled, object: nil)
     }
-    
+
     @objc func canPresentPageAt(indexPath: IndexPath) -> Bool {
         
         if indexPath.row < 0 || indexPath.row >= subMenuArr[HeadingRow].count {
@@ -675,7 +680,9 @@ class ParentViewController: UIViewController {
     }
     
     @IBAction func btnTopNewsActn(_ sender: Any) {
-        scrollToFirstRow()
+        //scrollToTopObj?.topSelected(status: true)
+        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "load"), object: nil)
+      //  scrollToFirstRow()
     }
     
     @IBAction func btnBackActn(_ sender: Any) {
@@ -700,6 +707,7 @@ extension ParentViewController : UICollectionViewDelegate, UICollectionViewDataS
     //    }
     
     func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
+    
         if headingName != "Trending"{
             isSwipe = true
             let index = Int(targetContentOffset.pointee.x / submenuCV.frame.width)
@@ -742,7 +750,7 @@ extension ParentViewController : UICollectionViewDelegate, UICollectionViewDataS
         else if collectionView == containerCV{
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "containerID", for:indexPath) as! ContainerCVCell
             cell.newShowArticle.removeAll()
-            
+            scrollToTopObj?.topSelected(status: false)
             if submenuCV.isHidden == false{
                 cell.isTrending = false
                 if isSwipe == true{

@@ -69,6 +69,8 @@
 		268C112521E4C36E00C76B9C /* BookmarkTVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 268C112421E4C36E00C76B9C /* BookmarkTVCell.swift */; };
 		268D4095228C447C0018C3EF /* ParentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 268D4094228C447C0018C3EF /* ParentViewController.swift */; };
 		2690F3CC21BF8C12003E65CA /* SettingsTVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2690F3CB21BF8C12003E65CA /* SettingsTVCell.swift */; };
+		26A6F575229EA00C006AC26A /* HomeiPhoneCVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26A6F574229EA00C006AC26A /* HomeiPhoneCVCell.swift */; };
+		26A6F577229EA02D006AC26A /* HomeiPhoneAlternateCVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26A6F576229EA02D006AC26A /* HomeiPhoneAlternateCVCell.swift */; };
 		26A98E8C2272CCBC0048CD93 /* HomeiPadClusterCVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26A98E8B2272CCBC0048CD93 /* HomeiPadClusterCVCell.swift */; };
 		26ACEA94216733BA000EF3C7 /* CategoryListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26ACEA93216733BA000EF3C7 /* CategoryListVC.swift */; };
 		26ACEA96216738BB000EF3C7 /* CategoryListTVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26ACEA95216738BB000EF3C7 /* CategoryListTVCell.swift */; };
@@ -203,6 +205,8 @@
 		268C112421E4C36E00C76B9C /* BookmarkTVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkTVCell.swift; sourceTree = "<group>"; };
 		268D4094228C447C0018C3EF /* ParentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParentViewController.swift; sourceTree = "<group>"; };
 		2690F3CB21BF8C12003E65CA /* SettingsTVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTVCell.swift; sourceTree = "<group>"; };
+		26A6F574229EA00C006AC26A /* HomeiPhoneCVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeiPhoneCVCell.swift; sourceTree = "<group>"; };
+		26A6F576229EA02D006AC26A /* HomeiPhoneAlternateCVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeiPhoneAlternateCVCell.swift; sourceTree = "<group>"; };
 		26A98E8B2272CCBC0048CD93 /* HomeiPadClusterCVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeiPadClusterCVCell.swift; sourceTree = "<group>"; };
 		26ACEA93216733BA000EF3C7 /* CategoryListVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryListVC.swift; sourceTree = "<group>"; };
 		26ACEA95216738BB000EF3C7 /* CategoryListTVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryListTVCell.swift; sourceTree = "<group>"; };
@@ -473,6 +477,8 @@
 		421ADFEB2156553500C00F6F /* Cell */ = {
 			isa = PBXGroup;
 			children = (
+				26A6F574229EA00C006AC26A /* HomeiPhoneCVCell.swift */,
+				26A6F576229EA02D006AC26A /* HomeiPhoneAlternateCVCell.swift */,
 				26362CEE22967E660040D22B /* ContainerCVCell.swift */,
 				26B0B8D7228D3D7800012B05 /* NewsubmenuCVCell.swift */,
 				26B0B8D3228D25E900012B05 /* menuCVCell.swift */,
@@ -854,6 +860,7 @@
 				26DE849C2223CC1C000A32F7 /* PeriodicTags+CoreDataClass.swift in Sources */,
 				26B0B8D5228D25E900012B05 /* menuCVCell.swift in Sources */,
 				264E304B2229151E00F73147 /* submenuCVCell.swift in Sources */,
+				26A6F577229EA02D006AC26A /* HomeiPhoneAlternateCVCell.swift in Sources */,
 				260FB9CC2221656F008B0291 /* HashTag+CoreDataProperties.swift in Sources */,
 				266C6B302158C2B6009A0A9D /* SearchResultTVCell.swift in Sources */,
 				260FB9D92221656F008B0291 /* NewsURL+CoreDataClass.swift in Sources */,
@@ -912,6 +919,7 @@
 				260FB9D42221656F008B0291 /* SearchArticles+CoreDataProperties.swift in Sources */,
 				260FB9D22221656F008B0291 /* LikeDislike+CoreDataProperties.swift in Sources */,
 				267687E122731704009B0695 /* TrendingCategory+CoreDataProperties.swift in Sources */,
+				26A6F575229EA00C006AC26A /* HomeiPhoneCVCell.swift in Sources */,
 				260FB9D62221656F008B0291 /* NewsArticle+CoreDataProperties.swift in Sources */,
 				267687E022731704009B0695 /* TrendingCategory+CoreDataClass.swift in Sources */,
 				4266D16321EEF4DA00CBD61A /* AboutUsVC.swift in Sources */,
