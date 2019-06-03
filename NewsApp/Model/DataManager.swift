@@ -40,7 +40,7 @@ class DBManager{
                         
                         if self.someEntityExists(id: 0, entity: "NewsURL", keyword: submenu) == false {
                             let newUrl = NewsURL(context: managedContext!)
-                            newUrl.category = submenu
+                            newUrl.category = self.ArticleData[0].body?.articles[0].category //submenu
                             newUrl.nextURL = self.ArticleData[0].body?.next
                         }
                         else{

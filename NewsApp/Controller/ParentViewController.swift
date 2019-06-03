@@ -759,9 +759,9 @@ extension ParentViewController : UICollectionViewDelegate, UICollectionViewDataS
                 cell.isTrending = true
                 cell.newShowArticle.append(prevTrendingData)
                 cell.newsCV.reloadData()
-                cell.newsCV?.scrollToItem(at: NSIndexPath(item: 0, section: 0) as IndexPath,
-                                          at: .top,
-                                          animated: false)
+//                cell.newsCV?.scrollToItem(at: NSIndexPath(row: 0, section: 0) as IndexPath,
+//                                          at: .top,
+//                                          animated: false)
             }
             else{
                 if submenuCV.isHidden == false{
@@ -775,18 +775,18 @@ extension ParentViewController : UICollectionViewDelegate, UICollectionViewDataS
                     fetchSubMenuNews()
                     cell.newShowArticle = newShowArticle
                     cell.newsCV.reloadData()
-                    cell.newsCV?.scrollToItem(at: NSIndexPath(item: 0, section: 0) as IndexPath,
-                                              at: .top,
-                                              animated: false)
+//                    cell.newsCV?.scrollToItem(at: NSIndexPath(row: 0, section: 0) as IndexPath,
+//                                              at: .top,
+//                                              animated: false)
                 }
                 else{
                     cell.isTrending = true
                     fetchSubMenuNews()
                     cell.newShowArticle = newShowArticle
                     cell.newsCV.reloadData()
-                    cell.newsCV?.scrollToItem(at: NSIndexPath(item: 0, section: 0) as IndexPath,
-                                              at: .top,
-                                              animated: false)
+//                    cell.newsCV?.scrollToItem(at: NSIndexPath(row: 0, section: 0) as IndexPath,
+//                                              at: .top,
+//                                              animated: false)
                 }
             }
             activityIndicator.stopAnimating()
@@ -861,6 +861,7 @@ extension ParentViewController : UICollectionViewDelegate, UICollectionViewDataS
                 submenuCV.reloadData()
                 subMenuRow = 0
                 submenuName = subMenuArr[HeadingRow][subMenuRow]
+                UserDefaults.standard.set(subMenuArr[self.HeadingRow], forKey: "submenuArr")
                 submenuCV.selectItem(at: IndexPath(row: 0 , section: 0), animated: false, scrollPosition: [])
                 submenuCV.scrollToItem(at: IndexPath(row: 0 , section: 0), at: .centeredHorizontally, animated: true)
                 btnBack.isHidden = true

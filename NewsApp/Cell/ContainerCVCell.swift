@@ -10,7 +10,7 @@ import UIKit
 import CoreData
 import SDWebImage
 
-class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
+class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UIScrollViewDelegate {
     
     @IBOutlet weak var btnTopNews: UIButton!
     @IBOutlet weak var newsCV: UICollectionView!
@@ -28,7 +28,7 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
     var selectedObj : CellDelegate?
     var trendingClickedObj : trendingDetailClicked?
     var trendingTVProtocol : TrendingBack?
-    
+    var isAPICalled = false
     required init?(coder aDecoder: NSCoder) {
         super.init(coder:aDecoder)
         print("init has been called")
@@ -81,8 +81,35 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
             return (newShowArticle.count > 0) ? self.newShowArticle[0].count : 0
         }
     }
+    
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
         return 0
+    }
+    
+    func saveArticlesInDB(){
+        var subMenuURL = ""
+        if UserDefaults.standard.value(forKey: "submenuURL") != nil{
+            subMenuURL =  UserDefaults.standard.value(forKey: "submenuURL") as! String
+        }
+        DBManager().SaveDataDB(nextUrl: subMenuURL ){response in
+            if response == true{
+                var submenuArr = UserDefaults.standard.value(forKey: "submenuArr") as! [String]
+                self.fetchSubmenuId(submenu: submenuArr[self.submenuCOunt])
+                self.fetchArticlesFromDB()
+            }
+        }
+    }
+    
+    func fetchSubmenuId(submenu : String){
+        let tagresult = DBManager().fetchsubmenuId(subMenuName: submenu)
+        switch tagresult{
+        case .Success(let id) :
+            let url = APPURL.ArticleByIdURL + "\(id)"
+            UserDefaults.standard.setValue(id, forKey: "subMenuId")
+            UserDefaults.standard.setValue(url, forKey: "submenuURL")
+        case .Failure(let error):
+            print(error)
+        }
     }
     
     func fetchClusterIdArticles(clusterID: Int){
@@ -421,6 +448,60 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
                 return CGSize(width: collectionCellSize/2.15, height: collectionCellSize/2)
             }else{
                 return CGSize(width: collectionCellSize/3.3, height: collectionCellSize/3)
+            }
+        }
+    }
+    
+    func fetchArticlesFromDB(){
+      
+        let result = DBManager().ArticlesfetchByCatId()
+        switch result {
+        case .Success(let DBData) :
+            
+            if DBData.count > 0 {
+                newShowArticle[submenuCOunt].removeAll()
+                newShowArticle[submenuCOunt] = DBData
+           // newShowArticle.append(ShowArticle)
+                newsCV.reloadData()
+            }
+        case .Failure(let errorMsg) :
+            print(errorMsg)
+        }
+    }
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        
+        if (scrollView.bounds.maxY) == scrollView.contentSize.height{
+           // activityIndicator.startAnimating()
+            if isTrending == false {
+                var submenuArr = UserDefaults.standard.value(forKey: "submenuArr") as! [String]
+                
+                var submenu = submenuArr[submenuCOunt] // UserDefaults.standard.value(forKey: "submenu") as! String
+                UserDefaults.standard.set(submenu ,forKey: "submenu")
+                if newShowArticle[submenuCOunt].count >= 20{
+                    if isAPICalled == false{
+                        let result =  DBManager().FetchNextURL(category: submenu)
+                        switch result {
+                        case .Success(let DBData) :
+                            let nextURL = DBData
+                            
+                            if nextURL.count != 0{
+                                isAPICalled = false
+                                if nextURL[0].category == submenu {
+                                    let nexturl = nextURL[0].nextURL
+                                    UserDefaults.standard.set(nexturl, forKey: "submenuURL")
+                                    self.saveArticlesInDB()
+                                }
+                            }
+                            else{
+                                isAPICalled = true
+                               // activityIndicator.stopAnimating()
+                            }
+                        case .Failure(let errorMsg) :
+                            print(errorMsg)
+                        }
+                    }
+                }
             }
         }
     }
