@@ -6172,19 +6172,46 @@
                                                         </collectionViewCell>
                                                     </cells>
                                                 </collectionView>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="anl-uF-lji">
+                                                    <rect key="frame" x="703" y="711" width="50" height="50"/>
+                                                    <color key="backgroundColor" red="0.92941176469999998" green="0.10980392160000001" blue="0.14117647059999999" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="50" id="aU7-Fw-3qH">
+                                                            <variation key="heightClass=regular-widthClass=compact" constant="45"/>
+                                                        </constraint>
+                                                        <constraint firstAttribute="height" constant="50" id="usl-2b-WJ3">
+                                                            <variation key="heightClass=regular-widthClass=compact" constant="45"/>
+                                                        </constraint>
+                                                    </constraints>
+                                                    <connections>
+                                                        <action selector="btnTopNewsActn:" destination="vXY-Av-r7h" eventType="touchUpInside" id="emR-td-JJ9"/>
+                                                    </connections>
+                                                </button>
+                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="upward_white" translatesAutoresizingMaskIntoConstraints="NO" id="aoz-34-Ru9">
+                                                    <rect key="frame" x="713" y="721" width="30" height="30"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="30" id="H9z-oZ-lJE"/>
+                                                        <constraint firstAttribute="height" constant="30" id="WaZ-QW-xQj"/>
+                                                    </constraints>
+                                                </imageView>
                                             </subviews>
                                         </view>
                                         <color key="backgroundColor" red="0.41352093020000003" green="0.773621224" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <constraints>
                                             <constraint firstItem="pa3-Vj-ccf" firstAttribute="height" secondItem="vXY-Av-r7h" secondAttribute="height" id="9Bb-t3-htV"/>
                                             <constraint firstItem="pa3-Vj-ccf" firstAttribute="leading" secondItem="vXY-Av-r7h" secondAttribute="leading" id="9d8-vo-ib7"/>
+                                            <constraint firstAttribute="bottomMargin" secondItem="anl-uF-lji" secondAttribute="bottom" constant="20" id="JkN-XA-ePk"/>
+                                            <constraint firstItem="aoz-34-Ru9" firstAttribute="centerX" secondItem="anl-uF-lji" secondAttribute="centerX" id="M5v-Za-cXl"/>
+                                            <constraint firstAttribute="trailingMargin" secondItem="anl-uF-lji" secondAttribute="trailing" constant="4" id="acf-Wx-YKs"/>
                                             <constraint firstItem="pa3-Vj-ccf" firstAttribute="bottom" secondItem="vXY-Av-r7h" secondAttribute="bottom" id="asC-ql-uel"/>
                                             <constraint firstItem="pa3-Vj-ccf" firstAttribute="top" secondItem="vXY-Av-r7h" secondAttribute="top" id="cFe-3D-DhU"/>
+                                            <constraint firstItem="aoz-34-Ru9" firstAttribute="centerY" secondItem="anl-uF-lji" secondAttribute="centerY" id="hUY-is-i5M"/>
                                             <constraint firstItem="pa3-Vj-ccf" firstAttribute="width" secondItem="vXY-Av-r7h" secondAttribute="width" id="i9d-i0-coX"/>
                                             <constraint firstItem="pa3-Vj-ccf" firstAttribute="trailing" secondItem="vXY-Av-r7h" secondAttribute="trailing" id="s2v-wD-YPu"/>
                                         </constraints>
                                         <size key="customSize" width="765" height="789"/>
                                         <connections>
+                                            <outlet property="btnTopNews" destination="anl-uF-lji" id="Qtt-Pe-wlN"/>
                                             <outlet property="newsCV" destination="pa3-Vj-ccf" id="kZu-0h-JnJ"/>
                                         </connections>
                                     </collectionViewCell>
@@ -6332,21 +6359,6 @@
                                     <constraint firstItem="e7i-vF-WqK" firstAttribute="top" secondItem="ZC3-lj-X0J" secondAttribute="bottom" id="yeP-Sv-RuX"/>
                                 </constraints>
                             </view>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="anl-uF-lji">
-                                <rect key="frame" x="714" y="954" width="50" height="50"/>
-                                <color key="backgroundColor" red="0.92941176469999998" green="0.10980392160000001" blue="0.14117647059999999" alpha="1" colorSpace="calibratedRGB"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="50" id="aU7-Fw-3qH">
-                                        <variation key="heightClass=regular-widthClass=compact" constant="45"/>
-                                    </constraint>
-                                    <constraint firstAttribute="height" constant="50" id="usl-2b-WJ3">
-                                        <variation key="heightClass=regular-widthClass=compact" constant="45"/>
-                                    </constraint>
-                                </constraints>
-                                <connections>
-                                    <action selector="btnTopNewsActn:" destination="fFt-qL-nUG" eventType="touchUpInside" id="A6F-Ve-PXk"/>
-                                </connections>
-                            </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="No news found" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5qk-pL-5kC">
                                 <rect key="frame" x="285.5" y="597" width="197" height="35.5"/>
                                 <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="20"/>
@@ -6356,13 +6368,6 @@
                                     <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="30"/>
                                 </variation>
                             </label>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="upward_white" translatesAutoresizingMaskIntoConstraints="NO" id="aoz-34-Ru9">
-                                <rect key="frame" x="724" y="964" width="30" height="30"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="30" id="H9z-oZ-lJE"/>
-                                    <constraint firstAttribute="height" constant="30" id="WaZ-QW-xQj"/>
-                                </constraints>
-                            </imageView>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
@@ -6374,19 +6379,15 @@
                             <constraint firstItem="7Dl-5s-1G2" firstAttribute="bottom" secondItem="yqi-ZJ-Fhg" secondAttribute="bottom" id="C0s-YX-9V5"/>
                             <constraint firstItem="7Dl-5s-1G2" firstAttribute="leading" secondItem="yqi-ZJ-Fhg" secondAttribute="leading" id="E6d-aj-ChE"/>
                             <constraint firstItem="fjl-yI-N9f" firstAttribute="bottom" secondItem="yqi-ZJ-Fhg" secondAttribute="bottom" id="J6a-g9-r70"/>
-                            <constraint firstItem="yqi-ZJ-Fhg" firstAttribute="trailing" secondItem="anl-uF-lji" secondAttribute="trailing" constant="4" id="NqH-xM-AFL"/>
                             <constraint firstItem="CmX-5N-hcm" firstAttribute="top" secondItem="7pZ-ew-IaQ" secondAttribute="bottom" id="OTd-hy-JYf"/>
                             <constraint firstItem="3DO-pu-E4f" firstAttribute="top" secondItem="CmX-5N-hcm" secondAttribute="bottom" id="Scq-Ln-pXm"/>
                             <constraint firstItem="fjl-yI-N9f" firstAttribute="leading" secondItem="yqi-ZJ-Fhg" secondAttribute="leading" id="UoP-NH-o99"/>
                             <constraint firstItem="fjl-yI-N9f" firstAttribute="trailing" secondItem="yqi-ZJ-Fhg" secondAttribute="trailing" id="VqE-Td-gTl"/>
-                            <constraint firstItem="aoz-34-Ru9" firstAttribute="centerY" secondItem="anl-uF-lji" secondAttribute="centerY" id="Wqp-L0-apP"/>
-                            <constraint firstItem="yqi-ZJ-Fhg" firstAttribute="bottom" secondItem="anl-uF-lji" secondAttribute="bottom" constant="20" id="YQB-Kd-bEa"/>
                             <constraint firstItem="7pZ-ew-IaQ" firstAttribute="leading" secondItem="yqi-ZJ-Fhg" secondAttribute="leading" id="Z7s-BX-HUG"/>
                             <constraint firstItem="CmX-5N-hcm" firstAttribute="trailing" secondItem="yqi-ZJ-Fhg" secondAttribute="trailing" id="fSs-44-r7p"/>
                             <constraint firstItem="3DO-pu-E4f" firstAttribute="trailing" secondItem="yqi-ZJ-Fhg" secondAttribute="trailing" id="fba-55-S3h"/>
                             <constraint firstItem="0Z7-br-xC4" firstAttribute="top" secondItem="sqQ-Dc-ymM" secondAttribute="bottom" id="gO1-aC-Clk"/>
                             <constraint firstItem="5qk-pL-5kC" firstAttribute="centerX" secondItem="fjl-yI-N9f" secondAttribute="centerX" id="iBh-Xf-3mD"/>
-                            <constraint firstItem="aoz-34-Ru9" firstAttribute="centerX" secondItem="anl-uF-lji" secondAttribute="centerX" id="kFA-mH-9OL"/>
                             <constraint firstItem="7Dl-5s-1G2" firstAttribute="trailing" secondItem="yqi-ZJ-Fhg" secondAttribute="trailing" id="p9s-Xh-2Xk"/>
                             <constraint firstAttribute="trailing" secondItem="0Z7-br-xC4" secondAttribute="trailing" constant="26" id="ul8-Gx-sIC"/>
                             <constraint firstItem="7pZ-ew-IaQ" firstAttribute="top" secondItem="yqi-ZJ-Fhg" secondAttribute="top" id="vWR-GA-dwi"/>
@@ -6410,7 +6411,6 @@
                         <outlet property="btnOptionMenu" destination="sqQ-Dc-ymM" id="mLC-Qi-vPH"/>
                         <outlet property="btnSearch" destination="rcJ-6h-35L" id="Bzl-z0-Fgv"/>
                         <outlet property="btnSettings" destination="v1n-zR-NM3" id="MfY-9b-WZz"/>
-                        <outlet property="btnTopNews" destination="anl-uF-lji" id="6cf-cK-Y8H"/>
                         <outlet property="containerCV" destination="7Dl-5s-1G2" id="Y0r-hk-9qh"/>
                         <outlet property="containerCVTop" destination="zWt-rT-oju" id="BIY-9N-oL4"/>
                         <outlet property="lblAppTitle" destination="kiC-hU-LGL" id="IZH-hX-QuO"/>
