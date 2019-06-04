@@ -1493,22 +1493,22 @@ extension NewsDetailVC:UICollectionViewDelegate, UICollectionViewDataSource, UIC
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "SuggestedNewsID", for: indexPath) as! SuggestedNewsCVCell
-        cell.lblTitle.font = FontConstants.NormalFontContent
+        cell.lblTitle.font = FontConstants.NormalFontRecomContent
         cell.lblMoreStories.font = FontConstants.LargeFontContentBold
         cell.btnCellPlayVIdeo.isHidden = true
         let textSizeSelected = UserDefaults.standard.value(forKey: "textSize") as! Int
         
         if textSizeSelected == 0{
             cell.lblMoreStories.font = FontConstants.smallFontDetailTitle
-            cell.lblTitle.font = FontConstants.smallRecommFont
+            cell.lblTitle.font = FontConstants.NormalFontRecomContent
         }
         else if textSizeSelected == 2{
             cell.lblMoreStories.font = FontConstants.LargeFontDetailTitle
-            cell.lblTitle.font = FontConstants.largeRecommFont
+            cell.lblTitle.font = FontConstants.NormalFontRecomContent
         }
         else{
             cell.lblMoreStories.font = FontConstants.NormalFontDetailTitle
-            cell.lblTitle.font = FontConstants.normalRecommFont
+            cell.lblTitle.font = FontConstants.NormalFontRecomContent
         }
         if indexPath.row == 0
         {

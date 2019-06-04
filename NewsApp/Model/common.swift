@@ -83,6 +83,10 @@ struct FontConstants{
     static let  smallFontContent = UIFont(name: AppFontName.regular, size: FontConstants.fontSmallContent)
     static let LargeFontContent = UIFont(name: AppFontName.regular, size: FontConstants.fontLargeContent)
     static let NormalFontContent = UIFont(name: AppFontName.regular, size: FontConstants.fontNormalContent)
+    //for recommendation title
+    static let  smallFontRecomContent = UIFont(name: AppFontName.bold, size: FontConstants.fontSmallContent)
+    static let LargeFontRecomContent = UIFont(name: AppFontName.bold, size: FontConstants.fontLargeContent)
+    static let NormalFontRecomContent = UIFont(name: AppFontName.bold, size: FontConstants.fontNormalContent)
     //for title labels on each screen
     static let viewTitleFont = UIFont(name: AppFontName.bold, size: FontConstants.fontViewTitle)
     //for settings tableview header
