@@ -185,9 +185,13 @@ class SettingsTVC: UITableViewController, GIDSignInUIDelegate {
     }
     
     override func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
+      
         let headerView = view as! UITableViewHeaderFooterView
         headerView.textLabel?.textColor = .black
         headerView.textLabel?.font = FontConstants.settingsTVHeader
+        let text = headerView.textLabel?.text?.capitalized
+        headerView.textLabel?.text = text
+        headerView.textLabel?.textColor = colorConstants.redColor
         let darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
     }
     
@@ -211,7 +215,7 @@ class SettingsTVC: UITableViewController, GIDSignInUIDelegate {
                 self.view.makeToast("You need to login", duration: 1.0, position: .center)
             }
         }
-        else if indexPath.section == 3 && indexPath.row == 0{
+        else if indexPath.section == 2 && indexPath.row == 2{
             let text = "checkout newScout app. I found it best for reading news."
             let url = URL(string: "http://www.fafadiatech.com/")
             let shareAll = [ text, url] as [Any]
@@ -224,12 +228,12 @@ class SettingsTVC: UITableViewController, GIDSignInUIDelegate {
             self.present(activityViewController, animated: true, completion: nil)
         }
             //Replace url with itunes app url
-        else if indexPath.section == 3 && indexPath.row == 1{
+        else if indexPath.section == 2 && indexPath.row == 3{
             //  UIApplication.sharedApplication().openURL(NSURL(string : "itms-apps://itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?id=\(0)&onlyLatestVersion=true&pageNumber=0&sortOrdering=1)")!);
             let url = URL(string: "https://mail.google.com")!
             UIApplication.shared.openURL(url)
         }
-        else if indexPath.section == 3 && indexPath.row == 2{
+        else if indexPath.section == 2 && indexPath.row == 4{
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             let AboutUsvc:AboutUsVC
                 = storyboard.instantiateViewController(withIdentifier: "AboutUsID") as! AboutUsVC

@@ -9,6 +9,15 @@
 import Foundation
 import UIKit
 
+extension StringProtocol {
+    var firstUppercased: String {
+        return prefix(1).uppercased()  + dropFirst()
+    }
+    var firstCapitalized: String {
+        return prefix(1).capitalized + dropFirst()
+    }
+}
+
 class Helper{
     //for conversion of timestamp
     func timeAgoSinceDate(_ date:Date, numericDates:Bool = false) -> String {
