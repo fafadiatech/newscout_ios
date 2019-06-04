@@ -273,21 +273,20 @@ class ShuffleDetailVC: UIViewController , UIScrollViewDelegate, TAPageControlDel
     
     func changeFont(){
         let textSizeSelected = UserDefaults.standard.value(forKey: "textSize") as! Int
-        
         if textSizeSelected == 0{
-            lblNewsHeading.font = FontConstants.smallFontHeadingBold
+            lblNewsHeading.font = FontConstants.smallFontDetailTitle
             btnSource.titleLabel?.font =  FontConstants.smallFontContentMedium
-            txtViewNewsDesc.font = FontConstants.smallFontTitle
+            txtViewNewsDesc.font = FontConstants.smallFontContentDetail
         }
         else if textSizeSelected == 2{
-            lblNewsHeading.font = FontConstants.LargeFontHeadingBold
+            lblNewsHeading.font = FontConstants.LargeFontDetailTitle
             btnSource.titleLabel?.font =  FontConstants.LargeFontContentMedium
-            txtViewNewsDesc.font = FontConstants.LargeFontTitle
+            txtViewNewsDesc.font = FontConstants.LargeFontContentDetail
         }
         else{
-            lblNewsHeading.font = FontConstants.NormalFontHeadingBold
+            lblNewsHeading.font = FontConstants.NormalFontDetailTitle
             btnSource.titleLabel?.font =  FontConstants.NormalFontContentMedium
-            txtViewNewsDesc.font = FontConstants.NormalFontTitle
+            txtViewNewsDesc.font = FontConstants.NormalFontContentDetail
         }
     }
     
@@ -739,16 +738,16 @@ extension ShuffleDetailVC:UICollectionViewDelegate, UICollectionViewDataSource, 
         let textSizeSelected = UserDefaults.standard.value(forKey: "textSize") as! Int
         
         if textSizeSelected == 0{
-            cell.lblMoreStories.font = FontConstants.smallRecommTitleFont
-            cell.lblTitle.font = FontConstants.smallRecommFont
+            cell.lblMoreStories.font = FontConstants.smallFontDetailTitle
+            cell.lblTitle.font = FontConstants.NormalFontRecomContent
         }
         else if textSizeSelected == 2{
-            cell.lblMoreStories.font = FontConstants.largeRecommTitleFont
-            cell.lblTitle.font = FontConstants.largeRecommFont
+            cell.lblMoreStories.font = FontConstants.LargeFontDetailTitle
+            cell.lblTitle.font = FontConstants.NormalFontRecomContent
         }
         else{
-            cell.lblMoreStories.font = FontConstants.normalRecommTitleFont
-            cell.lblTitle.font = FontConstants.normalRecommFont
+            cell.lblMoreStories.font = FontConstants.NormalFontDetailTitle
+            cell.lblTitle.font = FontConstants.NormalFontRecomContent
         }
         if indexPath.row == 0
         {

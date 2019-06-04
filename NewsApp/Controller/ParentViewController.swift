@@ -147,6 +147,12 @@ class ParentViewController: UIViewController {
         bottomBorder.backgroundColor = #colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1)
         menuCV.layer.addSublayer(bottomBorder)
         
+        if Platform.isSimulator {
+            if UserDefaults.standard.value(forKey: "deviceToken") == nil{
+                UserDefaults.standard.set("41ea0aaa15323ae5012992392e4edd6b8a6ee4547a8dc6fd1f3b31aab9839208", forKey: "deviceToken")
+            }
+        }
+        
         if UserDefaults.standard.value(forKey: "daily") == nil{
             UserDefaults.standard.set(false, forKey: "daily")
         }
@@ -267,12 +273,13 @@ class ParentViewController: UIViewController {
         btnSettings.setTitleColor(.white, for: UIControlState.normal)
         btnImgNightMode.setImage(UIImage(named: AssetConstants.whiteMoon), for: .normal)
         btnImgBookmark.setImage(UIImage(named:AssetConstants.Bookmark_white), for: .normal)
-        menuCV.backgroundColor = colorConstants.subTVgrayBackground
-        submenuCV.backgroundColor = colorConstants.txtlightGrayColor
+        menuCV.backgroundColor = colorConstants.MenugrayBackground
+        submenuCV.backgroundColor = colorConstants.grayBackground1
         HomeNewsTV.backgroundColor =  colorConstants.backgroundGray
         viewOptions.backgroundColor = colorConstants.txtlightGrayColor
         HomeNewsTV.reloadData()
         submenuCV.reloadData()
+        containerCV.reloadData()
     }
     
     @objc private func darkModeEnabled(_ notification: Notification){
@@ -750,6 +757,7 @@ extension ParentViewController : UICollectionViewDelegate, UICollectionViewDataS
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         var currentArticle = NewsArticle()
+        let darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
         if collectionView == menuCV {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "menuID", for:indexPath) as! menuCVCell
             cell.lblMenu.text = headingArr[indexPath.item]
@@ -761,6 +769,11 @@ extension ParentViewController : UICollectionViewDelegate, UICollectionViewDataS
             cell.newShowArticle.removeAll()
             cell.selectedObj = self as! CellDelegate
             cell.trendingClickedObj = self as! trendingDetailClicked
+            if  darkModeStatus == true{
+                cell.newsCV.backgroundColor = colorConstants.txtlightGrayColor
+            }else{
+                cell.newsCV.backgroundColor = .white
+            }
             if isTrendingDetail == 1{
                 cell.isTrending = true
                 cell.newShowArticle.append(prevTrendingData)
@@ -771,6 +784,7 @@ extension ParentViewController : UICollectionViewDelegate, UICollectionViewDataS
             }
             else{
                 if submenuCV.isHidden == false{
+                    
                     cell.isTrending = false
                     if isSwipe == true{
                         cell.submenuCOunt = indexPath.row
@@ -800,7 +814,7 @@ extension ParentViewController : UICollectionViewDelegate, UICollectionViewDataS
         }
         else{
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "submenuID", for:indexPath) as! NewsubmenuCVCell
-            let darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
+            
             
             cell.lblSubmenu.layer.borderWidth = 1.0
             cell.lblSubmenu.layer.cornerRadius = 20
@@ -809,7 +823,8 @@ extension ParentViewController : UICollectionViewDelegate, UICollectionViewDataS
             //cell.imgSubmenuBackground.image = UIImage(named: submenuImgArr[HeadingRow][indexPath.row] )
             
             if  darkModeStatus == true{
-                cell.backgroundColor = colorConstants.txtlightGrayColor
+                cell.backgroundColor = colorConstants.grayBackground1
+                cell.lblSubmenu.backgroundColor = .white
             }
             else{
                 cell.backgroundColor = .white

@@ -11,6 +11,8 @@ import NightNight
 
 class ProfileVC: UIViewController {
     
+    @IBOutlet weak var lblTitle: UILabel!
+    @IBOutlet weak var viewAppTitle: UIView!
     @IBOutlet weak var viewImage: UIView!
     @IBOutlet weak var btnImgProfile: UIButton!
     @IBOutlet weak var viewProfileDetails: UIView!
@@ -22,10 +24,17 @@ class ProfileVC: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        viewAppTitle.backgroundColor = colorConstants.redColor
+        lblTitle.font = FontConstants.viewTitleFont
         btnImgProfile.setImage(UIImage(named:"logo"), for: .normal)
         btnChangePswd.backgroundColor = colorConstants.redColor
         btnChangePswd.setTitleColor(colorConstants.whiteColor, for: .normal)
         btnChangePswd.titleLabel?.font = FontConstants.FontBtnTitle
+        btnChangePswd.layer.cornerRadius = 15
+        btnChangePswd.layer.borderWidth = 0
+        btnChangePswd.layer.cornerRadius = 15
+        btnChangePswd.layer.borderWidth = 0
+        
         if UserDefaults.standard.value(forKey: "first_name") != nil{
             lblNameVal.text = UserDefaults.standard.value(forKey: "first_name") as! String
         }

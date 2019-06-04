@@ -108,7 +108,7 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
         btnReadMore.backgroundColor = .clear
         btnReadMore.layer.cornerRadius = 5
         btnReadMore.layer.borderWidth = 1
-        btnReadMore.layer.borderColor = UIColor.gray.cgColor
+        btnReadMore.layer.borderColor = UIColor.black.cgColor
         btnPlayVideo.isHidden = true
         imgScrollView.delegate = self
         imgArray = [#imageLiteral(resourceName: "f3"),#imageLiteral(resourceName: "f1") ,#imageLiteral(resourceName: "f2")]
@@ -448,10 +448,11 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
     func changeTheme(){
         suggestedCV.backgroundColor = colorConstants.txtlightGrayColor
         btnSource.setTitleColor(.white, for: UIControlState.normal)
+        btnSource.tintColor = .white
         btnMoreStories.setTitleColor(.white, for: UIControlState.normal)
-        viewReadMore.backgroundColor = colorConstants.txtlightGrayColor
+        viewReadMore.backgroundColor = colorConstants.grayBackground1
         btnReadMore.setTitleColor(.white, for: UIControlState.normal)
-        btnReadMore.backgroundColor = colorConstants.txtlightGrayColor
+        btnReadMore.backgroundColor = colorConstants.grayBackground1
         newsView.backgroundColor = colorConstants.grayBackground1
         viewContainer.backgroundColor = colorConstants.grayBackground1
         viewNewsArea.backgroundColor = colorConstants.grayBackground1
@@ -525,7 +526,7 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
         }
         else{
             lblNewsHeading.font = FontConstants.NormalFontDetailTitle
-            btnSource.titleLabel?.font =  FontConstants.NormalFontContentMedium
+            btnSource.titleLabel?.font =  FontConstants.NormalFontContentDetail
             txtViewNewsDesc.font = FontConstants.NormalFontContentDetail
         }
     }
@@ -1500,15 +1501,15 @@ extension NewsDetailVC:UICollectionViewDelegate, UICollectionViewDataSource, UIC
         
         if textSizeSelected == 0{
             cell.lblMoreStories.font = FontConstants.smallFontDetailTitle
-            cell.lblTitle.font = FontConstants.NormalFontRecomContent
+            cell.lblTitle.font = FontConstants.smallFontDetailTitle
         }
         else if textSizeSelected == 2{
             cell.lblMoreStories.font = FontConstants.LargeFontDetailTitle
-            cell.lblTitle.font = FontConstants.NormalFontRecomContent
+            cell.lblTitle.font = FontConstants.smallFontDetailTitle
         }
         else{
             cell.lblMoreStories.font = FontConstants.NormalFontDetailTitle
-            cell.lblTitle.font = FontConstants.NormalFontRecomContent
+            cell.lblTitle.font = FontConstants.smallFontDetailTitle
         }
         if indexPath.row == 0
         {

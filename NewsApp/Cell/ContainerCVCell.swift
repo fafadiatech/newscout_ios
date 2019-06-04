@@ -9,6 +9,7 @@
 import UIKit
 import CoreData
 import SDWebImage
+import NightNight
 
 class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UIScrollViewDelegate {
     
@@ -47,7 +48,19 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
         newsCV.reloadData()
         //fetchArticlesFromDB()
     }
+    @objc private func darkModeEnabled(_ notification: Notification){
+        NightNight.theme = .night
+        newsCV.backgroundColor = colorConstants.grayBackground3
+    }
     
+    @objc private func darkModeDisabled(_ notification: Notification) {
+        NightNight.theme = .normal
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self, name: .darkModeEnabled, object: nil)
+        NotificationCenter.default.removeObserver(self, name: .darkModeDisabled, object: nil)
+    }
     override func awakeFromNib() {
         super.awakeFromNib()
         setupViews()
@@ -170,15 +183,18 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
                     cell.lblTitle.text = currentArticle.title
                     
                     if  darkModeStatus == true{
+                        cell.backgroundColor = colorConstants.grayBackground2
                         cell.containerView.backgroundColor = colorConstants.grayBackground2
                         cell.lblSource.textColor = colorConstants.nightModeText
                         cell.lblTitle.textColor = colorConstants.nightModeText
-                        //NightNight.theme =  .night
+                        NightNight.theme =  .night
                     }
                     else{
+                        cell.backgroundColor = .white
+                        cell.containerView.backgroundColor = .white
                         cell.lblSource.textColor = colorConstants.blackColor
                         cell.lblTitle.textColor = colorConstants.blackColor
-                        //NightNight.theme =  .normal
+                        NightNight.theme =  .normal
                     }
                     
                     if ((currentArticle.published_on?.count)!) <= 20{
@@ -243,15 +259,18 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
                     cell.lblTitle.text = currentArticle.title
                     
                     if  darkModeStatus == true{
+                        cell.backgroundColor = colorConstants.grayBackground2
                         cell.containerView.backgroundColor = colorConstants.grayBackground2
                         cell.lblSource.textColor = colorConstants.nightModeText
                         cell.lblTitle.textColor = colorConstants.nightModeText
-                        //NightNight.theme =  .night
+                        NightNight.theme =  .night
                     }
                     else{
+                        cell.backgroundColor = .white
+                        cell.containerView.backgroundColor = .white
                         cell.lblSource.textColor = colorConstants.blackColor
                         cell.lblTitle.textColor = colorConstants.blackColor
-                        //NightNight.theme =  .normal
+                        NightNight.theme =  .normal
                     }
                     
                     if ((currentArticle.published_on?.count)!) <= 20{
@@ -323,15 +342,18 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
         cellCluster.lblTitle.text = currentArticle.title
         cellCluster.lblCount.text = String(count)
         if  darkModeStatus == true{
+            cellCluster.backgroundColor = colorConstants.grayBackground2
             cellCluster.containerView.backgroundColor = colorConstants.grayBackground2
             cellCluster.lblSource.textColor = colorConstants.nightModeText
             cellCluster.lblTitle.textColor = colorConstants.nightModeText
-            //NightNight.theme =  .night
+            NightNight.theme = .night
         }
         else{
+            cellCluster.backgroundColor = .white
+            cellCluster.containerView.backgroundColor = .white
             cellCluster.lblSource.textColor = colorConstants.blackColor
             cellCluster.lblTitle.textColor = colorConstants.blackColor
-            //NightNight.theme =  .normal
+            NightNight.theme =  .normal
         }
         
         if ((currentArticle.published_on?.count)!) <= 20{
