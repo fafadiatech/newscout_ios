@@ -159,6 +159,7 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
                 if indexPath.row % 2 == 0{
                     //display data from DB
                     let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "HomeIphoneAlternateID", for:indexPath) as! HomeiPhoneAlternateCVCell
+                    
                     cell.imgNews.layer.cornerRadius = 10.0
                     cell.imgNews.clipsToBounds = true
                     cell.outerView.layer.cornerRadius = 10

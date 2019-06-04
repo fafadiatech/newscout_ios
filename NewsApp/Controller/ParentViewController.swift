@@ -142,6 +142,11 @@ class ParentViewController: UIViewController {
         DispatchQueue.main.async {
             //self.activityIndicator.stopAnimating()
         }
+        let bottomBorder = CALayer()
+        bottomBorder.frame = CGRect(x: 0.0, y: menuCV.frame.size.height-5, width: menuCV.frame.width, height: 1.0)
+        bottomBorder.backgroundColor = #colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1)
+        menuCV.layer.addSublayer(bottomBorder)
+        
         if UserDefaults.standard.value(forKey: "daily") == nil{
             UserDefaults.standard.set(false, forKey: "daily")
         }
@@ -246,6 +251,7 @@ class ParentViewController: UIViewController {
         btnOptionMenu.setImage(UIImage(named:AssetConstants.menuWhite), for: .normal)
         btnSearch.setImage(UIImage(named:AssetConstants.searchWhite), for: .normal)
         submenuCV.backgroundColor = colorConstants.whiteColor
+        menuCV.backgroundColor = .white
         HomeNewsTV.reloadData()
         submenuCV.reloadData()
         containerCV.reloadData()
