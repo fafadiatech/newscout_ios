@@ -86,8 +86,8 @@ class LoginVC: UIViewController, GIDSignInUIDelegate, FBSDKLoginButtonDelegate {
                 let check = UserDefaults.standard.value(forKey: "isSettingsLogin") as! Bool
                 if check == true{
                     let storyboard = UIStoryboard(name: "Main", bundle: nil)
-                    let HomeVc:HomeParentVC = storyboard.instantiateViewController(withIdentifier: "HomeParentID") as! HomeParentVC
-                    self.present(HomeVc, animated: true, completion: nil)
+                    let parentVc:ParentViewController = storyboard.instantiateViewController(withIdentifier: "parentID") as! ParentViewController
+                    self.present(parentVc, animated: true, completion: nil)
                 }
                 else{
                     self.dismiss(animated: false)
@@ -194,8 +194,8 @@ class LoginVC: UIViewController, GIDSignInUIDelegate, FBSDKLoginButtonDelegate {
                     let check = UserDefaults.standard.value(forKey: "isSettingsLogin") as! Bool
                     if check == true{
                         let storyboard = UIStoryboard(name: "Main", bundle: nil)
-                        let HomeVc:HomeParentVC = storyboard.instantiateViewController(withIdentifier: "HomeParentID") as! HomeParentVC
-                        self.present(HomeVc, animated: true, completion: nil)
+                        let parentVc:ParentViewController = storyboard.instantiateViewController(withIdentifier: "parentID") as! ParentViewController
+                        self.present(parentVc, animated: true, completion: nil)
                     }
                     else{
                         self.dismiss(animated: false)

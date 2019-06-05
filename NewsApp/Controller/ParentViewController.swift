@@ -142,11 +142,6 @@ class ParentViewController: UIViewController {
         DispatchQueue.main.async {
             //self.activityIndicator.stopAnimating()
         }
-        let bottomBorder = CALayer()
-        bottomBorder.frame = CGRect(x: 0.0, y: menuCV.frame.size.height-5, width: menuCV.frame.width, height: 1.0)
-        bottomBorder.backgroundColor = #colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1)
-        menuCV.layer.addSublayer(bottomBorder)
-        
         if Platform.isSimulator {
             if UserDefaults.standard.value(forKey: "deviceToken") == nil{
                 UserDefaults.standard.set("41ea0aaa15323ae5012992392e4edd6b8a6ee4547a8dc6fd1f3b31aab9839208", forKey: "deviceToken")
@@ -167,7 +162,7 @@ class ParentViewController: UIViewController {
             print("stup called")
         }
         HideButtonBarView()
-        
+        sendDeviceDetails()
         btnBack.isHidden = true
         lblNonews.isHidden = true
         lblAppTitle.text = Constants.AppName
@@ -231,6 +226,16 @@ class ParentViewController: UIViewController {
             self.HomeNewsTV.deselectRow(at: index, animated: false)
         }
     }
+    func sendDeviceDetails(){
+        if UserDefaults.standard.value(forKey: "deviceToken") != nil{
+            let id = UserDefaults.standard.value(forKey: "deviceToken") as! String
+            let param = ["device_id" : id,
+                         "device_name": Constants.platform]
+            APICall().deviceAPI(param : param){(status,response) in
+                print(status,response)
+            }
+        }
+    }
     
     @objc func tapped(gestureRecognizer: UITapGestureRecognizer) {
         if viewOptions.isHidden == false{
@@ -250,7 +255,7 @@ class ParentViewController: UIViewController {
         viewNightMode.backgroundColor = colorConstants.txtlightGrayColor
         viewSettings.backgroundColor = colorConstants.txtlightGrayColor
         viewMyBookmark.backgroundColor = colorConstants.txtlightGrayColor
-        viewOptions.backgroundColor = colorConstants.txtlightGrayColor
+        viewOptions.backgroundColor = colorConstants.whiteColor
         btnImgNightMode.setImage(nil, for: .normal)
         btnImgNightMode.setImage(UIImage(named: AssetConstants.moon), for: .normal)
         btnImgBookmark.setImage(UIImage(named:AssetConstants.bookmark), for: .normal)
@@ -1364,7 +1369,7 @@ extension ParentViewController: UICollectionViewDelegateFlowLayout {
             let label = UILabel(frame: CGRect.zero)
             label.text = headingArr[indexPath.item]
             label.sizeToFit()
-            CVSize = label.frame.width + 100.0
+            CVSize = label.frame.width + 90.0
             return CGSize(width:CVSize , height: 60)
         }
         else if collectionView ==  submenuCV{
@@ -1376,8 +1381,13 @@ extension ParentViewController: UICollectionViewDelegateFlowLayout {
         }
         else{
             let screen = UIScreen.main.bounds
-            let totalHeight = viewAppTitle.frame.size.height + menuCV.frame.size.height + submenuCV.frame.size.height
-            return CGSize(width: screen.size.width, height: screen.size.height - totalHeight)
+            if submenuCV.isHidden == true {
+                let totalHeight = viewAppTitle.frame.size.height + menuCV.frame.size.height + submenuCV.frame.size.height - 40.0
+                return CGSize(width: screen.size.width, height: screen.size.height - totalHeight)
+            }else{
+                let totalHeight = viewAppTitle.frame.size.height + menuCV.frame.size.height + submenuCV.frame.size.height
+                return CGSize(width: screen.size.width, height: screen.size.height - totalHeight)
+            }
             
         }
     }

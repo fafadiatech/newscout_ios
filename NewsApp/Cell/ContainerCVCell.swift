@@ -10,11 +10,13 @@ import UIKit
 import CoreData
 import SDWebImage
 import NightNight
+import MaterialComponents.MaterialActivityIndicator
 
 class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UIScrollViewDelegate {
     
     @IBOutlet weak var btnTopNews: UIButton!
     @IBOutlet weak var newsCV: UICollectionView!
+    let activityIndicator = MDCActivityIndicator()
     var sortedData = [NewsArticle]()
     var clusterArticles = [NewsArticle]()
     var prevTrendingData = [NewsArticle]()
@@ -42,12 +44,17 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
         // submenuCOunt = SwipeIndex.shared.currentIndex
         //submenuCOunt = submenuCOunt + 1
         newShowArticle = SwipeIndex.shared.newShowArticle
-        btnTopNews.layer.cornerRadius = 0.5 * btnTopNews.bounds.size.width
-        btnTopNews.clipsToBounds = true
-        btnTopNews.backgroundColor = colorConstants.redColor
+        activityIndicator.cycleColors = [.blue]
+        activityIndicator.frame = CGRect(x: newsCV.frame.width/2, y: newsCV.frame.height/2 - 100, width: 40, height: 40)
+        activityIndicator.sizeToFit()
+        activityIndicator.indicatorMode = .indeterminate
+        activityIndicator.progress = 2.0
+        newsCV.addSubview(activityIndicator)
+        
         newsCV.reloadData()
-        //fetchArticlesFromDB()
+        self.activityIndicator.startAnimating()
     }
+    
     @objc private func darkModeEnabled(_ notification: Notification){
         NightNight.theme = .night
         newsCV.backgroundColor = colorConstants.grayBackground3
@@ -161,12 +168,10 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
         var fullTxt = ""
         var dateSubString = ""
         var agoDate = ""
-        // let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "HomeIpadID", for:indexPath) as! HomeipadCVCell
-        // HomeIphoneID
-        //HomeIphoneAlternateID
         
         if (UIDevice.current.userInterfaceIdiom != UIUserInterfaceIdiom.pad){
             if isTrending == false{
+                activityIndicator.startAnimating()
                 sortedData = newShowArticle[submenuCOunt].sorted{ $0.published_on! > $1.published_on! }
                 currentArticle = sortedData[indexPath.row]
                 if indexPath.row % 2 == 0{
@@ -408,16 +413,6 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        //         let obj = ParentViewController()
-        //        if isTrending == false{
-        //            obj.sortedData = newShowArticle[submenuCOunt]
-        //        }else{
-        //            obj.sortedData = newShowArticle[0]
-        //        }
-        //        var id = UserDefaults.standard.array(forKey: "trendingArray") as! [Int]
-        //        let selectedCluster = id[indexPath.row]
-        //        fetchClusterIdArticles(clusterID: selectedCluster)
-        //        isTrendingDetail = 2
         if isTrending == false{
             selectedObj?.colCategorySelected(indexPath, sortedData)
         }else{
@@ -429,30 +424,6 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
             submenuCOunt = 0
             isTrendingDetail = 2
         }
-        
-        //        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        //        let newsDetailvc:NewsDetailVC = storyboard.instantiateViewController(withIdentifier: "NewsDetailID") as! NewsDetailVC
-        //
-        //        if isTrendingDetail == 0{
-        //            UserDefaults.standard.set("home", forKey: "isSearch")
-        //        }else{
-        //            UserDefaults.standard.set("cluster", forKey: "isSearch")
-        //        }
-        //        if isTrendingDetail == 0 || isTrendingDetail == 2{
-        //            if sortedData.count > 0 {
-        //                newsDetailvc.newsCurrentIndex = indexPath.row
-        //                newsDetailvc.ShowArticle = sortedData
-        //                newsDetailvc.articleId = Int(sortedData[indexPath.row].article_id)
-        //                present(newsDetailvc, animated: true, completion: nil)
-        //            }
-        //        }
-        //        else{
-        //            var id = UserDefaults.standard.array(forKey: "trendingArray") as! [Int]
-        //            let selectedCluster = id[indexPath.row]
-        //           //  fetchClusterIdArticles(clusterID: selectedCluster)
-        //            isTrendingDetail = 2
-        //        }
-        //
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
@@ -466,7 +437,6 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
         }
         else{
             let collectionCellSize = newsCV.frame.size.width
-            
             if isTrending == true {
                 return CGSize(width: collectionCellSize/2.15, height: collectionCellSize/2)
             }else{
@@ -476,7 +446,6 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
     }
     
     func fetchArticlesFromDB(){
-      
         let result = DBManager().ArticlesfetchByCatId()
         switch result {
         case .Success(let DBData) :
@@ -495,11 +464,11 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         
         if (scrollView.bounds.maxY) == scrollView.contentSize.height{
-           // activityIndicator.startAnimating()
+            activityIndicator.startAnimating()
             if isTrending == false {
                 var submenuArr = UserDefaults.standard.value(forKey: "submenuArr") as! [String]
                 
-                var submenu = submenuArr[submenuCOunt] // UserDefaults.standard.value(forKey: "submenu") as! String
+                var submenu = submenuArr[submenuCOunt]
                 UserDefaults.standard.set(submenu ,forKey: "submenu")
                 if newShowArticle[submenuCOunt].count >= 20{
                     if isAPICalled == false{
@@ -518,7 +487,7 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
                             }
                             else{
                                 isAPICalled = true
-                               // activityIndicator.stopAnimating()
+                                activityIndicator.stopAnimating()
                             }
                         case .Failure(let errorMsg) :
                             print(errorMsg)
