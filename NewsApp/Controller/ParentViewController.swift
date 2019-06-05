@@ -725,7 +725,7 @@ extension ParentViewController : UICollectionViewDelegate, UICollectionViewDataS
     //    }
     
     func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
-        
+        if scrollView == containerCV{
         if headingName != "Trending"{
             isSwipe = true
             let index = Int(targetContentOffset.pointee.x / submenuCV.frame.width)
@@ -742,6 +742,7 @@ extension ParentViewController : UICollectionViewDelegate, UICollectionViewDataS
              
              // reloadSubmenuNews()*/
             
+        }
         }
     }
     
