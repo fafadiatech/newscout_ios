@@ -33,6 +33,7 @@ class SourceVC: UIViewController {
         super.viewDidLoad()
         sourceTV.tableFooterView = UIView(frame: .zero)
         lblSource.text = source
+        lblSource.textColor = .white
         titleView.backgroundColor = colorConstants.redColor
         NotificationCenter.default.addObserver(self, selector: #selector(darkModeEnabled(_:)), name: .darkModeEnabled, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(darkModeDisabled(_:)), name: .darkModeDisabled, object: nil)
@@ -133,7 +134,11 @@ extension SourceVC: UITableViewDelegate, UITableViewDataSource{
         var dateSubString = ""
         var agoDate = ""
         if indexPath.row % 2 != 0{
-            
+            cell.viewCellContainer.layer.cornerRadius = 10
+            cell.viewCellContainer.layer.shadowColor = UIColor.black.cgColor
+            cell.viewCellContainer.layer.shadowOffset = CGSize(width: 3, height: 3)
+            cell.viewCellContainer.layer.shadowOpacity = 0.7
+            cell.viewCellContainer.layer.shadowRadius = 4.0
             cell.imgNews.layer.cornerRadius = 10.0
             cell.imgNews.clipsToBounds = true
             
@@ -204,7 +209,11 @@ extension SourceVC: UITableViewDelegate, UITableViewDataSource{
             return cell
         }
         else{
-            
+            cellOdd.viewCellContainer.layer.cornerRadius = 10
+            cellOdd.viewCellContainer.layer.shadowColor = UIColor.black.cgColor
+            cellOdd.viewCellContainer.layer.shadowOffset = CGSize(width: 3, height: 3)
+            cellOdd.viewCellContainer.layer.shadowOpacity = 0.7
+            cellOdd.viewCellContainer.layer.shadowRadius = 4.0
             cellOdd.imgNews.layer.cornerRadius = 10.0
             cellOdd.imgNews.clipsToBounds = true
             //display data from DB

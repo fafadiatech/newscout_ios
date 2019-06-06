@@ -250,7 +250,11 @@ extension BookmarkVC: UITableViewDelegate, UITableViewDataSource{
         sortedData = ShowArticle.sorted{ $0.published_on! > $1.published_on! }
         currentArticle = sortedData[indexPath.row]
         if indexPath.row % 2 != 0{
-            
+            cell.viewCellContainer.layer.cornerRadius = 10
+            cell.viewCellContainer.layer.shadowColor = UIColor.black.cgColor
+            cell.viewCellContainer.layer.shadowOffset = CGSize(width: 3, height: 3)
+            cell.viewCellContainer.layer.shadowOpacity = 0.7
+            cell.viewCellContainer.layer.shadowRadius = 4.0
             cell.imgNews.layer.cornerRadius = 10.0
             cell.imgNews.clipsToBounds = true
             
@@ -319,7 +323,11 @@ extension BookmarkVC: UITableViewDelegate, UITableViewDataSource{
             return cell
         }
         else{
-            
+            cellOdd.viewCellContainer.layer.cornerRadius = 10
+            cellOdd.viewCellContainer.layer.shadowColor = UIColor.black.cgColor
+            cellOdd.viewCellContainer.layer.shadowOffset = CGSize(width: 3, height: 3)
+            cellOdd.viewCellContainer.layer.shadowOpacity = 0.7
+            cellOdd.viewCellContainer.layer.shadowRadius = 4.0
             cellOdd.imgNews.layer.cornerRadius = 10.0
             cellOdd.imgNews.clipsToBounds = true
             //display data from DB

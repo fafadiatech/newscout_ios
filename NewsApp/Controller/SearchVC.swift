@@ -266,6 +266,11 @@ extension SearchVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDele
         if isResultLoaded == false{
             if indexPath.row % 2 != 0{
                 let cell = tableView.dequeueReusableCell(withIdentifier: "search", for:indexPath) as! SearchResultTVCell
+                cell.viewCellContainer.layer.cornerRadius = 10
+                cell.viewCellContainer.layer.shadowColor = UIColor.black.cgColor
+                cell.viewCellContainer.layer.shadowOffset = CGSize(width: 3, height: 3)
+                cell.viewCellContainer.layer.shadowOpacity = 0.7
+                cell.viewCellContainer.layer.shadowRadius = 4.0
                 cell.imgNews.layer.cornerRadius = 10.0
                 cell.imgNews.clipsToBounds = true
                 imgWidth = String(describing : Int(cell.imgNews.frame.width))
@@ -339,6 +344,11 @@ extension SearchVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDele
                 let cellOdd = tableView.dequeueReusableCell(withIdentifier: "searchZigzagID", for:indexPath) as! searchZigzagTVCell
                 cellOdd.imgNews.layer.cornerRadius = 10.0
                 cellOdd.imgNews.clipsToBounds = true
+                cellOdd.viewCellContainer.layer.cornerRadius = 10
+                cellOdd.viewCellContainer.layer.shadowColor = UIColor.black.cgColor
+                cellOdd.viewCellContainer.layer.shadowOffset = CGSize(width: 3, height: 3)
+                cellOdd.viewCellContainer.layer.shadowOpacity = 0.7
+                cellOdd.viewCellContainer.layer.shadowRadius = 4.0
                 //display data from DB
                 var currentArticle = Searchresults[indexPath.row]
                 cellOdd.lblNewsDescription.text = currentArticle.title
