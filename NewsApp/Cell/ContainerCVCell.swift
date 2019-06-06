@@ -13,7 +13,7 @@ import NightNight
 import MaterialComponents.MaterialActivityIndicator
 
 class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UIScrollViewDelegate {
-    
+     @IBOutlet weak var lblNoNews: UILabel!
     @IBOutlet weak var btnTopNews: UIButton!
     @IBOutlet weak var newsCV: UICollectionView!
     let activityIndicator = MDCActivityIndicator()
@@ -32,6 +32,7 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
     var trendingClickedObj : trendingDetailClicked?
     var trendingTVProtocol : TrendingBack?
     var isAPICalled = false
+    
     required init?(coder aDecoder: NSCoder) {
         super.init(coder:aDecoder)
         print("init has been called")
@@ -40,19 +41,19 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
     func setupViews(){
         newsCV.delegate = self
         newsCV.dataSource = self
-        trendingTVProtocol?.isTrendingTVLoaded(status: false)
-        // submenuCOunt = SwipeIndex.shared.currentIndex
-        //submenuCOunt = submenuCOunt + 1
-        newShowArticle = SwipeIndex.shared.newShowArticle
         activityIndicator.cycleColors = [.blue]
-        activityIndicator.frame = CGRect(x: newsCV.frame.width/2, y: newsCV.frame.height/2 - 100, width: 40, height: 40)
+        let screen = UIScreen.main.bounds
+        activityIndicator.frame = CGRect(x: screen.size.width/2, y: screen.size.height/2 - 100, width: 40, height: 40)
         activityIndicator.sizeToFit()
         activityIndicator.indicatorMode = .indeterminate
         activityIndicator.progress = 2.0
         newsCV.addSubview(activityIndicator)
-        
+        trendingTVProtocol?.isTrendingTVLoaded(status: false)
+        // submenuCOunt = SwipeIndex.shared.currentIndex
+        //submenuCOunt = submenuCOunt + 1
+        newShowArticle = SwipeIndex.shared.newShowArticle
         newsCV.reloadData()
-        self.activityIndicator.startAnimating()
+   activityIndicator.startAnimating()
     }
     
     @objc private func darkModeEnabled(_ notification: Notification){
@@ -147,8 +148,8 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
             }
             else{
                 //                self.HomeNewsTV.reloadData()
-                //                self.lblNonews.isHidden =  false
-                //                self.activityIndicator.stopAnimating()
+                                self.lblNoNews.isHidden =  true
+                                self.activityIndicator.stopAnimating()
             }
         case .Failure(let errorMsg) :
             print(errorMsg)
@@ -168,16 +169,14 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
         var fullTxt = ""
         var dateSubString = ""
         var agoDate = ""
-        
         if (UIDevice.current.userInterfaceIdiom != UIUserInterfaceIdiom.pad){
             if isTrending == false{
-                activityIndicator.startAnimating()
                 sortedData = newShowArticle[submenuCOunt].sorted{ $0.published_on! > $1.published_on! }
                 currentArticle = sortedData[indexPath.row]
                 if indexPath.row % 2 == 0{
                     //display data from DB
                     let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "HomeIphoneAlternateID", for:indexPath) as! HomeiPhoneAlternateCVCell
-                    
+                   
                     cell.imgNews.layer.cornerRadius = 10.0
                     cell.imgNews.clipsToBounds = true
                     cell.outerView.layer.cornerRadius = 10
@@ -248,8 +247,8 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
                         cell.imgNews.image = UIImage(named: AssetConstants.NoImage)
                     }
                     
-                    //            activityIndicator.stopAnimating()
-                    //            lblNonews.isHidden = true
+                                activityIndicator.stopAnimating()
+                                lblNoNews.isHidden = true
                     return cell
                 }
                 else{
@@ -324,8 +323,8 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
                         cell.imgNews.image = UIImage(named: AssetConstants.NoImage)
                     }
                     
-                    //            activityIndicator.stopAnimating()
-                    //            lblNonews.isHidden = true
+                    activityIndicator.stopAnimating()
+                    lblNoNews.isHidden = true
                     return cell
                 }
             }
@@ -333,7 +332,6 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
         let cellCluster = collectionView.dequeueReusableCell(withReuseIdentifier: "HomeIpadClusterID", for:indexPath) as! HomeiPadClusterCVCell
         cellCluster.imgNews.layer.cornerRadius = 10.0
         cellCluster.imgNews.clipsToBounds = true
-        
         cellCluster.outerView.layer.cornerRadius = 10
         cellCluster.outerView.layer.shadowColor = UIColor.black.cgColor
         cellCluster.outerView.layer.shadowOffset = CGSize(width: 3, height: 3)
@@ -409,6 +407,8 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
         if cellCluster.imgNews.image == nil{
             cellCluster.imgNews.image = UIImage(named: AssetConstants.NoImage)
         }
+        lblNoNews.isHidden = true
+        activityIndicator.stopAnimating()
         return cellCluster
     }
     

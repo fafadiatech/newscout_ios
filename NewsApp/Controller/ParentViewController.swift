@@ -129,7 +129,8 @@ class ParentViewController: UIViewController {
         viewAppTitle.addGestureRecognizer(tapRecognizer)
         tapRecognizer.delegate = self as UIGestureRecognizerDelegate
         activityIndicator.cycleColors = [.blue]
-        activityIndicator.frame = CGRect(x: view.frame.width/2, y: view.frame.height/2 - 100, width: 40, height: 40)
+        let screen = UIScreen.main.bounds
+        activityIndicator.frame = CGRect(x: screen.size.width/2, y: screen.size.height/2 - 100, width: 40, height: 40)
         activityIndicator.sizeToFit()
         activityIndicator.indicatorMode = .indeterminate
         activityIndicator.progress = 2.0
@@ -441,7 +442,7 @@ class ParentViewController: UIViewController {
     func saveTrending(){
         DBManager().saveTrending{response in
             if response == true{
-                //self.fetchTrending()
+                self.fetchTrending()
             }
         }
     }
@@ -458,12 +459,12 @@ class ParentViewController: UIViewController {
             if self.ShowArticle.count > 0{
                 SwipeIndex.shared.newShowArticle.append(ShowArticle)
                 self.lblNonews.isHidden = true
-                self.HomeNewsTV.reloadData()
+                //self.HomeNewsTV.reloadData()
                 containerCV.reloadData()
             }
             else{
                 self.HomeNewsTV.reloadData()
-                self.lblNonews.isHidden =  false
+                //self.lblNonews.isHidden =  false
                 self.activityIndicator.stopAnimating()
             }
         case .Failure(let errorMsg) :
@@ -485,7 +486,7 @@ class ParentViewController: UIViewController {
             }
             else{
                 self.HomeNewsTV.reloadData()
-                self.lblNonews.isHidden =  false
+                //self.lblNonews.isHidden =  false
                 self.activityIndicator.stopAnimating()
             }
         case .Failure(let errorMsg) :
@@ -703,7 +704,6 @@ class ParentViewController: UIViewController {
         //        activityIndicator.startAnimating()
         ShowArticle = prevTrendingData
         containerCV.reloadData()
-        // fetchTrending()
         btnBack.isHidden = true
     }
 }
