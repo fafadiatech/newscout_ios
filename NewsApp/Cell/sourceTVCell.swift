@@ -11,6 +11,7 @@ import UIKit
 class sourceTVCell: UITableViewCell {
     @IBOutlet weak var lblSource: UILabel!
     @IBOutlet weak var lblNewsDescription: UILabel!
+    @IBOutlet weak var viewCellContainer: UIView!
     @IBOutlet weak var imgNews: UIImageView!
     @IBOutlet weak var ViewCellBackground: UIView!
     
