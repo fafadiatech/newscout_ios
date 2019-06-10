@@ -16,4 +16,5 @@ class HomeiPadClusterCVCell: UICollectionViewCell {
     @IBOutlet weak var outerView: UIView!
     @IBOutlet weak var lblCount: UILabel!
     @IBOutlet weak var imgCount: UIImageView!
+    @IBOutlet weak var lblSourceTrailing: NSLayoutConstraint!
 }

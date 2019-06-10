@@ -13,9 +13,12 @@ import NightNight
 import MaterialComponents.MaterialActivityIndicator
 
 class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UIScrollViewDelegate {
-     @IBOutlet weak var lblNoNews: UILabel!
+    @IBOutlet weak var lblNoNews: UILabel!
     @IBOutlet weak var btnTopNews: UIButton!
     @IBOutlet weak var newsCV: UICollectionView!
+    
+    @IBOutlet weak var lblSourceTrailing: NSLayoutConstraint!
+    
     let activityIndicator = MDCActivityIndicator()
     var sortedData = [NewsArticle]()
     var clusterArticles = [NewsArticle]()
@@ -52,6 +55,7 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
         // submenuCOunt = SwipeIndex.shared.currentIndex
         //submenuCOunt = submenuCOunt + 1
         newShowArticle = SwipeIndex.shared.newShowArticle
+        btnTopNews.layer.cornerRadius = 0.5 * btnTopNews.bounds.size.width
         newsCV.reloadData()
    activityIndicator.startAnimating()
     }
@@ -108,6 +112,7 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
     }
     
     func saveArticlesInDB(){
+        activityIndicator.startAnimating()
         var subMenuURL = ""
         if UserDefaults.standard.value(forKey: "submenuURL") != nil{
             subMenuURL =  UserDefaults.standard.value(forKey: "submenuURL") as! String
@@ -179,6 +184,7 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
                    
                     cell.imgNews.layer.cornerRadius = 10.0
                     cell.imgNews.clipsToBounds = true
+                    
                     cell.outerView.layer.cornerRadius = 10
                     cell.outerView.layer.shadowColor = UIColor.black.cgColor
                     cell.outerView.layer.shadowOffset = CGSize(width: 3, height: 3)
@@ -323,27 +329,69 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
                         cell.imgNews.image = UIImage(named: AssetConstants.NoImage)
                     }
                     
-                    activityIndicator.stopAnimating()
+                   activityIndicator.stopAnimating()
                     lblNoNews.isHidden = true
                     return cell
                 }
             }
         }
+        
         let cellCluster = collectionView.dequeueReusableCell(withReuseIdentifier: "HomeIpadClusterID", for:indexPath) as! HomeiPadClusterCVCell
+       
+        cellCluster.outerView.layer.cornerRadius = 10
+        cellCluster.outerView.layer.masksToBounds = false
+        cellCluster.outerView.layer.shadowColor = UIColor.black.cgColor
+        cellCluster.outerView.layer.shadowOffset = CGSize(width: 0, height: 5)
+        let shadowpath = UIBezierPath(roundedRect: bounds, cornerRadius: 2)
+        layer.shadowPath = shadowpath.cgPath
+        cellCluster.outerView.layer.shadowOpacity = 0.7
+        //cellCluster.outerView.layer.shadowRadius = 6.0
         cellCluster.imgNews.layer.cornerRadius = 10.0
         cellCluster.imgNews.clipsToBounds = true
-        cellCluster.outerView.layer.cornerRadius = 10
-        cellCluster.outerView.layer.shadowColor = UIColor.black.cgColor
-        cellCluster.outerView.layer.shadowOffset = CGSize(width: 3, height: 3)
-        cellCluster.outerView.layer.shadowOpacity = 0.7
-        cellCluster.outerView.layer.shadowRadius = 6.0
+        cellCluster.layer.cornerRadius = 10.0
+        cellCluster.clipsToBounds = true
         // var currentArticle : Article!
-        currentArticle = newShowArticle[0][indexPath.row]
+        if (UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad){
+        if  isTrending == false {
+           // NSLayoutConstraint.deactivate([lblSourceTrailing])
+           
+        }
+    }
+        if isTrending == true{
+             currentArticle = newShowArticle[0][indexPath.row]
         let count = DBManager().showCount(articleId: Int(currentArticle.article_id))//ShowArticle[indexPath.row]
-        // currentArticle = ShowArticle[indexPath.row]
+         cellCluster.lblCount.text = String(count)
+            if lblSourceTrailing != nil{
+                NSLayoutConstraint.deactivate([lblSourceTrailing])
+                cellCluster.lblCount.isHidden = false
+                cellCluster.imgCount.isHidden = false
+            lblSourceTrailing = NSLayoutConstraint (item: cellCluster.lblSource,
+                                                    attribute: NSLayoutConstraint.Attribute.trailing,
+                                                    relatedBy: NSLayoutConstraint.Relation.equal,
+                                                    toItem: cellCluster.imgCount,
+                                                    attribute: NSLayoutConstraint.Attribute.leading,
+                                                    multiplier: -20,
+                                                    constant: 0)
+            NSLayoutConstraint.activate([lblSourceTrailing])
+            }
+        }else{
+            sortedData = newShowArticle[submenuCOunt].sorted{ $0.published_on! > $1.published_on! }
+            currentArticle = sortedData[indexPath.row]
+            cellCluster.lblCount.isHidden = true
+            cellCluster.imgCount.isHidden = true
+            lblSourceTrailing = NSLayoutConstraint (item: cellCluster.lblSource,
+                                                    attribute: NSLayoutConstraint.Attribute.trailing,
+                                                    relatedBy: NSLayoutConstraint.Relation.equal,
+                                                    toItem: cellCluster.lblTitle,
+                                                    attribute: NSLayoutConstraint.Attribute.trailing,
+                                                    multiplier: 1,
+                                                    constant: 0)
+            NSLayoutConstraint.activate([lblSourceTrailing])
+        }
+
         //display data from DB
         cellCluster.lblTitle.text = currentArticle.title
-        cellCluster.lblCount.text = String(count)
+      
         if  darkModeStatus == true{
             cellCluster.backgroundColor = colorConstants.grayBackground2
             cellCluster.containerView.backgroundColor = colorConstants.grayBackground2
@@ -440,12 +488,13 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
             if isTrending == true {
                 return CGSize(width: collectionCellSize/2.15, height: collectionCellSize/2)
             }else{
-                return CGSize(width: collectionCellSize/3.3, height: collectionCellSize/3)
+                return CGSize(width: collectionCellSize/3.3, height: collectionCellSize/2.3)
             }
         }
     }
     
     func fetchArticlesFromDB(){
+        activityIndicator.startAnimating()
         let result = DBManager().ArticlesfetchByCatId()
         switch result {
         case .Success(let DBData) :
@@ -462,8 +511,8 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        
-        if (scrollView.bounds.maxY) == scrollView.contentSize.height{
+        if scrollView == newsCV{
+        if (scrollView.bounds.maxY) >= scrollView.contentSize.height{
             activityIndicator.startAnimating()
             if isTrending == false {
                 var submenuArr = UserDefaults.standard.value(forKey: "submenuArr") as! [String]
@@ -495,6 +544,7 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
                     }
                 }
             }
+        }
         }
     }
     

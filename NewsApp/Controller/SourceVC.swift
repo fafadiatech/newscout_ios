@@ -79,7 +79,7 @@ class SourceVC: UIViewController {
             switch response {
             case .Success(let data) :
                 self.ShowArticle = (data[0].body?.articles)!
-                if data[0].body?.next != ""{
+                if data[0].body?.next != nil{
                     self.nextURL = (data[0].body?.next)!
                 }
                 if self.sourceTV.isHidden == false{
@@ -103,6 +103,7 @@ class SourceVC: UIViewController {
 }
 
 extension SourceVC: UITableViewDelegate, UITableViewDataSource{
+   
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return (ShowArticle.count > 0) ? (ShowArticle.count)  : 0
     }
@@ -351,8 +352,16 @@ extension SourceVC: UICollectionViewDelegate, UICollectionViewDataSource, UIScro
         var agoDate = ""
         //display data from DB
         var currentArticle = ShowArticle[indexPath.row]
+        cell.imgNews.layer.cornerRadius = 10.0
+        cell.imgNews.clipsToBounds = true
+        cell.layer.cornerRadius = 10.0
+        cell.clipsToBounds = true
         cell.lblTitle.text = currentArticle.title
-        
+        cell.viewCellContainer.layer.cornerRadius = 10
+        cell.viewCellContainer.layer.shadowColor = UIColor.black.cgColor
+        cell.viewCellContainer.layer.shadowOffset = CGSize(width: 3, height: 3)
+        cell.viewCellContainer.layer.shadowOpacity = 0.7
+        cell.viewCellContainer.layer.shadowRadius = 4.0
         if  darkModeStatus == true{
             cell.containerView.backgroundColor = colorConstants.grayBackground2
             cell.lblSource.textColor = colorConstants.nightModeText
@@ -453,6 +462,6 @@ extension SourceVC: UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let collectionCellSize = sourceCV.frame.size.width
-        return CGSize(width: collectionCellSize/3.4, height: collectionCellSize/3)
+        return CGSize(width: collectionCellSize/3.4, height: collectionCellSize/2.4)
     }
 }

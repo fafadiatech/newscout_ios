@@ -227,7 +227,7 @@ extension SearchVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDele
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         if isResultLoaded == false{
-            return 137
+            return 147
         }else{
             return 60
         }
@@ -488,7 +488,11 @@ extension SearchVC: UICollectionViewDelegate, UICollectionViewDataSource{
         //display data from DB
         let currentArticle = Searchresults[indexPath.row]
         cell.lblTitle.text = currentArticle.title
-        
+        cell.viewCellContainer.layer.cornerRadius = 10
+        cell.viewCellContainer.layer.shadowColor = UIColor.black.cgColor
+        cell.viewCellContainer.layer.shadowOffset = CGSize(width: 3, height: 3)
+        cell.viewCellContainer.layer.shadowOpacity = 0.7
+        cell.viewCellContainer.layer.shadowRadius = 4.0
         if  darkModeStatus == true{
             cell.containerView.backgroundColor = colorConstants.grayBackground2
             cell.lblSource.textColor = colorConstants.nightModeText
@@ -749,6 +753,7 @@ extension SearchVC: UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let collectionCellSize = searchResultCV.frame.size.width
-        return CGSize(width: collectionCellSize/3.4, height: collectionCellSize/3)
+        return CGSize(width: collectionCellSize/3.4, height: collectionCellSize/2.4)
     }
 }
+

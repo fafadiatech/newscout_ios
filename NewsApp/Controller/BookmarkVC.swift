@@ -462,8 +462,17 @@ extension BookmarkVC: UICollectionViewDelegate, UICollectionViewDataSource, UISc
         sortedData.removeAll()
         sortedData = ShowArticle.sorted{ $0.published_on! > $1.published_on! }
         let currentArticle = sortedData[indexPath.row]
+        cell.layer.cornerRadius = 10.0
+        cell.clipsToBounds = true
+        cell.imgNews.layer.cornerRadius = 10.0
+        cell.imgNews.clipsToBounds = true
         cell.lblTitle.text = currentArticle.title
-        
+        cell.viewCellContainer.layer.masksToBounds = false
+        cell.viewCellContainer.layer.cornerRadius = 10
+        cell.viewCellContainer.layer.shadowColor = UIColor.black.cgColor
+        cell.viewCellContainer.layer.shadowOffset = CGSize(width: 0, height: 5)
+        cell.viewCellContainer.layer.shadowOpacity = 0.7
+        cell.viewCellContainer.layer.shadowRadius = 4.0
         if  darkModeStatus == true{
             cell.containerView.backgroundColor = colorConstants.grayBackground2
             cell.lblSource.textColor = colorConstants.nightModeText
@@ -564,12 +573,13 @@ extension BookmarkVC: UICollectionViewDelegate, UICollectionViewDataSource, UISc
             }
         }
     }
+
 }
 
 extension BookmarkVC: UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let collectionCellSize = bookmarkCV.frame.size.width
-            return CGSize(width: collectionCellSize/3.4, height: collectionCellSize/3)
+            return CGSize(width: collectionCellSize/3.4, height: collectionCellSize/2.4)
     }
 }

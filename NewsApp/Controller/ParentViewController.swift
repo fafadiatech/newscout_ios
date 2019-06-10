@@ -876,6 +876,7 @@ extension ParentViewController : UICollectionViewDelegate, UICollectionViewDataS
         viewOptions.isHidden = true
         activityIndicator.startAnimating()
         if collectionView == menuCV{
+            activityIndicator.startAnimating()
             index = 0
             headingName = headingArr[indexPath.row]
             if headingArr[indexPath.row] != "Trending"{
