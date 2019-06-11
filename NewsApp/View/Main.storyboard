@@ -1814,16 +1814,6 @@
                                                     <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="24"/>
                                                 </variation>
                                             </textView>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="B78-Ys-NlE">
-                                                <rect key="frame" x="359.5" y="152.5" width="234.5" height="2"/>
-                                                <color key="backgroundColor" red="0.92941176469999998" green="0.10980392160000001" blue="0.14117647059999999" alpha="1" colorSpace="calibratedRGB"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="height" constant="2" id="ZfP-zU-1dL"/>
-                                                </constraints>
-                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                <nil key="textColor"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
                                         </subviews>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
@@ -1832,10 +1822,7 @@
                                             <constraint firstItem="CNh-Bn-zFR" firstAttribute="top" secondItem="TF7-cd-5GV" secondAttribute="top" multiplier="0.9" id="LyG-2F-I0d">
                                                 <variation key="heightClass=regular-widthClass=regular" constant="0.0"/>
                                             </constraint>
-                                            <constraint firstItem="B78-Ys-NlE" firstAttribute="trailing" secondItem="CNh-Bn-zFR" secondAttribute="trailing" id="b1i-oU-gsw"/>
                                             <constraint firstItem="fSe-TC-O0B" firstAttribute="centerY" secondItem="QCi-za-hYJ" secondAttribute="centerY" id="cpw-Pq-Dec"/>
-                                            <constraint firstItem="B78-Ys-NlE" firstAttribute="top" secondItem="CNh-Bn-zFR" secondAttribute="bottom" id="gwd-fq-Q8Z"/>
-                                            <constraint firstItem="B78-Ys-NlE" firstAttribute="leading" secondItem="CNh-Bn-zFR" secondAttribute="leading" id="nBI-vU-QWC"/>
                                             <constraint firstAttribute="height" constant="170" id="reX-fg-AOg"/>
                                             <constraint firstItem="wh8-03-Wtx" firstAttribute="leading" secondItem="fSe-TC-O0B" secondAttribute="trailing" constant="3" id="zgo-gG-a6e"/>
                                         </constraints>
@@ -4776,7 +4763,7 @@
                                 </connections>
                             </tableView>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="DmF-7v-rjC">
-                                <rect key="frame" x="0.0" y="104" width="768" height="920"/>
+                                <rect key="frame" x="0.0" y="84" width="768" height="940"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="DzD-y1-WpE">
                                     <size key="itemSize" width="231" height="365"/>
@@ -4901,7 +4888,7 @@
                             <constraint firstItem="4o0-za-xyl" firstAttribute="top" secondItem="wAV-RT-tAA" secondAttribute="bottom" id="N7I-BX-hJH"/>
                             <constraint firstItem="wAV-RT-tAA" firstAttribute="top" secondItem="MxZ-7N-Epz" secondAttribute="top" id="Nzn-bR-7Bs"/>
                             <constraint firstItem="JvN-h0-Ham" firstAttribute="centerX" secondItem="MxZ-7N-Epz" secondAttribute="centerX" id="bmf-wf-jDP"/>
-                            <constraint firstItem="DmF-7v-rjC" firstAttribute="top" secondItem="wAV-RT-tAA" secondAttribute="bottom" constant="20" id="cqP-hb-eV2"/>
+                            <constraint firstItem="DmF-7v-rjC" firstAttribute="top" secondItem="wAV-RT-tAA" secondAttribute="bottom" id="cqP-hb-eV2"/>
                             <constraint firstItem="z6K-Xl-hi9" firstAttribute="top" secondItem="DmF-7v-rjC" secondAttribute="bottom" id="fBT-ER-lt1"/>
                             <constraint firstItem="DmF-7v-rjC" firstAttribute="leading" secondItem="MxZ-7N-Epz" secondAttribute="leading" id="jCA-ex-aoe"/>
                             <constraint firstItem="wAV-RT-tAA" firstAttribute="height" secondItem="MxZ-7N-Epz" secondAttribute="height" multiplier="0.082" id="l98-KG-GuO"/>

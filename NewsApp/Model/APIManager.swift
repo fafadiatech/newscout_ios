@@ -300,8 +300,6 @@ class APICall{
                             }
                         }
                         else{
-                            DBManager().deleteAllData(entity: "LikeDislike")
-                            DBManager().deleteAllData(entity: "BookmarkArticles")
                             UserDefaults.standard.set(jsonData.body!.user!.token, forKey: "token")
                             UserDefaults.standard.set(jsonData.body!.user!.first_name, forKey: "first_name")
                             UserDefaults.standard.set(jsonData.body!.user!.last_name, forKey: "last_name")
@@ -388,11 +386,18 @@ class APICall{
                     do {
                         let jsonData = try jsonDecoder.decode(MainModel.self, from: data)
                         if jsonData.header.status == "0"{
-                            completion(jsonData.header.status,jsonData.errors!.Msg!)
+                            if jsonData.errors?.invalid_credentials != nil{
+                                completion(jsonData.header.status, (jsonData.errors?.invalid_credentials)!)
+                            }
+                            else{
+                                completion(jsonData.header.status,jsonData.errors!.Msg!)
+                            }
                         }
                         else{
                             let defaultList = ["token", "first_name", "last_name", "user_id", "email", "FBToken", "googleToken"]
                             Helper().clearDefaults(list : defaultList)
+                            DBManager().deleteAllData(entity: "LikeDislike")
+                            DBManager().deleteAllData(entity: "BookmarkArticles")
                             completion(jsonData.header.status,jsonData.body!.Msg!)
                         }
                     }

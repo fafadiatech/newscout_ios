@@ -64,6 +64,14 @@ class BookmarkVC: UIViewController {
             lblNoBookmark.text = "Login to see bookmark list"
             lblNoBookmark.isHidden = false
         }
+        let darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
+        if darkModeStatus == true{
+            bookmarkResultTV.backgroundColor = colorConstants.grayBackground3
+            bookmarkCV.backgroundColor = colorConstants.grayBackground3
+        }else{
+            bookmarkResultTV.backgroundColor = .white
+            bookmarkCV.backgroundColor = .white
+        }
         let refreshControl = UIRefreshControl()
         if UserDefaults.standard.value(forKey: "token") != nil{
             refreshControl.addTarget(self, action: #selector(refreshBookmarkedNews), for: .valueChanged)
@@ -85,6 +93,7 @@ class BookmarkVC: UIViewController {
     @objc private func darkModeEnabled(_ notification: Notification) {
         NightNight.theme = .night
         bookmarkResultTV.backgroundColor = colorConstants.grayBackground3
+        bookmarkCV.backgroundColor = colorConstants.grayBackground3
     }
     
     @objc private func darkModeDisabled(_ notification: Notification){
@@ -398,7 +407,7 @@ extension BookmarkVC: UITableViewDelegate, UITableViewDataSource{
     //check whether tableview scrolled up or down
     func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
         if targetContentOffset.pointee.y < scrollView.contentOffset.y {
-            if nextURL != "" {
+            if nextURL != nil {
                 
                 APICall().BookmarkedArticlesAPI(url: nextURL){ response in
                     switch response {
@@ -474,12 +483,15 @@ extension BookmarkVC: UICollectionViewDelegate, UICollectionViewDataSource, UISc
         cell.viewCellContainer.layer.shadowOpacity = 0.7
         cell.viewCellContainer.layer.shadowRadius = 4.0
         if  darkModeStatus == true{
+            cell.backgroundColor = colorConstants.grayBackground2
             cell.containerView.backgroundColor = colorConstants.grayBackground2
             cell.lblSource.textColor = colorConstants.nightModeText
             cell.lblTitle.textColor = colorConstants.nightModeText
             NightNight.theme =  .night
         }
         else{
+            cell.backgroundColor = .white
+            cell.containerView.backgroundColor = .white
             cell.lblSource.textColor = colorConstants.blackColor
             cell.lblTitle.textColor = colorConstants.blackColor
             NightNight.theme =  .normal
@@ -542,7 +554,7 @@ extension BookmarkVC: UICollectionViewDelegate, UICollectionViewDataSource, UISc
             activityIndicator.startAnimating()
             
             if ShowArticle.count >= 20{
-                if nextURL != "" {
+                if nextURL != nil {
                     self.activityIndicator.startAnimating()
                     APICall().BookmarkedArticlesAPI(url: nextURL){ response in
                         switch response {

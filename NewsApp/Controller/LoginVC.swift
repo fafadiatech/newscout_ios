@@ -229,6 +229,8 @@ class LoginVC: UIViewController, GIDSignInUIDelegate, FBSDKLoginButtonDelegate {
     
     func loginButtonDidLogOut(_ loginButton: FBSDKLoginButton!) {
         let defaultList = ["FBToken", "first_name", "last_name", "email"]
+        DBManager().deleteAllData(entity: "LikeDislike")
+        DBManager().deleteAllData(entity: "BookmarkArticles")
         Helper().clearDefaults(list : defaultList)
         self.view.makeToast("Succesfully Logged out..", duration: 1.0, position: .center)
     }

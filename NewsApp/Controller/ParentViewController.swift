@@ -220,6 +220,7 @@ class ParentViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         viewOptions.isHidden = true
+        containerCV.reloadData()
     }
     
     override func viewDidAppear(_ animated: Bool) {

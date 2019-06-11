@@ -151,6 +151,8 @@ class SettingsTVC: UITableViewController, GIDSignInUIDelegate {
             GIDSignIn.sharedInstance().signOut()
             let defaultList = ["googleToken", "first_name", "last_name", "email", "token"]
             Helper().clearDefaults(list : defaultList)
+            DBManager().deleteAllData(entity: "LikeDislike")
+            DBManager().deleteAllData(entity: "BookmarkArticles")
             self.btnLogout.isHidden = true
             self.lblLogin.text = "Login"
         }
@@ -161,6 +163,8 @@ class SettingsTVC: UITableViewController, GIDSignInUIDelegate {
             FBSDKProfile.setCurrent(nil)
             self.btnLogout.isHidden = true
             let defaultList = ["FBToken", "first_name", "last_name", "email", "token"]
+            DBManager().deleteAllData(entity: "LikeDislike")
+            DBManager().deleteAllData(entity: "BookmarkArticles")
             Helper().clearDefaults(list : defaultList)
             self.lblLogin.text = "Login"
         }

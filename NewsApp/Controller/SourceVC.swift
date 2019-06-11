@@ -53,11 +53,20 @@ class SourceVC: UIViewController {
             sourceCV.isHidden = true
             sourceTV.isHidden = false
         }
+        let darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
+        if darkModeStatus == true{
+            sourceCV.backgroundColor = colorConstants.grayBackground3
+            sourceTV.backgroundColor = colorConstants.grayBackground3
+        }else{
+            sourceTV.backgroundColor = .white
+            sourceCV.backgroundColor = .white
+        }
     }
     
     @objc private func darkModeEnabled(_ notification: Notification) {
         NightNight.theme = .night
         sourceTV.backgroundColor = colorConstants.grayBackground3
+        sourceCV.backgroundColor = colorConstants.grayBackground3
     }
     
     @objc private func darkModeDisabled(_ notification: Notification){
@@ -289,7 +298,7 @@ extension SourceVC: UITableViewDelegate, UITableViewDataSource{
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         if indexPath.row == tableView.numberOfRows(inSection: indexPath.section) - 1 {
             if (ShowArticle.count) >= 20{
-                if nextURL != ""{
+                if nextURL != nil{
                     APICall().loadSearchAPI(url : nextURL){
                         (status, response)  in
                         switch response {
@@ -346,7 +355,6 @@ extension SourceVC: UICollectionViewDelegate, UICollectionViewDataSource, UIScro
         dateFormatter.timeZone = NSTimeZone.local
         let darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
         let textSizeSelected = UserDefaults.standard.value(forKey: "textSize") as! Int
-        var sourceColor = UIColor()
         var fullTxt = ""
         var dateSubString = ""
         var agoDate = ""
@@ -363,12 +371,15 @@ extension SourceVC: UICollectionViewDelegate, UICollectionViewDataSource, UIScro
         cell.viewCellContainer.layer.shadowOpacity = 0.7
         cell.viewCellContainer.layer.shadowRadius = 4.0
         if  darkModeStatus == true{
+            //cell.backgroundColor = colorConstants.grayBackground2
             cell.containerView.backgroundColor = colorConstants.grayBackground2
             cell.lblSource.textColor = colorConstants.nightModeText
             cell.lblTitle.textColor = colorConstants.nightModeText
             NightNight.theme =  .night
         }
         else{
+            cell.backgroundColor = .white
+            cell.containerView.backgroundColor = .white
             cell.lblSource.textColor = colorConstants.blackColor
             cell.lblTitle.textColor = colorConstants.blackColor
             NightNight.theme =  .normal
@@ -430,7 +441,7 @@ extension SourceVC: UICollectionViewDelegate, UICollectionViewDataSource, UIScro
         
         if (scrollView.bounds.maxY) == scrollView.contentSize.height{
             if (ShowArticle.count) >= 20{
-                if nextURL != ""{
+                if nextURL != nil{
                     APICall().loadSearchAPI(url : nextURL){
                         (status, response)  in
                         switch response {

@@ -54,7 +54,14 @@ class SearchVC: UIViewController {
             searchResultCV.isHidden = true
             }
          }    
-    
+        let darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
+        if darkModeStatus == true{
+            searchResultCV.backgroundColor = colorConstants.grayBackground3
+            searchResultTV.backgroundColor = colorConstants.grayBackground3
+        }else{
+            searchResultTV.backgroundColor = .white
+            searchResultCV.backgroundColor = .white
+        }
         txtSearch.addTarget(self, action: #selector(self.textFieldDidChange), for: UIControlEvents.editingChanged)
         lblNoNews.isHidden = true
         NotificationCenter.default.addObserver(self, selector: #selector(darkModeEnabled(_:)), name: .darkModeEnabled, object: nil)
@@ -84,6 +91,7 @@ class SearchVC: UIViewController {
     @objc private func darkModeEnabled(_ notification: Notification){
         NightNight.theme = .night
         searchResultTV.backgroundColor = colorConstants.grayBackground3
+        searchResultCV.backgroundColor = colorConstants.grayBackground3
     }
     
     @objc private func darkModeDisabled(_ notification: Notification) {
@@ -481,25 +489,29 @@ extension SearchVC: UICollectionViewDelegate, UICollectionViewDataSource{
         let darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
         
         let textSizeSelected = UserDefaults.standard.value(forKey: "textSize") as! Int
-        var sourceColor = UIColor()
         var fullTxt = ""
         var dateSubString = ""
         var agoDate = ""
         //display data from DB
         let currentArticle = Searchresults[indexPath.row]
         cell.lblTitle.text = currentArticle.title
+        cell.layer.cornerRadius = 10.0
+        cell.clipsToBounds = true
         cell.viewCellContainer.layer.cornerRadius = 10
         cell.viewCellContainer.layer.shadowColor = UIColor.black.cgColor
         cell.viewCellContainer.layer.shadowOffset = CGSize(width: 3, height: 3)
         cell.viewCellContainer.layer.shadowOpacity = 0.7
         cell.viewCellContainer.layer.shadowRadius = 4.0
         if  darkModeStatus == true{
+            cell.backgroundColor = colorConstants.grayBackground2
             cell.containerView.backgroundColor = colorConstants.grayBackground2
             cell.lblSource.textColor = colorConstants.nightModeText
             cell.lblTitle.textColor = colorConstants.nightModeText
             NightNight.theme =  .night
         }
         else{
+            cell.backgroundColor = .white
+            cell.containerView.backgroundColor = .white
             cell.lblSource.textColor = colorConstants.blackColor
             cell.lblTitle.textColor = colorConstants.blackColor
             NightNight.theme =  .normal
