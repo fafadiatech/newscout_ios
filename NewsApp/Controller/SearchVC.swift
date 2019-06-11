@@ -22,6 +22,7 @@ class SearchVC: UIViewController {
     @IBOutlet weak var lblTitle: UILabel!
     @IBOutlet weak var lblNoNews: UILabel!
     @IBOutlet weak var searchResultCV: UICollectionView!
+    @IBOutlet weak var btnTopNews: UIButton!
     @IBOutlet weak var autoSuggestionView: UIView!
     @IBOutlet weak var autoSuggestionTV: UITableView!
     let activityIndicator = MDCActivityIndicator()
@@ -42,6 +43,7 @@ class SearchVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         searchResultTV.tableFooterView = UIView(frame: .zero)
+        btnTopNews.layer.cornerRadius = 0.5 * btnTopNews.bounds.size.width
         if UserDefaults.standard.value(forKey: "searchTxt") != nil{
             txtSearch.text = (UserDefaults.standard.value(forKey: "searchTxt") as! String)
         }
@@ -173,6 +175,17 @@ class SearchVC: UIViewController {
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
+    }
+    
+    @IBAction func btnTopNewsActn(_ sender: Any) {
+        if UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad{
+            self.searchResultCV?.scrollToItem(at: NSIndexPath(item: 0, section: 0) as IndexPath,
+                                              at: .top,
+                                              animated: true)
+        }else{
+            let indexPath = NSIndexPath(row: 0, section: 0)
+            self.searchResultTV.scrollToRow(at: indexPath as IndexPath, at: .top, animated: true)
+        }
     }
     
     func saveArticlesInDB(url: String){

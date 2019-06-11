@@ -18,6 +18,7 @@ class BookmarkVC: UIViewController {
     @IBOutlet weak var bookmarkResultTV: UITableView!
     @IBOutlet weak var btnBack: UIButton!
     @IBOutlet weak var lblNoBookmark: UILabel!
+    @IBOutlet weak var btnTopNews: UIButton!
     let activityIndicator = MDCActivityIndicator()
     let appDelegate = UIApplication.shared.delegate as? AppDelegate
     let textSizeSelected = UserDefaults.standard.value(forKey: "textSize") as! Int
@@ -33,6 +34,7 @@ class BookmarkVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         lblNoBookmark.isHidden = true
+        btnTopNews.layer.cornerRadius = 0.5 * btnTopNews.bounds.size.width
         bookmarkResultTV.tableFooterView = UIView(frame: .zero)
         NotificationCenter.default.addObserver(self, selector: #selector(darkModeEnabled(_:)), name: .darkModeEnabled, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(darkModeDisabled(_:)), name: .darkModeDisabled, object: nil)
@@ -145,6 +147,17 @@ class BookmarkVC: UIViewController {
             if response == true{
                 self.fetchBookmarkDataFromDB()
             }
+        }
+    }
+    
+    @IBAction func btnTopNewsActn(_ sender: Any) {
+        if UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad{
+            self.bookmarkCV?.scrollToItem(at: NSIndexPath(item: 0, section: 0) as IndexPath,
+                                          at: .top,
+                                          animated: true)
+        }else{
+            let indexPath = NSIndexPath(row: 0, section: 0)
+            self.bookmarkResultTV.scrollToRow(at: indexPath as IndexPath, at: .top, animated: true)
         }
     }
     

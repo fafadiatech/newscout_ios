@@ -45,6 +45,11 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
         newsCV.delegate = self
         newsCV.dataSource = self
         activityIndicator.cycleColors = [.blue]
+        let refreshControl = UIRefreshControl()
+        refreshControl.addTarget(self, action: #selector(refreshNews), for: .valueChanged)
+        newsCV.refreshControl = refreshControl
+        refreshControl.attributedTitle = NSAttributedString(string: "Pull  to Refresh...")
+        
         let screen = UIScreen.main.bounds
         activityIndicator.frame = CGRect(x: screen.size.width/2, y: screen.size.height/2 - 100, width: 40, height: 40)
         activityIndicator.sizeToFit()
@@ -58,6 +63,19 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
         btnTopNews.layer.cornerRadius = 0.5 * btnTopNews.bounds.size.width
         newsCV.reloadData()
    activityIndicator.startAnimating()
+    }
+    
+    @objc func refreshNews(refreshControl: UIRefreshControl) {
+        activityIndicator.startAnimating()
+        DispatchQueue.global(qos: .userInitiated).async {
+            if self.isTrending == false{
+                self.saveArticlesInDB()
+            }
+        }
+        DispatchQueue.main.async {
+            refreshControl.endRefreshing()
+            self.activityIndicator.stopAnimating()
+        }
     }
     
     @objc private func darkModeEnabled(_ notification: Notification){

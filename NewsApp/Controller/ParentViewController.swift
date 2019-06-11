@@ -665,13 +665,13 @@ class ParentViewController: UIViewController {
     @IBAction func btnSettingsActn(_ sender: Any) {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let settingvc:SettingsVC = storyboard.instantiateViewController(withIdentifier: "SettingsID") as! SettingsVC
-        self.present(settingvc, animated: true, completion: nil)
+        self.present(settingvc, animated: false, completion: nil)
     }
     
     @IBAction func btnMyBookmarkActn(_ sender: Any) {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let bookmarkvc:BookmarkVC = storyboard.instantiateViewController(withIdentifier: "BookmarkID") as! BookmarkVC
-        self.present(bookmarkvc, animated: true, completion: nil)
+        self.present(bookmarkvc, animated: false, completion: nil)
     }
     
     @IBAction func btnNightModeActn(_ sender: Any) {

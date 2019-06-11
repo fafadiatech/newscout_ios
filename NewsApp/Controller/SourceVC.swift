@@ -19,6 +19,7 @@ class SourceVC: UIViewController {
     @IBOutlet weak var titleView: UIView!
     @IBOutlet weak var sourceTV: UITableView!
     @IBOutlet weak var btnBack: UIButton!
+    @IBOutlet weak var btnTopNews: UIButton!
     var nextURL = ""
     var url = ""
     var source = ""
@@ -32,6 +33,7 @@ class SourceVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         sourceTV.tableFooterView = UIView(frame: .zero)
+        btnTopNews.layer.cornerRadius = 0.5 * btnTopNews.bounds.size.width
         lblSource.text = source
         lblSource.textColor = .white
         titleView.backgroundColor = colorConstants.redColor
@@ -80,6 +82,17 @@ class SourceVC: UIViewController {
     
     override var prefersStatusBarHidden: Bool {
         return true
+    }
+    
+    @IBAction func btnTopNewsActn(_ sender: Any) {
+        if UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad{
+        self.sourceCV?.scrollToItem(at: NSIndexPath(item: 0, section: 0) as IndexPath,
+                                  at: .top,
+                                  animated: true)
+        }else{
+            let indexPath = NSIndexPath(row: 0, section: 0)
+            self.sourceTV.scrollToRow(at: indexPath as IndexPath, at: .top, animated: true)
+        }
     }
     
     func loadSourceArticles(){
