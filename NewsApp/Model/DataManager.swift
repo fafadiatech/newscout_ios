@@ -834,7 +834,7 @@ class DBManager{
         likefetchRequest.predicate = NSPredicate(format: "article_id  = %d", id)
         fetchRequest.predicate = NSPredicate(format: "article_id  = %d", id)
         do {
-            if tempentity == "NewsArticle"{
+            if tempentity == "ShowArticle"{
                 Article = try (managedContext?.fetch(fetchRequest))!
             }
             else if tempentity == "SearchArticles"{
@@ -847,7 +847,7 @@ class DBManager{
             let newArticle = LikeDislike(context: managedContext!)
             newArticle.article_id = Int64(id)
             newArticle.isLike = Int16(status)
-            if tempentity == "NewsArticle"{
+            if tempentity == "ShowArticle"{
                 newArticle.addToLikedArticle(Article[0])
             }else if tempentity == "SearchArticles"{
                 newArticle.addToSearchlikeArticles(SearchArticle[0])
@@ -912,7 +912,7 @@ class DBManager{
         let searchRequest = NSFetchRequest<SearchArticles>(entityName: "SearchArticles")
         fetchRequest.predicate = NSPredicate(format: "article_id  = %d", id)
         do {
-            if currentEntity == "NewsArticle"{
+            if currentEntity == "ShowArticle"{
                 Article = try (managedContext?.fetch(fetchRequest))!
             }
             else if currentEntity == "SearchArticles"{
@@ -925,7 +925,7 @@ class DBManager{
             let newArticle = BookmarkArticles(context: managedContext!)
             newArticle.article_id = Int64(id)
             newArticle.isBookmark = 1
-            if currentEntity == "NewsArticle"{
+            if currentEntity == "ShowArticle"{
                 newArticle.addToArticle(Article[0])
             }else if currentEntity == "SearchArticles"{
                 newArticle.addToSearchArticle(SearchArticle[0])
@@ -1159,8 +1159,8 @@ class DBManager{
     }
     
     func deleteAllData(entity:String) {
-        let delegate = UIApplication.shared.delegate as! AppDelegate
-        let context = delegate.persistentContainer.viewContext
+        //let delegate = UIApplication.shared.delegate as! AppDelegate
+        let context = appDelegate!.persistentContainer.viewContext
         
         let deleteFetch = NSFetchRequest<NSFetchRequestResult>(entityName: entity)
         let deleteRequest = NSBatchDeleteRequest(fetchRequest: deleteFetch)
