@@ -27,7 +27,8 @@ class AboutUsVC: UIViewController {
     @IBOutlet weak var lblDDby: UILabel!
     @IBOutlet weak var lblAppVersionVal: UILabel!
     @IBOutlet weak var lblLastUpdatedVal: UILabel!
-    @IBOutlet weak var lblDDbyVal: UILabel!
+    
+    @IBOutlet weak var lblCopyright: UILabel!
     @IBOutlet weak var viewLblContainer: UIView!
     @IBOutlet weak var txtViewLink: UITextView!
     
@@ -46,19 +47,27 @@ class AboutUsVC: UIViewController {
         lblTitle.font = FontConstants.viewTitleFont
         let darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
         if  darkModeStatus == true{
-            containerView.backgroundColor = colorConstants.grayBackground3
-            txtViewAboutUs.backgroundColor = colorConstants.grayBackground3
-            viewLblContainer.backgroundColor = colorConstants.grayBackground3
+            changeTheme()
         }
     }
     
     @objc private func darkModeEnabled(_ notification: Notification) {
         NightNight.theme = .night
+       changeTheme()
+    }
+    
+    func changeTheme(){
         containerView.backgroundColor = colorConstants.grayBackground3
         txtViewAboutUs.backgroundColor = colorConstants.grayBackground3
         viewLblContainer.backgroundColor = colorConstants.grayBackground3
+        txtViewAboutUs.textColor = .white
+        lblAppVersion.textColor = .white
+        lblLastUpdated.textColor = .white
+        lblDDby.textColor = .white
+        lblAppVersionVal.textColor = .white
+        lblLastUpdatedVal.textColor = .white
+        lblCopyright.textColor = .white
     }
-    
     @objc private func darkModeDisabled(_ notification: Notification){
         NightNight.theme = .normal
     }

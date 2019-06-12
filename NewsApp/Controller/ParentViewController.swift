@@ -283,6 +283,7 @@ class ParentViewController: UIViewController {
         menuCV.backgroundColor = colorConstants.MenugrayBackground
         submenuCV.backgroundColor = colorConstants.grayBackground1
         HomeNewsTV.backgroundColor =  colorConstants.backgroundGray
+        containerCV.backgroundColor =  colorConstants.backgroundGray
         viewOptions.backgroundColor = colorConstants.txtlightGrayColor
         HomeNewsTV.reloadData()
         submenuCV.reloadData()
@@ -778,8 +779,10 @@ extension ParentViewController : UICollectionViewDelegate, UICollectionViewDataS
             cell.trendingClickedObj = self as! trendingDetailClicked
             if  darkModeStatus == true{
                 cell.newsCV.backgroundColor = colorConstants.txtlightGrayColor
+                cell.backgroundColor = colorConstants.grayBackground3
             }else{
                 cell.newsCV.backgroundColor = .white
+                cell.backgroundColor = .white
             }
             if isTrendingDetail == 1{
                 cell.isTrending = true
@@ -1385,10 +1388,10 @@ extension ParentViewController: UICollectionViewDelegateFlowLayout {
         else{
             let screen = UIScreen.main.bounds
             if submenuCV.isHidden == true {
-                let totalHeight = viewAppTitle.frame.size.height + menuCV.frame.size.height + submenuCV.frame.size.height - 40.0
+                let totalHeight = viewAppTitle.frame.size.height + menuCV.frame.size.height + submenuCV.frame.size.height - 45.0
                 return CGSize(width: screen.size.width, height: screen.size.height - totalHeight)
             }else{
-                let totalHeight = viewAppTitle.frame.size.height + menuCV.frame.size.height + submenuCV.frame.size.height
+                let totalHeight = viewAppTitle.frame.size.height + menuCV.frame.size.height + submenuCV.frame.size.height + 8
                 return CGSize(width: screen.size.width, height: screen.size.height - totalHeight)
             }
             

@@ -1758,11 +1758,11 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lHT-TE-ScZ">
                                 <rect key="frame" x="0.0" y="104" width="768" height="920"/>
                                 <subviews>
-                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="tRH-mr-vwM">
+                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" scrollEnabled="NO" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="tRH-mr-vwM">
                                         <rect key="frame" x="21" y="41" width="726" height="260"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
-                                            <constraint firstAttribute="height" constant="160" id="hlY-Pl-USQ">
+                                            <constraint firstAttribute="height" constant="180" id="hlY-Pl-USQ">
                                                 <variation key="heightClass=regular-widthClass=regular" constant="260"/>
                                             </constraint>
                                         </constraints>
@@ -1903,8 +1903,8 @@
                         <outlet property="containerView" destination="lHT-TE-ScZ" id="mbE-8B-m5j"/>
                         <outlet property="lblAppVersion" destination="JxG-n0-El8" id="gKa-jU-3tm"/>
                         <outlet property="lblAppVersionVal" destination="AOq-13-7Pt" id="x5F-Oq-i1r"/>
+                        <outlet property="lblCopyright" destination="k31-5h-YFl" id="4cy-Ri-8gq"/>
                         <outlet property="lblDDby" destination="TF7-cd-5GV" id="X0N-tD-cG8"/>
-                        <outlet property="lblDDbyVal" destination="k31-5h-YFl" id="I0B-Wt-Eaf"/>
                         <outlet property="lblLastUpdated" destination="meY-xN-Wbm" id="Otr-bM-pHb"/>
                         <outlet property="lblLastUpdatedVal" destination="vlK-OK-WPA" id="kMr-Pr-Qmm"/>
                         <outlet property="lblTitle" destination="1Ce-vw-5Rk" id="CZE-eY-55V"/>
@@ -2676,7 +2676,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Enter Email" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="D2r-fh-K4O" customClass="SkyFloatingLabelTextField" customModule="SkyFloatingLabelTextField">
-                                <rect key="frame" x="134.5" y="369.5" width="499" height="56.5"/>
+                                <rect key="frame" x="134.5" y="391" width="499" height="35"/>
                                 <nil key="textColor"/>
                                 <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="29"/>
                                 <textInputTraits key="textInputTraits"/>
@@ -5711,9 +5711,9 @@
                                     <outlet property="delegate" destination="fFt-qL-nUG" id="ymN-Qh-s8i"/>
                                 </connections>
                             </collectionView>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="157" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="fjl-yI-N9f">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="157" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="1" translatesAutoresizingMaskIntoConstraints="NO" id="fjl-yI-N9f">
                                 <rect key="frame" x="0.0" y="202" width="768" height="822"/>
-                                <color key="backgroundColor" white="0.66666666669999997" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="backgroundColor" red="0.72336632013320923" green="0.2619413976174334" blue="0.40719175873821717" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 <color key="sectionIndexBackgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="HomeNewsTVCellID" id="0XW-ZO-wus" customClass="HomeNewsTVCell" customModule="NewsApp" customModuleProvider="target">
@@ -6053,11 +6053,11 @@
                                     <size key="itemSize" width="765" height="789"/>
                                     <size key="headerReferenceSize" width="0.0" height="0.0"/>
                                     <size key="footerReferenceSize" width="0.0" height="0.0"/>
-                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="10"/>
+                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 </collectionViewFlowLayout>
                                 <cells>
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="containerID" id="vXY-Av-r7h" customClass="ContainerCVCell" customModule="NewsApp" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="4" width="765" height="804"/>
+                                        <rect key="frame" x="0.0" y="9" width="765" height="804"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
                                             <rect key="frame" x="0.0" y="0.0" width="765" height="804"/>
@@ -6634,13 +6634,13 @@
                             <constraint firstItem="7Dl-5s-1G2" firstAttribute="bottom" secondItem="yqi-ZJ-Fhg" secondAttribute="bottom" id="C0s-YX-9V5"/>
                             <constraint firstItem="7Dl-5s-1G2" firstAttribute="leading" secondItem="yqi-ZJ-Fhg" secondAttribute="leading" id="E6d-aj-ChE"/>
                             <constraint firstItem="UnP-6g-s6D" firstAttribute="leading" secondItem="yqi-ZJ-Fhg" secondAttribute="leading" id="HGW-KQ-Jna"/>
-                            <constraint firstItem="fjl-yI-N9f" firstAttribute="bottom" secondItem="yqi-ZJ-Fhg" secondAttribute="bottom" id="J6a-g9-r70"/>
                             <constraint firstItem="CmX-5N-hcm" firstAttribute="top" secondItem="7pZ-ew-IaQ" secondAttribute="bottom" id="OTd-hy-JYf"/>
                             <constraint firstItem="3DO-pu-E4f" firstAttribute="top" secondItem="CmX-5N-hcm" secondAttribute="bottom" constant="2" id="Scq-Ln-pXm"/>
                             <constraint firstItem="fjl-yI-N9f" firstAttribute="leading" secondItem="yqi-ZJ-Fhg" secondAttribute="leading" id="UoP-NH-o99"/>
                             <constraint firstItem="fjl-yI-N9f" firstAttribute="trailing" secondItem="yqi-ZJ-Fhg" secondAttribute="trailing" id="VqE-Td-gTl"/>
                             <constraint firstItem="7pZ-ew-IaQ" firstAttribute="leading" secondItem="yqi-ZJ-Fhg" secondAttribute="leading" id="Z7s-BX-HUG"/>
                             <constraint firstItem="edr-bj-tOA" firstAttribute="centerY" secondItem="yqi-ZJ-Fhg" secondAttribute="centerY" id="bpO-gY-d0b"/>
+                            <constraint firstItem="fjl-yI-N9f" firstAttribute="bottom" secondItem="yqi-ZJ-Fhg" secondAttribute="bottom" id="bye-Fk-JAL"/>
                             <constraint firstItem="CmX-5N-hcm" firstAttribute="trailing" secondItem="yqi-ZJ-Fhg" secondAttribute="trailing" id="fSs-44-r7p"/>
                             <constraint firstItem="3DO-pu-E4f" firstAttribute="trailing" secondItem="yqi-ZJ-Fhg" secondAttribute="trailing" id="fba-55-S3h"/>
                             <constraint firstItem="0Z7-br-xC4" firstAttribute="top" secondItem="sqQ-Dc-ymM" secondAttribute="bottom" id="gO1-aC-Clk"/>
@@ -6672,7 +6672,6 @@
                         <outlet property="containerCVTop" destination="zWt-rT-oju" id="BIY-9N-oL4"/>
                         <outlet property="lblAppTitle" destination="kiC-hU-LGL" id="IZH-hX-QuO"/>
                         <outlet property="lblNonews" destination="edr-bj-tOA" id="g6i-Em-mIB"/>
-                        <outlet property="mainViewLeading" destination="6e0-sH-Zzo" id="xxH-d7-PbI"/>
                         <outlet property="menuCV" destination="CmX-5N-hcm" id="l4R-Lu-v4O"/>
                         <outlet property="submenuCV" destination="3DO-pu-E4f" id="7PJ-pc-dvl"/>
                         <outlet property="submenuLeading" destination="zT1-5k-3qA" id="zuO-7W-Huv"/>

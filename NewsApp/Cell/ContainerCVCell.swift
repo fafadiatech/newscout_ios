@@ -415,6 +415,7 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
             cellCluster.containerView.backgroundColor = colorConstants.grayBackground2
             cellCluster.lblSource.textColor = colorConstants.nightModeText
             cellCluster.lblTitle.textColor = colorConstants.nightModeText
+            cellCluster.lblCount.textColor = colorConstants.nightModeText
             NightNight.theme = .night
         }
         else{
