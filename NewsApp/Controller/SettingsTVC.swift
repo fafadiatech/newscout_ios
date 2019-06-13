@@ -75,14 +75,16 @@ class SettingsTVC: UITableViewController, GIDSignInUIDelegate {
         let darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
         if  darkModeStatus == true{
             settingsTV.backgroundColor = colorConstants.grayBackground2
+            //changefontColor()
+        }
+        else{
             changeColor()
-            
         }
     }
     
     @objc private func darkModeEnabled(_ notification: Notification) {
         NightNight.theme = .night
-        changeColor()
+        //changefontColor()
         settingsTV.backgroundColor = colorConstants.grayBackground2
     }
     
@@ -104,14 +106,21 @@ class SettingsTVC: UITableViewController, GIDSignInUIDelegate {
         lblBreakingNews.textColor = .black
         lblDailyEdition.textColor = .black
     }
+    func changefontColor(){
+        lblLogin.textColor = .white
+        btnLogout.titleLabel?.textColor = .white
+        lblProfile.textColor = .white
+        lblPersonlized.textColor = .white
+        lblBreakingNews.textColor = .white
+        lblDailyEdition.textColor = .black
+    }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         isLoggedIn()
     }
     
-    func isLoggedIn()
-    {
+    func isLoggedIn(){
         if UserDefaults.standard.value(forKey: "token") == nil {
             lblLogin.text = "Login"
             btnLogout.isHidden = true
@@ -123,20 +132,23 @@ class SettingsTVC: UITableViewController, GIDSignInUIDelegate {
             }
         }
     }
+
     
     @IBAction func TextSizeAction(_ sender: Any) {
-        switch segmentTextSize.selectedSegmentIndex
-        {
+        switch segmentTextSize.selectedSegmentIndex{
         case 0:
             textSizeSelected = 0
+            UserDefaults.standard.set(true, forKey: "isTextSizeChanged")
             UserDefaults.standard.set(0, forKey: "textSize")
             
         case 1:
             textSizeSelected = 1
+            UserDefaults.standard.set(true, forKey: "isTextSizeChanged")
             UserDefaults.standard.set(1, forKey: "textSize")
             
         case 2:
             textSizeSelected = 2
+            UserDefaults.standard.set(true, forKey: "isTextSizeChanged")
             UserDefaults.standard.set(2, forKey: "textSize")
             
         default:
@@ -187,7 +199,18 @@ class SettingsTVC: UITableViewController, GIDSignInUIDelegate {
                    didSelectRowAtIndexPath indexPath: NSIndexPath) {
         
     }
-    
+//    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+//            let cell = SettingsTVCell()
+//                let darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
+//                if  darkModeStatus == true{
+//                     cell.backgroundColor = colorConstants.grayBackground3
+//                }
+//                else{
+//                cell.backgroundColor = colorConstants.blackColor
+//                }
+//                return cell
+//            }
+
     override func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
       
         let headerView = view as! UITableViewHeaderFooterView
@@ -196,7 +219,6 @@ class SettingsTVC: UITableViewController, GIDSignInUIDelegate {
         let text = headerView.textLabel?.text?.capitalized
         headerView.textLabel?.text = text
         headerView.textLabel?.textColor = colorConstants.redColor
-        let darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
     }
     
     override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {

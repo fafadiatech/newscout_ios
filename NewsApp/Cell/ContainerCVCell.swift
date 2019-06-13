@@ -81,6 +81,7 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
     @objc private func darkModeEnabled(_ notification: Notification){
         NightNight.theme = .night
         newsCV.backgroundColor = colorConstants.grayBackground3
+        lblNoNews.textColor = .white
     }
     
     @objc private func darkModeDisabled(_ notification: Notification) {

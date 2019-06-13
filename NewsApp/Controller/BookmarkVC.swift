@@ -79,6 +79,7 @@ class BookmarkVC: UIViewController {
         if darkModeStatus == true{
             bookmarkResultTV.backgroundColor = colorConstants.grayBackground3
             bookmarkCV.backgroundColor = colorConstants.grayBackground3
+            lblNoBookmark.textColor = .white
         }else{
             bookmarkResultTV.backgroundColor = .white
             bookmarkCV.backgroundColor = .white

@@ -60,6 +60,7 @@ class SearchVC: UIViewController {
         if darkModeStatus == true{
             searchResultCV.backgroundColor = colorConstants.grayBackground3
             searchResultTV.backgroundColor = colorConstants.grayBackground3
+            lblNoNews.textColor = .white
         }else{
             searchResultTV.backgroundColor = .white
             searchResultCV.backgroundColor = .white

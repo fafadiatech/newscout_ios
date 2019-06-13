@@ -69,6 +69,7 @@ class SourceVC: UIViewController {
         NightNight.theme = .night
         sourceTV.backgroundColor = colorConstants.grayBackground3
         sourceCV.backgroundColor = colorConstants.grayBackground3
+        lblNoNews.textColor = .white
     }
     
     @objc private func darkModeDisabled(_ notification: Notification){

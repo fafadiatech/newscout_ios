@@ -1379,6 +1379,7 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
             self.present(sourcevc, animated: true, completion: nil)
         }
         else if isSearch == "home" || isSearch == "shuffle" || isSearch == "cluster"{
+            UserDefaults.standard.set("back", forKey: "isSearch")
             self.dismiss(animated: false)
         }
     }

@@ -148,7 +148,9 @@ class ParentViewController: UIViewController {
                 UserDefaults.standard.set("41ea0aaa15323ae5012992392e4edd6b8a6ee4547a8dc6fd1f3b31aab9839208", forKey: "deviceToken")
             }
         }
-        
+        if UserDefaults.standard.value(forKey: "isTextSizeChanged") == nil{
+            UserDefaults.standard.set(false, forKey: "isTextSizeChanged")
+        }
         if UserDefaults.standard.value(forKey: "daily") == nil{
             UserDefaults.standard.set(false, forKey: "daily")
         }
@@ -220,7 +222,10 @@ class ParentViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         viewOptions.isHidden = true
-        containerCV.reloadData()
+        let textSizeChanged = UserDefaults.standard.value(forKey: "isTextSizeChanged") as! Bool
+        if textSizeChanged == true{
+            containerCV.reloadData()
+        }
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -788,9 +793,9 @@ extension ParentViewController : UICollectionViewDelegate, UICollectionViewDataS
                 cell.isTrending = true
                 cell.newShowArticle.append(prevTrendingData)
                 cell.newsCV.reloadData()
-//                cell.newsCV?.scrollToItem(at: NSIndexPath(row: 0, section: 0) as IndexPath,
-//                                          at: .top,
-//                                          animated: false)
+                cell.newsCV?.scrollToItem(at: NSIndexPath(row: 0, section: 0) as IndexPath,
+                                          at: .top,
+                                          animated: false)
             }
             else{
                 if submenuCV.isHidden == false{
@@ -805,18 +810,19 @@ extension ParentViewController : UICollectionViewDelegate, UICollectionViewDataS
                     fetchSubMenuNews()
                     cell.newShowArticle = newShowArticle
                     cell.newsCV.reloadData()
-//                    cell.newsCV?.scrollToItem(at: NSIndexPath(row: 0, section: 0) as IndexPath,
-//                                              at: .top,
-//                                              animated: false)
+                    cell.newsCV?.scrollToItem(at: NSIndexPath(row: 0, section: 0) as IndexPath,
+                                              at: .top,
+                                              animated: false)
                 }
                 else{
                     cell.isTrending = true
                     fetchSubMenuNews()
                     cell.newShowArticle = newShowArticle
                     cell.newsCV.reloadData()
-//                    cell.newsCV?.scrollToItem(at: NSIndexPath(row: 0, section: 0) as IndexPath,
-//                                              at: .top,
-//                                              animated: false)
+                    
+                    cell.newsCV?.scrollToItem(at: NSIndexPath(row: 0, section: 0) as IndexPath,
+                                              at: .top,
+                                              animated: false)
                 }
             }
             activityIndicator.stopAnimating()
@@ -926,6 +932,7 @@ extension ParentViewController : UICollectionViewDelegate, UICollectionViewDataS
             UserDefaults.standard.set(subMenuArr[HeadingRow][subMenuRow], forKey: "submenu")
             reloadSubmenuNews()
             containerCV.reloadData()
+            
         }
     }
     func fetchSubMenuNews(){
