@@ -887,7 +887,6 @@ extension ParentViewController : UICollectionViewDelegate, UICollectionViewDataS
                 //currentIndexPath = NSIndexPath(row: 0, section: 0) as IndexPath
                 //set first row selected by default
                 isTrendingDetail = 0
-                
                 HeadingRow = indexPath.row - 1
                 unhideButtonBarView()
                 submenuCV.reloadData()
@@ -898,13 +897,11 @@ extension ParentViewController : UICollectionViewDelegate, UICollectionViewDataS
                 submenuCV.scrollToItem(at: IndexPath(row: 0 , section: 0), at: .centeredHorizontally, animated: true)
                 btnBack.isHidden = true
                 SaveSubmenuNews()
-                
                 // reloadSubmenuNews()
                 containerCV.reloadData()
                 containerCV.selectItem(at: IndexPath(row: 0 , section: 0), animated: false, scrollPosition: [])
                 containerCV.scrollToItem(at: IndexPath(row: 0 , section: 0), at: .centeredHorizontally, animated: true)
             }else{
-                activityIndicator.startAnimating()
                 HideButtonBarView()
                 index = subMenuRow
                 isTrendingDetail = 1
@@ -927,9 +924,7 @@ extension ParentViewController : UICollectionViewDelegate, UICollectionViewDataS
             subMenuRow = indexPath.row
             submenuName = subMenuArr[HeadingRow][subMenuRow]
             UserDefaults.standard.set(subMenuArr[HeadingRow][subMenuRow], forKey: "submenu")
-            
             reloadSubmenuNews()
-            fetchSubMenuNews()
             containerCV.reloadData()
         }
     }

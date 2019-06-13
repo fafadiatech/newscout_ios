@@ -98,7 +98,7 @@ class ShuffleDetailVC: UIViewController , UIScrollViewDelegate, TAPageControlDel
         btnReadMore.backgroundColor = .clear
         btnReadMore.layer.cornerRadius = 5
         btnReadMore.layer.borderWidth = 1
-        btnReadMore.layer.borderColor = UIColor.gray.cgColor
+        btnReadMore.layer.borderColor = UIColor.black.cgColor
         btnPlayVideo.isHidden = true
         imgScrollView.delegate = self
         imgArray = [#imageLiteral(resourceName: "f3"),#imageLiteral(resourceName: "f1") ,#imageLiteral(resourceName: "f2")]
@@ -238,10 +238,11 @@ class ShuffleDetailVC: UIViewController , UIScrollViewDelegate, TAPageControlDel
     func changeTheme(){
         suggestedCV.backgroundColor = colorConstants.txtlightGrayColor
         btnSource.setTitleColor(.white, for: UIControlState.normal)
+        btnSource.tintColor = .white
         btnMoreStories.setTitleColor(.white, for: UIControlState.normal)
-        viewReadMore.backgroundColor = colorConstants.txtlightGrayColor
+        viewReadMore.backgroundColor = colorConstants.grayBackground1
         btnReadMore.setTitleColor(.white, for: UIControlState.normal)
-        btnReadMore.backgroundColor = colorConstants.txtlightGrayColor
+        btnReadMore.backgroundColor = colorConstants.grayBackground1
         newsView.backgroundColor = colorConstants.grayBackground1
         viewContainer.backgroundColor = colorConstants.grayBackground1
         viewNewsArea.backgroundColor = colorConstants.grayBackground1

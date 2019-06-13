@@ -103,7 +103,7 @@ class LoginVC: UIViewController, GIDSignInUIDelegate, FBSDKLoginButtonDelegate {
         txtPassword.titleColor = colorConstants.grayBackground3
         view.backgroundColor = colorConstants.grayBackground3
         btnSignUp.backgroundColor = colorConstants.grayBackground3
-        btnSignUp.titleLabel?.textColor = .white
+        btnSignUp.setTitleColor(.white, for: UIControlState.normal)
         viewGmailSignIn.backgroundColor =  colorConstants.whiteColor
         txtUsername.lineColor = .white
         txtPassword.lineColor = .white

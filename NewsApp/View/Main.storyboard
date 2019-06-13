@@ -1416,13 +1416,13 @@
                                 <rect key="frame" x="0.0" y="103.5" width="768" height="718"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xNY-Lb-fnP">
-                                        <rect key="frame" x="0.0" y="0.0" width="768" height="444"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="768" height="556"/>
                                         <subviews>
                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" alignment="center" spacing="7" translatesAutoresizingMaskIntoConstraints="NO" id="1ZS-5R-Axf">
-                                                <rect key="frame" x="0.0" y="20" width="768" height="228"/>
+                                                <rect key="frame" x="0.0" y="20" width="768" height="317.5"/>
                                                 <subviews>
                                                     <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="v7P-i3-PBO" customClass="SkyFloatingLabelTextField" customModule="SkyFloatingLabelTextField">
-                                                        <rect key="frame" x="115" y="0.0" width="538" height="40"/>
+                                                        <rect key="frame" x="115" y="0.0" width="538" height="58"/>
                                                         <nil key="textColor"/>
                                                         <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="20"/>
                                                         <textInputTraits key="textInputTraits"/>
@@ -1446,7 +1446,7 @@
                                                         </connections>
                                                     </textField>
                                                     <textField opaque="NO" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="XiE-2m-uWJ" customClass="SkyFloatingLabelTextField" customModule="SkyFloatingLabelTextField">
-                                                        <rect key="frame" x="115" y="47" width="538" height="40"/>
+                                                        <rect key="frame" x="115" y="65" width="538" height="58"/>
                                                         <nil key="textColor"/>
                                                         <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="20"/>
                                                         <textInputTraits key="textInputTraits"/>
@@ -1470,7 +1470,7 @@
                                                         </connections>
                                                     </textField>
                                                     <textField opaque="NO" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="6V2-WP-iQ7" customClass="SkyFloatingLabelTextField" customModule="SkyFloatingLabelTextField">
-                                                        <rect key="frame" x="115" y="94" width="538" height="40"/>
+                                                        <rect key="frame" x="115" y="130" width="538" height="57.5"/>
                                                         <nil key="textColor"/>
                                                         <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="20"/>
                                                         <textInputTraits key="textInputTraits"/>
@@ -1494,7 +1494,7 @@
                                                         </connections>
                                                     </textField>
                                                     <textField opaque="NO" tag="3" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="HwO-68-0dF" customClass="SkyFloatingLabelTextField" customModule="SkyFloatingLabelTextField">
-                                                        <rect key="frame" x="115" y="141" width="538" height="40"/>
+                                                        <rect key="frame" x="115" y="194.5" width="538" height="58"/>
                                                         <nil key="textColor"/>
                                                         <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="20"/>
                                                         <textInputTraits key="textInputTraits" secureTextEntry="YES" textContentType="password"/>
@@ -1518,7 +1518,7 @@
                                                         </connections>
                                                     </textField>
                                                     <textField opaque="NO" tag="4" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="dCB-Ga-GDY" customClass="SkyFloatingLabelTextField" customModule="SkyFloatingLabelTextField">
-                                                        <rect key="frame" x="115" y="188" width="538" height="40"/>
+                                                        <rect key="frame" x="115" y="259.5" width="538" height="58"/>
                                                         <nil key="textColor"/>
                                                         <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="20"/>
                                                         <textInputTraits key="textInputTraits" secureTextEntry="YES" textContentType="password"/>
@@ -1550,7 +1550,7 @@
                                                 </constraints>
                                             </stackView>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="s37-jO-1S1">
-                                                <rect key="frame" x="192" y="268" width="384" height="67"/>
+                                                <rect key="frame" x="192" y="357.5" width="384" height="67"/>
                                                 <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <state key="normal" title="SIGN UP">
                                                     <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -1560,7 +1560,7 @@
                                                 </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ged-Ue-hb8">
-                                                <rect key="frame" x="251.5" y="345" width="265" height="55"/>
+                                                <rect key="frame" x="251.5" y="434.5" width="265" height="55"/>
                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="45" id="l8L-hW-UKC">
@@ -1759,11 +1759,11 @@
                                 <rect key="frame" x="0.0" y="104" width="768" height="920"/>
                                 <subviews>
                                     <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" scrollEnabled="NO" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="tRH-mr-vwM">
-                                        <rect key="frame" x="21" y="41" width="726" height="260"/>
+                                        <rect key="frame" x="21" y="41" width="726" height="300"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
-                                            <constraint firstAttribute="height" constant="180" id="hlY-Pl-USQ">
-                                                <variation key="heightClass=regular-widthClass=regular" constant="260"/>
+                                            <constraint firstAttribute="height" constant="230" id="hlY-Pl-USQ">
+                                                <variation key="heightClass=regular-widthClass=regular" constant="300"/>
                                             </constraint>
                                         </constraints>
                                         <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
@@ -2676,7 +2676,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Enter Email" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="D2r-fh-K4O" customClass="SkyFloatingLabelTextField" customModule="SkyFloatingLabelTextField">
-                                <rect key="frame" x="134.5" y="391" width="499" height="35"/>
+                                <rect key="frame" x="134.5" y="369.5" width="499" height="56.5"/>
                                 <nil key="textColor"/>
                                 <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="29"/>
                                 <textInputTraits key="textInputTraits"/>
@@ -2774,24 +2774,6 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="kzV-4e-rH2" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="3914" y="830"/>
-        </scene>
-        <!--View Controller-->
-        <scene sceneID="O5j-Iy-6f5">
-            <objects>
-                <viewController storyboardIdentifier="PageContainerID" id="X7o-Fp-B3L" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="gIk-uq-nGm"/>
-                        <viewControllerLayoutGuide type="bottom" id="YZm-3p-fGd"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="23v-L1-m2T">
-                        <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                    </view>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="jFT-Hk-19L" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="5610" y="78"/>
         </scene>
         <!--News DetailVC-->
         <scene sceneID="KvS-be-s0a">

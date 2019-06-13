@@ -45,6 +45,7 @@ class ForgotPasswordVC: UIViewController {
         view.backgroundColor = colorConstants.grayBackground3
         txtEmail.selectedTitleColor = colorConstants.grayBackground3
         txtEmail.titleColor = colorConstants.grayBackground3
+        txtEmail.lineColor = .white
     }
     
     @objc private func darkModeDisabled(_ notification: Notification){
