@@ -289,7 +289,7 @@ extension BookmarkVC: UITableViewDelegate, UITableViewDataSource{
             cell.viewCellContainer.layer.shadowRadius = 4.0
             cell.imgNews.layer.cornerRadius = 10.0
             cell.imgNews.clipsToBounds = true
-            
+            cell.selectionStyle = UITableViewCellSelectionStyle.none
             //display data from DB
             cell.lblNewsDescription.text = currentArticle.title
             
@@ -362,6 +362,7 @@ extension BookmarkVC: UITableViewDelegate, UITableViewDataSource{
             cellOdd.viewCellContainer.layer.shadowRadius = 4.0
             cellOdd.imgNews.layer.cornerRadius = 10.0
             cellOdd.imgNews.clipsToBounds = true
+            cellOdd.selectionStyle = UITableViewCellSelectionStyle.none
             //display data from DB
             cellOdd.lblNewsDescription.text = currentArticle.title
             
@@ -474,6 +475,7 @@ extension BookmarkVC: UICollectionViewDelegate, UICollectionViewDataSource, UISc
         newsDetailvc.ShowArticle = sortedData
         UserDefaults.standard.set("bookmark", forKey: "isSearch")
         newsDetailvc.articleId = Int(sortedData[indexPath.row].article_id)
+        bookmarkResultTV.deselectRow(at: indexPath, animated: true)
         present(newsDetailvc, animated: true, completion: nil)
     }
     

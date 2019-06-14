@@ -87,6 +87,9 @@ class SearchVC: UIViewController {
         }
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+       
+    }
     @objc func textFieldDidChange(textField: UITextField) {
         fecthSerchedKeywords()
     }
@@ -130,6 +133,10 @@ class SearchVC: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        if let index = searchResultTV.indexPathForSelectedRow{
+            self.searchResultTV.deselectRow(at: index, animated: true)
+        }
+        
         changeFont()
     }
     
@@ -295,6 +302,7 @@ extension SearchVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDele
                 cell.viewCellContainer.layer.shadowRadius = 4.0
                 cell.imgNews.layer.cornerRadius = 10.0
                 cell.imgNews.clipsToBounds = true
+                cell.selectionStyle = UITableViewCellSelectionStyle.none
                 imgWidth = String(describing : Int(cell.imgNews.frame.width))
                 imgHeight = String(describing : Int(cell.imgNews.frame.height))
                 //display data from DB
@@ -371,6 +379,7 @@ extension SearchVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDele
                 cellOdd.viewCellContainer.layer.shadowOffset = CGSize(width: 3, height: 3)
                 cellOdd.viewCellContainer.layer.shadowOpacity = 0.7
                 cellOdd.viewCellContainer.layer.shadowRadius = 4.0
+                cellOdd.selectionStyle = UITableViewCellSelectionStyle.none
                 //display data from DB
                 var currentArticle = Searchresults[indexPath.row]
                 cellOdd.lblNewsDescription.text = currentArticle.title
