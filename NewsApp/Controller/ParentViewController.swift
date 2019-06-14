@@ -733,23 +733,23 @@ extension ParentViewController : UICollectionViewDelegate, UICollectionViewDataS
     
     func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
         if scrollView == containerCV{
-        if headingName != "Trending"{
-            isSwipe = true
-            let index = Int(targetContentOffset.pointee.x / submenuCV.frame.width)
-            let indexPath = IndexPath(item: index, section: 0)
-            print("indexPath in scroll(): \(indexPath)")
-            submenuCV.selectItem(at: indexPath, animated: true, scrollPosition: .centeredHorizontally)
-            //SwipeIndex.shared.currentIndex = subMenuRow + 1
-            // containerCV.reloadData()
-            /* //  self.currentIndexPath = indexPath
-             
-             //       subMenuRow = indexPath.row
-             //        submenuName = subMenuArr[HeadingRow][subMenuRow]
-             //        UserDefaults.standard.set(subMenuArr[HeadingRow][subMenuRow], forKey: "submenu")
-             
-             // reloadSubmenuNews()*/
-            
-        }
+            if headingName != "Trending"{
+                isSwipe = true
+                let index = Int(targetContentOffset.pointee.x / submenuCV.frame.width)
+                let indexPath = IndexPath(item: index, section: 0)
+                print("indexPath in scroll(): \(indexPath)")
+                submenuCV.selectItem(at: indexPath, animated: true, scrollPosition: .centeredHorizontally)
+                //SwipeIndex.shared.currentIndex = subMenuRow + 1
+                // containerCV.reloadData()
+                /* //  self.currentIndexPath = indexPath
+                 
+                 //       subMenuRow = indexPath.row
+                 //        submenuName = subMenuArr[HeadingRow][subMenuRow]
+                 //        UserDefaults.standard.set(subMenuArr[HeadingRow][subMenuRow], forKey: "submenu")
+                 
+                 // reloadSubmenuNews()*/
+                
+            }
         }
     }
     

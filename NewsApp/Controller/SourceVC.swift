@@ -87,9 +87,9 @@ class SourceVC: UIViewController {
     
     @IBAction func btnTopNewsActn(_ sender: Any) {
         if UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad{
-        self.sourceCV?.scrollToItem(at: NSIndexPath(item: 0, section: 0) as IndexPath,
-                                  at: .top,
-                                  animated: true)
+            self.sourceCV?.scrollToItem(at: NSIndexPath(item: 0, section: 0) as IndexPath,
+                                        at: .top,
+                                        animated: true)
         }else{
             let indexPath = NSIndexPath(row: 0, section: 0)
             self.sourceTV.scrollToRow(at: indexPath as IndexPath, at: .top, animated: true)
@@ -126,7 +126,7 @@ class SourceVC: UIViewController {
 }
 
 extension SourceVC: UITableViewDelegate, UITableViewDataSource{
-   
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return (ShowArticle.count > 0) ? (ShowArticle.count)  : 0
     }

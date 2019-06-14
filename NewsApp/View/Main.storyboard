@@ -2676,7 +2676,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Enter Email" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="D2r-fh-K4O" customClass="SkyFloatingLabelTextField" customModule="SkyFloatingLabelTextField">
-                                <rect key="frame" x="134.5" y="391" width="499" height="35"/>
+                                <rect key="frame" x="134.5" y="369.5" width="499" height="56.5"/>
                                 <nil key="textColor"/>
                                 <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="29"/>
                                 <textInputTraits key="textInputTraits"/>
@@ -5077,13 +5077,14 @@
                                                 <rect key="frame" x="8" y="113" width="355" height="150"/>
                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. </string>
-                                                <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                                             </textView>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9QI-YB-GjV">
-                                                <rect key="frame" x="25" y="80" width="55" height="33"/>
-                                                <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="17"/>
+                                                <rect key="frame" x="25" y="80" width="50" height="33"/>
+                                                <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="17"/>
+                                                <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <state key="normal" title="Button">
                                                     <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                                 </state>
@@ -5197,7 +5198,7 @@
                                 <subviews>
                                     <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="dcu-OJ-Fpb">
                                         <rect key="frame" x="0.0" y="0.0" width="768" height="215"/>
-                                        <color key="backgroundColor" red="0.92143100499999997" green="0.92145264149999995" blue="0.92144101860000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="0.0" minimumInteritemSpacing="12" id="8GC-lo-ZAJ">
                                             <size key="itemSize" width="190" height="150"/>
                                             <size key="headerReferenceSize" width="0.0" height="0.0"/>
@@ -5326,20 +5327,22 @@
                                             <action selector="btnShareActn:" destination="t83-2R-aeZ" eventType="touchUpInside" id="KKH-5g-G0C"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GX0-DM-17o">
-                                        <rect key="frame" x="281" y="8" width="37" height="35"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GX0-DM-17o">
+                                        <rect key="frame" x="661" y="13.5" width="36" height="38"/>
                                         <state key="normal" backgroundImage="shuffled"/>
                                         <connections>
                                             <action selector="btnShuffleActn:" destination="t83-2R-aeZ" eventType="touchUpInside" id="Jhm-gT-lh3"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nGe-0D-uJh">
-                                        <rect key="frame" x="329.5" y="0.0" width="109" height="64.5"/>
-                                        <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="19"/>
+                                        <rect key="frame" x="316.5" y="0.0" width="135" height="64.5"/>
+                                        <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="20"/>
                                         <state key="normal" title="More Stories">
                                             <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
+                                        <variation key="heightClass=regular-widthClass=regular">
+                                            <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="22"/>
+                                        </variation>
                                         <connections>
                                             <action selector="btnMoreStoriesActn:" destination="t83-2R-aeZ" eventType="touchUpInside" id="75h-Qy-1tt"/>
                                         </connections>
@@ -5349,13 +5352,17 @@
                                 <constraints>
                                     <constraint firstItem="tUl-bo-U8m" firstAttribute="leading" secondItem="Pim-I7-vwH" secondAttribute="leading" constant="20" id="2J6-M9-wb0"/>
                                     <constraint firstItem="tUl-bo-U8m" firstAttribute="centerY" secondItem="Pim-I7-vwH" secondAttribute="centerY" id="4cU-yv-obl"/>
+                                    <constraint firstItem="v2b-eJ-Roa" firstAttribute="leading" secondItem="GX0-DM-17o" secondAttribute="trailing" constant="15" id="9g8-sK-sG3"/>
+                                    <constraint firstItem="GX0-DM-17o" firstAttribute="centerY" secondItem="Pim-I7-vwH" secondAttribute="centerY" id="M4n-7R-8be"/>
                                     <constraint firstItem="nGe-0D-uJh" firstAttribute="centerX" secondItem="Pim-I7-vwH" secondAttribute="centerX" id="MQK-kS-iYi"/>
                                     <constraint firstItem="v2b-eJ-Roa" firstAttribute="centerY" secondItem="Pim-I7-vwH" secondAttribute="centerY" id="W79-Ul-5q1"/>
                                     <constraint firstItem="roG-8H-qcU" firstAttribute="height" secondItem="tUl-bo-U8m" secondAttribute="height" id="XVd-e0-z5V"/>
                                     <constraint firstAttribute="trailing" secondItem="v2b-eJ-Roa" secondAttribute="trailing" constant="20" id="aPp-Wf-BH4"/>
                                     <constraint firstAttribute="bottom" secondItem="nGe-0D-uJh" secondAttribute="bottom" id="asU-bn-1Or"/>
                                     <constraint firstItem="roG-8H-qcU" firstAttribute="leading" secondItem="tUl-bo-U8m" secondAttribute="trailing" constant="17" id="bDg-fX-TOc"/>
+                                    <constraint firstItem="GX0-DM-17o" firstAttribute="height" secondItem="v2b-eJ-Roa" secondAttribute="height" id="bsF-Fh-tAm"/>
                                     <constraint firstItem="roG-8H-qcU" firstAttribute="width" secondItem="tUl-bo-U8m" secondAttribute="width" id="f7q-6w-4xm"/>
+                                    <constraint firstItem="GX0-DM-17o" firstAttribute="width" secondItem="v2b-eJ-Roa" secondAttribute="width" id="gsb-ya-rSz"/>
                                     <constraint firstItem="nGe-0D-uJh" firstAttribute="top" secondItem="Pim-I7-vwH" secondAttribute="top" id="iV1-Ra-3c2"/>
                                     <constraint firstItem="roG-8H-qcU" firstAttribute="centerY" secondItem="Pim-I7-vwH" secondAttribute="centerY" id="mxu-jQ-Gn5"/>
                                 </constraints>

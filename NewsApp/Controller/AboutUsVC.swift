@@ -53,7 +53,7 @@ class AboutUsVC: UIViewController {
     
     @objc private func darkModeEnabled(_ notification: Notification) {
         NightNight.theme = .night
-       changeTheme()
+        changeTheme()
     }
     
     func changeTheme(){

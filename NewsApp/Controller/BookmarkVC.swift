@@ -54,27 +54,27 @@ class BookmarkVC: UIViewController {
             bookmarkCV.isHidden = true
         }
         if UserDefaults.standard.value(forKey: "token") != nil {
-                            fetchBookmarkDataFromDB()
-                    }
-                    else{
-                        activityIndicator.stopAnimating()
-                        lblNoBookmark.text = "Login to see bookmark list"
-                        lblNoBookmark.isHidden = false
-                    }
-       
-//        if UserDefaults.standard.value(forKey: "token") != nil {
-//            let coredataRecordCount = DBManager().IsCoreDataEmpty(entity: "BookmarkArticles")
-//            if coredataRecordCount != 0{
-//                fetchBookmarkDataFromDB()
-//            }else{
-//                saveBookmarkDataInDB(url : APPURL.bookmarkedArticlesURL)
-//            }
-//        }
-//        else{
-//            activityIndicator.stopAnimating()
-//            lblNoBookmark.text = "Login to see bookmark list"
-//            lblNoBookmark.isHidden = false
-//        }
+            fetchBookmarkDataFromDB()
+        }
+        else{
+            activityIndicator.stopAnimating()
+            lblNoBookmark.text = "Login to see bookmark list"
+            lblNoBookmark.isHidden = false
+        }
+        
+        //        if UserDefaults.standard.value(forKey: "token") != nil {
+        //            let coredataRecordCount = DBManager().IsCoreDataEmpty(entity: "BookmarkArticles")
+        //            if coredataRecordCount != 0{
+        //                fetchBookmarkDataFromDB()
+        //            }else{
+        //                saveBookmarkDataInDB(url : APPURL.bookmarkedArticlesURL)
+        //            }
+        //        }
+        //        else{
+        //            activityIndicator.stopAnimating()
+        //            lblNoBookmark.text = "Login to see bookmark list"
+        //            lblNoBookmark.isHidden = false
+        //        }
         let darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
         if darkModeStatus == true{
             bookmarkResultTV.backgroundColor = colorConstants.grayBackground3
@@ -608,13 +608,13 @@ extension BookmarkVC: UICollectionViewDelegate, UICollectionViewDataSource, UISc
             }
         }
     }
-
+    
 }
 
 extension BookmarkVC: UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let collectionCellSize = bookmarkCV.frame.size.width
-            return CGSize(width: collectionCellSize/3.4, height: collectionCellSize/2.4)
+        return CGSize(width: collectionCellSize/3.4, height: collectionCellSize/2.4)
     }
 }

@@ -752,7 +752,7 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
         dateFormatter.timeZone = NSTimeZone.local
         playbackSlider.removeFromSuperview()
         // avPlayerView.isHidden = true
-    
+        
         if ShowArticle.count > 0{
             fetchBookmarkDataFromDB()
             currentEntity = "ShowArticle"
@@ -1220,22 +1220,22 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
                         DBManager().deleteBookmarkedArticle(id: self.articleId)
                         if self.currentEntity == "ShowArticle"{
                             self.ShowArticle.remove(at: self.newsCurrentIndex)
-                           let isSearch = UserDefaults.standard.value(forKey: "isSearch") as! String
-                             if isSearch == "bookmark"{
-                        if self.indexCount > 1{
-                        self.indexCount = self.indexCount - 1
-                            if self.newsCurrentIndex == self.indexCount {
-                                self.newsCurrentIndex = self.newsCurrentIndex - 1
-                            }
-                            self.ShowNews(currentIndex: self.newsCurrentIndex)
-                        }else{
-                           
+                            let isSearch = UserDefaults.standard.value(forKey: "isSearch") as! String
                             if isSearch == "bookmark"{
-                                let storyboard = UIStoryboard(name: "Main", bundle: nil)
-                                let vc:BookmarkVC = storyboard.instantiateViewController(withIdentifier: "BookmarkID") as! BookmarkVC
-                                self.present(vc, animated: true, completion: nil)
-                            }
-                        }
+                                if self.indexCount > 1{
+                                    self.indexCount = self.indexCount - 1
+                                    if self.newsCurrentIndex == self.indexCount {
+                                        self.newsCurrentIndex = self.newsCurrentIndex - 1
+                                    }
+                                    self.ShowNews(currentIndex: self.newsCurrentIndex)
+                                }else{
+                                    
+                                    if isSearch == "bookmark"{
+                                        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+                                        let vc:BookmarkVC = storyboard.instantiateViewController(withIdentifier: "BookmarkID") as! BookmarkVC
+                                        self.present(vc, animated: true, completion: nil)
+                                    }
+                                }
                             }
                         }
                         
@@ -1385,7 +1385,7 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
     }
     
     @IBAction func btnBackAction(_ sender: Any) {
-       backNavigation()
+        backNavigation()
     }
     
     @IBAction func btnWebBackAction(_ sender: Any) {
@@ -1434,6 +1434,7 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, TAPageControlDelegat
     }
     
     @IBAction func btnShuffleActn(_ sender: Any) {
+        activity.startAnimating()
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let vc:ShuffleDetailVC = storyboard.instantiateViewController(withIdentifier: "ShuffleID") as! ShuffleDetailVC
         UserDefaults.standard.set("shuffle", forKey: "isSearch")
