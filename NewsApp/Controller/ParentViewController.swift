@@ -448,9 +448,9 @@ class ParentViewController: UIViewController {
     
     func saveTrending(){
         DBManager().saveTrending{response in
-            if response == true{
-                self.fetchTrending()
-            }
+//            if response == true{
+//                self.fetchTrending()
+//            }
         }
     }
     
@@ -461,8 +461,10 @@ class ParentViewController: UIViewController {
         case .Success(let DBData) :
             self.ShowArticle.removeAll()
             prevTrendingData.removeAll()
+            SwipeIndex.shared.newShowArticle.removeAll()
             self.ShowArticle = DBData
             prevTrendingData = DBData
+            
             if self.ShowArticle.count > 0{
                 SwipeIndex.shared.newShowArticle.append(ShowArticle)
                 self.lblNonews.isHidden = true
@@ -571,7 +573,7 @@ class ParentViewController: UIViewController {
         //        loadFirstNews()
         SaveSubmenuNews()
         HideButtonBarView()
-        fetchTrending()
+        self.fetchTrending()
     }
     
     func loadFirstNews(){
@@ -634,7 +636,8 @@ class ParentViewController: UIViewController {
         if UserDefaults.standard.value(forKey: "submenuURL") != nil{
             subMenuURL =  UserDefaults.standard.value(forKey: "submenuURL") as! String
         }
-        DBManager().SaveDataDB(nextUrl: subMenuURL ){response in
+        DBManager().SaveDataDB(nextUrl: subMenuURL ){
+            response in
             if response == true{
                 // self.fetchArticlesFromDB()
             }
@@ -733,6 +736,7 @@ extension ParentViewController : UICollectionViewDelegate, UICollectionViewDataS
     
     func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
         if scrollView == containerCV{
+            activityIndicator.startAnimating()
         if headingName != "Trending"{
             isSwipe = true
             let index = Int(targetContentOffset.pointee.x / submenuCV.frame.width)
@@ -748,7 +752,7 @@ extension ParentViewController : UICollectionViewDelegate, UICollectionViewDataS
              //        UserDefaults.standard.set(subMenuArr[HeadingRow][subMenuRow], forKey: "submenu")
              
              // reloadSubmenuNews()*/
-            
+            activityIndicator.stopAnimating()
         }
         }
     }
@@ -793,9 +797,9 @@ extension ParentViewController : UICollectionViewDelegate, UICollectionViewDataS
                 cell.isTrending = true
                 cell.newShowArticle.append(prevTrendingData)
                 cell.newsCV.reloadData()
-                cell.newsCV?.scrollToItem(at: NSIndexPath(row: 0, section: 0) as IndexPath,
-                                          at: .top,
-                                          animated: false)
+//                cell.newsCV?.scrollToItem(at: NSIndexPath(row: 0, section: 0) as IndexPath,
+//                                          at: .top,
+//                                          animated: false)
             }
             else{
                 if submenuCV.isHidden == false{
@@ -808,11 +812,14 @@ extension ParentViewController : UICollectionViewDelegate, UICollectionViewDataS
                         cell.submenuCOunt = subMenuRow
                     }
                     fetchSubMenuNews()
+
                     cell.newShowArticle = newShowArticle
                     cell.newsCV.reloadData()
+                    if newShowArticle[cell.submenuCOunt].count > 0{
                     cell.newsCV?.scrollToItem(at: NSIndexPath(row: 0, section: 0) as IndexPath,
                                               at: .top,
                                               animated: false)
+                    }
                 }
                 else{
                     cell.isTrending = true
@@ -907,16 +914,23 @@ extension ParentViewController : UICollectionViewDelegate, UICollectionViewDataS
                 containerCV.reloadData()
                 containerCV.selectItem(at: IndexPath(row: 0 , section: 0), animated: false, scrollPosition: [])
                 containerCV.scrollToItem(at: IndexPath(row: 0 , section: 0), at: .centeredHorizontally, animated: true)
-            }else{
+            }
+            else{
                 HideButtonBarView()
                 index = subMenuRow
                 isTrendingDetail = 1
                 if prevTrendingData.count > 0{
-                    ShowArticle = prevTrendingData
+                      DispatchQueue.global(qos: .userInitiated).async {
+                        self.ShowArticle = self.prevTrendingData
+                    }
+                    DispatchQueue.main.async {
                     // HomeNewsTV.reloadData()
-                    containerCV.reloadData()
+                        self.containerCV.reloadData()
+                    }
                 }else{
-                    fetchTrending()
+                      DispatchQueue.global(qos: .userInitiated).async {
+                        self.fetchTrending()
+                    }
                 }
             }
         }

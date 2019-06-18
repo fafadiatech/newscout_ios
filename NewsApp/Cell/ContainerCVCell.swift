@@ -119,7 +119,7 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if isTrending == false{
-            return (newShowArticle.count > 0) ? self.newShowArticle[submenuCOunt].count : 0
+            return (newShowArticle[submenuCOunt].count > 0) ? self.newShowArticle[submenuCOunt].count : 0
         }
         else{
             return (newShowArticle.count > 0) ? self.newShowArticle[0].count : 0
@@ -187,9 +187,8 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
         dateFormatter.timeZone = NSTimeZone.local
         let darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
-        
+
         let textSizeSelected = UserDefaults.standard.value(forKey: "textSize") as! Int
-        var sourceColor = UIColor()
         var fullTxt = ""
         var dateSubString = ""
         var agoDate = ""
@@ -200,7 +199,10 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
                 if indexPath.row % 2 == 0{
                     //display data from DB
                     let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "HomeIphoneAlternateID", for:indexPath) as! HomeiPhoneAlternateCVCell
-                   
+                    imgWidth = String(describing : Int(cell.imgNews.frame.width))
+                    imgHeight = String(describing : Int(cell.imgNews.frame.height))
+                    print("imgWidth \(imgWidth)")
+                    print("imgHeight \(imgHeight)")
                     cell.imgNews.layer.cornerRadius = 10.0
                     cell.imgNews.clipsToBounds = true
                     
@@ -253,6 +255,7 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
                         }
                     }
                     let imgURL = APPURL.imageServer + imgWidth + "x" + imgHeight + "/smart/" + currentArticle.imageURL!
+                    print("imgURL: \(imgURL)")
                     cell.imgNews.sd_setImage(with: URL(string: imgURL), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
                     
                     if textSizeSelected == 0{
@@ -278,6 +281,10 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
                 }
                 else{
                     let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "HomeIphoneID", for:indexPath) as! HomeiPhoneCVCell
+                    imgWidth = String(describing : Int(cell.imgNews.frame.width))
+                    imgHeight = String(describing : Int(cell.imgNews.frame.height))
+                    print("imgWidth \(imgWidth)")
+                    print("imgHeight \(imgHeight)")
                     cell.imgNews.layer.cornerRadius = 10.0
                     cell.imgNews.clipsToBounds = true
                     cell.outerView.layer.cornerRadius = 10
@@ -329,6 +336,7 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
                         }
                     }
                     let imgURL = APPURL.imageServer + imgWidth + "x" + imgHeight + "/smart/" + currentArticle.imageURL!
+                    print("imgURL: \(imgURL)")
                     cell.imgNews.sd_setImage(with: URL(string: imgURL), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
                     
                     if textSizeSelected == 0{
@@ -356,7 +364,10 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
         }
         
         let cellCluster = collectionView.dequeueReusableCell(withReuseIdentifier: "HomeIpadClusterID", for:indexPath) as! HomeiPadClusterCVCell
-       
+        imgWidth = String(describing : Int(cellCluster.imgNews.frame.width))
+        imgHeight = String(describing : Int(cellCluster.imgNews.frame.height))
+        print("imgWidth \(imgWidth)")
+        print("imgHeight \(imgHeight)")
         cellCluster.outerView.layer.cornerRadius = 10
         cellCluster.outerView.layer.masksToBounds = false
         cellCluster.outerView.layer.shadowColor = UIColor.black.cgColor
@@ -454,6 +465,7 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
             }
         }
         let imgURL = APPURL.imageServer + imgWidth + "x" + imgHeight + "/smart/" + currentArticle.imageURL!
+        print("imgURL: \(imgURL)")
         cellCluster.imgNews.sd_setImage(with: URL(string: imgURL), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
         
         if textSizeSelected == 0{
@@ -506,8 +518,12 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
         else{
             let collectionCellSize = newsCV.frame.size.width
             if isTrending == true {
+                print("width: \(collectionCellSize/2.15)")
+                print("height: \(collectionCellSize/2)")
                 return CGSize(width: collectionCellSize/2.15, height: collectionCellSize/2)
             }else{
+                print("width: \(collectionCellSize/3.3)")
+                print("height: \(collectionCellSize/2.3)")
                 return CGSize(width: collectionCellSize/3.3, height: collectionCellSize/2.3)
             }
         }
