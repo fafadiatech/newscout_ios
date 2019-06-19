@@ -92,11 +92,14 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
     
     @objc func refreshNews(refreshControl: UIRefreshControl) {
         DispatchQueue.global(qos: .userInitiated).async {
-            if self.isTrending == false{
+            if self.isTrending == false && self.isTrendingDetail != 2{
                 self.saveArticlesInDB()
             }
-            else{
+            else if self.isTrending == true {
                 self.saveTrending()
+            }
+            else{
+                self.activityIndicator.stopAnimating()
             }
         }
         DispatchQueue.main.async {
@@ -575,7 +578,7 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         if scrollView == newsCV{
         if (scrollView.bounds.maxY) >= scrollView.contentSize.height{
-            activityIndicator.startAnimating()
+           // activityIndicator.startAnimating()
             if isTrending == false {
                 var submenuArr = UserDefaults.standard.value(forKey: "submenuArr") as! [String]
                 
