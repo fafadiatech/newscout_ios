@@ -1407,7 +1407,7 @@ extension ParentViewController: UICollectionViewDelegateFlowLayout {
                 let totalHeight = viewAppTitle.frame.size.height + menuCV.frame.size.height + submenuCV.frame.size.height - 45.0
                 return CGSize(width: screen.size.width, height: screen.size.height - totalHeight)
             }else{
-                let totalHeight = viewAppTitle.frame.size.height + menuCV.frame.size.height + submenuCV.frame.size.height + 8
+                let totalHeight = viewAppTitle.frame.size.height + menuCV.frame.size.height + submenuCV.frame.size.height + 80.0
                 return CGSize(width: screen.size.width, height: screen.size.height - totalHeight)
             }
             
