@@ -242,6 +242,7 @@ class DBManager{
             switch response {
             case .Success(let data) :
                 TrendingData = data
+                DBManager().deleteAllData(entity: "TrendingCategory")
             case .Failure(let errormessage) :
                 print(errormessage)
             }
@@ -255,6 +256,7 @@ class DBManager{
                             //if self.someIDExist(id: news.article_id) == false{
                             newTrending.trendingID = Int64(TrendingData[0].body.results[result].id)
                             newTrending.articleID = Int64(news.article_id)
+                            newTrending.publishedOn = news.published_on!
                             newTrending.count = Int64(TrendingData[0].body.results[result].articles.count)
                             if  self.someEntityExists(id: Int(news.article_id), entity: "NewsArticle", keyword: "") == false{
                                 newArticle.article_id = Int64(news.article_id)
@@ -305,6 +307,7 @@ class DBManager{
         }
     }
     
+    //fetch news of trending article fron newsarticle
     func fetchTrendingArticle() -> ArticleDBfetchResult{
         var trendingArticleIDs = [TrendingCategory]()
         var trendingArticles = [NewsArticle]()
@@ -372,6 +375,8 @@ class DBManager{
         let managedContext =
             appDelegate?.persistentContainer.viewContext
         let trendingRequest =  NSFetchRequest<TrendingCategory>(entityName: "TrendingCategory")
+        let sort = NSSortDescriptor(key: #keyPath(TrendingCategory.publishedOn), ascending: false)
+        trendingRequest.sortDescriptors = [sort]
         do {
             trendingData = try (managedContext?.fetch(trendingRequest))!
         }catch let error as NSError {

@@ -448,9 +448,9 @@ class ParentViewController: UIViewController {
     
     func saveTrending(){
         DBManager().saveTrending{response in
-//            if response == true{
-//                self.fetchTrending()
-//            }
+            if response == true{
+                self.fetchTrending()
+            }
         }
     }
     
@@ -468,7 +468,6 @@ class ParentViewController: UIViewController {
             if self.ShowArticle.count > 0{
                 SwipeIndex.shared.newShowArticle.append(ShowArticle)
                 self.lblNonews.isHidden = true
-                //self.HomeNewsTV.reloadData()
                 containerCV.reloadData()
             }
             else{
@@ -573,7 +572,7 @@ class ParentViewController: UIViewController {
         //        loadFirstNews()
         SaveSubmenuNews()
         HideButtonBarView()
-        self.fetchTrending()
+        //self.fetchTrending()
     }
     
     func loadFirstNews(){
@@ -928,9 +927,9 @@ extension ParentViewController : UICollectionViewDelegate, UICollectionViewDataS
                         self.containerCV.reloadData()
                     }
                 }else{
-                      DispatchQueue.global(qos: .userInitiated).async {
+                     // DispatchQueue.global(qos: .userInitiated).async {
                         self.fetchTrending()
-                    }
+                   // }
                 }
             }
         }
@@ -1407,7 +1406,7 @@ extension ParentViewController: UICollectionViewDelegateFlowLayout {
                 let totalHeight = viewAppTitle.frame.size.height + menuCV.frame.size.height + submenuCV.frame.size.height - 45.0
                 return CGSize(width: screen.size.width, height: screen.size.height - totalHeight)
             }else{
-                let totalHeight = viewAppTitle.frame.size.height + menuCV.frame.size.height + submenuCV.frame.size.height + 80.0
+                let totalHeight = viewAppTitle.frame.size.height + menuCV.frame.size.height + submenuCV.frame.size.height + 8.0
                 return CGSize(width: screen.size.width, height: screen.size.height - totalHeight)
             }
             

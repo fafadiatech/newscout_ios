@@ -64,17 +64,43 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
         newsCV.reloadData()
    activityIndicator.startAnimating()
     }
+    func saveTrending(){
+        DBManager().saveTrending{response in
+                        if response == true{
+                            self.fetchTrending()
+                        }
+        }
+    }
+    
+    func fetchTrending(){
+        activityIndicator.startAnimating()
+        let result = DBManager().fetchTrendingArticle()
+        switch result {
+        case .Success(let DBData) :
+              if DBData.count > 0{
+            self.newShowArticle[0].removeAll()
+                newShowArticle[0] = DBData
+                newsCV.reloadData()
+            }
+            else{
+                self.activityIndicator.stopAnimating()
+            }
+        case .Failure(let errorMsg) :
+            print(errorMsg)
+        }
+    }
     
     @objc func refreshNews(refreshControl: UIRefreshControl) {
-        activityIndicator.startAnimating()
         DispatchQueue.global(qos: .userInitiated).async {
             if self.isTrending == false{
                 self.saveArticlesInDB()
             }
+            else{
+                self.saveTrending()
+            }
         }
         DispatchQueue.main.async {
             refreshControl.endRefreshing()
-            self.activityIndicator.stopAnimating()
         }
     }
     

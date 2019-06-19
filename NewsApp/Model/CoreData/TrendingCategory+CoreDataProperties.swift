@@ -20,5 +20,5 @@ extension TrendingCategory {
     @NSManaged public var articleID: Int64
     @NSManaged public var trendingID: Int64
     @NSManaged public var count: Int64
-
+    @NSManaged public var publishedOn: String
 }
