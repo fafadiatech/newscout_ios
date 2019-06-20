@@ -736,23 +736,23 @@ extension ParentViewController : UICollectionViewDelegate, UICollectionViewDataS
     func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
         if scrollView == containerCV{
             activityIndicator.startAnimating()
-        if headingName != "Trending"{
-            isSwipe = true
-            let index = Int(targetContentOffset.pointee.x / submenuCV.frame.width)
-            let indexPath = IndexPath(item: index, section: 0)
-            print("indexPath in scroll(): \(indexPath)")
-            submenuCV.selectItem(at: indexPath, animated: true, scrollPosition: .centeredHorizontally)
-            //SwipeIndex.shared.currentIndex = subMenuRow + 1
-            // containerCV.reloadData()
-            /* //  self.currentIndexPath = indexPath
-             
-             //       subMenuRow = indexPath.row
-             //        submenuName = subMenuArr[HeadingRow][subMenuRow]
-             //        UserDefaults.standard.set(subMenuArr[HeadingRow][subMenuRow], forKey: "submenu")
-             
-             // reloadSubmenuNews()*/
-            activityIndicator.stopAnimating()
-        }
+            if headingName != "Trending"{
+                isSwipe = true
+                let index = Int(targetContentOffset.pointee.x / submenuCV.frame.width)
+                let indexPath = IndexPath(item: index, section: 0)
+                print("indexPath in scroll(): \(indexPath)")
+                submenuCV.selectItem(at: indexPath, animated: true, scrollPosition: .centeredHorizontally)
+                //SwipeIndex.shared.currentIndex = subMenuRow + 1
+                // containerCV.reloadData()
+                /* //  self.currentIndexPath = indexPath
+                 
+                 //       subMenuRow = indexPath.row
+                 //        submenuName = subMenuArr[HeadingRow][subMenuRow]
+                 //        UserDefaults.standard.set(subMenuArr[HeadingRow][subMenuRow], forKey: "submenu")
+                 
+                 // reloadSubmenuNews()*/
+                activityIndicator.stopAnimating()
+            }
         }
     }
     
@@ -796,9 +796,9 @@ extension ParentViewController : UICollectionViewDelegate, UICollectionViewDataS
                 cell.isTrending = true
                 cell.newShowArticle.append(prevTrendingData)
                 cell.newsCV.reloadData()
-//                cell.newsCV?.scrollToItem(at: NSIndexPath(row: 0, section: 0) as IndexPath,
-//                                          at: .top,
-//                                          animated: false)
+                //                cell.newsCV?.scrollToItem(at: NSIndexPath(row: 0, section: 0) as IndexPath,
+                //                                          at: .top,
+                //                                          animated: false)
             }
             else{
                 if submenuCV.isHidden == false{
@@ -811,13 +811,13 @@ extension ParentViewController : UICollectionViewDelegate, UICollectionViewDataS
                         cell.submenuCOunt = subMenuRow
                     }
                     fetchSubMenuNews()
-
+                    
                     cell.newShowArticle = newShowArticle
                     cell.newsCV.reloadData()
                     if newShowArticle[cell.submenuCOunt].count > 0{
-                    cell.newsCV?.scrollToItem(at: NSIndexPath(row: 0, section: 0) as IndexPath,
-                                              at: .top,
-                                              animated: false)
+                        cell.newsCV?.scrollToItem(at: NSIndexPath(row: 0, section: 0) as IndexPath,
+                                                  at: .top,
+                                                  animated: false)
                     }
                 }
                 else{
@@ -919,17 +919,17 @@ extension ParentViewController : UICollectionViewDelegate, UICollectionViewDataS
                 index = subMenuRow
                 isTrendingDetail = 1
                 if prevTrendingData.count > 0{
-                      DispatchQueue.global(qos: .userInitiated).async {
+                    DispatchQueue.global(qos: .userInitiated).async {
                         self.ShowArticle = self.prevTrendingData
                     }
                     DispatchQueue.main.async {
-                    // HomeNewsTV.reloadData()
+                        // HomeNewsTV.reloadData()
                         self.containerCV.reloadData()
                     }
                 }else{
-                     // DispatchQueue.global(qos: .userInitiated).async {
-                        self.fetchTrending()
-                   // }
+                    // DispatchQueue.global(qos: .userInitiated).async {
+                    self.fetchTrending()
+                    // }
                 }
             }
         }
@@ -1402,14 +1402,16 @@ extension ParentViewController: UICollectionViewDelegateFlowLayout {
         }
         else{
             let screen = UIScreen.main.bounds
+            let bottomPadding = view.safeAreaInsets.bottom
+            let topPadding = view.safeAreaInsets.top
+            
             if submenuCV.isHidden == true {
-                let totalHeight = viewAppTitle.frame.size.height + menuCV.frame.size.height + submenuCV.frame.size.height - 45.0
+                let totalHeight = viewAppTitle.frame.size.height + menuCV.frame.size.height + bottomPadding + topPadding
                 return CGSize(width: screen.size.width, height: screen.size.height - totalHeight)
             }else{
-                let totalHeight = viewAppTitle.frame.size.height + menuCV.frame.size.height + submenuCV.frame.size.height + 8.0
+                let totalHeight = viewAppTitle.frame.size.height + menuCV.frame.size.height + submenuCV.frame.size.height + bottomPadding + topPadding
                 return CGSize(width: screen.size.width, height: screen.size.height - totalHeight)
             }
-            
         }
     }
 }

@@ -62,13 +62,13 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
         newShowArticle = SwipeIndex.shared.newShowArticle
         btnTopNews.layer.cornerRadius = 0.5 * btnTopNews.bounds.size.width
         newsCV.reloadData()
-   activityIndicator.startAnimating()
+        activityIndicator.startAnimating()
     }
     func saveTrending(){
         DBManager().saveTrending{response in
-                        if response == true{
-                            self.fetchTrending()
-                        }
+            if response == true{
+                self.fetchTrending()
+            }
         }
     }
     
@@ -77,8 +77,8 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
         let result = DBManager().fetchTrendingArticle()
         switch result {
         case .Success(let DBData) :
-              if DBData.count > 0{
-            self.newShowArticle[0].removeAll()
+            if DBData.count > 0{
+                self.newShowArticle[0].removeAll()
                 newShowArticle[0] = DBData
                 newsCV.reloadData()
             }
@@ -201,8 +201,8 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
             }
             else{
                 //                self.HomeNewsTV.reloadData()
-                                self.lblNoNews.isHidden =  true
-                                self.activityIndicator.stopAnimating()
+                self.lblNoNews.isHidden =  true
+                self.activityIndicator.stopAnimating()
             }
         case .Failure(let errorMsg) :
             print(errorMsg)
@@ -216,7 +216,7 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
         dateFormatter.timeZone = NSTimeZone.local
         let darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
-
+        
         let textSizeSelected = UserDefaults.standard.value(forKey: "textSize") as! Int
         var fullTxt = ""
         var dateSubString = ""
@@ -304,8 +304,8 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
                         cell.imgNews.image = UIImage(named: AssetConstants.NoImage)
                     }
                     
-                                activityIndicator.stopAnimating()
-                                lblNoNews.isHidden = true
+                    activityIndicator.stopAnimating()
+                    lblNoNews.isHidden = true
                     return cell
                 }
                 else{
@@ -385,7 +385,7 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
                         cell.imgNews.image = UIImage(named: AssetConstants.NoImage)
                     }
                     
-                   activityIndicator.stopAnimating()
+                    activityIndicator.stopAnimating()
                     lblNoNews.isHidden = true
                     return cell
                 }
@@ -411,27 +411,27 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
         cellCluster.clipsToBounds = true
         // var currentArticle : Article!
         if (UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad){
-        if  isTrending == false {
-           // NSLayoutConstraint.deactivate([lblSourceTrailing])
-           
+            if  isTrending == false {
+                // NSLayoutConstraint.deactivate([lblSourceTrailing])
+                
+            }
         }
-    }
         if isTrending == true{
-             currentArticle = newShowArticle[0][indexPath.row]
-        let count = DBManager().showCount(articleId: Int(currentArticle.article_id))//ShowArticle[indexPath.row]
-         cellCluster.lblCount.text = String(count)
+            currentArticle = newShowArticle[0][indexPath.row]
+            let count = DBManager().showCount(articleId: Int(currentArticle.article_id))//ShowArticle[indexPath.row]
+            cellCluster.lblCount.text = String(count)
             if lblSourceTrailing != nil{
                 NSLayoutConstraint.deactivate([lblSourceTrailing])
                 cellCluster.lblCount.isHidden = false
                 cellCluster.imgCount.isHidden = false
-            lblSourceTrailing = NSLayoutConstraint (item: cellCluster.lblSource,
-                                                    attribute: NSLayoutConstraint.Attribute.trailing,
-                                                    relatedBy: NSLayoutConstraint.Relation.equal,
-                                                    toItem: cellCluster.imgCount,
-                                                    attribute: NSLayoutConstraint.Attribute.leading,
-                                                    multiplier: -20,
-                                                    constant: 0)
-            NSLayoutConstraint.activate([lblSourceTrailing])
+                lblSourceTrailing = NSLayoutConstraint (item: cellCluster.lblSource,
+                                                        attribute: NSLayoutConstraint.Attribute.trailing,
+                                                        relatedBy: NSLayoutConstraint.Relation.equal,
+                                                        toItem: cellCluster.imgCount,
+                                                        attribute: NSLayoutConstraint.Attribute.leading,
+                                                        multiplier: -20,
+                                                        constant: 0)
+                NSLayoutConstraint.activate([lblSourceTrailing])
             }
         }else{
             sortedData = newShowArticle[submenuCOunt].sorted{ $0.published_on! > $1.published_on! }
@@ -447,10 +447,10 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
                                                     constant: 0)
             NSLayoutConstraint.activate([lblSourceTrailing])
         }
-
+        
         //display data from DB
         cellCluster.lblTitle.text = currentArticle.title
-      
+        
         if  darkModeStatus == true{
             cellCluster.backgroundColor = colorConstants.grayBackground2
             cellCluster.containerView.backgroundColor = colorConstants.grayBackground2
@@ -567,7 +567,7 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
             if DBData.count > 0 {
                 newShowArticle[submenuCOunt].removeAll()
                 newShowArticle[submenuCOunt] = DBData
-           // newShowArticle.append(ShowArticle)
+                // newShowArticle.append(ShowArticle)
                 newsCV.reloadData()
             }
         case .Failure(let errorMsg) :
@@ -577,39 +577,39 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         if scrollView == newsCV{
-        if (scrollView.bounds.maxY) >= scrollView.contentSize.height{
-           // activityIndicator.startAnimating()
-            if isTrending == false {
-                var submenuArr = UserDefaults.standard.value(forKey: "submenuArr") as! [String]
-                
-                var submenu = submenuArr[submenuCOunt]
-                UserDefaults.standard.set(submenu ,forKey: "submenu")
-                if newShowArticle[submenuCOunt].count >= 20{
-                    if isAPICalled == false{
-                        let result =  DBManager().FetchNextURL(category: submenu)
-                        switch result {
-                        case .Success(let DBData) :
-                            let nextURL = DBData
-                            
-                            if nextURL.count != 0{
-                                isAPICalled = false
-                                if nextURL[0].category == submenu {
-                                    let nexturl = nextURL[0].nextURL
-                                    UserDefaults.standard.set(nexturl, forKey: "submenuURL")
-                                    self.saveArticlesInDB()
+            if (scrollView.bounds.maxY) >= scrollView.contentSize.height{
+                // activityIndicator.startAnimating()
+                if isTrending == false {
+                    var submenuArr = UserDefaults.standard.value(forKey: "submenuArr") as! [String]
+                    
+                    var submenu = submenuArr[submenuCOunt]
+                    UserDefaults.standard.set(submenu ,forKey: "submenu")
+                    if newShowArticle[submenuCOunt].count >= 20{
+                        if isAPICalled == false{
+                            let result =  DBManager().FetchNextURL(category: submenu)
+                            switch result {
+                            case .Success(let DBData) :
+                                let nextURL = DBData
+                                
+                                if nextURL.count != 0{
+                                    isAPICalled = false
+                                    if nextURL[0].category == submenu {
+                                        let nexturl = nextURL[0].nextURL
+                                        UserDefaults.standard.set(nexturl, forKey: "submenuURL")
+                                        self.saveArticlesInDB()
+                                    }
                                 }
+                                else{
+                                    isAPICalled = true
+                                    activityIndicator.stopAnimating()
+                                }
+                            case .Failure(let errorMsg) :
+                                print(errorMsg)
                             }
-                            else{
-                                isAPICalled = true
-                                activityIndicator.stopAnimating()
-                            }
-                        case .Failure(let errorMsg) :
-                            print(errorMsg)
                         }
                     }
                 }
             }
-        }
         }
     }
     
