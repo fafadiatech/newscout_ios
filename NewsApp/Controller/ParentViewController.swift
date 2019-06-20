@@ -139,6 +139,8 @@ class ParentViewController: UIViewController {
         DispatchQueue.global(qos: .userInitiated).async {
             self.saveFetchMenu()
             self.saveTrending()
+            
+            
         }
         DispatchQueue.main.async {
             //self.activityIndicator.stopAnimating()
@@ -570,7 +572,9 @@ class ParentViewController: UIViewController {
         //        currentIndexPath = NSIndexPath(row: 0, section: 0) as IndexPath
         //        submenuCV.selectItem(at: currentIndexPath, animated: true, scrollPosition: [])
         //        loadFirstNews()
-        SaveSubmenuNews()
+        DispatchQueue.global(qos: .userInitiated).async {
+            self.SaveAllSubmenuNews()
+        }
         HideButtonBarView()
         //self.fetchTrending()
     }
@@ -608,11 +612,19 @@ class ParentViewController: UIViewController {
     }
     
     func fetchArticlesFromDB(){
+        activityIndicator.startAnimating()
         ShowArticle.removeAll()
         let result = DBManager().ArticlesfetchByCatId()
         switch result {
         case .Success(let DBData) :
-            ShowArticle = DBData
+            if DBData.count > 0{
+                ShowArticle = DBData
+            }
+            else{
+                DispatchQueue.global(qos: .userInitiated).async {
+                    self.fetchArticlesFromDB()
+                }
+            }
             //            if ShowArticle.count > 0{
             //                lblNonews.isHidden = true
             //                self.HomeNewsTV.reloadData()
@@ -909,7 +921,6 @@ extension ParentViewController : UICollectionViewDelegate, UICollectionViewDataS
                 submenuCV.scrollToItem(at: IndexPath(row: 0 , section: 0), at: .centeredHorizontally, animated: true)
                 btnBack.isHidden = true
                 SaveSubmenuNews()
-                // reloadSubmenuNews()
                 containerCV.reloadData()
                 containerCV.selectItem(at: IndexPath(row: 0 , section: 0), animated: false, scrollPosition: [])
                 containerCV.scrollToItem(at: IndexPath(row: 0 , section: 0), at: .centeredHorizontally, animated: true)
@@ -945,19 +956,17 @@ extension ParentViewController : UICollectionViewDelegate, UICollectionViewDataS
             UserDefaults.standard.set(subMenuArr[HeadingRow][subMenuRow], forKey: "submenu")
             reloadSubmenuNews()
             containerCV.reloadData()
-            
         }
     }
+    
     func fetchSubMenuNews(){
         newShowArticle.removeAll()
         index = 0
         if submenuCV.isHidden == false{
             while index < subMenuArr[HeadingRow].count{
-                
                 submenuName = subMenuArr[HeadingRow][index]
                 UserDefaults.standard.set(subMenuArr[HeadingRow][index], forKey: "submenu")
                 fetchSubmenuId(submenu: subMenuArr[HeadingRow][index])
-                
                 fetchArticlesFromDB()
                 index = index + 1
                 newShowArticle.append(ShowArticle)
@@ -968,6 +977,26 @@ extension ParentViewController : UICollectionViewDelegate, UICollectionViewDataS
             newShowArticle.append(ShowArticle)
         }
         SwipeIndex.shared.newShowArticle = newShowArticle
+    }
+    
+    func SaveAllSubmenuNews(){
+        for head in 0...headingArr.count - 2 {
+            var index = 0
+            while index < subMenuArr[head].count {
+                UserDefaults.standard.set(subMenuArr[head][index], forKey: "submenu")
+                fetchSubmenuId(submenu: subMenuArr[head][index])
+                coredataRecordCount = DBManager().IsCoreDataEmpty(entity: "NewsArticle")
+                if Reachability.isConnectedToNetwork(){
+                    activityIndicator.startAnimating()
+                    if UserDefaults.standard.value(forKey: "submenuURL") != nil{
+                        self.saveArticlesInDB()
+                    }
+                }else{
+                    lblNonews.isHidden = true
+                }
+                index = index + 1
+            }
+        }
     }
     
     func SaveSubmenuNews(){
@@ -988,7 +1017,6 @@ extension ParentViewController : UICollectionViewDelegate, UICollectionViewDataS
     }
     
     func reloadSubmenuNews(){
-        
         lblNonews.isHidden = true
         activityIndicator.startAnimating()
         UserDefaults.standard.set(subMenuArr[HeadingRow][subMenuRow], forKey: "submenu")
@@ -999,7 +1027,6 @@ extension ParentViewController : UICollectionViewDelegate, UICollectionViewDataS
             if UserDefaults.standard.value(forKey: "submenuURL") != nil{
                 self.saveArticlesInDB()
             }
-            
         }else{
             lblNonews.isHidden = true
         }
