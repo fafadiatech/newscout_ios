@@ -281,10 +281,7 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
                     }
                     imgWidth = String(describing : Int(cell.imgNews.frame.size.width))
                     imgHeight = String(describing : Int(cell.imgNews.frame.size.height))
-                    print("imgWidth \(imgWidth)")
-                    print("imgHeight \(imgHeight)")
                     let imgURL = APPURL.imageServer + imgWidth + "x" + imgHeight + "/smart/" + currentArticle.imageURL!
-                    print("imgURL: \(imgURL)")
                     cell.imgNews.sd_setImage(with: URL(string: imgURL), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
                     
                     if textSizeSelected == 0{
@@ -363,10 +360,7 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
                     }
                     imgWidth = String(describing : Int(cell.imgNews.frame.size.width))
                     imgHeight = String(describing : Int(cell.imgNews.frame.size.height))
-                    print("imgWidth \(imgWidth)")
-                    print("imgHeight \(imgHeight)")
                     let imgURL = APPURL.imageServer + imgWidth + "x" + imgHeight + "/smart/" + currentArticle.imageURL!
-                    print("imgURL: \(imgURL)")
                     cell.imgNews.sd_setImage(with: URL(string: imgURL), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
                     
                     if textSizeSelected == 0{
@@ -426,8 +420,6 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
             }
             imgWidth = String(describing : Int(cellCluster.imgNews.frame.size.width))
             imgHeight = String(describing : Int(cellCluster.imgNews.frame.size.height))
-            print("imgWidth \(imgWidth)")
-            print("imgHeight \(imgHeight)")
         }
         else{
             sortedData = newShowArticle[submenuCOunt].sorted{ $0.published_on! > $1.published_on! }
@@ -444,8 +436,6 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
             NSLayoutConstraint.activate([lblSourceTrailing])
             imgWidth = String(describing : Int(cellCluster.imgNews.frame.size.width))
             imgHeight = String(describing : Int(cellCluster.imgNews.frame.size.height))
-            print("imgWidth \(imgWidth)")
-            print("imgHeight \(imgHeight)")
         }
         
         //display data from DB
@@ -495,7 +485,6 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
         }
         
         let imgURL = APPURL.imageServer + imgWidth + "x" + imgHeight + "/smart/" + currentArticle.imageURL!
-        print("imgURL: \(imgURL)")
         cellCluster.imgNews.sd_setImage(with: URL(string: imgURL), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
         
         if textSizeSelected == 0{
@@ -548,12 +537,8 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
         else{
             let collectionCellSize = newsCV.frame.size.width
             if isTrending == true {
-                print("width: \(collectionCellSize/2.15)")
-                print("height: \(collectionCellSize/2)")
                 return CGSize(width: collectionCellSize/2.15, height: collectionCellSize/2)
             }else{
-                print("width: \(collectionCellSize/3.3)")
-                print("height: \(collectionCellSize/2.3)")
                 return CGSize(width: collectionCellSize/3.3, height: collectionCellSize/2.3)
             }
         }
