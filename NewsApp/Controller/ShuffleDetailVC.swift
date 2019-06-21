@@ -16,9 +16,8 @@ import AVKit
 import SwiftDevice
 import CoreData
 import MaterialComponents.MaterialActivityIndicator
-import TAPageControl
 
-class ShuffleDetailVC: UIViewController , UIScrollViewDelegate, TAPageControlDelegate, WKNavigationDelegate {
+class ShuffleDetailVC: UIViewController , UIScrollViewDelegate, WKNavigationDelegate {
     
     @IBOutlet weak var viewContainer: UIView!
     @IBOutlet weak var imgNews: UIImageView!
@@ -37,12 +36,10 @@ class ShuffleDetailVC: UIViewController , UIScrollViewDelegate, TAPageControlDel
     @IBOutlet weak var btnBookamark: UIButton!
     @IBOutlet weak var viewLikeDislike: UIView!
     @IBOutlet weak var viewNewsArea: UIView!
-    @IBOutlet weak var btnPlayVideo: UIButton!
     @IBOutlet weak var newsAreaHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var viewLikeDislikeHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var viewLikeDislikeBottom: NSLayoutConstraint!
     @IBOutlet weak var viewBack: UIView!
-    @IBOutlet weak var imgScrollView: UIScrollView!
     @IBOutlet weak var viewImgContainerTop: NSLayoutConstraint!
     @IBOutlet weak var viewImgContainer: UIView!
     @IBOutlet weak var viewContainerTop: NSLayoutConstraint!
@@ -52,10 +49,8 @@ class ShuffleDetailVC: UIViewController , UIScrollViewDelegate, TAPageControlDel
     @IBOutlet weak var btnShuffle: UIButton!
     @IBOutlet weak var btnReadMore: UIButton!
     @IBOutlet weak var btnMoreStories: UIButton!
+    
     var RecommendationArticle = [NewsArticle]()
-    var btnPlay = UIButton(type: .custom)
-    let imageCache = NSCache<NSString, UIImage>()
-    var playbackSlider = UISlider()
     var RecomArticleData = [ArticleStatus]()
     var ArticleData = [ArticleStatus]()
     var RecomData = [NewsArticle]()
@@ -66,25 +61,13 @@ class ShuffleDetailVC: UIViewController , UIScrollViewDelegate, TAPageControlDel
     var newsCurrentIndex = 0
     var articleId = 0
     var sourceURL = ""
-    var tapTerm:UITapGestureRecognizer = UITapGestureRecognizer()
-    var player:AVPlayer?
-    var playerItem:AVPlayerItem?
     var lblSourceTopConstraint : NSLayoutConstraint!
     var lblTimesTopConstraint : NSLayoutConstraint!
     var viewLikeDislikeBottomConstraint : NSLayoutConstraint!
     var deviceOrientation: UIDeviceOrientation = UIDevice.current.orientation
     var statusBarOrientation: UIInterfaceOrientation = UIApplication.shared.statusBarOrientation
     var darkModeStatus = Bool()
-    var articleArr = [Article]()
-    var playerViewWidth = CGFloat()
-    var playerViewHeight = CGFloat()
     let activityIndicator = MDCActivityIndicator()
-    let activity = MDCActivityIndicator()
-    var imgArray = [UIImage]()
-    var MediaData = [Media]()
-    var index = 0
-    var timer = Timer()
-    var customPagecontrol = TAPageControl()
     var imgWidth = ""
     var imgHeight = ""
     
@@ -99,9 +82,6 @@ class ShuffleDetailVC: UIViewController , UIScrollViewDelegate, TAPageControlDel
         btnReadMore.layer.cornerRadius = 5
         btnReadMore.layer.borderWidth = 1
         btnReadMore.layer.borderColor = UIColor.black.cgColor
-        btnPlayVideo.isHidden = true
-        imgScrollView.delegate = self
-        imgArray = [#imageLiteral(resourceName: "f3"),#imageLiteral(resourceName: "f1") ,#imageLiteral(resourceName: "f2")]
         activityIndicator.cycleColors = [.blue]
         activityIndicator.frame = CGRect(x: view.frame.width/2, y: view.frame.height/2 - 100, width: 40, height: 40)
         activityIndicator.sizeToFit()
@@ -135,14 +115,6 @@ class ShuffleDetailVC: UIViewController , UIScrollViewDelegate, TAPageControlDel
         self.newsView.addGestureRecognizer(swipeRight)
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-        timer = Timer.scheduledTimer(timeInterval: 3, target: self, selector: #selector(runImages), userInfo: nil, repeats: true)
-    }
-    
-    override func viewDidDisappear(_ animated: Bool) {
-        timer.invalidate()
-    }
-    
     @objc func respondToSwipeGesture(gesture: UIGestureRecognizer) {
         
         let transition = CATransition()
@@ -159,22 +131,7 @@ class ShuffleDetailVC: UIViewController , UIScrollViewDelegate, TAPageControlDel
             }
         }
     }
-    @objc func runImages(){
-        customPagecontrol.currentPage = index
-        if index == MediaData.count - 1{
-            index = 0
-        }else{
-            index = index + 1
-        }
-        self.taPageControl(customPagecontrol, didSelectPageAt: index)
-    }
-    
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        let pageindex = imgScrollView.contentOffset.x / imgScrollView.frame.size.width
-        customPagecontrol.currentPage = Int(pageindex)
-        index = Int(pageindex)
-    }
-    
+   
     func filterRecommendation(){
         RecomData.removeAll()
         if ShowArticle.count > 0{
@@ -186,11 +143,6 @@ class ShuffleDetailVC: UIViewController , UIScrollViewDelegate, TAPageControlDel
             }
         }
         suggestedCV.reloadData()
-    }
-    
-    func taPageControl(_ pageControl: TAPageControl!, didSelectPageAt currentIndex: Int) {
-        index =  currentIndex
-        imgScrollView.scrollRectToVisible(CGRect(x: view.frame.size.width * CGFloat(currentIndex), y:0, width: view.frame.width, height: imgScrollView.frame.height), animated: true)
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -259,15 +211,6 @@ class ShuffleDetailVC: UIViewController , UIScrollViewDelegate, TAPageControlDel
         imgNews.backgroundColor = colorConstants.txtlightGrayColor
     }
     
-    @objc func PlayerViewtapped(gestureRecognizer: UITapGestureRecognizer) {
-        if btnPlayVideo.isHidden == true{
-            btnPlayVideo.isHidden = false
-        }
-        else{
-            btnPlayVideo.isHidden = true
-        }
-    }
-    
     override var prefersStatusBarHidden: Bool {
         return true
     }
@@ -311,58 +254,6 @@ class ShuffleDetailVC: UIViewController , UIScrollViewDelegate, TAPageControlDel
     
     func webViewDidFinishLoad(_ : WKWebView) {
         activityIndicator.stopAnimating()
-    }
-    
-    @IBAction func btnPlayVideo(_ sender: Any) {
-        if player?.rate == 0
-        {
-            player!.play()
-            btnPlayVideo.setImage(UIImage(named: AssetConstants.pause), for: .normal)
-            btnPlayVideo.isHidden = true
-            Timer.scheduledTimer(timeInterval: 5, target: self, selector: #selector(ShowPausebtn), userInfo: nil, repeats: false)
-        } else {
-            player!.pause()
-            btnPlayVideo.setImage(UIImage(named: AssetConstants.play), for: .normal)
-        }
-    }
-    
-    //for play button created programmatically
-    @objc func ShowPlayPausebtn() {
-        if (btnPlay.currentImage?.isEqual(UIImage(named: AssetConstants.pause)))! {
-            btnPlay.isHidden = true
-        }
-    }
-    
-    @objc func ShowPausebtn() {
-        if (btnPlayVideo.currentImage?.isEqual(UIImage(named: AssetConstants.pause)))! {
-            btnPlayVideo.isHidden = true
-        }
-    }
-    
-    @objc func playbackSliderValueChanged(_ playbackSlider:UISlider){
-        let seconds : Int64 = Int64(playbackSlider.value)
-        let targetTime:CMTime = CMTimeMake(seconds, 1)
-        player!.seek(to: targetTime)
-        
-        if player!.rate == 0{
-            player?.pause()
-        }
-        else{
-            player?.play()
-        }
-    }
-    
-    //for play button created programmatically
-    @objc func buttonTapped(sender : UIButton) {
-        if player?.rate == 0{
-            player!.play()
-            btnPlay.setImage(UIImage(named: AssetConstants.pause), for: .normal)
-            btnPlay.isHidden = true
-            Timer.scheduledTimer(timeInterval: 5, target: self, selector: #selector(ShowPlayPausebtn), userInfo: nil, repeats: false)
-        } else {
-            player!.pause()
-            btnPlay.setImage(UIImage(named: AssetConstants.play), for: .normal)
-        }
     }
     
     func fetchRecommendation() {
@@ -413,14 +304,10 @@ class ShuffleDetailVC: UIViewController , UIScrollViewDelegate, TAPageControlDel
     
     func ShowNews(currentIndex: Int){
         suggestedView.isHidden = true
-        MediaData.removeAll()
         activityIndicator.startAnimating()
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
         dateFormatter.timeZone = NSTimeZone.local
-        playbackSlider.removeFromSuperview()
-        // avPlayerView.isHidden = true
-        
         if shuffleData.count > 0{
             fetchBookmarkDataFromDB()
             if shuffleData[currentIndex].title != nil {

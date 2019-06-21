@@ -54,7 +54,6 @@ PODS:
   - SkyFloatingLabelTextField (3.5.1)
   - SwiftDevice (0.3.0)
   - SwiftyJSON (4.1.0)
-  - TAPageControl (0.2.0)
   - Toast-Swift (3.0.1)
   - XLPagerTabStrip (8.0.1)
 
@@ -71,12 +70,11 @@ DEPENDENCIES:
   - SkyFloatingLabelTextField
   - SwiftDevice
   - SwiftyJSON
-  - TAPageControl
   - Toast-Swift
   - XLPagerTabStrip
 
 SPEC REPOS:
-  https://github.com/cocoapods/specs.git:
+  https://github.com/CocoaPods/Specs.git:
     - Alamofire
     - Bolts
     - Crashlytics
@@ -97,7 +95,6 @@ SPEC REPOS:
     - SkyFloatingLabelTextField
     - SwiftDevice
     - SwiftyJSON
-    - TAPageControl
     - Toast-Swift
     - XLPagerTabStrip
 
@@ -122,10 +119,9 @@ SPEC CHECKSUMS:
   SkyFloatingLabelTextField: 4cbeece9c3aae97c6019d8fae511cb5b755874f7
   SwiftDevice: ee6e7682db9a6d79aa9e922886b1a5a1ebeb7b3c
   SwiftyJSON: c29297daf073d2aa016295d5809cdd68045c39b3
-  TAPageControl: fd11d779bbb5c2464ca2f55dde9e288213ea8a9b
   Toast-Swift: ba0b01b095aada709d915f9beb1d38184a2721c3
   XLPagerTabStrip: c908b17cbf42fcd2598ee1adfc49bae25444d88a
 
-PODFILE CHECKSUM: bffaf33e06ee7d7916e3aa1951140b490caaff64
+PODFILE CHECKSUM: 74876b242802b6c3b4946561a5e54aba2d7da143
 
-COCOAPODS: 1.5.3
+COCOAPODS: 1.5.0
