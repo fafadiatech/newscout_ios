@@ -1206,52 +1206,6 @@ class DBManager{
         }
     }
     
-    func saveTags() {
-        let managedContext =
-            appDelegate?.persistentContainer.viewContext
-        var tagsData = [DailyTags]()
-        let types = ["daily", "weekly", "monthly"]
-        for type in types{
-            APICall().getTags(url:APPURL.getTagsURL, type: type){
-                (response)  in
-                switch response {
-                case .Success(let data) :
-                    tagsData  = data
-                    if tagsData[0].header.status == "1" {
-                        if tagsData[0].body.count > 0{
-                            for tag in tagsData[0].body.results{
-                                self.tagType = type
-                                if self.someEntityExists(id: 0, entity: "PeriodicTags", keyword: tag.name) == false{
-                                    let newTag = PeriodicTags(context: managedContext!)
-                                    newTag.tagName =  tag.name
-                                    newTag.count = Int64(tag.count)
-                                    newTag.type = type
-                                    self.saveBlock()
-                                }
-                            }
-                        }
-                    }
-                case .Failure(let errormessage) :
-                    print(errormessage)
-                }
-            }
-        }
-    }
-    
-    func fetchTags(type : String) -> PeriodicTagDBfetchResult {
-        let managedContext =
-            appDelegate?.persistentContainer.viewContext
-        let fetchRequest =
-            NSFetchRequest<PeriodicTags>(entityName: "PeriodicTags")
-        fetchRequest.predicate = NSPredicate(format: "type contains[c] %@",type)
-        do {
-            let tagsData = try (managedContext?.fetch(fetchRequest))!
-            return PeriodicTagDBfetchResult.Success(tagsData)
-        } catch let error as NSError {
-            return PeriodicTagDBfetchResult.Failure(error as! String)
-        }
-    }
-    
     func saveMenu(_ completion : @escaping (Bool) -> ()){
         var menuData =  [Menu]()
         let managedContext =

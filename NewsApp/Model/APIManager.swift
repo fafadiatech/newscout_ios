@@ -664,32 +664,6 @@ class APICall{
         }
     }
     
-    //get daily,weekly and monthly tags
-    func getTags(url : String,type : String, _ completion : @escaping (DailyTagAPIResult) ->()){
-        let param = [type : 1]
-        Alamofire.request(url,method: .get, parameters: param).responseString{
-            response in
-            if(response.result.isSuccess){
-                if let data = response.data {
-                    let jsonDecoder = JSONDecoder()
-                    do {
-                        let jsonData = try jsonDecoder.decode(DailyTags.self, from: data)
-                        completion(DailyTagAPIResult.Success([jsonData]))
-                    }
-                    catch {
-                        completion(DailyTagAPIResult.Failure(error.localizedDescription
-                        ))
-                    }
-                }
-            }
-            else{
-                if let err = response.result.error as? URLError, err.code == .notConnectedToInternet {
-                    completion(DailyTagAPIResult.Failure(Constants.InternetErrorMsg))
-                }
-            }
-        }
-    }
-    
     func getMenu(_ completion : @escaping (MenuAPIResult) ->()){
         Alamofire.request(APPURL.getMenus, method: .get).responseString{
             response in

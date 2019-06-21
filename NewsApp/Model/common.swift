@@ -198,7 +198,6 @@ struct APPURL {
         static let saveRemoveCategory = Domains.version + "categories/save-remove/"
         static let getLikeList = Domains.version + "articles/like-news-list/"
         static let getBookmarkList = Domains.version + "bookmark-articles/bookmark-news-list/"
-        static let getTags = Domains.version + "tags/"
         static let ArticlesBytags = Domains.version + "article/search?"
         static let ArticleById = Domains.version + "article/search?category="
         static let ArtilceByTags2 = Domains.version + "articles/?"
@@ -227,7 +226,6 @@ struct APPURL {
     static let saveRemoveCategoryURL = Domains.Local + Routes.saveRemoveCategory
     static let getLikeListURL = Domains.Local + Routes.getLikeList
     static let getBookmarkListURL = Domains.Local + Routes.getBookmarkList
-    static let getTagsURL = Domains.Local + Routes.getTags
     static let ArticlesByTagsURL = Domains.Local + Routes.ArticlesBytags
     static let ArticlesByTagsURL2 = Domains.Local + Routes.ArtilceByTags2
     static let getMenus = Domains.Local + Routes.menu
