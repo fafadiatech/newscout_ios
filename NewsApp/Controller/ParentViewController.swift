@@ -113,7 +113,7 @@ class ParentViewController: UIViewController {
     var newShowArticle = [[NewsArticle]]()
     var headingName = "Trending"
     var isSwipe = false
-    
+    var menuImgSize = CGFloat()
     var headingImg = [AssetConstants.sector, AssetConstants.regional, AssetConstants.finance, AssetConstants.economy, AssetConstants.misc, AssetConstants.sector]
     var submenuImgArr = [[AssetConstants.banking, AssetConstants.retail,AssetConstants.retail, AssetConstants.tech, AssetConstants.transport, AssetConstants.energy, AssetConstants.food, AssetConstants.manufacturing, AssetConstants.fintech, AssetConstants.media],
                          [AssetConstants.us, AssetConstants.china, AssetConstants.asia, AssetConstants.japan, AssetConstants.india, AssetConstants.appLogo],
@@ -722,7 +722,6 @@ class ParentViewController: UIViewController {
     
     @IBAction func btnBackActn(_ sender: Any) {
         isTrendingDetail = 1
-        //        activityIndicator.startAnimating()
         ShowArticle = prevTrendingData
         containerCV.reloadData()
         btnBack.isHidden = true
@@ -789,6 +788,7 @@ extension ParentViewController : UICollectionViewDelegate, UICollectionViewDataS
         if collectionView == menuCV {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "menuID", for:indexPath) as! menuCVCell
             cell.lblMenu.text = headingArr[indexPath.item]
+            print("cell.lblMenu.width:\(cell.lblMenu.frame.width)")
             cell.imgMenu.image =  UIImage(named: headingImg[indexPath.row])
             return cell
         }
@@ -851,7 +851,7 @@ extension ParentViewController : UICollectionViewDelegate, UICollectionViewDataS
             
             
             cell.lblSubmenu.layer.borderWidth = 1.0
-            cell.lblSubmenu.layer.cornerRadius = 20
+            cell.lblSubmenu.layer.cornerRadius = 18
             cell.lblSubmenu.layer.masksToBounds = true
             cell.lblSubmenu.text = subMenuArr[HeadingRow][indexPath.row]
             //cell.imgSubmenuBackground.image = UIImage(named: submenuImgArr[HeadingRow][indexPath.row] )
@@ -1085,7 +1085,6 @@ extension ParentViewController: UITableViewDelegate, UITableViewDataSource, UISc
         let darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
         sortedData.removeAll()
         let textSizeSelected = UserDefaults.standard.value(forKey: "textSize") as! Int
-        var sourceColor = UIColor()
         var fullTxt = ""
         var dateSubString = ""
         var agoDate = ""
@@ -1417,14 +1416,18 @@ extension ParentViewController: UICollectionViewDelegateFlowLayout {
             let label = UILabel(frame: CGRect.zero)
             label.text = headingArr[indexPath.item]
             label.sizeToFit()
-            CVSize = label.frame.width + 90.0
+            if (UIDevice.current.userInterfaceIdiom != UIUserInterfaceIdiom.pad){
+            CVSize = label.intrinsicContentSize.width + 80
+            }else{
+                 CVSize = label.intrinsicContentSize.width + 90
+            }
             return CGSize(width:CVSize , height: 60)
         }
         else if collectionView ==  submenuCV{
             let label = UILabel(frame: CGRect.zero)
             label.text = subMenuArr[HeadingRow][indexPath.item]
             label.sizeToFit()
-            CVSize = label.frame.width + 80.0
+            CVSize = label.frame.width + 60.0
             return CGSize(width:CVSize , height: 40)
         }
         else{

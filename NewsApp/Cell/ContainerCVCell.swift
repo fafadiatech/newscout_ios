@@ -228,10 +228,6 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
                 if indexPath.row % 2 == 0{
                     //display data from DB
                     let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "HomeIphoneAlternateID", for:indexPath) as! HomeiPhoneAlternateCVCell
-                    imgWidth = String(describing : Int(cell.imgNews.frame.width))
-                    imgHeight = String(describing : Int(cell.imgNews.frame.height))
-                    print("imgWidth \(imgWidth)")
-                    print("imgHeight \(imgHeight)")
                     cell.imgNews.layer.cornerRadius = 10.0
                     cell.imgNews.clipsToBounds = true
                     
@@ -283,6 +279,10 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
                             cell.lblSource.attributedText = attributedWithTextColor
                         }
                     }
+                    imgWidth = String(describing : Int(cell.imgNews.frame.size.width))
+                    imgHeight = String(describing : Int(cell.imgNews.frame.size.height))
+                    print("imgWidth \(imgWidth)")
+                    print("imgHeight \(imgHeight)")
                     let imgURL = APPURL.imageServer + imgWidth + "x" + imgHeight + "/smart/" + currentArticle.imageURL!
                     print("imgURL: \(imgURL)")
                     cell.imgNews.sd_setImage(with: URL(string: imgURL), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
@@ -310,10 +310,7 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
                 }
                 else{
                     let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "HomeIphoneID", for:indexPath) as! HomeiPhoneCVCell
-                    imgWidth = String(describing : Int(cell.imgNews.frame.width))
-                    imgHeight = String(describing : Int(cell.imgNews.frame.height))
-                    print("imgWidth \(imgWidth)")
-                    print("imgHeight \(imgHeight)")
+                    
                     cell.imgNews.layer.cornerRadius = 10.0
                     cell.imgNews.clipsToBounds = true
                     cell.outerView.layer.cornerRadius = 10
@@ -364,6 +361,10 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
                             cell.lblSource.attributedText = attributedWithTextColor
                         }
                     }
+                    imgWidth = String(describing : Int(cell.imgNews.frame.size.width))
+                    imgHeight = String(describing : Int(cell.imgNews.frame.size.height))
+                    print("imgWidth \(imgWidth)")
+                    print("imgHeight \(imgHeight)")
                     let imgURL = APPURL.imageServer + imgWidth + "x" + imgHeight + "/smart/" + currentArticle.imageURL!
                     print("imgURL: \(imgURL)")
                     cell.imgNews.sd_setImage(with: URL(string: imgURL), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
@@ -393,10 +394,7 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
         }
         
         let cellCluster = collectionView.dequeueReusableCell(withReuseIdentifier: "HomeIpadClusterID", for:indexPath) as! HomeiPadClusterCVCell
-        imgWidth = String(describing : Int(cellCluster.imgNews.frame.width))
-        imgHeight = String(describing : Int(cellCluster.imgNews.frame.height))
-        print("imgWidth \(imgWidth)")
-        print("imgHeight \(imgHeight)")
+      
         cellCluster.outerView.layer.cornerRadius = 10
         cellCluster.outerView.layer.masksToBounds = false
         cellCluster.outerView.layer.shadowColor = UIColor.black.cgColor
@@ -409,21 +407,14 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
         cellCluster.imgNews.clipsToBounds = true
         cellCluster.layer.cornerRadius = 10.0
         cellCluster.clipsToBounds = true
-        // var currentArticle : Article!
-        if (UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad){
-            if  isTrending == false {
-                // NSLayoutConstraint.deactivate([lblSourceTrailing])
-                
-            }
-        }
         if isTrending == true{
             currentArticle = newShowArticle[0][indexPath.row]
+            cellCluster.lblCount.isHidden = false
+            cellCluster.imgCount.isHidden = false
             let count = DBManager().showCount(articleId: Int(currentArticle.article_id))//ShowArticle[indexPath.row]
             cellCluster.lblCount.text = String(count)
             if lblSourceTrailing != nil{
                 NSLayoutConstraint.deactivate([lblSourceTrailing])
-                cellCluster.lblCount.isHidden = false
-                cellCluster.imgCount.isHidden = false
                 lblSourceTrailing = NSLayoutConstraint (item: cellCluster.lblSource,
                                                         attribute: NSLayoutConstraint.Attribute.trailing,
                                                         relatedBy: NSLayoutConstraint.Relation.equal,
@@ -433,7 +424,12 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
                                                         constant: 0)
                 NSLayoutConstraint.activate([lblSourceTrailing])
             }
-        }else{
+            imgWidth = String(describing : Int(cellCluster.imgNews.frame.size.width))
+            imgHeight = String(describing : Int(cellCluster.imgNews.frame.size.height))
+            print("imgWidth \(imgWidth)")
+            print("imgHeight \(imgHeight)")
+        }
+        else{
             sortedData = newShowArticle[submenuCOunt].sorted{ $0.published_on! > $1.published_on! }
             currentArticle = sortedData[indexPath.row]
             cellCluster.lblCount.isHidden = true
@@ -446,6 +442,10 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
                                                     multiplier: 1,
                                                     constant: 0)
             NSLayoutConstraint.activate([lblSourceTrailing])
+            imgWidth = String(describing : Int(cellCluster.imgNews.frame.size.width))
+            imgHeight = String(describing : Int(cellCluster.imgNews.frame.size.height))
+            print("imgWidth \(imgWidth)")
+            print("imgHeight \(imgHeight)")
         }
         
         //display data from DB
@@ -493,6 +493,7 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
                 cellCluster.lblSource.attributedText = attributedWithTextColor
             }
         }
+        
         let imgURL = APPURL.imageServer + imgWidth + "x" + imgHeight + "/smart/" + currentArticle.imageURL!
         print("imgURL: \(imgURL)")
         cellCluster.imgNews.sd_setImage(with: URL(string: imgURL), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
