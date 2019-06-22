@@ -117,7 +117,7 @@ class HomeVC: UIViewController{
         
         if tabBarTitle == "today"{
             isTrendingDetail = 1
-            var records = DBManager().IsCoreDataEmpty(entity: "TrendingCategory")
+            let records = DBManager().IsCoreDataEmpty(entity: "TrendingCategory")
             if records <= 0{
                 DBManager().saveTrending{response in
                     self.fetchTrending()
@@ -193,7 +193,7 @@ class HomeVC: UIViewController{
         let tagresult = DBManager().fetchsubmenuId(subMenuName: submenu)
         switch tagresult{
         case .Success(let id) :
-            var url = APPURL.ArticleByIdURL + "\(id)"
+            let url = APPURL.ArticleByIdURL + "\(id)"
             UserDefaults.standard.setValue(id, forKey: "subMenuId")
             UserDefaults.standard.setValue(url, forKey: "submenuURL")
         case .Failure(let error):
@@ -253,7 +253,7 @@ class HomeVC: UIViewController{
             if DBData.count == 0{
                 activityIndicator.stopAnimating()
             }
-        case .Failure(let errorMsg) : break
+        case .Failure(let _) : break
         }
     }
     
@@ -350,7 +350,7 @@ class HomeVC: UIViewController{
             }
         }
         if isTrendingDetail == 1 {
-            var records = DBManager().IsCoreDataEmpty(entity: "TrendingCategory")
+            let records = DBManager().IsCoreDataEmpty(entity: "TrendingCategory")
             if records <= 0{
                 DBManager().saveTrending{response in
                     self.fetchTrending()
@@ -440,7 +440,6 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
         let darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
         sortedData.removeAll()
         let textSizeSelected = UserDefaults.standard.value(forKey: "textSize") as! Int
-        var sourceColor = UIColor()
         var fullTxt = ""
         var dateSubString = ""
         var agoDate = ""

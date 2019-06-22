@@ -82,8 +82,6 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, WKNavigationDelegate
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        imgWidth = String(describing : Int(imgNews.frame.width))
-        imgHeight = String(describing : Int(imgNews.frame.height))
         btnReadMore.setTitleColor(.black, for: UIControlState.normal)
         suggestedView.isHidden = true
         WKWebView.navigationDelegate = self
@@ -607,21 +605,44 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, WKNavigationDelegate
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
         dateFormatter.timeZone = NSTimeZone.local
-  
+        imgWidth = String(describing : Int(imgNews.frame.width))
+        imgHeight = String(describing : Int(imgNews.frame.height))
+        var dateSubString = ""
+        var fullTxt = ""
+        var agoDate = ""
+        print("imgWidth:\(imgWidth)")
+         print("imgHeight:\(imgHeight)")
         if ShowArticle.count > 0{
             fetchBookmarkDataFromDB()
             currentEntity = "ShowArticle"
             let currentArticle = ShowArticle[currentIndex]
             Helper().getMenuEvents(action: "item_detail", menuId: articleId, menuName: currentArticle.title! )
-            let newDate = dateFormatter.date(from: currentArticle.published_on!)
-            var agoDate = ""
-            if newDate != nil{
-                agoDate = Helper().timeAgoSinceDate(newDate!)
+           
+            if ((currentArticle.published_on?.count)!) <= 20{
+                if !(currentArticle.published_on?.contains("Z"))!{
+                    currentArticle.published_on?.append("Z")
+                }
+                let newDate = dateFormatter.date(from: currentArticle.published_on!)
+                if newDate != nil{
+                    agoDate = Helper().timeAgoSinceDate(newDate!)
+                    fullTxt = "\(agoDate)" + " via " + currentArticle.source!
+                }
+            }
+            else{
+                dateSubString = String(currentArticle.published_on!.prefix(19))
+                if !(dateSubString.contains("Z")){
+                    dateSubString.append("Z")
+                }
+                let newDate = dateFormatter.date(from: dateSubString
+                )
+                if newDate != nil{
+                    agoDate = Helper().timeAgoSinceDate(newDate!)
+                    fullTxt = "\(agoDate)" + " via " + currentArticle.source!
+                }
             }
             articleId = Int(currentArticle.article_id)
             lblNewsHeading.text = currentArticle.title
             txtViewNewsDesc.text = currentArticle.blurb
-            var fullTxt = "\(agoDate)" + " via " + currentArticle.source!
             let attributedWithTextColor: NSAttributedString = fullTxt.attributedStringWithColor([currentArticle.source!], color: UIColor.red)
             
             btnSource.setAttributedTitle(attributedWithTextColor, for: .normal)
@@ -663,21 +684,36 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, WKNavigationDelegate
             fetchSearchBookmarkDataFromDB()
             let currentArticle = SearchArticle[currentIndex]
             Helper().getMenuEvents(action: "item_detail", menuId: articleId, menuName: currentArticle.title! )
-            let newDate = dateFormatter.date(from: currentArticle.published_on!)
-            var agoDate = ""
-            if newDate != nil{
-                agoDate = Helper().timeAgoSinceDate(newDate!)
+            if ((currentArticle.published_on?.count)!) <= 20{
+                if !(currentArticle.published_on?.contains("Z"))!{
+                    currentArticle.published_on?.append("Z")
+                }
+                let newDate = dateFormatter.date(from: currentArticle.published_on!)
+                if newDate != nil{
+                    agoDate = Helper().timeAgoSinceDate(newDate!)
+                    fullTxt = "\(agoDate)" + " via " + currentArticle.source!
+                }
+            }
+            else{
+                dateSubString = String(currentArticle.published_on!.prefix(19))
+                if !(dateSubString.contains("Z")){
+                    dateSubString.append("Z")
+                }
+                let newDate = dateFormatter.date(from: dateSubString
+                )
+                if newDate != nil{
+                    agoDate = Helper().timeAgoSinceDate(newDate!)
+                    fullTxt = "\(agoDate)" + " via " + currentArticle.source!
+                }
             }
             articleId = Int(currentArticle.article_id)
             lblNewsHeading.text = currentArticle.title
             txtViewNewsDesc.text = currentArticle.blurb
-            var fullTxt = "\(agoDate)" + " via " + currentArticle.source!
             let attributedWithTextColor: NSAttributedString = fullTxt.attributedStringWithColor([currentArticle.source!], color: UIColor.red)
             
             btnSource.setAttributedTitle(attributedWithTextColor, for: .normal)
             sourceURL = currentArticle.source_url!
             if currentArticle.imageURL != ""{
-                
                 let imgURL = APPURL.imageServer + imgWidth + "x" + imgHeight + "/smart/" + currentArticle.imageURL!
                 imgNews.sd_setImage(with: URL(string: imgURL), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
             }
@@ -710,22 +746,37 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, WKNavigationDelegate
         }
         else if sourceArticle.count > 0{
             currentEntity = "source"
-            let currentArticle = sourceArticle[currentIndex]
+            var currentArticle = sourceArticle[currentIndex]
             Helper().getMenuEvents(action: "item_detail", menuId: articleId, menuName: currentArticle.title! )
-            let newDate = dateFormatter.date(from: currentArticle.published_on!)
-            var agoDate = ""
-            if newDate != nil{
-                agoDate = Helper().timeAgoSinceDate(newDate!)
+            if ((currentArticle.published_on?.count)!) <= 20{
+                if !(currentArticle.published_on?.contains("Z"))!{
+                    currentArticle.published_on?.append("Z")
+                }
+                let newDate = dateFormatter.date(from: currentArticle.published_on!)
+                if newDate != nil{
+                    agoDate = Helper().timeAgoSinceDate(newDate!)
+                    fullTxt = "\(agoDate)" + " via " + currentArticle.source!
+                }
+            }
+            else{
+                dateSubString = String(currentArticle.published_on!.prefix(19))
+                if !(dateSubString.contains("Z")){
+                    dateSubString.append("Z")
+                }
+                let newDate = dateFormatter.date(from: dateSubString
+                )
+                if newDate != nil{
+                    agoDate = Helper().timeAgoSinceDate(newDate!)
+                    fullTxt = "\(agoDate)" + " via " + currentArticle.source!
+                }
             }
             articleId = Int(currentArticle.article_id)
             lblNewsHeading.text = currentArticle.title
             txtViewNewsDesc.text = currentArticle.blurb
-            var fullTxt = "\(agoDate)" + " via " + currentArticle.source!
             let attributedWithTextColor: NSAttributedString = fullTxt.attributedStringWithColor([currentArticle.source!], color: UIColor.red)
             btnSource.setAttributedTitle(attributedWithTextColor, for: .normal)
             sourceURL = (currentArticle.url!)
             if currentArticle.imageURL != ""{
-                
                 let imgURL = APPURL.imageServer + imgWidth + "x" + imgHeight + "/smart/" + currentArticle.imageURL!
                 imgNews.sd_setImage(with: URL(string: imgURL), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
             }

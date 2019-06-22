@@ -153,7 +153,6 @@ extension SourceVC: UITableViewDelegate, UITableViewDataSource{
         dateFormatter.timeZone = NSTimeZone.local
         let darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
         let textSizeSelected = UserDefaults.standard.value(forKey: "textSize") as! Int
-        var sourceColor = UIColor()
         var fullTxt = ""
         var dateSubString = ""
         var agoDate = ""
@@ -189,7 +188,7 @@ extension SourceVC: UITableViewDelegate, UITableViewDataSource{
                 }
                 let newDate = dateFormatter.date(from: currentArticle.published_on!)
                 if newDate != nil{
-                    agoDate = try Helper().timeAgoSinceDate(newDate!)
+                    agoDate = Helper().timeAgoSinceDate(newDate!)
                     fullTxt = "\(agoDate)" + " via " + currentArticle.source!
                     let attributedWithTextColor: NSAttributedString = fullTxt.attributedStringWithColor([currentArticle.source!], color: UIColor.red)
                     cell.lblSource.attributedText = attributedWithTextColor
@@ -203,7 +202,7 @@ extension SourceVC: UITableViewDelegate, UITableViewDataSource{
                 let newDate = dateFormatter.date(from: dateSubString
                 )
                 if newDate != nil{
-                    agoDate = try Helper().timeAgoSinceDate(newDate!)
+                    agoDate = Helper().timeAgoSinceDate(newDate!)
                     fullTxt = "\(agoDate)" + " via " + currentArticle.source!
                     let attributedWithTextColor: NSAttributedString = fullTxt.attributedStringWithColor([currentArticle.source!], color: UIColor.red)
                     cell.lblSource.attributedText = attributedWithTextColor
@@ -264,7 +263,7 @@ extension SourceVC: UITableViewDelegate, UITableViewDataSource{
                 }
                 let newDate = dateFormatter.date(from: currentArticle.published_on!)
                 if newDate != nil{
-                    agoDate = try Helper().timeAgoSinceDate(newDate!)
+                    agoDate = Helper().timeAgoSinceDate(newDate!)
                     fullTxt = "\(agoDate)" + " via " + currentArticle.source!
                     let attributedWithTextColor: NSAttributedString = fullTxt.attributedStringWithColor([currentArticle.source!], color: UIColor.red)
                     cellOdd.lblSource.attributedText = attributedWithTextColor
@@ -278,7 +277,7 @@ extension SourceVC: UITableViewDelegate, UITableViewDataSource{
                 let newDate = dateFormatter.date(from: dateSubString
                 )
                 if newDate != nil{
-                    agoDate = try Helper().timeAgoSinceDate(newDate!)
+                    agoDate = Helper().timeAgoSinceDate(newDate!)
                     fullTxt = "\(agoDate)" + " via " + currentArticle.source!
                     let attributedWithTextColor: NSAttributedString = fullTxt.attributedStringWithColor([currentArticle.source!], color: UIColor.red)
                     cellOdd.lblSource.attributedText = attributedWithTextColor
@@ -406,7 +405,7 @@ extension SourceVC: UICollectionViewDelegate, UICollectionViewDataSource, UIScro
             }
             let newDate = dateFormatter.date(from: currentArticle.published_on!)
             if newDate != nil{
-                agoDate = try Helper().timeAgoSinceDate(newDate!)
+                agoDate = Helper().timeAgoSinceDate(newDate!)
                 fullTxt = "\(agoDate)" + " via " + currentArticle.source!
                 let attributedWithTextColor: NSAttributedString = fullTxt.attributedStringWithColor([currentArticle.source!], color: UIColor.red)
                 cell.lblSource.attributedText = attributedWithTextColor
@@ -420,7 +419,7 @@ extension SourceVC: UICollectionViewDelegate, UICollectionViewDataSource, UIScro
             let newDate = dateFormatter.date(from: dateSubString
             )
             if newDate != nil{
-                agoDate = try Helper().timeAgoSinceDate(newDate!)
+                agoDate = Helper().timeAgoSinceDate(newDate!)
                 fullTxt = "\(agoDate)" + " via " + currentArticle.source!
                 let attributedWithTextColor: NSAttributedString = fullTxt.attributedStringWithColor([currentArticle.source!], color: UIColor.red)
                 cell.lblSource.attributedText = attributedWithTextColor

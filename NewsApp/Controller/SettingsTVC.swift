@@ -60,7 +60,7 @@ class SettingsTVC: UITableViewController, GIDSignInUIDelegate {
         segmentTextSize.tintColor = colorConstants.redColor
         segmentTextSize.selectedSegmentIndex = textSizeSelected
         let font = FontConstants.NormalFontContentMedium
-        segmentTextSize.setTitleTextAttributes([NSAttributedStringKey.font: font],for: .normal)
+        segmentTextSize.setTitleTextAttributes([NSAttributedStringKey.font: font as Any],for: .normal)
         if (UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad){
             tableView.rowHeight = 70
             segmentTextSize.setWidth(120, forSegmentAt: 0)
@@ -297,11 +297,11 @@ class SettingsTVC: UITableViewController, GIDSignInUIDelegate {
         let id = UserDefaults.standard.value(forKey: "deviceToken") as! String
         var status = Bool()
         status = UserDefaults.standard.value(forKey: "breaking") as! Bool
-        var notifyBreaking =  String(status).capitalized
+        let notifyBreaking =  String(status).capitalized
         status = UserDefaults.standard.value(forKey: "daily") as! Bool
-        var notifyDaily = String(status).capitalized
+        let notifyDaily = String(status).capitalized
         status = UserDefaults.standard.value(forKey: "personalised") as! Bool
-        var notifyPersonalised = String(status).capitalized
+        let notifyPersonalised = String(status).capitalized
         let param = ["device_id" : id,
                      "device_name": "ios",
                      "breaking_news" : notifyBreaking,
