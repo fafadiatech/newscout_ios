@@ -21,8 +21,9 @@ struct colorConstants{
     static let txtDarkGrayColor = UIColor(hexFromString: "424242")
     static let TVgrayBackground = UIColor(hexFromString: "FAF9F8")
     static let subTVgrayBackground = UIColor(hexFromString: "A6ACAF") //A6ACAF
-    static let MenugrayBackground = UIColor(hexFromString: "F3EFED")
+    static let MenugrayBackground = UIColor(hexFromString: "808080")
     static let cardNormalBackground = UIColor(hexFromString: "E7E8E6")
+    static let cellBackground = UIColor(hexFromString: "EFEFEF") //DEDEDE
 }
 
 struct FontConstants{
@@ -31,15 +32,15 @@ struct FontConstants{
     static let fontxLarge:CGFloat = isPhone ? 16:22 //16
     static let fontxNormal:CGFloat = isPhone ? 15 :20 //14
     static let fontxSmall:CGFloat = isPhone ? 12 :18 //12
-    static let fontLargeHeading:CGFloat = isPhone ? 21:20 //25
-    static let fontNormalHeading:CGFloat = isPhone ? 19 :18 //22
-    static let fontSmallHeading:CGFloat = isPhone ? 17 :17 //18
+    static let fontLargeHeading:CGFloat = isPhone ? 19:20 //25
+    static let fontNormalHeading:CGFloat = isPhone ? 17 :18 //22
+    static let fontSmallHeading:CGFloat = isPhone ? 15 :17 //18
     static let fontLargeTitle:CGFloat = isPhone ? 21:26 //21
     static let fontNormalTitle:CGFloat = isPhone ? 17 :25//18
     static let fontSmallTitle:CGFloat = isPhone ? 14 :20 //14
-    static let fontLargeContent:CGFloat = isPhone ? 18 :19 //18
-    static let fontNormalContent:CGFloat = isPhone ? 16 :16 //14
-    static let fontSmallContent:CGFloat = isPhone ? 14 :15 //10
+    static let fontLargeContent:CGFloat = isPhone ? 19 :19 //18
+    static let fontNormalContent:CGFloat = isPhone ? 17 :16 //14
+    static let fontSmallContent:CGFloat = isPhone ? 16 :15 //10
     static let fontNormalBtn: CGFloat = isPhone ? 18 :26
     static let fontViewTitle:CGFloat = isPhone ? 23 : 35
     static let fontSettingsTVHeader:CGFloat = isPhone ? 20 : 23
@@ -47,15 +48,13 @@ struct FontConstants{
     static let fontsmallDetailTitle:CGFloat = isPhone ? 17 : 19
     static let fontNormalDetailTitle:CGFloat = isPhone ? 19 : 21
     static let fontLargeDetailTitle:CGFloat = isPhone ? 21 : 23
-    static let fontsmallDetailContent:CGFloat = isPhone ? 14 : 16
-    static let fontNormalDetailContent:CGFloat = isPhone ? 16 : 17
-    static let fontLargeDetailCOntent:CGFloat = isPhone ? 18 : 19
+    static let fontsmallDetailContent:CGFloat = isPhone ? 16 : 16
+    static let fontNormalDetailContent:CGFloat = isPhone ? 18 : 17
+    static let fontLargeDetailCOntent:CGFloat = isPhone ? 20 : 19
     //for button titles
     static let FontBtnTitle = UIFont(name: AppFontName.medium, size: FontConstants.fontNormalBtn)
     //for news description
-    static let smallFontTitle = UIFont(name: AppFontName.regular, size: FontConstants.fontSmallTitle)
-    static let LargeFontTitle = UIFont(name: AppFontName.regular, size: FontConstants.fontLargeTitle)
-    static let NormalFontTitle = UIFont(name: AppFontName.regular, size: FontConstants.fontNormalTitle)
+
     static let smallFontTitleMedium = UIFont(name: AppFontName.medium, size: FontConstants.fontSmallTitle)
     static let LargeFontTitleMedium = UIFont(name: AppFontName.medium, size: FontConstants.fontLargeTitle)
     static let NormalFontTitleMedium = UIFont(name: AppFontName.medium, size: FontConstants.fontNormalTitle)
@@ -66,9 +65,7 @@ struct FontConstants{
     static let smallFontHeadingBold = UIFont(name: AppFontName.bold, size: FontConstants.fontSmallHeading)
     static let LargeFontHeadingBold = UIFont(name: AppFontName.bold, size: FontConstants.fontLargeHeading)
     static let NormalFontHeadingBold = UIFont(name: AppFontName.bold, size: FontConstants.fontNormalHeading)
-    static let smallFontHeading = UIFont(name: AppFontName.regular, size: FontConstants.fontSmallHeading)
-    static let LargeFontHeading = UIFont(name: AppFontName.regular, size: FontConstants.fontLargeHeading)
-    static let NormalFontHeading = UIFont(name: AppFontName.regular, size: FontConstants.fontNormalHeading)
+    
     static let smallFontDetailTitle = UIFont(name: AppFontName.bold, size: FontConstants.fontsmallDetailTitle)
     static let LargeFontDetailTitle = UIFont(name: AppFontName.bold, size: FontConstants.fontLargeDetailTitle)
     static let NormalFontDetailTitle = UIFont(name: AppFontName.bold, size: FontConstants.fontNormalDetailTitle)
@@ -82,17 +79,15 @@ struct FontConstants{
     static let  smallFontContent = UIFont(name: AppFontName.regular, size: FontConstants.fontSmallContent)
     static let LargeFontContent = UIFont(name: AppFontName.regular, size: FontConstants.fontLargeContent)
     static let NormalFontContent = UIFont(name: AppFontName.regular, size: FontConstants.fontNormalContent)
+    //for recommendation title
+    static let  smallFontRecomContent = UIFont(name: AppFontName.bold, size: FontConstants.fontSmallContent)
+    static let LargeFontRecomContent = UIFont(name: AppFontName.bold, size: FontConstants.fontLargeContent)
+    static let NormalFontRecomContent = UIFont(name: AppFontName.bold, size: FontConstants.fontNormalContent)
     //for title labels on each screen
     static let viewTitleFont = UIFont(name: AppFontName.bold, size: FontConstants.fontViewTitle)
     //for settings tableview header
     static let settingsTVHeader = UIFont(name: AppFontName.medium, size: FontConstants.fontSettingsTVHeader)
     static let appFont = UIFont(name: AppFontName.bold, size: FontConstants.fontAppTitle)
-    static let smallRecommFont = UIFont(name: AppFontName.regular, size: FontConstants.fontxSmall)
-    static let largeRecommFont = UIFont(name: AppFontName.regular, size: FontConstants.fontxLarge)
-    static let normalRecommFont = UIFont(name: AppFontName.regular, size: FontConstants.fontxNormal)
-    static let smallRecommTitleFont = UIFont(name: AppFontName.bold, size: FontConstants.fontxSmall)
-    static let largeRecommTitleFont = UIFont(name: AppFontName.bold, size: FontConstants.fontxLarge)
-    static let normalRecommTitleFont = UIFont(name: AppFontName.bold, size: FontConstants.fontxNormal)
 }
 
 struct Constants{
@@ -121,7 +116,7 @@ struct AssetConstants{
     static let NoImage = "NoImage"
     static let search = "newsearch"
     static let settings = "settings"
-    static let appLogo = "Logo"
+    static let appLogo = "logo"
     static let glogo = "glogo"
     static let flogo = "flogo"
     static let menu = "menu"
@@ -143,6 +138,26 @@ struct AssetConstants{
     static let menuBlack = "menublack"
     static let menuWhite = "menuwhite"
     static let submenuBackground = "submenuBack"
+    static let asia = "asia"
+    static let banking = "banking"
+    static let china = "china"
+    static let food = "food"
+    static let energy = "energy"
+    static let funding = "funding"
+    static let ipo = "ipo"
+    static let india = "india"
+    static let japan = "japan"
+    static let manufacturing = "manufacturing"
+    static let personal_finance = "personal_finance"
+    static let recession = "recession"
+    static let retail = "retail"
+    static let tech = "tech"
+    static let transport = "transport"
+    static let us = "us"
+    static let crypto = "crypto"
+    static let fintech = "fintech"
+    static let media = "media"
+    
 }
 
 struct AppFontName {
@@ -172,7 +187,6 @@ struct APPURL {
         static let Login = Domains.version + "login/"
         static let SignUp = Domains.version + "signup/"
         static let Logout = Domains.version + "logout/"
-        static let Categories = Domains.version + "categories"
         static let Search = Domains.version + "article/search/?q="
         static let Source = Domains.version + "article/search/?source="
         static let recommendation = Domains.version + "articles/"
@@ -184,7 +198,6 @@ struct APPURL {
         static let saveRemoveCategory = Domains.version + "categories/save-remove/"
         static let getLikeList = Domains.version + "articles/like-news-list/"
         static let getBookmarkList = Domains.version + "bookmark-articles/bookmark-news-list/"
-        static let getTags = Domains.version + "tags/"
         static let ArticlesBytags = Domains.version + "article/search?"
         static let ArticleById = Domains.version + "article/search?category="
         static let ArtilceByTags2 = Domains.version + "articles/?"
@@ -202,7 +215,6 @@ struct APPURL {
     static let LoginURL = Domains.Local + Routes.Login
     static let SignUpURL =  Domains.Local + Routes.SignUp
     static let LogoutURL =  Domains.Local + Routes.Logout
-    static let CategoriesURL =  Domains.Local + Routes.Categories
     static let SearchURL =  Domains.Local + Routes.Search
     static let SourceURL = Domains.Local + Routes.Source
     static let recommendationURL = Domains.Local + Routes.recommendation
@@ -214,7 +226,6 @@ struct APPURL {
     static let saveRemoveCategoryURL = Domains.Local + Routes.saveRemoveCategory
     static let getLikeListURL = Domains.Local + Routes.getLikeList
     static let getBookmarkListURL = Domains.Local + Routes.getBookmarkList
-    static let getTagsURL = Domains.Local + Routes.getTags
     static let ArticlesByTagsURL = Domains.Local + Routes.ArticlesBytags
     static let ArticlesByTagsURL2 = Domains.Local + Routes.ArtilceByTags2
     static let getMenus = Domains.Local + Routes.menu

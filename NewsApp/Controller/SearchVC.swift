@@ -22,6 +22,7 @@ class SearchVC: UIViewController {
     @IBOutlet weak var lblTitle: UILabel!
     @IBOutlet weak var lblNoNews: UILabel!
     @IBOutlet weak var searchResultCV: UICollectionView!
+    @IBOutlet weak var btnTopNews: UIButton!
     @IBOutlet weak var autoSuggestionView: UIView!
     @IBOutlet weak var autoSuggestionTV: UITableView!
     let activityIndicator = MDCActivityIndicator()
@@ -42,22 +43,27 @@ class SearchVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         searchResultTV.tableFooterView = UIView(frame: .zero)
+        btnTopNews.layer.cornerRadius = 0.5 * btnTopNews.bounds.size.width
         if UserDefaults.standard.value(forKey: "searchTxt") != nil{
             txtSearch.text = (UserDefaults.standard.value(forKey: "searchTxt") as! String)
         }
-        if UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad && statusBarOrientation.isPortrait{
-            if Searchresults.count <= 0{
-                searchResultTV.isHidden = false
-                searchResultCV.isHidden = true
-                
-            }else{
+        if Searchresults.count <= 0{
+            if UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad && statusBarOrientation.isPortrait{
                 searchResultTV.isHidden = true
                 searchResultCV.isHidden = false
+            }else{
+                searchResultTV.isHidden = false
+                searchResultCV.isHidden = true
             }
         }
-        else{
-            searchResultTV.isHidden = false
-            searchResultCV.isHidden = true
+        let darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
+        if darkModeStatus == true{
+            searchResultCV.backgroundColor = colorConstants.grayBackground3
+            searchResultTV.backgroundColor = colorConstants.grayBackground3
+            lblNoNews.textColor = .white
+        }else{
+            searchResultTV.backgroundColor = .white
+            searchResultCV.backgroundColor = .white
         }
         txtSearch.addTarget(self, action: #selector(self.textFieldDidChange), for: UIControlEvents.editingChanged)
         lblNoNews.isHidden = true
@@ -81,6 +87,9 @@ class SearchVC: UIViewController {
         }
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        
+    }
     @objc func textFieldDidChange(textField: UITextField) {
         fecthSerchedKeywords()
     }
@@ -88,6 +97,7 @@ class SearchVC: UIViewController {
     @objc private func darkModeEnabled(_ notification: Notification){
         NightNight.theme = .night
         searchResultTV.backgroundColor = colorConstants.grayBackground3
+        searchResultCV.backgroundColor = colorConstants.grayBackground3
     }
     
     @objc private func darkModeDisabled(_ notification: Notification) {
@@ -123,6 +133,10 @@ class SearchVC: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        if let index = searchResultTV.indexPathForSelectedRow{
+            self.searchResultTV.deselectRow(at: index, animated: true)
+        }
+        
         changeFont()
     }
     
@@ -169,6 +183,17 @@ class SearchVC: UIViewController {
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
+    }
+    
+    @IBAction func btnTopNewsActn(_ sender: Any) {
+        if UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad{
+            self.searchResultCV?.scrollToItem(at: NSIndexPath(item: 0, section: 0) as IndexPath,
+                                              at: .top,
+                                              animated: true)
+        }else{
+            let indexPath = NSIndexPath(row: 0, section: 0)
+            self.searchResultTV.scrollToRow(at: indexPath as IndexPath, at: .top, animated: true)
+        }
     }
     
     func saveArticlesInDB(url: String){
@@ -231,7 +256,7 @@ extension SearchVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDele
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         if isResultLoaded == false{
-            return 137
+            return 147
         }else{
             return 60
         }
@@ -270,12 +295,18 @@ extension SearchVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDele
         if isResultLoaded == false{
             if indexPath.row % 2 != 0{
                 let cell = tableView.dequeueReusableCell(withIdentifier: "search", for:indexPath) as! SearchResultTVCell
+                cell.viewCellContainer.layer.cornerRadius = 10
+                cell.viewCellContainer.layer.shadowColor = UIColor.black.cgColor
+                cell.viewCellContainer.layer.shadowOffset = CGSize(width: 3, height: 3)
+                cell.viewCellContainer.layer.shadowOpacity = 0.7
+                cell.viewCellContainer.layer.shadowRadius = 4.0
                 cell.imgNews.layer.cornerRadius = 10.0
                 cell.imgNews.clipsToBounds = true
+                cell.selectionStyle = UITableViewCellSelectionStyle.none
                 imgWidth = String(describing : Int(cell.imgNews.frame.width))
                 imgHeight = String(describing : Int(cell.imgNews.frame.height))
                 //display data from DB
-                var currentArticle = Searchresults[indexPath.row]
+                let currentArticle = Searchresults[indexPath.row]
                 cell.lblNewsDescription.text = currentArticle.title
                 
                 if  darkModeStatus == true{
@@ -297,7 +328,7 @@ extension SearchVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDele
                     }
                     let newDate = dateFormatter.date(from: currentArticle.published_on!)
                     if newDate != nil{
-                        agoDate = try Helper().timeAgoSinceDate(newDate!)
+                        agoDate = Helper().timeAgoSinceDate(newDate!)
                         fullTxt = "\(agoDate)" + " via " + currentArticle.source!
                         let attributedWithTextColor: NSAttributedString = fullTxt.attributedStringWithColor([currentArticle.source!], color: UIColor.red)
                         cell.lblSource.attributedText = attributedWithTextColor
@@ -311,7 +342,7 @@ extension SearchVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDele
                     let newDate = dateFormatter.date(from: dateSubString
                     )
                     if newDate != nil{
-                        agoDate = try Helper().timeAgoSinceDate(newDate!)
+                        agoDate = Helper().timeAgoSinceDate(newDate!)
                         fullTxt = "\(agoDate)" + " via " + currentArticle.source!
                         let attributedWithTextColor: NSAttributedString = fullTxt.attributedStringWithColor([currentArticle.source!], color: UIColor.red)
                         cell.lblSource.attributedText = attributedWithTextColor
@@ -343,8 +374,14 @@ extension SearchVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDele
                 let cellOdd = tableView.dequeueReusableCell(withIdentifier: "searchZigzagID", for:indexPath) as! searchZigzagTVCell
                 cellOdd.imgNews.layer.cornerRadius = 10.0
                 cellOdd.imgNews.clipsToBounds = true
+                cellOdd.viewCellContainer.layer.cornerRadius = 10
+                cellOdd.viewCellContainer.layer.shadowColor = UIColor.black.cgColor
+                cellOdd.viewCellContainer.layer.shadowOffset = CGSize(width: 3, height: 3)
+                cellOdd.viewCellContainer.layer.shadowOpacity = 0.7
+                cellOdd.viewCellContainer.layer.shadowRadius = 4.0
+                cellOdd.selectionStyle = UITableViewCellSelectionStyle.none
                 //display data from DB
-                var currentArticle = Searchresults[indexPath.row]
+                let currentArticle = Searchresults[indexPath.row]
                 cellOdd.lblNewsDescription.text = currentArticle.title
                 
                 if  darkModeStatus == true{
@@ -366,7 +403,7 @@ extension SearchVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDele
                     }
                     let newDate = dateFormatter.date(from: currentArticle.published_on!)
                     if newDate != nil{
-                        agoDate = try Helper().timeAgoSinceDate(newDate!)
+                        agoDate = Helper().timeAgoSinceDate(newDate!)
                         fullTxt = "\(agoDate)" + " via " + currentArticle.source!
                         let attributedWithTextColor: NSAttributedString = fullTxt.attributedStringWithColor([currentArticle.source!], color: UIColor.red)
                         cellOdd.lblSource.attributedText = attributedWithTextColor
@@ -380,7 +417,7 @@ extension SearchVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDele
                     let newDate = dateFormatter.date(from: dateSubString
                     )
                     if newDate != nil{
-                        agoDate = try Helper().timeAgoSinceDate(newDate!)
+                        agoDate = Helper().timeAgoSinceDate(newDate!)
                         fullTxt = "\(agoDate)" + " via " + currentArticle.source!
                         let attributedWithTextColor: NSAttributedString = fullTxt.attributedStringWithColor([currentArticle.source!], color: UIColor.red)
                         cellOdd.lblSource.attributedText = attributedWithTextColor
@@ -475,21 +512,29 @@ extension SearchVC: UICollectionViewDelegate, UICollectionViewDataSource{
         let darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
         
         let textSizeSelected = UserDefaults.standard.value(forKey: "textSize") as! Int
-        var sourceColor = UIColor()
         var fullTxt = ""
         var dateSubString = ""
         var agoDate = ""
         //display data from DB
         let currentArticle = Searchresults[indexPath.row]
         cell.lblTitle.text = currentArticle.title
-        
+        cell.layer.cornerRadius = 10.0
+        cell.clipsToBounds = true
+        cell.viewCellContainer.layer.cornerRadius = 10
+        cell.viewCellContainer.layer.shadowColor = UIColor.black.cgColor
+        cell.viewCellContainer.layer.shadowOffset = CGSize(width: 3, height: 3)
+        cell.viewCellContainer.layer.shadowOpacity = 0.7
+        cell.viewCellContainer.layer.shadowRadius = 4.0
         if  darkModeStatus == true{
+            cell.backgroundColor = colorConstants.grayBackground2
             cell.containerView.backgroundColor = colorConstants.grayBackground2
             cell.lblSource.textColor = colorConstants.nightModeText
             cell.lblTitle.textColor = colorConstants.nightModeText
             NightNight.theme =  .night
         }
         else{
+            cell.backgroundColor = .white
+            cell.containerView.backgroundColor = .white
             cell.lblSource.textColor = colorConstants.blackColor
             cell.lblTitle.textColor = colorConstants.blackColor
             NightNight.theme =  .normal
@@ -553,11 +598,6 @@ extension SearchVC: UICollectionViewDelegate, UICollectionViewDataSource{
             let contentYoffset = scrollView.contentOffset.y
             let distanceFromBottom = scrollView.contentSize.height - contentYoffset
             if distanceFromBottom < height {
-                //                if recordCount > 0 {
-                //                    if isResultLoaded == false{
-                //                        activityIndicator.startAnimating()
-                //                    }
-                //                }
             }
             
         }else{
@@ -610,10 +650,9 @@ extension SearchVC: UITextFieldDelegate{
         let param = ["action" : "search",
                      "platform" : Constants.platform,
                      "device_id" : id,
-                     "q": query] as! [String : Any]
+                     "q": query] as [String : Any]
         APICall().trackingEventsAPI(param : param){response in
             if response == true{
-                print("event captured")
             }
         }
     }
@@ -736,13 +775,13 @@ extension SearchVC: UITextFieldDelegate{
             fecthSerchedKeywords()
         }
     }
-    
 }
 
 extension SearchVC: UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let collectionCellSize = searchResultCV.frame.size.width
-        return CGSize(width: collectionCellSize/3.4, height: collectionCellSize/3)
+        return CGSize(width: collectionCellSize/3.4, height: collectionCellSize/2.4)
     }
 }
+

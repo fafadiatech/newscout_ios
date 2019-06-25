@@ -10,7 +10,6 @@
 import Foundation
 import CoreData
 
-
 extension MenuHashTag {
 
     @nonobjc public class func fetchRequest() -> NSFetchRequest<MenuHashTag> {

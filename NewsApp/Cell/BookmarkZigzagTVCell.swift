@@ -13,6 +13,7 @@ class BookmarkZigzagTVCell: UITableViewCell {
     @IBOutlet weak var lblNewsDescription: UILabel!
     @IBOutlet weak var imgNews: UIImageView!
     @IBOutlet weak var ViewCellBackground: UIView!
+    @IBOutlet weak var viewCellContainer: UIView!
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code

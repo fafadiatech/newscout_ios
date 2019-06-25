@@ -68,11 +68,6 @@
         <attribute name="nextURL" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="prevURL" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
-    <entity name="PeriodicTags" representedClassName="PeriodicTags" syncable="YES">
-        <attribute name="count" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
-        <attribute name="tagName" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="type" optional="YES" attributeType="String" syncable="YES"/>
-    </entity>
     <entity name="RecommendationID" representedClassName="RecommendationID" syncable="YES">
         <attribute name="articleID" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="recomArticleID" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
@@ -95,6 +90,7 @@
     <entity name="TrendingCategory" representedClassName="TrendingCategory" syncable="YES">
         <attribute name="articleID" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="count" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="publishedOn" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="trendingID" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
     </entity>
     <elements>
@@ -108,10 +104,9 @@
         <element name="MenuHeadings" positionX="405" positionY="90" width="128" height="75"/>
         <element name="NewsArticle" positionX="407.63671875" positionY="-45.1953125" width="128" height="255"/>
         <element name="NewsURL" positionX="405" positionY="63" width="128" height="90"/>
-        <element name="PeriodicTags" positionX="405" positionY="90" width="128" height="90"/>
         <element name="RecommendationID" positionX="414" positionY="99" width="128" height="75"/>
         <element name="SearchArticles" positionX="405" positionY="54" width="128" height="195"/>
         <element name="SearchHistory" positionX="405" positionY="90" width="128" height="60"/>
-        <element name="TrendingCategory" positionX="405" positionY="90" width="128" height="90"/>
+        <element name="TrendingCategory" positionX="405" positionY="90" width="128" height="105"/>
     </elements>
 </model>

@@ -16,9 +16,8 @@ import AVKit
 import SwiftDevice
 import CoreData
 import MaterialComponents.MaterialActivityIndicator
-import TAPageControl
 
-class ShuffleDetailVC: UIViewController , UIScrollViewDelegate, TAPageControlDelegate, WKNavigationDelegate {
+class ShuffleDetailVC: UIViewController , UIScrollViewDelegate, WKNavigationDelegate {
     
     @IBOutlet weak var viewContainer: UIView!
     @IBOutlet weak var imgNews: UIImageView!
@@ -37,12 +36,10 @@ class ShuffleDetailVC: UIViewController , UIScrollViewDelegate, TAPageControlDel
     @IBOutlet weak var btnBookamark: UIButton!
     @IBOutlet weak var viewLikeDislike: UIView!
     @IBOutlet weak var viewNewsArea: UIView!
-    @IBOutlet weak var btnPlayVideo: UIButton!
     @IBOutlet weak var newsAreaHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var viewLikeDislikeHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var viewLikeDislikeBottom: NSLayoutConstraint!
     @IBOutlet weak var viewBack: UIView!
-    @IBOutlet weak var imgScrollView: UIScrollView!
     @IBOutlet weak var viewImgContainerTop: NSLayoutConstraint!
     @IBOutlet weak var viewImgContainer: UIView!
     @IBOutlet weak var viewContainerTop: NSLayoutConstraint!
@@ -53,9 +50,7 @@ class ShuffleDetailVC: UIViewController , UIScrollViewDelegate, TAPageControlDel
     @IBOutlet weak var btnReadMore: UIButton!
     @IBOutlet weak var btnMoreStories: UIButton!
     
-    var btnPlay = UIButton(type: .custom)
-    let imageCache = NSCache<NSString, UIImage>()
-    var playbackSlider = UISlider()
+    var RecommendationArticle = [NewsArticle]()
     var RecomArticleData = [ArticleStatus]()
     var ArticleData = [ArticleStatus]()
     var RecomData = [NewsArticle]()
@@ -66,25 +61,13 @@ class ShuffleDetailVC: UIViewController , UIScrollViewDelegate, TAPageControlDel
     var newsCurrentIndex = 0
     var articleId = 0
     var sourceURL = ""
-    var tapTerm:UITapGestureRecognizer = UITapGestureRecognizer()
-    var player:AVPlayer?
-    var playerItem:AVPlayerItem?
     var lblSourceTopConstraint : NSLayoutConstraint!
     var lblTimesTopConstraint : NSLayoutConstraint!
     var viewLikeDislikeBottomConstraint : NSLayoutConstraint!
     var deviceOrientation: UIDeviceOrientation = UIDevice.current.orientation
     var statusBarOrientation: UIInterfaceOrientation = UIApplication.shared.statusBarOrientation
     var darkModeStatus = Bool()
-    var articleArr = [Article]()
-    var playerViewWidth = CGFloat()
-    var playerViewHeight = CGFloat()
     let activityIndicator = MDCActivityIndicator()
-    let activity = MDCActivityIndicator()
-    var imgArray = [UIImage]()
-    var MediaData = [Media]()
-    var index = 0
-    var timer = Timer()
-    var customPagecontrol = TAPageControl()
     var imgWidth = ""
     var imgHeight = ""
     
@@ -98,27 +81,24 @@ class ShuffleDetailVC: UIViewController , UIScrollViewDelegate, TAPageControlDel
         btnReadMore.backgroundColor = .clear
         btnReadMore.layer.cornerRadius = 5
         btnReadMore.layer.borderWidth = 1
-        btnReadMore.layer.borderColor = UIColor.gray.cgColor
-        btnPlayVideo.isHidden = true
-        imgScrollView.delegate = self
-        imgArray = [#imageLiteral(resourceName: "f3"),#imageLiteral(resourceName: "f1") ,#imageLiteral(resourceName: "f2")]
+        btnReadMore.layer.borderColor = UIColor.black.cgColor
         activityIndicator.cycleColors = [.blue]
         activityIndicator.frame = CGRect(x: view.frame.width/2, y: view.frame.height/2 - 100, width: 40, height: 40)
         activityIndicator.sizeToFit()
         activityIndicator.indicatorMode = .indeterminate
         activityIndicator.progress = 2.0
         imgNews.addSubview(activityIndicator)
+        activityIndicator.startAnimating()
         txtViewNewsDesc.textContainer.lineBreakMode = NSLineBreakMode.byTruncatingTail
         getShuffleData()
-        if shuffleData.count > 0{
-            let randomInt = Int.random(in: 0..<shuffleData.count)
-            activityIndicator.stopAnimating()
-            ShowNews(currentIndex: randomInt)
-        }
         viewLikeDislike.backgroundColor = colorConstants.redColor
         viewBack.backgroundColor = colorConstants.redColor
         ViewWebContainer.isHidden = true
-        
+        if Reachability.isConnectedToNetwork(){
+            RecommendationDBCall()
+        }else{
+            filterRecommendation()
+        }
         NotificationCenter.default.addObserver(self, selector: #selector(darkModeEnabled(_:)), name: .darkModeEnabled, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(darkModeDisabled(_:)), name: .darkModeDisabled, object: nil)
         darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
@@ -128,14 +108,6 @@ class ShuffleDetailVC: UIViewController , UIScrollViewDelegate, TAPageControlDel
         let swipeRight = UISwipeGestureRecognizer(target: self, action: #selector(self.respondToSwipeGesture))
         swipeRight.direction = UISwipeGestureRecognizerDirection.right
         self.newsView.addGestureRecognizer(swipeRight)
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        timer = Timer.scheduledTimer(timeInterval: 3, target: self, selector: #selector(runImages), userInfo: nil, repeats: true)
-    }
-    
-    override func viewDidDisappear(_ animated: Bool) {
-        timer.invalidate()
     }
     
     @objc func respondToSwipeGesture(gesture: UIGestureRecognizer) {
@@ -154,38 +126,18 @@ class ShuffleDetailVC: UIViewController , UIScrollViewDelegate, TAPageControlDel
             }
         }
     }
-    @objc func runImages(){
-        customPagecontrol.currentPage = index
-        if index == MediaData.count - 1{
-            index = 0
-        }else{
-            index = index + 1
-        }
-        self.taPageControl(customPagecontrol, didSelectPageAt: index)
-    }
-    
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        let pageindex = imgScrollView.contentOffset.x / imgScrollView.frame.size.width
-        customPagecontrol.currentPage = Int(pageindex)
-        index = Int(pageindex)
-    }
     
     func filterRecommendation(){
         RecomData.removeAll()
-        if shuffleData.count > 0{
-            articleId = Int(shuffleData[newsCurrentIndex].article_id)
-            for news in shuffleData{
+        if ShowArticle.count > 0{
+            articleId = Int(ShowArticle[newsCurrentIndex].article_id)
+            for news in ShowArticle{
                 if news.article_id != articleId{
                     RecomData.append(news)
                 }
             }
         }
         suggestedCV.reloadData()
-    }
-    
-    func taPageControl(_ pageControl: TAPageControl!, didSelectPageAt currentIndex: Int) {
-        index =  currentIndex
-        imgScrollView.scrollRectToVisible(CGRect(x: view.frame.size.width * CGFloat(currentIndex), y:0, width: view.frame.width, height: imgScrollView.frame.height), animated: true)
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -238,10 +190,11 @@ class ShuffleDetailVC: UIViewController , UIScrollViewDelegate, TAPageControlDel
     func changeTheme(){
         suggestedCV.backgroundColor = colorConstants.txtlightGrayColor
         btnSource.setTitleColor(.white, for: UIControlState.normal)
+        btnSource.tintColor = .white
         btnMoreStories.setTitleColor(.white, for: UIControlState.normal)
-        viewReadMore.backgroundColor = colorConstants.txtlightGrayColor
+        viewReadMore.backgroundColor = colorConstants.grayBackground1
         btnReadMore.setTitleColor(.white, for: UIControlState.normal)
-        btnReadMore.backgroundColor = colorConstants.txtlightGrayColor
+        btnReadMore.backgroundColor = colorConstants.grayBackground1
         newsView.backgroundColor = colorConstants.grayBackground1
         viewContainer.backgroundColor = colorConstants.grayBackground1
         viewNewsArea.backgroundColor = colorConstants.grayBackground1
@@ -251,15 +204,6 @@ class ShuffleDetailVC: UIViewController , UIScrollViewDelegate, TAPageControlDel
         viewWebTitle.backgroundColor = colorConstants.grayBackground3
         lblWebSource.textColor = .white
         imgNews.backgroundColor = colorConstants.txtlightGrayColor
-    }
-    
-    @objc func PlayerViewtapped(gestureRecognizer: UITapGestureRecognizer) {
-        if btnPlayVideo.isHidden == true{
-            btnPlayVideo.isHidden = false
-        }
-        else{
-            btnPlayVideo.isHidden = true
-        }
     }
     
     override var prefersStatusBarHidden: Bool {
@@ -275,19 +219,19 @@ class ShuffleDetailVC: UIViewController , UIScrollViewDelegate, TAPageControlDel
         let textSizeSelected = UserDefaults.standard.value(forKey: "textSize") as! Int
         
         if textSizeSelected == 0{
-            lblNewsHeading.font = FontConstants.smallFontHeadingBold
+            lblNewsHeading.font = FontConstants.smallFontDetailTitle
             btnSource.titleLabel?.font =  FontConstants.smallFontContentMedium
-            txtViewNewsDesc.font = FontConstants.smallFontTitle
+            txtViewNewsDesc.font = FontConstants.smallFontContentDetail
         }
         else if textSizeSelected == 2{
-            lblNewsHeading.font = FontConstants.LargeFontHeadingBold
+            lblNewsHeading.font = FontConstants.LargeFontDetailTitle
             btnSource.titleLabel?.font =  FontConstants.LargeFontContentMedium
-            txtViewNewsDesc.font = FontConstants.LargeFontTitle
+            txtViewNewsDesc.font = FontConstants.LargeFontContentDetail
         }
         else{
-            lblNewsHeading.font = FontConstants.NormalFontHeadingBold
-            btnSource.titleLabel?.font =  FontConstants.NormalFontContentMedium
-            txtViewNewsDesc.font = FontConstants.NormalFontTitle
+            lblNewsHeading.font = FontConstants.NormalFontDetailTitle
+            btnSource.titleLabel?.font =  FontConstants.NormalFontContentDetail
+            txtViewNewsDesc.font = FontConstants.NormalFontContentDetail
         }
     }
     
@@ -307,55 +251,20 @@ class ShuffleDetailVC: UIViewController , UIScrollViewDelegate, TAPageControlDel
         activityIndicator.stopAnimating()
     }
     
-    @IBAction func btnPlayVideo(_ sender: Any) {
-        if player?.rate == 0
-        {
-            player!.play()
-            btnPlayVideo.setImage(UIImage(named: AssetConstants.pause), for: .normal)
-            btnPlayVideo.isHidden = true
-            Timer.scheduledTimer(timeInterval: 5, target: self, selector: #selector(ShowPausebtn), userInfo: nil, repeats: false)
-        } else {
-            player!.pause()
-            btnPlayVideo.setImage(UIImage(named: AssetConstants.play), for: .normal)
-        }
-    }
-    
-    //for play button created programmatically
-    @objc func ShowPlayPausebtn() {
-        if (btnPlay.currentImage?.isEqual(UIImage(named: AssetConstants.pause)))! {
-            btnPlay.isHidden = true
-        }
-    }
-    
-    @objc func ShowPausebtn() {
-        if (btnPlayVideo.currentImage?.isEqual(UIImage(named: AssetConstants.pause)))! {
-            btnPlayVideo.isHidden = true
-        }
-    }
-    
-    @objc func playbackSliderValueChanged(_ playbackSlider:UISlider){
-        let seconds : Int64 = Int64(playbackSlider.value)
-        let targetTime:CMTime = CMTimeMake(seconds, 1)
-        player!.seek(to: targetTime)
-        
-        if player!.rate == 0{
-            player?.pause()
-        }
-        else{
-            player?.play()
-        }
-    }
-    
-    //for play button created programmatically
-    @objc func buttonTapped(sender : UIButton) {
-        if player?.rate == 0{
-            player!.play()
-            btnPlay.setImage(UIImage(named: AssetConstants.pause), for: .normal)
-            btnPlay.isHidden = true
-            Timer.scheduledTimer(timeInterval: 5, target: self, selector: #selector(ShowPlayPausebtn), userInfo: nil, repeats: false)
-        } else {
-            player!.pause()
-            btnPlay.setImage(UIImage(named: AssetConstants.play), for: .normal)
+    func fetchRecommendation() {
+        let result = DBManager().fetchRecommendation(articleId : articleId)
+        switch result {
+        case .Success(let DBData) :
+            RecommendationArticle = DBData
+            if RecommendationArticle.count > 0{
+                suggestedCV.reloadData()
+            }
+            else{
+                filterRecommendation()
+                activityIndicator.stopAnimating()
+            }
+        case .Failure(let errorMsg) :
+            print(errorMsg)
         }
     }
     
@@ -367,6 +276,13 @@ class ShuffleDetailVC: UIViewController , UIScrollViewDelegate, TAPageControlDel
                 activityIndicator.stopAnimating()
             }
         case .Failure( _) : break
+        }
+    }
+    
+    func RecommendationDBCall(){
+        DBManager().saveRecommendation(articleId : articleId){
+            response in
+            self.fetchRecommendation()
         }
     }
     
@@ -382,14 +298,11 @@ class ShuffleDetailVC: UIViewController , UIScrollViewDelegate, TAPageControlDel
     }
     
     func ShowNews(currentIndex: Int){
-        MediaData.removeAll()
+        suggestedView.isHidden = true
         activityIndicator.startAnimating()
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
         dateFormatter.timeZone = NSTimeZone.local
-        playbackSlider.removeFromSuperview()
-        // avPlayerView.isHidden = true
-        
         if shuffleData.count > 0{
             fetchBookmarkDataFromDB()
             if shuffleData[currentIndex].title != nil {
@@ -455,6 +368,11 @@ class ShuffleDetailVC: UIViewController , UIScrollViewDelegate, TAPageControlDel
         else{
             getShuffleData()
         }
+        if Reachability.isConnectedToNetwork(){
+            RecommendationDBCall()
+        }else{
+            filterRecommendation()
+        }
         activityIndicator.stopAnimating()
     }
     
@@ -517,7 +435,7 @@ class ShuffleDetailVC: UIViewController , UIScrollViewDelegate, TAPageControlDel
                         if (self.btnLike.currentImage?.isEqual(UIImage(named: AssetConstants.thumb_up_filled)))! {
                             self.btnLike.setImage(UIImage(named: AssetConstants.thumb_up), for: .normal)
                         }
-                    DBManager().addLikedArticle(tempentity:"NewsArticle", id: self.articleId, status: 1)
+                        DBManager().addLikedArticle(tempentity:"NewsArticle", id: self.articleId, status: 1)
                     }
                 }
             }
@@ -628,7 +546,6 @@ class ShuffleDetailVC: UIViewController , UIScrollViewDelegate, TAPageControlDel
             shareAll = [ text , sourceURL , webURL ] as [Any]
         }
         
-        
         let activityViewController = UIActivityViewController(activityItems: shareAll, applicationActivities: nil)
         activityViewController.excludedActivityTypes = [UIActivityType.airDrop]
         activityViewController.popoverPresentationController?.sourceView = sender as! UIView
@@ -647,9 +564,6 @@ class ShuffleDetailVC: UIViewController , UIScrollViewDelegate, TAPageControlDel
     //btn Back Action
     @IBAction func btnBAckAction(_ sender: Any) {
         self.dismiss(animated: false)
-    }
-    
-    @IBAction func PlayButtonTapped() -> Void {
     }
     
     @IBAction func btnSourceActn(_ sender: Any) {
@@ -678,20 +592,18 @@ class ShuffleDetailVC: UIViewController , UIScrollViewDelegate, TAPageControlDel
             if DBData.count > 0{
                 shuffleData = DBData
                 let randomInt = Int.random(in: 0..<DBData.count)
-                activityIndicator.stopAnimating()
                 ShowNews(currentIndex: randomInt)
+            }
+            else{
+                getShuffleData()
             }
         case .Failure(let errorMsg) : break
         }
     }
     
     @IBAction func btnShuffleActn(_ sender: Any) {
+        activityIndicator.startAnimating()
         getShuffleData()
-        if shuffleData.count > 0{
-            let randomInt = Int.random(in: 0..<shuffleData.count)
-            activityIndicator.stopAnimating()
-            ShowNews(currentIndex: randomInt)
-        }
     }
     
     @IBAction func btnMoreStoriesActn(_ sender: Any) {
@@ -728,7 +640,20 @@ extension ShuffleDetailVC:UICollectionViewDelegate, UICollectionViewDataSource, 
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return RecomData.count != 0 ? RecomData.count + 1 : 0
+        if RecommendationArticle.count > 0{
+            return (self.RecommendationArticle.count > 0) ? self.RecommendationArticle.count + 1 : 0
+        }
+        if RecomData.count == 0  && RecommendationArticle.count == 0{
+            return 0
+        }
+        else if RecomData.count >= 5{
+            return 6
+        }else{
+            if RecomData.count > 0{
+                return RecomData.count + 1
+            }
+        }
+        return RecommendationArticle.count != 0 ? RecommendationArticle.count + 1 : 0
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -739,16 +664,16 @@ extension ShuffleDetailVC:UICollectionViewDelegate, UICollectionViewDataSource, 
         let textSizeSelected = UserDefaults.standard.value(forKey: "textSize") as! Int
         
         if textSizeSelected == 0{
-            cell.lblMoreStories.font = FontConstants.smallRecommTitleFont
-            cell.lblTitle.font = FontConstants.smallRecommFont
+            cell.lblMoreStories.font = FontConstants.smallFontDetailTitle
+            cell.lblTitle.font = FontConstants.NormalFontRecomContent
         }
         else if textSizeSelected == 2{
-            cell.lblMoreStories.font = FontConstants.largeRecommTitleFont
-            cell.lblTitle.font = FontConstants.largeRecommFont
+            cell.lblMoreStories.font = FontConstants.LargeFontDetailTitle
+            cell.lblTitle.font = FontConstants.NormalFontRecomContent
         }
         else{
-            cell.lblMoreStories.font = FontConstants.normalRecommTitleFont
-            cell.lblTitle.font = FontConstants.normalRecommFont
+            cell.lblMoreStories.font = FontConstants.NormalFontDetailTitle
+            cell.lblTitle.font = FontConstants.NormalFontRecomContent
         }
         if indexPath.row == 0
         {
@@ -761,13 +686,20 @@ extension ShuffleDetailVC:UICollectionViewDelegate, UICollectionViewDataSource, 
             cell.imgNews.isHidden = false
             cell.lblTitle.isHidden = false
             cell.lblMoreStories.isHidden = true
-            let currentArticle =  RecomData[indexPath.row - 1] //RecomArticleData[0].body!.articles[indexPath.row - 1]
-            cell.lblTitle.text = currentArticle.title
-            if currentArticle.imageURL != nil{
-                cell.imgNews.sd_setImage(with: URL(string: currentArticle.imageURL!), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
+            if RecommendationArticle.count > 0{
+                let currentArticle =  RecommendationArticle[indexPath.row - 1]
+                cell.lblTitle.text = currentArticle.title
+                if currentArticle.imageURL != nil{
+                    cell.imgNews.sd_setImage(with: URL(string: currentArticle.imageURL!), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
+                }
             }
-            
-            
+            else if RecomData.count > 0{
+                let currentArticle =  RecomData[indexPath.row - 1]
+                cell.lblTitle.text = currentArticle.title
+                if currentArticle.imageURL != nil{
+                    cell.imgNews.sd_setImage(with: URL(string: currentArticle.imageURL!), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
+                }
+            }
             if cell.imgNews.image == nil{
                 cell.imgNews.image = UIImage(named: AssetConstants.NoImage)
             }
@@ -783,6 +715,7 @@ extension ShuffleDetailVC:UICollectionViewDelegate, UICollectionViewDataSource, 
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        
         if indexPath.row != 0{
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             let newsDetailvc:NewsDetailVC = storyboard.instantiateViewController(withIdentifier: "NewsDetailID") as! NewsDetailVC
@@ -800,9 +733,13 @@ extension ShuffleDetailVC:UICollectionViewDelegate, UICollectionViewDataSource, 
                 UserDefaults.standard.set("recommend", forKey: "isSearch")
             }
             newsDetailvc.newsCurrentIndex = indexPath.row - 1
-            if shuffleData.count > 0{
-                newsDetailvc.shuffleData =  RecomData
-                newsDetailvc.articleId = Int(RecomData[indexPath.row].article_id)
+            if RecommendationArticle.count > 0{
+                newsDetailvc.ShowArticle =  RecommendationArticle
+                newsDetailvc.articleId = Int(RecommendationArticle[indexPath.row - 1].article_id)
+            }
+            else if RecomData.count > 0{
+                newsDetailvc.ShowArticle =  RecomData
+                newsDetailvc.articleId = Int(RecomData[indexPath.row - 1].article_id)
             }
             present(newsDetailvc, animated: true, completion: nil)
         }

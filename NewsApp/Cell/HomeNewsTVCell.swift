@@ -10,6 +10,7 @@ import UIKit
 
 class HomeNewsTVCell: UITableViewCell {
     
+    @IBOutlet weak var viewCellContainer: UIView!
     @IBOutlet weak var ViewCellBackground: UIView!
     @IBOutlet weak var lblSource: UILabel!
     @IBOutlet weak var lblNewsHeading: UILabel!

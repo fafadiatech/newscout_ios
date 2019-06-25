@@ -60,7 +60,7 @@ class SettingsTVC: UITableViewController, GIDSignInUIDelegate {
         segmentTextSize.tintColor = colorConstants.redColor
         segmentTextSize.selectedSegmentIndex = textSizeSelected
         let font = FontConstants.NormalFontContentMedium
-        segmentTextSize.setTitleTextAttributes([NSAttributedStringKey.font: font],for: .normal)
+        segmentTextSize.setTitleTextAttributes([NSAttributedStringKey.font: font as Any],for: .normal)
         if (UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad){
             tableView.rowHeight = 70
             segmentTextSize.setWidth(120, forSegmentAt: 0)
@@ -75,14 +75,17 @@ class SettingsTVC: UITableViewController, GIDSignInUIDelegate {
         let darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
         if  darkModeStatus == true{
             settingsTV.backgroundColor = colorConstants.grayBackground2
+            settingsTV.backgroundView?.backgroundColor = colorConstants.grayBackground2
+            //changefontColor()
+        }
+        else{
             changeColor()
-            
         }
     }
     
     @objc private func darkModeEnabled(_ notification: Notification) {
         NightNight.theme = .night
-        changeColor()
+        //  changefontColor()
         settingsTV.backgroundColor = colorConstants.grayBackground2
     }
     
@@ -104,14 +107,23 @@ class SettingsTVC: UITableViewController, GIDSignInUIDelegate {
         lblBreakingNews.textColor = .black
         lblDailyEdition.textColor = .black
     }
+    func changefontColor(){
+        let cell = UITableViewCell()
+        cell.backgroundColor = .black
+        lblLogin.textColor = .white
+        btnLogout.titleLabel?.textColor = .white
+        lblProfile.textColor = .white
+        lblPersonlized.textColor = .white
+        lblBreakingNews.textColor = .white
+        lblDailyEdition.textColor = .black
+    }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         isLoggedIn()
     }
     
-    func isLoggedIn()
-    {
+    func isLoggedIn(){
         if UserDefaults.standard.value(forKey: "token") == nil {
             lblLogin.text = "Login"
             btnLogout.isHidden = true
@@ -124,19 +136,22 @@ class SettingsTVC: UITableViewController, GIDSignInUIDelegate {
         }
     }
     
+    
     @IBAction func TextSizeAction(_ sender: Any) {
-        switch segmentTextSize.selectedSegmentIndex
-        {
+        switch segmentTextSize.selectedSegmentIndex{
         case 0:
             textSizeSelected = 0
+            UserDefaults.standard.set(true, forKey: "isTextSizeChanged")
             UserDefaults.standard.set(0, forKey: "textSize")
             
         case 1:
             textSizeSelected = 1
+            UserDefaults.standard.set(true, forKey: "isTextSizeChanged")
             UserDefaults.standard.set(1, forKey: "textSize")
             
         case 2:
             textSizeSelected = 2
+            UserDefaults.standard.set(true, forKey: "isTextSizeChanged")
             UserDefaults.standard.set(2, forKey: "textSize")
             
         default:
@@ -151,6 +166,8 @@ class SettingsTVC: UITableViewController, GIDSignInUIDelegate {
             GIDSignIn.sharedInstance().signOut()
             let defaultList = ["googleToken", "first_name", "last_name", "email", "token"]
             Helper().clearDefaults(list : defaultList)
+            DBManager().deleteAllData(entity: "LikeDislike")
+            DBManager().deleteAllData(entity: "BookmarkArticles")
             self.btnLogout.isHidden = true
             self.lblLogin.text = "Login"
         }
@@ -161,6 +178,8 @@ class SettingsTVC: UITableViewController, GIDSignInUIDelegate {
             FBSDKProfile.setCurrent(nil)
             self.btnLogout.isHidden = true
             let defaultList = ["FBToken", "first_name", "last_name", "email", "token"]
+            DBManager().deleteAllData(entity: "LikeDislike")
+            DBManager().deleteAllData(entity: "BookmarkArticles")
             Helper().clearDefaults(list : defaultList)
             self.lblLogin.text = "Login"
         }
@@ -184,11 +203,46 @@ class SettingsTVC: UITableViewController, GIDSignInUIDelegate {
         
     }
     
+    /*  override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+     let cell = UITableViewCell()
+     let darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
+     if  darkModeStatus == true{
+     cell.backgroundColor = colorConstants.grayBackground3
+     //cell.textLabel?.text = "Jayashri"
+     if indexPath.section == 0 && indexPath.row == 0{
+     cell.addSubview(segmentTextSize)
+     segmentTextSize.contentHorizontalAlignment = .center
+     
+     }else if indexPath.section == 1 && indexPath.row == 0{
+     cell.addSubview(lblBreakingNews)
+     
+     cell.addSubview(lblPersonlized)
+     lblBreakingNews.textColor = .white
+     
+     }else if indexPath.section == 1 && indexPath.row == 1{
+     cell.addSubview(lblDailyEdition)
+     lblDailyEdition.textColor = .white
+     }
+     else if indexPath.section == 2 && indexPath.row == 0{
+     cell.addSubview(lblLogin)
+     
+     }
+     
+     cell.textLabel?.textColor = .white
+     
+     }
+     else{
+     cell.backgroundColor = colorConstants.blackColor
+     }
+     return cell
+     }*/
+    
     override func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
         let headerView = view as! UITableViewHeaderFooterView
-        headerView.textLabel?.textColor = .black
         headerView.textLabel?.font = FontConstants.settingsTVHeader
-        let darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
+        let text = headerView.textLabel?.text?.capitalized
+        headerView.textLabel?.text = text
+        headerView.textLabel?.textColor = colorConstants.redColor
     }
     
     override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
@@ -211,7 +265,7 @@ class SettingsTVC: UITableViewController, GIDSignInUIDelegate {
                 self.view.makeToast("You need to login", duration: 1.0, position: .center)
             }
         }
-        else if indexPath.section == 3 && indexPath.row == 0{
+        else if indexPath.section == 2 && indexPath.row == 2{
             let text = "checkout newScout app. I found it best for reading news."
             let url = URL(string: "http://www.fafadiatech.com/")
             let shareAll = [ text, url] as [Any]
@@ -224,12 +278,12 @@ class SettingsTVC: UITableViewController, GIDSignInUIDelegate {
             self.present(activityViewController, animated: true, completion: nil)
         }
             //Replace url with itunes app url
-        else if indexPath.section == 3 && indexPath.row == 1{
+        else if indexPath.section == 2 && indexPath.row == 3{
             //  UIApplication.sharedApplication().openURL(NSURL(string : "itms-apps://itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?id=\(0)&onlyLatestVersion=true&pageNumber=0&sortOrdering=1)")!);
             let url = URL(string: "https://mail.google.com")!
             UIApplication.shared.openURL(url)
         }
-        else if indexPath.section == 3 && indexPath.row == 2{
+        else if indexPath.section == 2 && indexPath.row == 4{
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             let AboutUsvc:AboutUsVC
                 = storyboard.instantiateViewController(withIdentifier: "AboutUsID") as! AboutUsVC
@@ -243,11 +297,11 @@ class SettingsTVC: UITableViewController, GIDSignInUIDelegate {
         let id = UserDefaults.standard.value(forKey: "deviceToken") as! String
         var status = Bool()
         status = UserDefaults.standard.value(forKey: "breaking") as! Bool
-        var notifyBreaking =  String(status).capitalized
+        let notifyBreaking =  String(status).capitalized
         status = UserDefaults.standard.value(forKey: "daily") as! Bool
-        var notifyDaily = String(status).capitalized
+        let notifyDaily = String(status).capitalized
         status = UserDefaults.standard.value(forKey: "personalised") as! Bool
-        var notifyPersonalised = String(status).capitalized
+        let notifyPersonalised = String(status).capitalized
         let param = ["device_id" : id,
                      "device_name": "ios",
                      "breaking_news" : notifyBreaking,

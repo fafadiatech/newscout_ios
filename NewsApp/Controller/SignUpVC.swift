@@ -46,6 +46,11 @@ class SignUpVC: UIViewController {
     }
     
     func changeColor(){
+        txtFname.lineColor = .white
+        txtLname.lineColor = .white
+        txtPassword.lineColor = .white
+        txtConfirmPswd.lineColor = .white
+        txtEmail.lineColor = .white
         txtFname.selectedTitleColor = colorConstants.grayBackground3
         txtLname.selectedTitleColor = colorConstants.grayBackground3
         txtEmail.selectedTitleColor = colorConstants.grayBackground3
@@ -58,6 +63,7 @@ class SignUpVC: UIViewController {
         txtConfirmPswd.titleColor = colorConstants.grayBackground3
         view.backgroundColor = colorConstants.grayBackground3
         btnAlreadyMember.backgroundColor = colorConstants.grayBackground3
+        btnAlreadyMember.setTitleColor(.white, for: UIControlState.normal)
         containerView.backgroundColor = colorConstants.grayBackground3
     }
     

@@ -321,16 +321,6 @@ struct TagList : Decodable{
     let count : Int
 }
 
-struct DailyTags : Decodable{
-    let header : Header
-    let body : DailyTagBody
-}
-
-struct DailyTagBody: Decodable {
-    let results : [TagList]
-    let count : Int
-}
-
 struct GetLikeBookmarkList: Decodable{
     let header : Header
     let body : Body
@@ -385,18 +375,8 @@ enum FetchTrendingFromDB{
     case Failure(String)
 }
 
-enum DailyTagAPIResult {
-    case Success([DailyTags])
-    case Failure(String)
-}
-
 enum BookmarkArticleDBfetchResult {
     case Success([BookmarkArticles])
-    case Failure(String)
-}
-
-enum CategoryAPIResult {
-    case Success([CategoryList])
     case Failure(String)
 }
 
@@ -422,11 +402,6 @@ enum SearchDBfetchResult {
 
 enum NextURLDBfetchResult {
     case Success([NewsURL])
-    case Failure(String)
-}
-
-enum PeriodicTagDBfetchResult {
-    case Success([PeriodicTags])
     case Failure(String)
 }
 

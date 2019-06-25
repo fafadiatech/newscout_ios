@@ -56,7 +56,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
         let isWalkthroughShown = UserDefaults.standard.value(forKey: "isWalkthroughShown") as! Bool
         var initialViewController = UIViewController()
         if isWalkthroughShown == true{
-            initialViewController = storyboard.instantiateViewController(withIdentifier: "HomeParentID")
+            initialViewController = storyboard.instantiateViewController(withIdentifier: "parentID")
         }else{
             initialViewController = storyboard.instantiateViewController(withIdentifier: "PageID")
         }
@@ -127,7 +127,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
                         if check == true{
                             
                             let mainStoryboard:UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
-                            let HomeVc = mainStoryboard.instantiateViewController(withIdentifier: "HomeParentID") as! HomeParentVC
+                            let HomeVc = mainStoryboard.instantiateViewController(withIdentifier: "parentID") as! ParentViewController
                             self.window?.rootViewController = HomeVc
                             
                         }
@@ -135,10 +135,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
                     }
                 }
             }
-            
-            /*  let mainStoryboard:UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
-             let HomeVc = mainStoryboard.instantiateViewController(withIdentifier: "HomeParentID") as! HomeParentVC
-             self.window?.rootViewController = HomeVc*/
         }
     }
     

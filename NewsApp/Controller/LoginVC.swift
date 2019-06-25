@@ -1,7 +1,6 @@
 //
 //  LoginVC.swift
-//  NewsApp
-//
+//  NewsApp sc//
 //  Created by Jayashree on 01/10/18.
 //  Copyright © 2018 Fafadia Tech. All rights reserved.
 //
@@ -86,8 +85,8 @@ class LoginVC: UIViewController, GIDSignInUIDelegate, FBSDKLoginButtonDelegate {
                 let check = UserDefaults.standard.value(forKey: "isSettingsLogin") as! Bool
                 if check == true{
                     let storyboard = UIStoryboard(name: "Main", bundle: nil)
-                    let HomeVc:HomeParentVC = storyboard.instantiateViewController(withIdentifier: "HomeParentID") as! HomeParentVC
-                    self.present(HomeVc, animated: true, completion: nil)
+                    let parentVc:ParentViewController = storyboard.instantiateViewController(withIdentifier: "parentID") as! ParentViewController
+                    self.present(parentVc, animated: true, completion: nil)
                 }
                 else{
                     self.dismiss(animated: false)
@@ -103,7 +102,10 @@ class LoginVC: UIViewController, GIDSignInUIDelegate, FBSDKLoginButtonDelegate {
         txtPassword.titleColor = colorConstants.grayBackground3
         view.backgroundColor = colorConstants.grayBackground3
         btnSignUp.backgroundColor = colorConstants.grayBackground3
+        btnSignUp.setTitleColor(.white, for: UIControlState.normal)
         viewGmailSignIn.backgroundColor =  colorConstants.whiteColor
+        txtUsername.lineColor = .white
+        txtPassword.lineColor = .white
     }
     
     @objc private func darkModeEnabled(_ notification: Notification) {
@@ -194,8 +196,8 @@ class LoginVC: UIViewController, GIDSignInUIDelegate, FBSDKLoginButtonDelegate {
                     let check = UserDefaults.standard.value(forKey: "isSettingsLogin") as! Bool
                     if check == true{
                         let storyboard = UIStoryboard(name: "Main", bundle: nil)
-                        let HomeVc:HomeParentVC = storyboard.instantiateViewController(withIdentifier: "HomeParentID") as! HomeParentVC
-                        self.present(HomeVc, animated: true, completion: nil)
+                        let parentVc:ParentViewController = storyboard.instantiateViewController(withIdentifier: "parentID") as! ParentViewController
+                        self.present(parentVc, animated: true, completion: nil)
                     }
                     else{
                         self.dismiss(animated: false)
@@ -229,6 +231,8 @@ class LoginVC: UIViewController, GIDSignInUIDelegate, FBSDKLoginButtonDelegate {
     
     func loginButtonDidLogOut(_ loginButton: FBSDKLoginButton!) {
         let defaultList = ["FBToken", "first_name", "last_name", "email"]
+        DBManager().deleteAllData(entity: "LikeDislike")
+        DBManager().deleteAllData(entity: "BookmarkArticles")
         Helper().clearDefaults(list : defaultList)
         self.view.makeToast("Succesfully Logged out..", duration: 1.0, position: .center)
     }

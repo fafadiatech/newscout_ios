@@ -40,7 +40,7 @@ class DBManager{
                         
                         if self.someEntityExists(id: 0, entity: "NewsURL", keyword: submenu) == false {
                             let newUrl = NewsURL(context: managedContext!)
-                            newUrl.category = submenu
+                            newUrl.category = self.ArticleData[0].body?.articles[0].category //submenu
                             newUrl.nextURL = self.ArticleData[0].body?.next
                         }
                         else{
@@ -242,6 +242,7 @@ class DBManager{
             switch response {
             case .Success(let data) :
                 TrendingData = data
+                DBManager().deleteAllData(entity: "TrendingCategory")
             case .Failure(let errormessage) :
                 print(errormessage)
             }
@@ -255,6 +256,7 @@ class DBManager{
                             //if self.someIDExist(id: news.article_id) == false{
                             newTrending.trendingID = Int64(TrendingData[0].body.results[result].id)
                             newTrending.articleID = Int64(news.article_id)
+                            newTrending.publishedOn = news.published_on!
                             newTrending.count = Int64(TrendingData[0].body.results[result].articles.count)
                             if  self.someEntityExists(id: Int(news.article_id), entity: "NewsArticle", keyword: "") == false{
                                 newArticle.article_id = Int64(news.article_id)
@@ -305,6 +307,7 @@ class DBManager{
         }
     }
     
+    //fetch news of trending article fron newsarticle
     func fetchTrendingArticle() -> ArticleDBfetchResult{
         var trendingArticleIDs = [TrendingCategory]()
         var trendingArticles = [NewsArticle]()
@@ -372,6 +375,8 @@ class DBManager{
         let managedContext =
             appDelegate?.persistentContainer.viewContext
         let trendingRequest =  NSFetchRequest<TrendingCategory>(entityName: "TrendingCategory")
+        let sort = NSSortDescriptor(key: #keyPath(TrendingCategory.publishedOn), ascending: false)
+        trendingRequest.sortDescriptors = [sort]
         do {
             trendingData = try (managedContext?.fetch(trendingRequest))!
         }catch let error as NSError {
@@ -834,7 +839,7 @@ class DBManager{
         likefetchRequest.predicate = NSPredicate(format: "article_id  = %d", id)
         fetchRequest.predicate = NSPredicate(format: "article_id  = %d", id)
         do {
-            if tempentity == "NewsArticle"{
+            if tempentity == "ShowArticle"{
                 Article = try (managedContext?.fetch(fetchRequest))!
             }
             else if tempentity == "SearchArticles"{
@@ -847,7 +852,7 @@ class DBManager{
             let newArticle = LikeDislike(context: managedContext!)
             newArticle.article_id = Int64(id)
             newArticle.isLike = Int16(status)
-            if tempentity == "NewsArticle"{
+            if tempentity == "ShowArticle"{
                 newArticle.addToLikedArticle(Article[0])
             }else if tempentity == "SearchArticles"{
                 newArticle.addToSearchlikeArticles(SearchArticle[0])
@@ -912,7 +917,7 @@ class DBManager{
         let searchRequest = NSFetchRequest<SearchArticles>(entityName: "SearchArticles")
         fetchRequest.predicate = NSPredicate(format: "article_id  = %d", id)
         do {
-            if currentEntity == "NewsArticle"{
+            if currentEntity == "ShowArticle"{
                 Article = try (managedContext?.fetch(fetchRequest))!
             }
             else if currentEntity == "SearchArticles"{
@@ -925,7 +930,7 @@ class DBManager{
             let newArticle = BookmarkArticles(context: managedContext!)
             newArticle.article_id = Int64(id)
             newArticle.isBookmark = 1
-            if currentEntity == "NewsArticle"{
+            if currentEntity == "ShowArticle"{
                 newArticle.addToArticle(Article[0])
             }else if currentEntity == "SearchArticles"{
                 newArticle.addToSearchArticle(SearchArticle[0])
@@ -1159,8 +1164,8 @@ class DBManager{
     }
     
     func deleteAllData(entity:String) {
-        let delegate = UIApplication.shared.delegate as! AppDelegate
-        let context = delegate.persistentContainer.viewContext
+        //let delegate = UIApplication.shared.delegate as! AppDelegate
+        let context = appDelegate!.persistentContainer.viewContext
         
         let deleteFetch = NSFetchRequest<NSFetchRequestResult>(entityName: entity)
         let deleteRequest = NSBatchDeleteRequest(fetchRequest: deleteFetch)
@@ -1198,52 +1203,6 @@ class DBManager{
             return NextURLDBfetchResult.Success(NewsURL)
         } catch let error as NSError {
             return NextURLDBfetchResult.Failure(error as! String)
-        }
-    }
-    
-    func saveTags() {
-        let managedContext =
-            appDelegate?.persistentContainer.viewContext
-        var tagsData = [DailyTags]()
-        let types = ["daily", "weekly", "monthly"]
-        for type in types{
-            APICall().getTags(url:APPURL.getTagsURL, type: type){
-                (response)  in
-                switch response {
-                case .Success(let data) :
-                    tagsData  = data
-                    if tagsData[0].header.status == "1" {
-                        if tagsData[0].body.count > 0{
-                            for tag in tagsData[0].body.results{
-                                self.tagType = type
-                                if self.someEntityExists(id: 0, entity: "PeriodicTags", keyword: tag.name) == false{
-                                    let newTag = PeriodicTags(context: managedContext!)
-                                    newTag.tagName =  tag.name
-                                    newTag.count = Int64(tag.count)
-                                    newTag.type = type
-                                    self.saveBlock()
-                                }
-                            }
-                        }
-                    }
-                case .Failure(let errormessage) :
-                    print(errormessage)
-                }
-            }
-        }
-    }
-    
-    func fetchTags(type : String) -> PeriodicTagDBfetchResult {
-        let managedContext =
-            appDelegate?.persistentContainer.viewContext
-        let fetchRequest =
-            NSFetchRequest<PeriodicTags>(entityName: "PeriodicTags")
-        fetchRequest.predicate = NSPredicate(format: "type contains[c] %@",type)
-        do {
-            let tagsData = try (managedContext?.fetch(fetchRequest))!
-            return PeriodicTagDBfetchResult.Success(tagsData)
-        } catch let error as NSError {
-            return PeriodicTagDBfetchResult.Failure(error as! String)
         }
     }
     

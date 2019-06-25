@@ -43,6 +43,9 @@ class ChangePasswordVC: UIViewController {
     }
     
     func changeFontColor(){
+        txtOldPswd.lineColor = .white
+        txtNewPswd.lineColor = .white
+        txtConfirmPswd.lineColor = .white
         txtNewPswd.selectedTitleColor = colorConstants.grayBackground3
         txtOldPswd.selectedTitleColor = colorConstants.grayBackground3
         txtConfirmPswd.selectedTitleColor = colorConstants.grayBackground3
