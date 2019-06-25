@@ -91,11 +91,6 @@ class ShuffleDetailVC: UIViewController , UIScrollViewDelegate, WKNavigationDele
         activityIndicator.startAnimating()
         txtViewNewsDesc.textContainer.lineBreakMode = NSLineBreakMode.byTruncatingTail
         getShuffleData()
-        //        if shuffleData.count > 0{
-        //            let randomInt = Int.random(in: 0..<shuffleData.count)
-        //            activityIndicator.stopAnimating()
-        //            ShowNews(currentIndex: randomInt)
-        //        }
         viewLikeDislike.backgroundColor = colorConstants.redColor
         viewBack.backgroundColor = colorConstants.redColor
         ViewWebContainer.isHidden = true
@@ -131,7 +126,7 @@ class ShuffleDetailVC: UIViewController , UIScrollViewDelegate, WKNavigationDele
             }
         }
     }
-   
+    
     func filterRecommendation(){
         RecomData.removeAll()
         if ShowArticle.count > 0{
@@ -551,7 +546,6 @@ class ShuffleDetailVC: UIViewController , UIScrollViewDelegate, WKNavigationDele
             shareAll = [ text , sourceURL , webURL ] as [Any]
         }
         
-        
         let activityViewController = UIActivityViewController(activityItems: shareAll, applicationActivities: nil)
         activityViewController.excludedActivityTypes = [UIActivityType.airDrop]
         activityViewController.popoverPresentationController?.sourceView = sender as! UIView
@@ -570,9 +564,6 @@ class ShuffleDetailVC: UIViewController , UIScrollViewDelegate, WKNavigationDele
     //btn Back Action
     @IBAction func btnBAckAction(_ sender: Any) {
         self.dismiss(animated: false)
-    }
-    
-    @IBAction func PlayButtonTapped() -> Void {
     }
     
     @IBAction func btnSourceActn(_ sender: Any) {
@@ -613,11 +604,6 @@ class ShuffleDetailVC: UIViewController , UIScrollViewDelegate, WKNavigationDele
     @IBAction func btnShuffleActn(_ sender: Any) {
         activityIndicator.startAnimating()
         getShuffleData()
-        //        if shuffleData.count > 0{
-        //            let randomInt = Int.random(in: 0..<shuffleData.count)
-        //            activityIndicator.stopAnimating()
-        //            ShowNews(currentIndex: randomInt)
-        //        }
     }
     
     @IBAction func btnMoreStoriesActn(_ sender: Any) {

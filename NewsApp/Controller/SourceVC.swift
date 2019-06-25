@@ -385,7 +385,6 @@ extension SourceVC: UICollectionViewDelegate, UICollectionViewDataSource, UIScro
         cell.viewCellContainer.layer.shadowOpacity = 0.7
         cell.viewCellContainer.layer.shadowRadius = 4.0
         if  darkModeStatus == true{
-            //cell.backgroundColor = colorConstants.grayBackground2
             cell.containerView.backgroundColor = colorConstants.grayBackground2
             cell.lblSource.textColor = colorConstants.nightModeText
             cell.lblTitle.textColor = colorConstants.nightModeText

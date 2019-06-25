@@ -62,19 +62,6 @@ class BookmarkVC: UIViewController {
             lblNoBookmark.isHidden = false
         }
         
-        //        if UserDefaults.standard.value(forKey: "token") != nil {
-        //            let coredataRecordCount = DBManager().IsCoreDataEmpty(entity: "BookmarkArticles")
-        //            if coredataRecordCount != 0{
-        //                fetchBookmarkDataFromDB()
-        //            }else{
-        //                saveBookmarkDataInDB(url : APPURL.bookmarkedArticlesURL)
-        //            }
-        //        }
-        //        else{
-        //            activityIndicator.stopAnimating()
-        //            lblNoBookmark.text = "Login to see bookmark list"
-        //            lblNoBookmark.isHidden = false
-        //        }
         let darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
         if darkModeStatus == true{
             bookmarkResultTV.backgroundColor = colorConstants.grayBackground3
@@ -140,7 +127,6 @@ class BookmarkVC: UIViewController {
                 activityIndicator.stopAnimating()
                 lblNoBookmark.text = "No bookmarks"
                 lblNoBookmark.isHidden = false
-                //self.bookmarkResultTV.makeToast("No news found", duration: 3.0, position: .center)
             }
             if bookmarkResultTV.isHidden == false{
                 bookmarkResultTV.reloadData()
@@ -275,7 +261,6 @@ extension BookmarkVC: UITableViewDelegate, UITableViewDataSource{
         sortedData.removeAll()
         let darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
         let textSizeSelected = UserDefaults.standard.value(forKey: "textSize") as! Int
-        var sourceColor = UIColor()
         var fullTxt = ""
         var dateSubString = ""
         var agoDate = ""
@@ -312,7 +297,7 @@ extension BookmarkVC: UITableViewDelegate, UITableViewDataSource{
                 }
                 let newDate = dateFormatter.date(from: currentArticle.published_on!)
                 if newDate != nil{
-                    agoDate = try Helper().timeAgoSinceDate(newDate!)
+                    agoDate = Helper().timeAgoSinceDate(newDate!)
                     fullTxt = "\(agoDate)" + " via " + currentArticle.source!
                     let attributedWithTextColor: NSAttributedString = fullTxt.attributedStringWithColor([currentArticle.source!], color: UIColor.red)
                     cell.lblSource.attributedText = attributedWithTextColor
@@ -326,7 +311,7 @@ extension BookmarkVC: UITableViewDelegate, UITableViewDataSource{
                 let newDate = dateFormatter.date(from: dateSubString
                 )
                 if newDate != nil{
-                    agoDate = try Helper().timeAgoSinceDate(newDate!)
+                    agoDate = Helper().timeAgoSinceDate(newDate!)
                     fullTxt = "\(agoDate)" + " via " + currentArticle.source!
                     let attributedWithTextColor: NSAttributedString = fullTxt.attributedStringWithColor([currentArticle.source!], color: UIColor.red)
                     cell.lblSource.attributedText = attributedWithTextColor
@@ -384,7 +369,7 @@ extension BookmarkVC: UITableViewDelegate, UITableViewDataSource{
                 }
                 let newDate = dateFormatter.date(from: currentArticle.published_on!)
                 if newDate != nil{
-                    agoDate = try Helper().timeAgoSinceDate(newDate!)
+                    agoDate = Helper().timeAgoSinceDate(newDate!)
                     fullTxt = "\(agoDate)" + " via " + currentArticle.source!
                     let attributedWithTextColor: NSAttributedString = fullTxt.attributedStringWithColor([currentArticle.source!], color: UIColor.red)
                     cellOdd.lblSource.attributedText = attributedWithTextColor
@@ -398,7 +383,7 @@ extension BookmarkVC: UITableViewDelegate, UITableViewDataSource{
                 let newDate = dateFormatter.date(from: dateSubString
                 )
                 if newDate != nil{
-                    agoDate = try Helper().timeAgoSinceDate(newDate!)
+                    agoDate = Helper().timeAgoSinceDate(newDate!)
                     fullTxt = "\(agoDate)" + " via " + currentArticle.source!
                     let attributedWithTextColor: NSAttributedString = fullTxt.attributedStringWithColor([currentArticle.source!], color: UIColor.red)
                     cellOdd.lblSource.attributedText = attributedWithTextColor
@@ -432,7 +417,6 @@ extension BookmarkVC: UITableViewDelegate, UITableViewDataSource{
     func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
         if targetContentOffset.pointee.y < scrollView.contentOffset.y {
             if nextURL != nil {
-                
                 APICall().BookmarkedArticlesAPI(url: nextURL){ response in
                     switch response {
                     case .Success(let data) :
@@ -488,7 +472,6 @@ extension BookmarkVC: UICollectionViewDelegate, UICollectionViewDataSource, UISc
         dateFormatter.timeZone = NSTimeZone.local
         let darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
         let textSizeSelected = UserDefaults.standard.value(forKey: "textSize") as! Int
-        var sourceColor = UIColor()
         var fullTxt = ""
         var dateSubString = ""
         var agoDate = ""
@@ -528,7 +511,7 @@ extension BookmarkVC: UICollectionViewDelegate, UICollectionViewDataSource, UISc
             }
             let newDate = dateFormatter.date(from: currentArticle.published_on!)
             if newDate != nil{
-                agoDate = try Helper().timeAgoSinceDate(newDate!)
+                agoDate = Helper().timeAgoSinceDate(newDate!)
                 fullTxt = "\(agoDate)" + " via " + currentArticle.source!
                 let attributedWithTextColor: NSAttributedString = fullTxt.attributedStringWithColor([currentArticle.source!], color: UIColor.red)
                 cell.lblSource.attributedText = attributedWithTextColor
@@ -542,7 +525,7 @@ extension BookmarkVC: UICollectionViewDelegate, UICollectionViewDataSource, UISc
             let newDate = dateFormatter.date(from: dateSubString
             )
             if newDate != nil{
-                agoDate = try Helper().timeAgoSinceDate(newDate!)
+                agoDate = Helper().timeAgoSinceDate(newDate!)
                 fullTxt = "\(agoDate)" + " via " + currentArticle.source!
                 let attributedWithTextColor: NSAttributedString = fullTxt.attributedStringWithColor([currentArticle.source!], color: UIColor.red)
                 cell.lblSource.attributedText = attributedWithTextColor

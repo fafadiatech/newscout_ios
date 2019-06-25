@@ -580,13 +580,13 @@ extension ParentViewController: trendingDetailClicked {
     }
 }
 extension ParentViewController : UICollectionViewDelegate, UICollectionViewDataSource, CellDelegate{
-    //     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-    //
-    //        print(scrollView.contentOffset.x)
-    //       // submenuLeading.constant = scrollView.contentOffset.x / CGFloat(subMenuArr[HeadingRow].count)
-    //        //submenuCV.submenuLeading.constant = scrollView.contentOffset.x
-    //       // menuBar.horizontalBarLeftAnchorConstraint?.constant = scrollView.contentOffset.x / 4
-    //    }
+    
+    /*  func scrollViewDidScroll(_ scrollView: UIScrollView) {
+     print(scrollView.contentOffset.x)
+     submenuLeading.constant = scrollView.contentOffset.x / CGFloat(subMenuArr[HeadingRow].count)
+     submenuCV.submenuLeading.constant = scrollView.contentOffset.x
+     menuBar.horizontalBarLeftAnchorConstraint?.constant = scrollView.contentOffset.x / 4
+     }*/
     
     func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
         if scrollView == containerCV{
@@ -595,17 +595,16 @@ extension ParentViewController : UICollectionViewDelegate, UICollectionViewDataS
                 isSwipe = true
                 let index = Int(targetContentOffset.pointee.x / submenuCV.frame.width)
                 let indexPath = IndexPath(item: index, section: 0)
-                print("indexPath in scroll(): \(indexPath)")
                 submenuCV.selectItem(at: indexPath, animated: true, scrollPosition: .centeredHorizontally)
-                //SwipeIndex.shared.currentIndex = subMenuRow + 1
-                // containerCV.reloadData()
-                /* //  self.currentIndexPath = indexPath
+                /*  SwipeIndex.shared.currentIndex = subMenuRow + 1
+                 containerCV.reloadData()
+                 self.currentIndexPath = indexPath
                  
-                 //       subMenuRow = indexPath.row
-                 //        submenuName = subMenuArr[HeadingRow][subMenuRow]
-                 //        UserDefaults.standard.set(subMenuArr[HeadingRow][subMenuRow], forKey: "submenu")
+                 subMenuRow = indexPath.row
+                 submenuName = subMenuArr[HeadingRow][subMenuRow]
+                 UserDefaults.standard.set(subMenuArr[HeadingRow][subMenuRow], forKey: "submenu")
                  
-                 // reloadSubmenuNews()*/
+                 reloadSubmenuNews()*/
                 activityIndicator.stopAnimating()
             }
         }

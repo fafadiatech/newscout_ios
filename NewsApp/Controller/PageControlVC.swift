@@ -51,7 +51,7 @@ class PageControlVC: UIViewController, UIScrollViewDelegate {
             let lblTxt = UILabel()
             lblTxt.frame = CGRect(x: i * Int(pageView.frame.width), y: Int(pageView.frame.maxY - 90) , width:
                 Int(self.pageView.frame.size.width) , height: 26)
-            var heightToMinus = pageControl.frame.height + lblTxt.frame.height + 80
+            let heightToMinus = pageControl.frame.height + lblTxt.frame.height + 80
             lblTxt.text = txtArray[i]
             lblTxt.font = UIFont(name: AppFontName.regular, size: 22)
             lblTxt.textAlignment = .center
@@ -85,12 +85,9 @@ class PageControlVC: UIViewController, UIScrollViewDelegate {
     @IBAction func btnGetStartedActn(_ sender: Any) {
         UserDefaults.standard.set(true, forKey: "isWalkthroughShown")
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
-      
+        
         let parentvc: ParentViewController = storyboard.instantiateViewController(withIdentifier: "parentID") as! ParentViewController
         UIApplication.shared.keyWindow?.rootViewController = parentvc
-       
-     //   let parentvc:ParentViewController = storyboard.instantiateViewController(withIdentifier: "parentID") as! ParentViewController
-        
         present(parentvc, animated: true, completion: nil)
     }
     

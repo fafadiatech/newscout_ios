@@ -135,10 +135,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
                     }
                 }
             }
-            
-            /*  let mainStoryboard:UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
-             let HomeVc = mainStoryboard.instantiateViewController(withIdentifier: "HomeParentID") as! HomeParentVC
-             self.window?.rootViewController = HomeVc*/
         }
     }
     

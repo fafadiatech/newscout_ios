@@ -276,8 +276,7 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
                     }
                     imgWidth = String(describing : Int(cell.imgNews.frame.size.width))
                     imgHeight = String(describing : Int(cell.imgNews.frame.size.height))
-                    print("imgWidth:\(imgWidth)")
-                    print("imgHeight:\(imgHeight)")
+            
                     let imgURL = APPURL.imageServer + imgWidth + "x" + imgHeight + "/smart/" + currentArticle.imageURL!
                     cell.imgNews.sd_setImage(with: URL(string: imgURL), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
                     
@@ -357,8 +356,7 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
                     }
                     imgWidth = String(describing : Int(cell.imgNews.frame.size.width))
                     imgHeight = String(describing : Int(cell.imgNews.frame.size.height))
-                    print("imgWidth:\(imgWidth)")
-                    print("imgHeight:\(imgHeight)")
+                   
                     let imgURL = APPURL.imageServer + imgWidth + "x" + imgHeight + "/smart/" + currentArticle.imageURL!
                     cell.imgNews.sd_setImage(with: URL(string: imgURL), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
                     
@@ -499,8 +497,6 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
                 }
                 imgWidth = String(describing : Int(cellCluster.imgNews.frame.size.width))
                 imgHeight = String(describing : Int(cellCluster.imgNews.frame.size.height))
-                print("imgWidth:\(imgWidth)")
-                print("imgHeight:\(imgHeight)")
             }
             else{
                 sortedData = newShowArticle[submenuCOunt].sorted{ $0.published_on! > $1.published_on! }
@@ -517,8 +513,6 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
                 NSLayoutConstraint.activate([lblSourceTrailing])
                 imgWidth = String(describing : Int(cellCluster.imgNews.frame.size.width))
                 imgHeight = String(describing : Int(cellCluster.imgNews.frame.size.height))
-                print("imgWidth:\(imgWidth)")
-                print("imgHeight:\(imgHeight)")
             }
             cellCluster.lblTitle.text = currentArticle.title
             if  darkModeStatus == true{

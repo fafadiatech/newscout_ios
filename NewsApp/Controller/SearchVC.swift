@@ -47,15 +47,15 @@ class SearchVC: UIViewController {
         if UserDefaults.standard.value(forKey: "searchTxt") != nil{
             txtSearch.text = (UserDefaults.standard.value(forKey: "searchTxt") as! String)
         }
-         if Searchresults.count <= 0{
+        if Searchresults.count <= 0{
             if UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad && statusBarOrientation.isPortrait{
-            searchResultTV.isHidden = true
-            searchResultCV.isHidden = false
+                searchResultTV.isHidden = true
+                searchResultCV.isHidden = false
             }else{
-            searchResultTV.isHidden = false
-            searchResultCV.isHidden = true
+                searchResultTV.isHidden = false
+                searchResultCV.isHidden = true
             }
-         }    
+        }
         let darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
         if darkModeStatus == true{
             searchResultCV.backgroundColor = colorConstants.grayBackground3
@@ -88,7 +88,7 @@ class SearchVC: UIViewController {
     }
     
     override func viewDidAppear(_ animated: Bool) {
-       
+        
     }
     @objc func textFieldDidChange(textField: UITextField) {
         fecthSerchedKeywords()
@@ -306,7 +306,7 @@ extension SearchVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDele
                 imgWidth = String(describing : Int(cell.imgNews.frame.width))
                 imgHeight = String(describing : Int(cell.imgNews.frame.height))
                 //display data from DB
-                var currentArticle = Searchresults[indexPath.row]
+                let currentArticle = Searchresults[indexPath.row]
                 cell.lblNewsDescription.text = currentArticle.title
                 
                 if  darkModeStatus == true{
@@ -328,7 +328,7 @@ extension SearchVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDele
                     }
                     let newDate = dateFormatter.date(from: currentArticle.published_on!)
                     if newDate != nil{
-                        agoDate = try Helper().timeAgoSinceDate(newDate!)
+                        agoDate = Helper().timeAgoSinceDate(newDate!)
                         fullTxt = "\(agoDate)" + " via " + currentArticle.source!
                         let attributedWithTextColor: NSAttributedString = fullTxt.attributedStringWithColor([currentArticle.source!], color: UIColor.red)
                         cell.lblSource.attributedText = attributedWithTextColor
@@ -342,7 +342,7 @@ extension SearchVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDele
                     let newDate = dateFormatter.date(from: dateSubString
                     )
                     if newDate != nil{
-                        agoDate = try Helper().timeAgoSinceDate(newDate!)
+                        agoDate = Helper().timeAgoSinceDate(newDate!)
                         fullTxt = "\(agoDate)" + " via " + currentArticle.source!
                         let attributedWithTextColor: NSAttributedString = fullTxt.attributedStringWithColor([currentArticle.source!], color: UIColor.red)
                         cell.lblSource.attributedText = attributedWithTextColor
@@ -381,7 +381,7 @@ extension SearchVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDele
                 cellOdd.viewCellContainer.layer.shadowRadius = 4.0
                 cellOdd.selectionStyle = UITableViewCellSelectionStyle.none
                 //display data from DB
-                var currentArticle = Searchresults[indexPath.row]
+                let currentArticle = Searchresults[indexPath.row]
                 cellOdd.lblNewsDescription.text = currentArticle.title
                 
                 if  darkModeStatus == true{
@@ -403,7 +403,7 @@ extension SearchVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDele
                     }
                     let newDate = dateFormatter.date(from: currentArticle.published_on!)
                     if newDate != nil{
-                        agoDate = try Helper().timeAgoSinceDate(newDate!)
+                        agoDate = Helper().timeAgoSinceDate(newDate!)
                         fullTxt = "\(agoDate)" + " via " + currentArticle.source!
                         let attributedWithTextColor: NSAttributedString = fullTxt.attributedStringWithColor([currentArticle.source!], color: UIColor.red)
                         cellOdd.lblSource.attributedText = attributedWithTextColor
@@ -417,7 +417,7 @@ extension SearchVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDele
                     let newDate = dateFormatter.date(from: dateSubString
                     )
                     if newDate != nil{
-                        agoDate = try Helper().timeAgoSinceDate(newDate!)
+                        agoDate = Helper().timeAgoSinceDate(newDate!)
                         fullTxt = "\(agoDate)" + " via " + currentArticle.source!
                         let attributedWithTextColor: NSAttributedString = fullTxt.attributedStringWithColor([currentArticle.source!], color: UIColor.red)
                         cellOdd.lblSource.attributedText = attributedWithTextColor
@@ -598,11 +598,6 @@ extension SearchVC: UICollectionViewDelegate, UICollectionViewDataSource{
             let contentYoffset = scrollView.contentOffset.y
             let distanceFromBottom = scrollView.contentSize.height - contentYoffset
             if distanceFromBottom < height {
-                //                if recordCount > 0 {
-                //                    if isResultLoaded == false{
-                //                        activityIndicator.startAnimating()
-                //                    }
-                //                }
             }
             
         }else{
@@ -655,10 +650,9 @@ extension SearchVC: UITextFieldDelegate{
         let param = ["action" : "search",
                      "platform" : Constants.platform,
                      "device_id" : id,
-                     "q": query] as! [String : Any]
+                     "q": query] as [String : Any]
         APICall().trackingEventsAPI(param : param){response in
             if response == true{
-                print("event captured")
             }
         }
     }

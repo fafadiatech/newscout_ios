@@ -139,8 +139,7 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, WKNavigationDelegate
         }else{
             filterRecommendation()
         }
-        
-        // MediaData = DBManager().fetchArticleMedia(articleId: Int(ShowArticle[newsCurrentIndex].article_id))
+
         let swipeUp = UISwipeGestureRecognizer(target: self, action: #selector(self.respondToSwipeGesture))
         swipeUp.direction = UISwipeGestureRecognizerDirection.up
         self.newsView.addGestureRecognizer(swipeUp)
@@ -324,7 +323,6 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, WKNavigationDelegate
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
-        
         super.viewWillTransition(to: size, with: coordinator)
         
         /* if UIDevice.current.orientation.isLandscape {
@@ -610,8 +608,7 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, WKNavigationDelegate
         var dateSubString = ""
         var fullTxt = ""
         var agoDate = ""
-        print("imgWidth:\(imgWidth)")
-        print("imgHeight:\(imgHeight)")
+
         if ShowArticle.count > 0{
             fetchBookmarkDataFromDB()
             currentEntity = "ShowArticle"
@@ -1043,7 +1040,6 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, WKNavigationDelegate
             self.dismiss(animated: false)
         }
         else if isSearch == "recommend" {
-            //self.view.window!.rootViewController?.dismiss(animated: false, completion: nil)
             self.dismiss(animated: false)
         }
         else if isSearch == "bookmark"{

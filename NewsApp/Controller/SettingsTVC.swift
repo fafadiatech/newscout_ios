@@ -85,7 +85,7 @@ class SettingsTVC: UITableViewController, GIDSignInUIDelegate {
     
     @objc private func darkModeEnabled(_ notification: Notification) {
         NightNight.theme = .night
-      //  changefontColor()
+        //  changefontColor()
         settingsTV.backgroundColor = colorConstants.grayBackground2
     }
     
@@ -135,7 +135,7 @@ class SettingsTVC: UITableViewController, GIDSignInUIDelegate {
             }
         }
     }
-
+    
     
     @IBAction func TextSizeAction(_ sender: Any) {
         switch segmentTextSize.selectedSegmentIndex{
@@ -202,41 +202,41 @@ class SettingsTVC: UITableViewController, GIDSignInUIDelegate {
                    didSelectRowAtIndexPath indexPath: NSIndexPath) {
         
     }
-   
-  /*  override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-            let cell = UITableViewCell()
-                let darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
-                if  darkModeStatus == true{
-                    cell.backgroundColor = colorConstants.grayBackground3
-                    //cell.textLabel?.text = "Jayashri"
-                    if indexPath.section == 0 && indexPath.row == 0{
-                        cell.addSubview(segmentTextSize)
-                        segmentTextSize.contentHorizontalAlignment = .center
-                        
-                    }else if indexPath.section == 1 && indexPath.row == 0{
-                        cell.addSubview(lblBreakingNews)
-                       
-                        cell.addSubview(lblPersonlized)
-                        lblBreakingNews.textColor = .white
-                        
-                    }else if indexPath.section == 1 && indexPath.row == 1{
-                         cell.addSubview(lblDailyEdition)
-                        lblDailyEdition.textColor = .white
-                    }
-                    else if indexPath.section == 2 && indexPath.row == 0{
-                        cell.addSubview(lblLogin)
-                        
-                    }
-                
-                    cell.textLabel?.textColor = .white
-
-                }
-                else{
-                cell.backgroundColor = colorConstants.blackColor
-                }
-                return cell
-            }*/
-
+    
+    /*  override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+     let cell = UITableViewCell()
+     let darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
+     if  darkModeStatus == true{
+     cell.backgroundColor = colorConstants.grayBackground3
+     //cell.textLabel?.text = "Jayashri"
+     if indexPath.section == 0 && indexPath.row == 0{
+     cell.addSubview(segmentTextSize)
+     segmentTextSize.contentHorizontalAlignment = .center
+     
+     }else if indexPath.section == 1 && indexPath.row == 0{
+     cell.addSubview(lblBreakingNews)
+     
+     cell.addSubview(lblPersonlized)
+     lblBreakingNews.textColor = .white
+     
+     }else if indexPath.section == 1 && indexPath.row == 1{
+     cell.addSubview(lblDailyEdition)
+     lblDailyEdition.textColor = .white
+     }
+     else if indexPath.section == 2 && indexPath.row == 0{
+     cell.addSubview(lblLogin)
+     
+     }
+     
+     cell.textLabel?.textColor = .white
+     
+     }
+     else{
+     cell.backgroundColor = colorConstants.blackColor
+     }
+     return cell
+     }*/
+    
     override func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
         let headerView = view as! UITableViewHeaderFooterView
         headerView.textLabel?.font = FontConstants.settingsTVHeader
