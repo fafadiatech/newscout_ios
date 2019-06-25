@@ -781,7 +781,6 @@ extension SearchVC: UITextFieldDelegate{
             fecthSerchedKeywords()
         }
     }
-    
 }
 
 extension SearchVC: UICollectionViewDelegateFlowLayout {

@@ -1,7 +1,6 @@
 //
 //  LoginVC.swift
-//  NewsApp
-//
+//  NewsApp sc//
 //  Created by Jayashree on 01/10/18.
 //  Copyright © 2018 Fafadia Tech. All rights reserved.
 //

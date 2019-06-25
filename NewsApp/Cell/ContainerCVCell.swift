@@ -98,12 +98,10 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
             else if self.isTrending == true {
                 self.saveTrending()
             }
-            else{
-                self.activityIndicator.stopAnimating()
-            }
         }
         DispatchQueue.main.async {
             refreshControl.endRefreshing()
+            self.activityIndicator.stopAnimating()
         }
     }
     
@@ -193,14 +191,11 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
             self.clusterArticles = DBData
             if self.clusterArticles.count > 0{
                 newShowArticle.removeAll()
-                // self.lblNonews.isHidden = true
-                //ShowArticle = DBData
                 newShowArticle.append(DBData)
                 trendingTVProtocol?.isTrendingTVLoaded(status: true)
                 newsCV.reloadData()
             }
             else{
-                //                self.HomeNewsTV.reloadData()
                 self.lblNoNews.isHidden =  true
                 self.activityIndicator.stopAnimating()
             }
@@ -281,6 +276,8 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
                     }
                     imgWidth = String(describing : Int(cell.imgNews.frame.size.width))
                     imgHeight = String(describing : Int(cell.imgNews.frame.size.height))
+                    print("imgWidth:\(imgWidth)")
+                    print("imgHeight:\(imgHeight)")
                     let imgURL = APPURL.imageServer + imgWidth + "x" + imgHeight + "/smart/" + currentArticle.imageURL!
                     cell.imgNews.sd_setImage(with: URL(string: imgURL), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
                     
@@ -360,6 +357,8 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
                     }
                     imgWidth = String(describing : Int(cell.imgNews.frame.size.width))
                     imgHeight = String(describing : Int(cell.imgNews.frame.size.height))
+                    print("imgWidth:\(imgWidth)")
+                    print("imgHeight:\(imgHeight)")
                     let imgURL = APPURL.imageServer + imgWidth + "x" + imgHeight + "/smart/" + currentArticle.imageURL!
                     cell.imgNews.sd_setImage(with: URL(string: imgURL), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
                     
@@ -386,129 +385,203 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
                 }
             }
         }
-        
-        let cellCluster = collectionView.dequeueReusableCell(withReuseIdentifier: "HomeIpadClusterID", for:indexPath) as! HomeiPadClusterCVCell
-      
-        cellCluster.outerView.layer.cornerRadius = 10
-        cellCluster.outerView.layer.masksToBounds = false
-        cellCluster.outerView.layer.shadowColor = UIColor.black.cgColor
-        cellCluster.outerView.layer.shadowOffset = CGSize(width: 0, height: 5)
-        let shadowpath = UIBezierPath(roundedRect: bounds, cornerRadius: 2)
-        layer.shadowPath = shadowpath.cgPath
-        cellCluster.outerView.layer.shadowOpacity = 0.7
-        //cellCluster.outerView.layer.shadowRadius = 6.0
-        cellCluster.imgNews.layer.cornerRadius = 10.0
-        cellCluster.imgNews.clipsToBounds = true
-        cellCluster.layer.cornerRadius = 10.0
-        cellCluster.clipsToBounds = true
-        if isTrending == true{
-            currentArticle = newShowArticle[0][indexPath.row]
-            cellCluster.lblCount.isHidden = false
-            cellCluster.imgCount.isHidden = false
-            let count = DBManager().showCount(articleId: Int(currentArticle.article_id))//ShowArticle[indexPath.row]
-            cellCluster.lblCount.text = String(count)
-            if lblSourceTrailing != nil{
-                NSLayoutConstraint.deactivate([lblSourceTrailing])
+        if  isTrending == false{
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "HomeIpadID", for:indexPath) as! HomeipadCVCell
+            cell.outerView.layer.cornerRadius = 10
+            cell.outerView.layer.masksToBounds = false
+            cell.outerView.layer.shadowColor = UIColor.black.cgColor
+            cell.outerView.layer.shadowOffset = CGSize(width: 0, height: 5)
+            let shadowpath = UIBezierPath(roundedRect: bounds, cornerRadius: 2)
+            layer.shadowPath = shadowpath.cgPath
+            cell.outerView.layer.shadowOpacity = 0.7
+            cell.imgNews.layer.cornerRadius = 10.0
+            cell.imgNews.clipsToBounds = true
+            cell.layer.cornerRadius = 10.0
+            cell.clipsToBounds = true
+            sortedData = newShowArticle[submenuCOunt].sorted{ $0.published_on! > $1.published_on! }
+            currentArticle = sortedData[indexPath.row]
+            //display data from DB
+            cell.lblTitle.text = currentArticle.title
+            
+            if  darkModeStatus == true{
+                cell.containerView.backgroundColor = colorConstants.grayBackground2
+                cell.lblSource.textColor = colorConstants.nightModeText
+                cell.lblTitle.textColor = colorConstants.nightModeText
+                NightNight.theme =  .night
+            }
+            else{
+                cell.lblSource.textColor = colorConstants.blackColor
+                cell.lblTitle.textColor = colorConstants.blackColor
+                NightNight.theme =  .normal
+            }
+            
+            if ((currentArticle.published_on?.count)!) <= 20{
+                if !(currentArticle.published_on?.contains("Z"))!{
+                    currentArticle.published_on?.append("Z")
+                }
+                let newDate = dateFormatter.date(from: currentArticle.published_on!)
+                if newDate != nil{
+                    agoDate = try Helper().timeAgoSinceDate(newDate!)
+                    fullTxt = "\(agoDate)" + " via " + currentArticle.source!
+                    let attributedWithTextColor: NSAttributedString = fullTxt.attributedStringWithColor([currentArticle.source!], color: UIColor.red)
+                    cell.lblSource.attributedText = attributedWithTextColor
+                }
+            }
+            else{
+                dateSubString = String(currentArticle.published_on!.prefix(19))
+                if !(dateSubString.contains("Z")){
+                    dateSubString.append("Z")
+                }
+                let newDate = dateFormatter.date(from: dateSubString
+                )
+                if newDate != nil{
+                    agoDate = try Helper().timeAgoSinceDate(newDate!)
+                    fullTxt = "\(agoDate)" + " via " + currentArticle.source!
+                    let attributedWithTextColor: NSAttributedString = fullTxt.attributedStringWithColor([currentArticle.source!], color: UIColor.red)
+                    cell.lblSource.attributedText = attributedWithTextColor
+                }
+            }
+            let imgURL = APPURL.imageServer + imgWidth + "x" + imgHeight + "/smart/" + currentArticle.imageURL!
+            cell.imgNews.sd_setImage(with: URL(string: imgURL), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
+            
+            if textSizeSelected == 0{
+                cell.lblSource.font = FontConstants.smallFontContent
+                cell.lblTitle.font = FontConstants.smallFontHeadingBold
+            }
+            else if textSizeSelected == 2{
+                cell.lblSource.font = FontConstants.LargeFontContent
+                cell.lblTitle.font = FontConstants.LargeFontHeadingBold
+            }
+            else{
+                cell.lblSource.font =  FontConstants.NormalFontContent
+                cell.lblTitle.font = FontConstants.NormalFontHeadingBold
+            }
+            
+            if cell.imgNews.image == nil{
+                cell.imgNews.image = UIImage(named: AssetConstants.NoImage)
+            }
+            
+            activityIndicator.stopAnimating()
+            lblNoNews.isHidden = true
+            return cell
+        }
+        else{
+            let cellCluster = collectionView.dequeueReusableCell(withReuseIdentifier: "HomeIpadClusterID", for:indexPath) as! HomeiPadClusterCVCell
+            cellCluster.outerView.layer.cornerRadius = 10
+            cellCluster.outerView.layer.masksToBounds = false
+            cellCluster.outerView.layer.shadowColor = UIColor.black.cgColor
+            cellCluster.outerView.layer.shadowOffset = CGSize(width: 0, height: 5)
+            let shadowpath = UIBezierPath(roundedRect: bounds, cornerRadius: 2)
+            layer.shadowPath = shadowpath.cgPath
+            cellCluster.outerView.layer.shadowOpacity = 0.7
+            cellCluster.imgNews.layer.cornerRadius = 10.0
+            cellCluster.imgNews.clipsToBounds = true
+            cellCluster.layer.cornerRadius = 10.0
+            cellCluster.clipsToBounds = true
+            
+            //display data from DB
+            if isTrending == true{
+                currentArticle = newShowArticle[0][indexPath.row]
+                cellCluster.lblCount.isHidden = false
+                cellCluster.imgCount.isHidden = false
+                let count = DBManager().showCount(articleId: Int(currentArticle.article_id))
+                cellCluster.lblCount.text = String(count)
+                if lblSourceTrailing != nil{
+                    NSLayoutConstraint.deactivate([lblSourceTrailing])
+                    lblSourceTrailing = NSLayoutConstraint (item: cellCluster.lblSource,
+                                                            attribute: NSLayoutConstraint.Attribute.trailing,
+                                                            relatedBy: NSLayoutConstraint.Relation.equal,
+                                                            toItem: cellCluster.imgCount,
+                                                            attribute: NSLayoutConstraint.Attribute.leading,
+                                                            multiplier: -10,
+                                                            constant: 0)
+                    NSLayoutConstraint.activate([lblSourceTrailing])
+                }
+                imgWidth = String(describing : Int(cellCluster.imgNews.frame.size.width))
+                imgHeight = String(describing : Int(cellCluster.imgNews.frame.size.height))
+                print("imgWidth:\(imgWidth)")
+                print("imgHeight:\(imgHeight)")
+            }
+            else{
+                sortedData = newShowArticle[submenuCOunt].sorted{ $0.published_on! > $1.published_on! }
+                currentArticle = sortedData[indexPath.row]
+                cellCluster.lblCount.isHidden = true
+                cellCluster.imgCount.isHidden = true
                 lblSourceTrailing = NSLayoutConstraint (item: cellCluster.lblSource,
                                                         attribute: NSLayoutConstraint.Attribute.trailing,
                                                         relatedBy: NSLayoutConstraint.Relation.equal,
-                                                        toItem: cellCluster.imgCount,
-                                                        attribute: NSLayoutConstraint.Attribute.leading,
-                                                        multiplier: -20,
+                                                        toItem: cellCluster.lblTitle,
+                                                        attribute: NSLayoutConstraint.Attribute.trailing,
+                                                        multiplier: 1,
                                                         constant: 0)
                 NSLayoutConstraint.activate([lblSourceTrailing])
+                imgWidth = String(describing : Int(cellCluster.imgNews.frame.size.width))
+                imgHeight = String(describing : Int(cellCluster.imgNews.frame.size.height))
+                print("imgWidth:\(imgWidth)")
+                print("imgHeight:\(imgHeight)")
             }
-            imgWidth = String(describing : Int(cellCluster.imgNews.frame.size.width))
-            imgHeight = String(describing : Int(cellCluster.imgNews.frame.size.height))
-        }
-        else{
-            sortedData = newShowArticle[submenuCOunt].sorted{ $0.published_on! > $1.published_on! }
-            currentArticle = sortedData[indexPath.row]
-            cellCluster.lblCount.isHidden = true
-            cellCluster.imgCount.isHidden = true
-            lblSourceTrailing = NSLayoutConstraint (item: cellCluster.lblSource,
-                                                    attribute: NSLayoutConstraint.Attribute.trailing,
-                                                    relatedBy: NSLayoutConstraint.Relation.equal,
-                                                    toItem: cellCluster.lblTitle,
-                                                    attribute: NSLayoutConstraint.Attribute.trailing,
-                                                    multiplier: 1,
-                                                    constant: 0)
-            NSLayoutConstraint.activate([lblSourceTrailing])
-            imgWidth = String(describing : Int(cellCluster.imgNews.frame.size.width))
-            imgHeight = String(describing : Int(cellCluster.imgNews.frame.size.height))
-        }
-        
-        //display data from DB
-        cellCluster.lblTitle.text = currentArticle.title
-        
-        if  darkModeStatus == true{
-            cellCluster.backgroundColor = colorConstants.grayBackground2
-            cellCluster.containerView.backgroundColor = colorConstants.grayBackground2
-            cellCluster.lblSource.textColor = colorConstants.nightModeText
-            cellCluster.lblTitle.textColor = colorConstants.nightModeText
-            cellCluster.lblCount.textColor = colorConstants.nightModeText
-            NightNight.theme = .night
-        }
-        else{
-            cellCluster.backgroundColor = .white
-            cellCluster.containerView.backgroundColor = .white
-            cellCluster.lblSource.textColor = colorConstants.blackColor
-            cellCluster.lblTitle.textColor = colorConstants.blackColor
-            NightNight.theme =  .normal
-        }
-        
-        if ((currentArticle.published_on?.count)!) <= 20{
-            if !(currentArticle.published_on?.contains("Z"))!{
-                currentArticle.published_on?.append("Z")
+            cellCluster.lblTitle.text = currentArticle.title
+            if  darkModeStatus == true{
+                cellCluster.containerView.backgroundColor = colorConstants.grayBackground2
+                cellCluster.lblSource.textColor = colorConstants.nightModeText
+                cellCluster.lblTitle.textColor = colorConstants.nightModeText
+                NightNight.theme =  .night
             }
-            let newDate = dateFormatter.date(from: currentArticle.published_on!)
-            if newDate != nil{
-                agoDate = try Helper().timeAgoSinceDate(newDate!)
-                fullTxt = "\(agoDate)" + " via " + currentArticle.source!
-                let attributedWithTextColor: NSAttributedString = fullTxt.attributedStringWithColor([currentArticle.source!], color: UIColor.red)
-                cellCluster.lblSource.attributedText = attributedWithTextColor
+            else{
+                cellCluster.lblSource.textColor = colorConstants.blackColor
+                cellCluster.lblTitle.textColor = colorConstants.blackColor
+                NightNight.theme =  .normal
             }
-        }
-        else{
-            dateSubString = String(currentArticle.published_on!.prefix(19))
-            if !(dateSubString.contains("Z")){
-                dateSubString.append("Z")
+            
+            if ((currentArticle.published_on?.count)!) <= 20{
+                if !(currentArticle.published_on?.contains("Z"))!{
+                    currentArticle.published_on?.append("Z")
+                }
+                let newDate = dateFormatter.date(from: currentArticle.published_on!)
+                if newDate != nil{
+                    agoDate = try Helper().timeAgoSinceDate(newDate!)
+                    fullTxt = "\(agoDate)" + " via " + currentArticle.source!
+                    let attributedWithTextColor: NSAttributedString = fullTxt.attributedStringWithColor([currentArticle.source!], color: UIColor.red)
+                    cellCluster.lblSource.attributedText = attributedWithTextColor
+                }
             }
-            let newDate = dateFormatter.date(from: dateSubString
-            )
-            if newDate != nil{
-                agoDate = try Helper().timeAgoSinceDate(newDate!)
-                fullTxt = "\(agoDate)" + " via " + currentArticle.source!
-                let attributedWithTextColor: NSAttributedString = fullTxt.attributedStringWithColor([currentArticle.source!], color: UIColor.red)
-                cellCluster.lblSource.attributedText = attributedWithTextColor
+            else{
+                dateSubString = String(currentArticle.published_on!.prefix(19))
+                if !(dateSubString.contains("Z")){
+                    dateSubString.append("Z")
+                }
+                let newDate = dateFormatter.date(from: dateSubString
+                )
+                if newDate != nil{
+                    agoDate = try Helper().timeAgoSinceDate(newDate!)
+                    fullTxt = "\(agoDate)" + " via " + currentArticle.source!
+                    let attributedWithTextColor: NSAttributedString = fullTxt.attributedStringWithColor([currentArticle.source!], color: UIColor.red)
+                    cellCluster.lblSource.attributedText = attributedWithTextColor
+                }
             }
+            let imgURL = APPURL.imageServer + imgWidth + "x" + imgHeight + "/smart/" + currentArticle.imageURL!
+            cellCluster.imgNews.sd_setImage(with: URL(string: imgURL), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
+            
+            if textSizeSelected == 0{
+                cellCluster.lblSource.font = FontConstants.smallFontContent
+                cellCluster.lblTitle.font = FontConstants.smallFontHeadingBold
+            }
+            else if textSizeSelected == 2{
+                cellCluster.lblSource.font = FontConstants.LargeFontContent
+                cellCluster.lblTitle.font = FontConstants.LargeFontHeadingBold
+            }
+            else{
+                cellCluster.lblSource.font =  FontConstants.NormalFontContent
+                cellCluster.lblTitle.font = FontConstants.NormalFontHeadingBold
+            }
+            
+            if cellCluster.imgNews.image == nil{
+                cellCluster.imgNews.image = UIImage(named: AssetConstants.NoImage)
+            }
+            activityIndicator.stopAnimating()
+            lblNoNews.isHidden = true
+            return cellCluster
         }
-        
-        let imgURL = APPURL.imageServer + imgWidth + "x" + imgHeight + "/smart/" + currentArticle.imageURL!
-        cellCluster.imgNews.sd_setImage(with: URL(string: imgURL), placeholderImage: nil, options: SDWebImageOptions.refreshCached)
-        
-        if textSizeSelected == 0{
-            cellCluster.lblSource.font = FontConstants.smallFontContent
-            cellCluster.lblTitle.font = FontConstants.smallFontHeadingBold
-            cellCluster.lblCount.font = FontConstants.smallFontHeadingBold
-        }
-        else if textSizeSelected == 2{
-            cellCluster.lblSource.font = FontConstants.LargeFontContent
-            cellCluster.lblTitle.font = FontConstants.LargeFontHeadingBold
-            cellCluster.lblCount.font = FontConstants.LargeFontHeadingBold
-        }
-        else{
-            cellCluster.lblSource.font =  FontConstants.NormalFontContent
-            cellCluster.lblTitle.font = FontConstants.NormalFontHeadingBold
-            cellCluster.lblCount.font = FontConstants.NormalFontHeadingBold
-        }
-        
-        if cellCluster.imgNews.image == nil{
-            cellCluster.imgNews.image = UIImage(named: AssetConstants.NoImage)
-        }
-        lblNoNews.isHidden = true
-        activityIndicator.stopAnimating()
-        return cellCluster
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
@@ -539,7 +612,7 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
             if isTrending == true {
                 return CGSize(width: collectionCellSize/2.15, height: collectionCellSize/2)
             }else{
-                return CGSize(width: collectionCellSize/3.3, height: collectionCellSize/2.3)
+                return CGSize(width: collectionCellSize/3.3, height: collectionCellSize/2.5)
             }
         }
     }
@@ -553,7 +626,6 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
             if DBData.count > 0 {
                 newShowArticle[submenuCOunt].removeAll()
                 newShowArticle[submenuCOunt] = DBData
-                // newShowArticle.append(ShowArticle)
                 newsCV.reloadData()
             }
         case .Failure(let errorMsg) :
@@ -564,11 +636,10 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         if scrollView == newsCV{
             if (scrollView.bounds.maxY) >= scrollView.contentSize.height{
-                // activityIndicator.startAnimating()
                 if isTrending == false {
                     var submenuArr = UserDefaults.standard.value(forKey: "submenuArr") as! [String]
                     
-                    var submenu = submenuArr[submenuCOunt]
+                    let submenu = submenuArr[submenuCOunt]
                     UserDefaults.standard.set(submenu ,forKey: "submenu")
                     if newShowArticle[submenuCOunt].count >= 20{
                         if isAPICalled == false{

@@ -13,8 +13,6 @@ import SDWebImage
 import NightNight
 
 extension UIView {
-    
-    // OUTPUT 1
     func dropShadow(scale: Bool = true) {
         layer.masksToBounds = false
         layer.shadowColor = UIColor.black.cgColor
@@ -27,7 +25,6 @@ extension UIView {
         layer.rasterizationScale = scale ? UIScreen.main.scale : 1
     }
     
-    // OUTPUT 2
     func dropShadow(color: UIColor, opacity: Float = 0.5, offSet: CGSize, radius: CGFloat = 1, scale: Bool = true) {
         layer.masksToBounds = false
         layer.shadowColor = color.cgColor
@@ -70,7 +67,7 @@ class ParentViewController: UIViewController {
     @IBOutlet var menuCV: UICollectionView!
     @IBOutlet var submenuCV: UICollectionView!
     @IBOutlet weak var lblNonews: UILabel!
-
+    
     let activityIndicator = MDCActivityIndicator()
     var headingArr : [String] = []
     var headingIds : [Int] = []
@@ -180,10 +177,10 @@ class ParentViewController: UIViewController {
         viewOptions.isHidden = true
         viewOptions.layer.borderWidth = 0.5
         viewOptions.layer.borderColor =  UIColor.darkGray.cgColor
-
+        
         var paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
         print("path is :\(paths[0])")
-    
+        
         if UserDefaults.standard.value(forKey: "token") != nil{
             if Reachability.isConnectedToNetwork(){
                 saveBookmarkDataInDB(url : APPURL.bookmarkedArticlesURL)
@@ -363,7 +360,6 @@ class ParentViewController: UIViewController {
                 ShowArticle = DBData
             }
             else{
-                //self.lblNonews.isHidden =  false
                 self.activityIndicator.stopAnimating()
             }
         case .Failure(let errorMsg) :
@@ -434,16 +430,10 @@ class ParentViewController: UIViewController {
         case .Failure(let error) :
             print(error)
         }
-        
-        //        submenuCV.reloadData()
-        //        currentIndexPath = NSIndexPath(row: 0, section: 0) as IndexPath
-        //        submenuCV.selectItem(at: currentIndexPath, animated: true, scrollPosition: [])
-        //        loadFirstNews()
         DispatchQueue.global(qos: .userInitiated).async {
             self.SaveAllSubmenuNews()
         }
         HideButtonBarView()
-        //self.fetchTrending()
     }
     
     func loadFirstNews(){
@@ -505,7 +495,6 @@ class ParentViewController: UIViewController {
         DBManager().SaveDataDB(nextUrl: subMenuURL ){
             response in
             if response == true{
-                // self.fetchArticlesFromDB()
             }
         }
     }
@@ -638,7 +627,6 @@ extension ParentViewController : UICollectionViewDelegate, UICollectionViewDataS
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        var currentArticle = NewsArticle()
         let darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
         if collectionView == menuCV {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "menuID", for:indexPath) as! menuCVCell
@@ -649,8 +637,8 @@ extension ParentViewController : UICollectionViewDelegate, UICollectionViewDataS
         else if collectionView == containerCV{
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "containerID", for:indexPath) as! ContainerCVCell
             cell.newShowArticle.removeAll()
-            cell.selectedObj = self as! CellDelegate
-            cell.trendingClickedObj = self as! trendingDetailClicked
+            cell.selectedObj = self as CellDelegate
+            cell.trendingClickedObj = self as trendingDetailClicked
             if  darkModeStatus == true{
                 cell.newsCV.backgroundColor = colorConstants.txtlightGrayColor
                 cell.backgroundColor = colorConstants.grayBackground3
@@ -662,13 +650,9 @@ extension ParentViewController : UICollectionViewDelegate, UICollectionViewDataS
                 cell.isTrending = true
                 cell.newShowArticle.append(prevTrendingData)
                 cell.newsCV.reloadData()
-                //                cell.newsCV?.scrollToItem(at: NSIndexPath(row: 0, section: 0) as IndexPath,
-                //                                          at: .top,
-                //                                          animated: false)
             }
             else{
                 if submenuCV.isHidden == false{
-                    
                     cell.isTrending = false
                     if isSwipe == true{
                         cell.submenuCOunt = indexPath.row
@@ -691,7 +675,6 @@ extension ParentViewController : UICollectionViewDelegate, UICollectionViewDataS
                     fetchSubMenuNews()
                     cell.newShowArticle = newShowArticle
                     cell.newsCV.reloadData()
-                    
                     cell.newsCV?.scrollToItem(at: NSIndexPath(row: 0, section: 0) as IndexPath,
                                               at: .top,
                                               animated: false)
@@ -702,13 +685,10 @@ extension ParentViewController : UICollectionViewDelegate, UICollectionViewDataS
         }
         else{
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "submenuID", for:indexPath) as! NewsubmenuCVCell
-            
-            
             cell.lblSubmenu.layer.borderWidth = 1.0
             cell.lblSubmenu.layer.cornerRadius = 18
             cell.lblSubmenu.layer.masksToBounds = true
             cell.lblSubmenu.text = subMenuArr[HeadingRow][indexPath.row]
-            //cell.imgSubmenuBackground.image = UIImage(named: submenuImgArr[HeadingRow][indexPath.row] )
             
             if  darkModeStatus == true{
                 cell.backgroundColor = colorConstants.grayBackground1
@@ -754,6 +734,7 @@ extension ParentViewController : UICollectionViewDelegate, UICollectionViewDataS
             btnBack.isHidden = true
         }
     }
+    
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         viewOptions.isHidden = true
         activityIndicator.startAnimating()
@@ -919,9 +900,9 @@ extension ParentViewController: UICollectionViewDelegateFlowLayout {
             label.text = headingArr[indexPath.item]
             label.sizeToFit()
             if (UIDevice.current.userInterfaceIdiom != UIUserInterfaceIdiom.pad){
-            CVSize = label.intrinsicContentSize.width + 80
+                CVSize = label.intrinsicContentSize.width + 80
             }else{
-                 CVSize = label.intrinsicContentSize.width + 90
+                CVSize = label.intrinsicContentSize.width + 90
             }
             return CGSize(width:CVSize , height: 60)
         }

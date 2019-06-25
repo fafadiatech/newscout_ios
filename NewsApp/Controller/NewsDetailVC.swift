@@ -52,7 +52,7 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, WKNavigationDelegate
     @IBOutlet weak var btnShuffle: UIButton!
     @IBOutlet weak var btnReadMore: UIButton!
     @IBOutlet weak var btnMoreStories: UIButton!
-
+    
     var RecomArticleData = [ArticleStatus]()
     var ArticleData = [ArticleStatus]()
     var RecomData = [NewsArticle]()
@@ -157,7 +157,7 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, WKNavigationDelegate
         viewNewsArea.addGestureRecognizer(tapRecognizer)
         tapRecognizer.delegate = self as! UIGestureRecognizerDelegate
     }
-   
+    
     func filterRecommendation(){
         RecomData.removeAll()
         searchRecomData.removeAll()
@@ -576,7 +576,7 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, WKNavigationDelegate
     func webViewDidFinishLoad(_ : WKWebView) {
         activityIndicator.stopAnimating()
     }
-
+    
     func fetchSearchBookmarkDataFromDB(){
         let result = DBManager().FetchSearchLikeBookmarkFromDB()
         switch result {
@@ -611,13 +611,13 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, WKNavigationDelegate
         var fullTxt = ""
         var agoDate = ""
         print("imgWidth:\(imgWidth)")
-         print("imgHeight:\(imgHeight)")
+        print("imgHeight:\(imgHeight)")
         if ShowArticle.count > 0{
             fetchBookmarkDataFromDB()
             currentEntity = "ShowArticle"
             let currentArticle = ShowArticle[currentIndex]
             Helper().getMenuEvents(action: "item_detail", menuId: articleId, menuName: currentArticle.title! )
-           
+            
             if ((currentArticle.published_on?.count)!) <= 20{
                 if !(currentArticle.published_on?.contains("Z"))!{
                     currentArticle.published_on?.append("Z")
