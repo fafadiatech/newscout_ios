@@ -402,12 +402,15 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
             cell.lblTitle.text = currentArticle.title
             
             if  darkModeStatus == true{
+                cell.backgroundColor = colorConstants.grayBackground2
                 cell.containerView.backgroundColor = colorConstants.grayBackground2
                 cell.lblSource.textColor = colorConstants.nightModeText
                 cell.lblTitle.textColor = colorConstants.nightModeText
                 NightNight.theme =  .night
             }
             else{
+                cell.backgroundColor = .white
+                cell.containerView.backgroundColor = .white
                 cell.lblSource.textColor = colorConstants.blackColor
                 cell.lblTitle.textColor = colorConstants.blackColor
                 NightNight.theme =  .normal
@@ -516,12 +519,15 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
             }
             cellCluster.lblTitle.text = currentArticle.title
             if  darkModeStatus == true{
+                cellCluster.backgroundColor = colorConstants.grayBackground2
                 cellCluster.containerView.backgroundColor = colorConstants.grayBackground2
                 cellCluster.lblSource.textColor = colorConstants.nightModeText
                 cellCluster.lblTitle.textColor = colorConstants.nightModeText
                 NightNight.theme =  .night
             }
             else{
+                cellCluster.backgroundColor = .white
+                cellCluster.containerView.backgroundColor = .white
                 cellCluster.lblSource.textColor = colorConstants.blackColor
                 cellCluster.lblTitle.textColor = colorConstants.blackColor
                 NightNight.theme =  .normal
