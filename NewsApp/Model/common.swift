@@ -157,7 +157,7 @@ struct AssetConstants{
     static let crypto = "crypto"
     static let fintech = "fintech"
     static let media = "media"
-    
+    static let trending = "newspaper"
 }
 
 struct AppFontName {
