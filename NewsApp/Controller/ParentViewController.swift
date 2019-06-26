@@ -481,6 +481,9 @@ class ParentViewController: UIViewController {
                 DispatchQueue.global(qos: .userInitiated).async {
                     self.fetchArticlesFromDB()
                 }
+                DispatchQueue.main.async {
+                    self.activityIndicator.stopAnimating()
+                }
             }
         case .Failure(let errorMsg) :
             print(errorMsg)
@@ -590,7 +593,6 @@ extension ParentViewController : UICollectionViewDelegate, UICollectionViewDataS
     
     func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
         if scrollView == containerCV{
-            activityIndicator.startAnimating()
             if headingName != "Trending"{
                 isSwipe = true
                 let index = Int(targetContentOffset.pointee.x / submenuCV.frame.width)
@@ -605,7 +607,6 @@ extension ParentViewController : UICollectionViewDelegate, UICollectionViewDataS
                  UserDefaults.standard.set(subMenuArr[HeadingRow][subMenuRow], forKey: "submenu")
                  
                  reloadSubmenuNews()*/
-                activityIndicator.stopAnimating()
             }
         }
     }
@@ -697,6 +698,7 @@ extension ParentViewController : UICollectionViewDelegate, UICollectionViewDataS
                 cell.backgroundColor = .white
             }
             containerCV.reloadData()
+            activityIndicator.stopAnimating()
             return cell
         }
     }
@@ -736,9 +738,7 @@ extension ParentViewController : UICollectionViewDelegate, UICollectionViewDataS
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         viewOptions.isHidden = true
-        activityIndicator.startAnimating()
         if collectionView == menuCV{
-            activityIndicator.startAnimating()
             index = 0
             headingName = headingArr[indexPath.row]
             if headingArr[indexPath.row] != "Trending"{
@@ -849,12 +849,10 @@ extension ParentViewController : UICollectionViewDelegate, UICollectionViewDataS
     
     func reloadSubmenuNews(){
         lblNonews.isHidden = true
-        activityIndicator.startAnimating()
         UserDefaults.standard.set(subMenuArr[HeadingRow][subMenuRow], forKey: "submenu")
         fetchSubmenuId(submenu: subMenuArr[HeadingRow][subMenuRow])
         coredataRecordCount = DBManager().IsCoreDataEmpty(entity: "NewsArticle")
         if Reachability.isConnectedToNetwork(){
-            activityIndicator.startAnimating()
             if UserDefaults.standard.value(forKey: "submenuURL") != nil{
                 self.saveArticlesInDB()
             }

@@ -56,7 +56,14 @@ class DBManager{
                             for url in URLData{
                                 if url.category == submenu {
                                     url.nextURL = self.ArticleData[0].body?.next
-                                    UserDefaults.standard.set(self.ArticleData[0].body?.next, forKey: "homeNextURL")
+                                    if UserDefaults.standard.value(forKey: "homeNextURL") != nil{
+                                    let tempURL = UserDefaults.standard.value(forKey: "homeNextURL") as! String
+                                    if url.nextURL != tempURL{ UserDefaults.standard.set(self.ArticleData[0].body?.next, forKey: "homeNextURL")
+                                    }else{
+                                        UserDefaults.standard.removeObject(forKey: "homeNextURL")
+                                    }
+                                    }
+                            
                                 }
                             }
                         }

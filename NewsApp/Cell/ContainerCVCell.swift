@@ -620,6 +620,7 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
             if DBData.count > 0 {
                 newShowArticle[submenuCOunt].removeAll()
                 newShowArticle[submenuCOunt] = DBData
+                activityIndicator.stopAnimating()
                 newsCV.reloadData()
             }
         case .Failure(let errorMsg) :

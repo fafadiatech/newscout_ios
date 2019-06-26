@@ -79,7 +79,7 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, WKNavigationDelegate
     var currentEntity = ""
     var imgWidth = ""
     var imgHeight = ""
-    
+   
     override func viewDidLoad() {
         super.viewDidLoad()
         btnReadMore.setTitleColor(.black, for: UIControlState.normal)
@@ -478,8 +478,13 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, WKNavigationDelegate
                 else{
                     let status =  UserDefaults.standard.value(forKey: "isSearch") as! String
                     if status == "home"{
-                        activityIndicator.startAnimating()
+                         if UserDefaults.standard.value(forKey: "homeNextURL") as? String != nil{
+                             activityIndicator.startAnimating()
                         pagination()
+                        }
+                         else{
+                            self.view.makeToast("No more news to show", duration: 1.0, position: .center)
+                        }
                     }
                 }
             default:
@@ -491,15 +496,14 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, WKNavigationDelegate
     func pagination(){
         let isSearch = UserDefaults.standard.value(forKey: "isSearch") as! String
         if isSearch == "home"{
-            if UserDefaults.standard.value(forKey: "homeNextURL") != nil{
                 DBManager().SaveDataDB(nextUrl: UserDefaults.standard.value(forKey: "homeNextURL") as! String ){response in
+                    if UserDefaults.standard.value(forKey: "homeNextURL") != nil{
                     self.fetchArticlesFromDB()
+                    }
+                    else{
+                        self.view.makeToast("No more news to show", duration: 1.0, position: .center)
+                    }
                 }
-            }
-            else{
-                self.view.makeToast("No more news to show", duration: 1.0, position: .center)
-            }
-            
         }
         else if isSearch == "search"{
             if UserDefaults.standard.value(forKey: "searchNextURL") != nil{
