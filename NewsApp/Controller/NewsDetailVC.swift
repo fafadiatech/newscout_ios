@@ -615,7 +615,7 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, WKNavigationDelegate
 
         if ShowArticle.count > 0{
             fetchBookmarkDataFromDB()
-            currentEntity = "ShowArticle"
+            currentEntity = "NewsArticle"
             let currentArticle = ShowArticle[currentIndex]
             Helper().getMenuEvents(action: "item_detail", menuId: articleId, menuName: currentArticle.title! )
             
@@ -902,7 +902,7 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, WKNavigationDelegate
                     else{
                         self.ResetBookmarkImg()
                         DBManager().deleteBookmarkedArticle(id: self.articleId)
-                        if self.currentEntity == "ShowArticle"{
+                        if self.currentEntity == "NewsArticle"{
                             self.ShowArticle.remove(at: self.newsCurrentIndex)
                             let isSearch = UserDefaults.standard.value(forKey: "isSearch") as! String
                             if isSearch == "bookmark"{
@@ -962,7 +962,7 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, WKNavigationDelegate
         let webURL = "Sent via NewsCout"
         var shareAll : [Any]
         var sourceURL : URL!
-        if currentEntity == "ShowArticle"{
+        if currentEntity == "NewsArticle"{
             text = ShowArticle[newsCurrentIndex].title!
             if ShowArticle[newsCurrentIndex].imageURL != ""{
                 let url = URL(string:ShowArticle[newsCurrentIndex].imageURL!)

@@ -15,7 +15,6 @@ class DBManager{
     var ArticleData = [ArticleStatus]()
     var CategoryData = [CategoryList]()
     var tagType = ""
-    
     //save articles in DB
     func SaveDataDB(nextUrl:String,_ completion : @escaping (Bool) -> ())
     {
@@ -36,7 +35,7 @@ class DBManager{
                 
                 if self.ArticleData[0].header.status == "1" {
                     if self.ArticleData[0].body?.next != nil{
-                        var submenu = UserDefaults.standard.value(forKey: "submenu") as! String
+                        let submenu = UserDefaults.standard.value(forKey: "submenu") as! String
                         
                         if self.someEntityExists(id: 0, entity: "NewsURL", keyword: submenu) == false {
                             let newUrl = NewsURL(context: managedContext!)
@@ -233,7 +232,7 @@ class DBManager{
         trendingRequest.predicate = NSPredicate(format: "articleID = %d", articleId)
         do {
             trendingData = try (managedContext?.fetch(trendingRequest))!
-        }catch let error as NSError {
+        }catch _ as NSError {
             return 0
         }
         return Int(trendingData[0].count)
@@ -241,7 +240,6 @@ class DBManager{
     
     //save trending articles
     func saveTrending(_ completion : @escaping (Bool) -> ()){
-        var URLData = [NewsURL]()
         var TrendingData = [Trending]()
         let managedContext = appDelegate?.persistentContainer.viewContext
         APICall().loadTrendingArticles{
@@ -412,7 +410,6 @@ class DBManager{
     //fetch Article Ids of specific trending id
     func fetchTrendingNewsIds(trendingId: Int) -> FetchTrendingFromDB{
         var  trendingData = [TrendingCategory]()
-        var trendingIDs = [Int]()
         let managedContext =
             appDelegate?.persistentContainer.viewContext
         let trendingRequest =  NSFetchRequest<TrendingCategory>(entityName: "TrendingCategory")
@@ -509,13 +506,12 @@ class DBManager{
     //fetch newsArticle heading->submenu->category id
     func ArticlesfetchByCatId() -> ArticleDBfetchResult{
         var ShowArticle = [NewsArticle]()
-        var tagData = [HashTag]()
         let managedContext =
             appDelegate?.persistentContainer.viewContext
         let fetchRequest =
             NSFetchRequest<NewsArticle>(entityName: "NewsArticle")
         if UserDefaults.standard.value(forKey: "subMenuId") != nil{
-            var subMenuId = UserDefaults.standard.value(forKey: "subMenuId") as! Int
+            let subMenuId = UserDefaults.standard.value(forKey: "subMenuId") as! Int
             fetchRequest.predicate = NSPredicate(format: "categoryId = %d ", subMenuId)
         }
         do {
@@ -846,7 +842,7 @@ class DBManager{
         likefetchRequest.predicate = NSPredicate(format: "article_id  = %d", id)
         fetchRequest.predicate = NSPredicate(format: "article_id  = %d", id)
         do {
-            if tempentity == "ShowArticle"{
+            if tempentity == "NewsArticle"{
                 Article = try (managedContext?.fetch(fetchRequest))!
             }
             else if tempentity == "SearchArticles"{
@@ -859,7 +855,7 @@ class DBManager{
             let newArticle = LikeDislike(context: managedContext!)
             newArticle.article_id = Int64(id)
             newArticle.isLike = Int16(status)
-            if tempentity == "ShowArticle"{
+            if tempentity == "NewsArticle"{
                 newArticle.addToLikedArticle(Article[0])
             }else if tempentity == "SearchArticles"{
                 newArticle.addToSearchlikeArticles(SearchArticle[0])
@@ -901,15 +897,12 @@ class DBManager{
             for status in likeDislike{
                 managedContext!.delete(status)
             }
-            
-        } catch {
-            print("Failed")
         }
         do {
             try managedContext?.save()
             completion(true)
         }
-        catch let error as NSError  {
+        catch let _ as NSError  {
             completion(false)
         }
     }
@@ -924,7 +917,7 @@ class DBManager{
         let searchRequest = NSFetchRequest<SearchArticles>(entityName: "SearchArticles")
         fetchRequest.predicate = NSPredicate(format: "article_id  = %d", id)
         do {
-            if currentEntity == "ShowArticle"{
+            if currentEntity == "NewsArticle"{
                 Article = try (managedContext?.fetch(fetchRequest))!
             }
             else if currentEntity == "SearchArticles"{
@@ -937,7 +930,7 @@ class DBManager{
             let newArticle = BookmarkArticles(context: managedContext!)
             newArticle.article_id = Int64(id)
             newArticle.isBookmark = 1
-            if currentEntity == "ShowArticle"{
+            if currentEntity == "NewsArticle"{
                 newArticle.addToArticle(Article[0])
             }else if currentEntity == "SearchArticles"{
                 newArticle.addToSearchArticle(SearchArticle[0])
@@ -962,9 +955,6 @@ class DBManager{
             for book in bookmark{
                 managedContext!.delete(book)
             }
-            
-        } catch {
-            print("Failed")
         }
         saveBlock()
     }
@@ -999,7 +989,7 @@ class DBManager{
         do {
             result = try (managedContext?.fetch(fetchRequest))!
         } catch let error as NSError {
-            return SearchHistoryDBFetchResult.Failure(error as! String)
+            return SearchHistoryDBFetchResult.Failure(error.localizedDescription)
         }
         return SearchHistoryDBFetchResult.Success(result)
     }
@@ -1095,7 +1085,7 @@ class DBManager{
             return ArticleDBfetchResult.Success(ShowArticle as! [NewsArticle] )
         }
         catch let error as NSError {
-            return ArticleDBfetchResult.Failure(error as! String)
+            return ArticleDBfetchResult.Failure(error.localizedDescription)
         }
         
     }
@@ -1111,7 +1101,7 @@ class DBManager{
             let ShowArticle = try (managedContext?.fetch(fetchRequest))!
             return SearchDBfetchResult.Success(ShowArticle as! [SearchArticles])
         } catch let error as NSError {
-            return SearchDBfetchResult.Failure(error as! String)
+            return SearchDBfetchResult.Failure(error.localizedDescription)
         }
     }
     //fetch bookmarked articles
@@ -1151,7 +1141,7 @@ class DBManager{
                 }
                 
             } catch let error as NSError {
-                return SearchDBfetchResult.Failure(error as! String)
+                return SearchDBfetchResult.Failure(error.localizedDescription)
             }
         }
         for like in LikeArticle{
@@ -1164,27 +1154,37 @@ class DBManager{
                 }
                 
             } catch let error as NSError {
-                return SearchDBfetchResult.Failure(error as! String)
+                return SearchDBfetchResult.Failure(error.localizedDescription)
             }
         }
         return SearchDBfetchResult.Success(ShowArticle)
     }
     
     func deleteAllData(entity:String) {
-        //let delegate = UIApplication.shared.delegate as! AppDelegate
         let context = appDelegate!.persistentContainer.viewContext
-        
+    context.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
         let deleteFetch = NSFetchRequest<NSFetchRequestResult>(entityName: entity)
         let deleteRequest = NSBatchDeleteRequest(fetchRequest: deleteFetch)
-        
+
         do {
             try context.execute(deleteRequest)
             try context.save()
         } catch {
-            print ("There was an error")
+            print(error.localizedDescription)
+            print ("There was an error in deleting \(entity)")
         }
     }
-    
+//    func deleteAllData(entity:String) {
+//        func enqueue(block: @escaping (_ context: NSManagedObjectContext) -> Void) {
+//
+//                let context: NSManagedObjectContext = self.persistentContainer.newBackgroundContext()
+//                context.performAndWait{
+//                    block(context)
+//                    try? context.save() //Don't just use '?' here look at the error and log it to your analytics service
+//                }
+//            }
+//        }
+//    }
     func deleteSearchNextURl(){
         let managedContext = appDelegate?.persistentContainer.viewContext
         
@@ -1192,7 +1192,7 @@ class DBManager{
         let result = try? managedContext?.fetch(deleteFetch)
         let resultData = result as! [NewsURL]
         let lastRecord = resultData.last
-        var search = UserDefaults.standard.value(forKey: "searchTxt") as! String
+        let search = UserDefaults.standard.value(forKey: "searchTxt") as! String
         if lastRecord?.category == search {
             managedContext!.delete(lastRecord!)
         }
@@ -1209,7 +1209,7 @@ class DBManager{
             let NewsURL = try (managedContext?.fetch(fetchRequest))!
             return NextURLDBfetchResult.Success(NewsURL)
         } catch let error as NSError {
-            return NextURLDBfetchResult.Failure(error as! String)
+            return NextURLDBfetchResult.Failure(error.localizedDescription)
         }
     }
     
@@ -1254,7 +1254,7 @@ class DBManager{
                 }
                 completion(true)
                 
-            case .Failure(let errormessage) :
+            case .Failure( _) :
                 completion(false)
                 
             }
@@ -1273,13 +1273,12 @@ class DBManager{
             headingsData = try (managedContext?.fetch(headingfetchRequest))!
             return HeadingsDBFetchResult.Success(headingsData)
         } catch let error as NSError {
-            return HeadingsDBFetchResult.Failure(error as! String)
+            return HeadingsDBFetchResult.Failure(error.localizedDescription)
         }
     }
     
     func fetchSubMenu(headingId : Int) -> SubMenuDBFetchResult{
         var subMenuData = [HeadingSubMenu]()
-        var subMenuArr = [[String]]()
         let managedContext =
             appDelegate?.persistentContainer.viewContext
         let subMenufetchRequest = NSFetchRequest<HeadingSubMenu>(entityName: "HeadingSubMenu")
@@ -1289,7 +1288,7 @@ class DBManager{
             subMenufetchRequest.predicate = NSPredicate(format: "headingId = %d",headingId)
             subMenuData = try (managedContext?.fetch(subMenufetchRequest))!
         } catch let error as NSError {
-            return SubMenuDBFetchResult.Failure(error as! String)
+            return SubMenuDBFetchResult.Failure(error.localizedDescription)
         }
         return SubMenuDBFetchResult.Success(subMenuData)
     }
@@ -1304,7 +1303,7 @@ class DBManager{
             let tagsData = try (managedContext?.fetch(tagfetchRequest))!
             return MenuHashTagDBFetchResult.Success(tagsData)
         } catch let error as NSError {
-            return MenuHashTagDBFetchResult.Failure(error as! String)
+            return MenuHashTagDBFetchResult.Failure(error.localizedDescription)
         }
     }
     func fetchsubmenuId(subMenuName : String) -> submenuIdDBFetchResult{
@@ -1320,7 +1319,7 @@ class DBManager{
             }
             return submenuIdDBFetchResult.Success(Int(id))
         } catch let error as NSError {
-            return submenuIdDBFetchResult.Failure(error as! String)
+            return submenuIdDBFetchResult.Failure(error.localizedDescription)
         }
     }
 }
