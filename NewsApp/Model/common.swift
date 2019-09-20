@@ -201,7 +201,7 @@ struct APPURL {
         static let ArticlesBytags = Domains.version + "article/search?"
         static let ArticleById = Domains.version + "article/search?category="
         static let ArtilceByTags2 = Domains.version + "articles/?"
-        static let menu = Domains.version + "menus"
+        static let menu = Domains.version + "menus/?domain=newscout"
         static let deviceDetails = Domains.version + "device/"
         static let NotificationDetails = Domains.version + "notification/"
         static let socialLogin = Domains.version + "social-login/"
