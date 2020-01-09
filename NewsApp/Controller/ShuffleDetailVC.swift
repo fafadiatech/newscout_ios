@@ -315,7 +315,7 @@ class ShuffleDetailVC: UIViewController , UIScrollViewDelegate, WKNavigationDele
                 articleId = Int(currentArticle.article_id)
                 lblNewsHeading.text = currentArticle.title
                 txtViewNewsDesc.text = currentArticle.blurb
-                var fullTxt = "\(agoDate)" + " via " + currentArticle.source!
+                let fullTxt = "\(agoDate)" + " via " + currentArticle.source!
                 let attributedWithTextColor: NSAttributedString = fullTxt.attributedStringWithColor([currentArticle.source!], color: UIColor.red)
                 
                 btnSource.setAttributedTitle(attributedWithTextColor, for: .normal)

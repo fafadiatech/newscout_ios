@@ -86,7 +86,7 @@ class HomeParentVC: ButtonBarPagerTabStripViewController{
             }
         }
         
-        let switchStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
+        let _ = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
         
         if UserDefaults.standard.value(forKey: "daily") == nil{
             UserDefaults.standard.set(false, forKey: "daily")
@@ -280,7 +280,6 @@ class HomeParentVC: ButtonBarPagerTabStripViewController{
         subMenuArr.insert(["today"], at: 0)
         reloadPagerTabStripView()
     }
-    
     
     func fetchSubmenuId(submenu : String){
         let tagresult = DBManager().fetchsubmenuId(subMenuName: submenu)

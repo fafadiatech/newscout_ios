@@ -178,7 +178,7 @@ class ParentViewController: UIViewController {
         viewOptions.layer.borderWidth = 0.5
         viewOptions.layer.borderColor =  UIColor.darkGray.cgColor
         
-        var paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
+        let paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
         print("path is :\(paths[0])")
         
         if UserDefaults.standard.value(forKey: "token") != nil{
@@ -403,6 +403,10 @@ class ParentViewController: UIViewController {
             }
             headingArr.insert("Trending", at: 0)
             headingIds.insert(00, at: 0)
+//            headingArr.insert("Latest News", at: 1)
+//            headingIds.insert(01, at: 1)
+//            headingArr.insert("Trending", at: 2)
+//            headingIds.insert(02, at: 2)
             isTrendingDetail = 1
             
             self.menuCV.reloadData()
@@ -655,16 +659,17 @@ extension ParentViewController : UICollectionViewDelegate, UICollectionViewDataS
                 if submenuCV.isHidden == false{
                     cell.isTrending = false
                     if isSwipe == true{
-                        cell.submenuCOunt = indexPath.row
+                        cell.submenuCount = indexPath.row
                     }
                     else{
-                        cell.submenuCOunt = subMenuRow
+                        cell.submenuCount = subMenuRow
                     }
                     fetchSubMenuNews()
                     
                     cell.newShowArticle = newShowArticle
                     cell.newsCV.reloadData()
-                    if newShowArticle[cell.submenuCOunt].count > 0{
+                    
+                    if (cell.submenuCount > 0 && newShowArticle.count > 0 && newShowArticle[cell.submenuCount].count > 0){
                         cell.newsCV?.scrollToItem(at: NSIndexPath(row: 0, section: 0) as IndexPath,
                                                   at: .top,
                                                   animated: false)
@@ -724,7 +729,7 @@ extension ParentViewController : UICollectionViewDelegate, UICollectionViewDataS
             }
         }
         else{
-            var id = UserDefaults.standard.array(forKey: "trendingArray") as! [Int]
+            let id = UserDefaults.standard.array(forKey: "trendingArray") as! [Int]
             let selectedCluster = id[indexPath.row]
             fetchClusterIdArticles(clusterID: selectedCluster)
             isTrendingDetail = 2

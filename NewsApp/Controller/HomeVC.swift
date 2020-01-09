@@ -81,7 +81,7 @@ class HomeVC: UIViewController{
         activityIndicator.progress = 2.0
         view.addSubview(activityIndicator)
         self.activityIndicator.startAnimating()
-        var paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
+        let paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
         print("path is :\(paths[0])")
         let refreshControl = UIRefreshControl()
         refreshControl.addTarget(self, action: #selector(refreshNews), for: .valueChanged)
@@ -189,6 +189,7 @@ class HomeVC: UIViewController{
             print(errorMsg)
         }
     }
+    
     func fetchSubmenuId(submenu : String){
         let tagresult = DBManager().fetchsubmenuId(subMenuName: submenu)
         switch tagresult{
@@ -253,7 +254,7 @@ class HomeVC: UIViewController{
             if DBData.count == 0{
                 activityIndicator.stopAnimating()
             }
-        case .Failure(let _) : break
+        case .Failure( _) : break
         }
     }
     
@@ -412,19 +413,20 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
         if isTrendingDetail == 0 || isTrendingDetail == 2{
             if sortedData.count > 0 {
                 newsDetailvc.newsCurrentIndex = indexPath.row
-                newsDetailvc.ShowArticle = sortedData as! [NewsArticle]
+                newsDetailvc.ShowArticle = sortedData 
                 newsDetailvc.articleId = Int(sortedData[indexPath.row].article_id)
                 present(newsDetailvc, animated: true, completion: nil)
             }
         }
         else{
-            var id = UserDefaults.standard.array(forKey: "trendingArray") as! [Int]
+            let id = UserDefaults.standard.array(forKey: "trendingArray") as! [Int]
             let selectedCluster = id[indexPath.row]
             fetchClusterIdArticles(clusterID: selectedCluster)
             trendingProtocol?.isTrendingTVLoaded(status: true)
             isTrendingDetail = 2
         }
     }
+    
     func scrollToFirstRow() {
         let indexPath = NSIndexPath(row: 0, section: 0)
         self.HomeNewsTV.scrollToRow(at: indexPath as IndexPath, at: .top, animated: true)
@@ -595,7 +597,7 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
         else {
             currentArticle = ShowArticle[indexPath.row]
             let cellCluster = tableView.dequeueReusableCell(withIdentifier: "ClusterTVCellID", for:indexPath) as! ClusterTVCell
-            var count = DBManager().showCount(articleId: Int(currentArticle.article_id))
+            let count = DBManager().showCount(articleId: Int(currentArticle.article_id))
             imgWidth = String(describing : Int(cellCluster.imgNews.frame.width))
             imgHeight = String(describing : Int(cellCluster.imgNews.frame.height))
             cellCluster.imgNews.layer.cornerRadius = 10.0

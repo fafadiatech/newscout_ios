@@ -28,7 +28,7 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
     var rowCount = [0,9,6,5,7,12]
     var imgWidth = ""
     var imgHeight = ""
-    var submenuCOunt = 0
+    var submenuCount = 0
     var isTrending = true
     var isTrendingDetail = 0
     var selectedObj : CellDelegate?
@@ -146,7 +146,10 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if isTrending == false{
-            return (newShowArticle[submenuCOunt].count > 0) ? self.newShowArticle[submenuCOunt].count : 0
+            if (submenuCount == 0 || newShowArticle.count == 0){
+                return 0
+            }
+            return (newShowArticle[submenuCount].count > 0) ? self.newShowArticle[submenuCount].count : 0
         }
         else{
             return (newShowArticle.count > 0) ? self.newShowArticle[0].count : 0
@@ -165,8 +168,8 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
         }
         DBManager().SaveDataDB(nextUrl: subMenuURL ){response in
             if response == true{
-                var submenuArr = UserDefaults.standard.value(forKey: "submenuArr") as! [String]
-                self.fetchSubmenuId(submenu: submenuArr[self.submenuCOunt])
+                let submenuArr = UserDefaults.standard.value(forKey: "submenuArr") as! [String]
+                self.fetchSubmenuId(submenu: submenuArr[self.submenuCount])
                 self.fetchArticlesFromDB()
             }
         }
@@ -218,7 +221,7 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
         var agoDate = ""
         if (UIDevice.current.userInterfaceIdiom != UIUserInterfaceIdiom.pad){
             if isTrending == false{
-                sortedData = newShowArticle[submenuCOunt].sorted{ $0.published_on! > $1.published_on! }
+                sortedData = newShowArticle[submenuCount].sorted{ $0.published_on! > $1.published_on! }
                 currentArticle = sortedData[indexPath.row]
                 if indexPath.row % 2 == 0{
                     //display data from DB
@@ -396,7 +399,7 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
             cell.imgNews.clipsToBounds = true
             cell.layer.cornerRadius = 10.0
             cell.clipsToBounds = true
-            sortedData = newShowArticle[submenuCOunt].sorted{ $0.published_on! > $1.published_on! }
+            sortedData = newShowArticle[submenuCount].sorted{ $0.published_on! > $1.published_on! }
             currentArticle = sortedData[indexPath.row]
             //display data from DB
             cell.lblTitle.text = currentArticle.title
@@ -502,7 +505,7 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
                 imgHeight = String(describing : Int(cellCluster.imgNews.frame.size.height))
             }
             else{
-                sortedData = newShowArticle[submenuCOunt].sorted{ $0.published_on! > $1.published_on! }
+                sortedData = newShowArticle[submenuCount].sorted{ $0.published_on! > $1.published_on! }
                 currentArticle = sortedData[indexPath.row]
                 cellCluster.lblCount.isHidden = true
                 cellCluster.imgCount.isHidden = true
@@ -588,12 +591,12 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
         if isTrending == false{
             selectedObj?.colCategorySelected(indexPath, sortedData)
         }else{
-            var id = UserDefaults.standard.array(forKey: "trendingArray") as! [Int]
+            let id = UserDefaults.standard.array(forKey: "trendingArray") as! [Int]
             trendingClickedObj?.isTrendingDetailedOpened(status: true)
             let selectedCluster = id[indexPath.row]
             fetchClusterIdArticles(clusterID: selectedCluster)
             isTrending = false
-            submenuCOunt = 0
+            submenuCount = 0
             isTrendingDetail = 2
         }
     }
@@ -624,8 +627,8 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
         case .Success(let DBData) :
             
             if DBData.count > 0 {
-                newShowArticle[submenuCOunt].removeAll()
-                newShowArticle[submenuCOunt] = DBData
+                newShowArticle[submenuCount].removeAll()
+                newShowArticle[submenuCount] = DBData
                 activityIndicator.stopAnimating()
                 newsCV.reloadData()
             }
@@ -638,11 +641,11 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
         if scrollView == newsCV{
             if (scrollView.bounds.maxY) >= scrollView.contentSize.height{
                 if isTrending == false {
-                    var submenuArr = UserDefaults.standard.value(forKey: "submenuArr") as! [String]
+                    let submenuArr = UserDefaults.standard.value(forKey: "submenuArr") as! [String]
                     
-                    let submenu = submenuArr[submenuCOunt]
+                    let submenu = submenuArr[submenuCount]
                     UserDefaults.standard.set(submenu ,forKey: "submenu")
-                    if newShowArticle[submenuCOunt].count >= 20{
+                    if newShowArticle[submenuCount].count >= 20{
                         if isAPICalled == false{
                             let result =  DBManager().FetchNextURL(category: submenu)
                             switch result {

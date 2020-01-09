@@ -57,7 +57,7 @@ class HomeiPadVC: UIViewController {
         activityIndicator.progress = 2.0
         view.addSubview(activityIndicator)
         self.activityIndicator.startAnimating()
-        var paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
+        let paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
         print("path is :\(paths[0])")
         let refreshControl = UIRefreshControl()
         refreshControl.addTarget(self, action: #selector(refreshNews), for: .valueChanged)
@@ -87,7 +87,7 @@ class HomeiPadVC: UIViewController {
         
         if tabBarTitle == "today"{
             isTrendingDetail = 1
-            var records = DBManager().IsCoreDataEmpty(entity: "TrendingCategory")
+            let records = DBManager().IsCoreDataEmpty(entity: "TrendingCategory")
             if records <= 0{
                 DBManager().saveTrending{response in
                     self.fetchTrending()
