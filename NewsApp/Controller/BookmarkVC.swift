@@ -173,7 +173,7 @@ class BookmarkVC: UIViewController {
         
         alertController.addAction(action1)
         
-        let action2 = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.default) { (action:UIAlertAction) in
+        let action2 = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.default) { (action:UIAlertAction) in
         }
         alertController.addAction(action2)
         
@@ -274,7 +274,7 @@ extension BookmarkVC: UITableViewDelegate, UITableViewDataSource{
             cell.viewCellContainer.layer.shadowRadius = 4.0
             cell.imgNews.layer.cornerRadius = 10.0
             cell.imgNews.clipsToBounds = true
-            cell.selectionStyle = UITableViewCellSelectionStyle.none
+            cell.selectionStyle = UITableViewCell.SelectionStyle.none
             //display data from DB
             cell.lblNewsDescription.text = currentArticle.title
             
@@ -347,7 +347,7 @@ extension BookmarkVC: UITableViewDelegate, UITableViewDataSource{
             cellOdd.viewCellContainer.layer.shadowRadius = 4.0
             cellOdd.imgNews.layer.cornerRadius = 10.0
             cellOdd.imgNews.clipsToBounds = true
-            cellOdd.selectionStyle = UITableViewCellSelectionStyle.none
+            cellOdd.selectionStyle = UITableViewCell.SelectionStyle.none
             //display data from DB
             cellOdd.lblNewsDescription.text = currentArticle.title
             
@@ -416,7 +416,7 @@ extension BookmarkVC: UITableViewDelegate, UITableViewDataSource{
     //check whether tableview scrolled up or down
     func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
         if targetContentOffset.pointee.y < scrollView.contentOffset.y {
-            if nextURL != nil {
+            if nextURL != "" {
                 APICall().BookmarkedArticlesAPI(url: nextURL){ response in
                     switch response {
                     case .Success(let data) :
@@ -562,7 +562,7 @@ extension BookmarkVC: UICollectionViewDelegate, UICollectionViewDataSource, UISc
             activityIndicator.startAnimating()
             
             if ShowArticle.count >= 20{
-                if nextURL != nil {
+                if nextURL != "" {
                     self.activityIndicator.startAnimating()
                     APICall().BookmarkedArticlesAPI(url: nextURL){ response in
                         switch response {

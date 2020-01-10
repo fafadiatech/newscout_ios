@@ -100,7 +100,7 @@ class Helper{
                      "platform" : Constants.platform,
                      "device_id" : id,
                      "item_id": menuId ,
-                     "item_name": menuName] as! [String : Any]
+                     "item_name": menuName] as [String : Any]
         APICall().trackingEventsAPI(param : param){response in
             if response == true{
                 print("event captured")
@@ -131,7 +131,7 @@ extension Array {
 }
 //show an image from url
 extension UIImageView {
-    func downloadedFrom(url: URL, contentMode mode: UIViewContentMode = .scaleAspectFit) {
+    func downloadedFrom(url: URL, contentMode mode: UIView.ContentMode = .scaleAspectFit) {
         contentMode = mode
         URLSession.shared.dataTask(with: url) { data, response, error in
             guard
@@ -145,7 +145,7 @@ extension UIImageView {
             }
             }.resume()
     }
-    func downloadedFrom(link: String, contentMode mode: UIViewContentMode = .scaleToFill) {
+    func downloadedFrom(link: String, contentMode mode: UIView.ContentMode = .scaleToFill) {
         guard let url = URL(string: link) else { return }
         downloadedFrom(url: url, contentMode: mode)
     }

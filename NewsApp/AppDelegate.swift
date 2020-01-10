@@ -20,9 +20,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
     
     var window: UIWindow?
     
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         GIDSignIn.sharedInstance().clientID = "424337192018-pnik0j5sm85mjg48uf0u02ucrb64e6lc.apps.googleusercontent.com"
-        GIDSignIn.sharedInstance().delegate = self as! GIDSignInDelegate
+        GIDSignIn.sharedInstance().delegate = self as? GIDSignInDelegate
         FBSDKApplicationDelegate.sharedInstance().application(application, didFinishLaunchingWithOptions: launchOptions)
         if UserDefaults.standard.value(forKey: "darkModeEnabled") == nil{
             UserDefaults.standard.set(false, forKey: "darkModeEnabled")
@@ -36,10 +36,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
             UserDefaults.standard.set("", forKey: "searchTxt")
         }
         
-        let notificationTypes: UIUserNotificationType = [UIUserNotificationType.alert, UIUserNotificationType.badge, UIUserNotificationType.sound]
-        let pushNotificationSettings = UIUserNotificationSettings(types: notificationTypes, categories: nil)
-        application.registerUserNotificationSettings(pushNotificationSettings)
-        application.registerForRemoteNotifications()
+        if #available(iOS 10.0, *){
+            let center = UNUserNotificationCenter.current()
+            center.requestAuthorization(options: [.alert, .badge, .sound])  { (granted, error) in
+                // Enable or disable features based on authorization.
+            }
+            
+        }
+        else{
+            let notificationTypes: UIUserNotificationType = [UIUserNotificationType.alert, UIUserNotificationType.badge, UIUserNotificationType.sound]
+            let pushNotificationSettings = UIUserNotificationSettings(types: notificationTypes, categories: nil)
+            application.registerUserNotificationSettings(pushNotificationSettings)
+            application.registerForRemoteNotifications()
+        }
+        
+        
         Fabric.with([Crashlytics.self])
         // Create a Sentry client and start crash handler
         do{
@@ -66,17 +77,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
         return true
     }
     
-    func application(_ app: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey : Any] = [:]) -> Bool {
+    func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
         
         
         if UserDefaults.standard.value(forKey: "googleToken") != nil{
             return GIDSignIn.sharedInstance().handle(url as URL?,
-                                                     sourceApplication: options[UIApplicationOpenURLOptionsKey.sourceApplication] as? String,
-                                                     annotation: options[UIApplicationOpenURLOptionsKey.annotation])
+                                                     sourceApplication: options[UIApplication.OpenURLOptionsKey.sourceApplication] as? String,
+                                                     annotation: options[UIApplication.OpenURLOptionsKey.annotation])
             
         }
         else{
-            let sourceApplication: String? = options[UIApplicationOpenURLOptionsKey.sourceApplication] as? String
+            let sourceApplication: String? = options[UIApplication.OpenURLOptionsKey.sourceApplication] as? String
             return FBSDKApplicationDelegate.sharedInstance().application(app, open: url, sourceApplication: sourceApplication, annotation: nil)
         }
     }
@@ -102,14 +113,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
         }
         else {
             // Perform any operations on signed in user here.
-            let userId = user.userID                  // For client-side use only!
+            _ = user.userID                  // For client-side use only!
             let idToken = user.authentication.idToken // Safe to send to the server
-            let fullName = user.profile.name
+            _ = user.profile.name
             let givenName = user.profile.givenName
             let familyName = user.profile.familyName
             let email = user.profile.email
             let pic1 = user.profile.imageURL(withDimension: 50)
-            let pic = (pic1?.relativeString)!
+            _ = (pic1?.relativeString)!
             UserDefaults.standard.set(idToken, forKey: "googleToken")
             UserDefaults.standard.set(email, forKey: "email")
             UserDefaults.standard.set(givenName, forKey: "first_name")

@@ -382,8 +382,8 @@
 				421ADFEB2156553500C00F6F /* Cell */,
 				421ADFEA2156553500C00F6F /* Controller */,
 				421ADFEC2156553500C00F6F /* Model */,
-				421ADFE92156553500C00F6F /* View */,
 				421ADFC22156407600C00F6F /* Assets.xcassets */,
+				421ADFE92156553500C00F6F /* View */,
 				421ADFC42156407600C00F6F /* LaunchScreen.storyboard */,
 				421ADFC72156407600C00F6F /* Info.plist */,
 				421ADFBF2156407400C00F6F /* NewsApp.xcdatamodeld */,
@@ -581,6 +581,7 @@
 				TargetAttributes = {
 					421ADFB42156407400C00F6F = {
 						CreatedOnToolsVersion = 9.4.1;
+						LastSwiftMigration = 1130;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.Push = {
@@ -1069,7 +1070,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.fafadiatech.Newscout;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -1088,7 +1089,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.fafadiatech.Newscout;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;

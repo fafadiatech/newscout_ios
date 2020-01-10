@@ -164,7 +164,7 @@ extension SourceVC: UITableViewDelegate, UITableViewDataSource{
             cell.viewCellContainer.layer.shadowRadius = 4.0
             cell.imgNews.layer.cornerRadius = 10.0
             cell.imgNews.clipsToBounds = true
-            cell.selectionStyle = UITableViewCellSelectionStyle.none
+            cell.selectionStyle = UITableViewCell.SelectionStyle.none
             //display data from DB
             var currentArticle = ShowArticle[indexPath.row]
             cell.lblNewsDescription.text = currentArticle.title
@@ -239,7 +239,7 @@ extension SourceVC: UITableViewDelegate, UITableViewDataSource{
             cellOdd.viewCellContainer.layer.shadowRadius = 4.0
             cellOdd.imgNews.layer.cornerRadius = 10.0
             cellOdd.imgNews.clipsToBounds = true
-            cellOdd.selectionStyle = UITableViewCellSelectionStyle.none
+            cellOdd.selectionStyle = UITableViewCell.SelectionStyle.none
             //display data from DB
             var currentArticle = ShowArticle[indexPath.row]
             cellOdd.lblNewsDescription.text = currentArticle.title
@@ -312,7 +312,7 @@ extension SourceVC: UITableViewDelegate, UITableViewDataSource{
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         if indexPath.row == tableView.numberOfRows(inSection: indexPath.section) - 1 {
             if (ShowArticle.count) >= 20{
-                if nextURL != nil{
+                if nextURL != ""{
                     APICall().loadSearchAPI(url : nextURL){
                         (status, response)  in
                         switch response {
@@ -454,7 +454,7 @@ extension SourceVC: UICollectionViewDelegate, UICollectionViewDataSource, UIScro
         
         if (scrollView.bounds.maxY) == scrollView.contentSize.height{
             if (ShowArticle.count) >= 20{
-                if nextURL != nil{
+                if nextURL != ""{
                     APICall().loadSearchAPI(url : nextURL){
                         (status, response)  in
                         switch response {

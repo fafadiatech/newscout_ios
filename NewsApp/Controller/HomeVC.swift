@@ -384,7 +384,7 @@ class HomeVC: UIViewController{
         
         alertController.addAction(action1)
         
-        let action2 = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.default) { (action:UIAlertAction) in
+        let action2 = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.default) { (action:UIAlertAction) in
         }
         alertController.addAction(action2)
         
@@ -478,7 +478,7 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
                     }
                     let newDate = dateFormatter.date(from: currentArticle.published_on!)
                     if newDate != nil{
-                        agoDate = try Helper().timeAgoSinceDate(newDate!)
+                        agoDate = Helper().timeAgoSinceDate(newDate!)
                         fullTxt = "\(agoDate)" + " via " + currentArticle.source!
                         let attributedWithTextColor: NSAttributedString = fullTxt.attributedStringWithColor([currentArticle.source!], color: UIColor.red)
                         cell.lblSource.attributedText = attributedWithTextColor
@@ -492,7 +492,7 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
                     let newDate = dateFormatter.date(from: dateSubString
                     )
                     if newDate != nil{
-                        agoDate = try Helper().timeAgoSinceDate(newDate!)
+                        agoDate = Helper().timeAgoSinceDate(newDate!)
                         fullTxt = "\(agoDate)" + " via " + currentArticle.source!
                         let attributedWithTextColor: NSAttributedString = fullTxt.attributedStringWithColor([currentArticle.source!], color: UIColor.red)
                         cell.lblSource.attributedText = attributedWithTextColor
@@ -550,7 +550,7 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
                     }
                     let newDate = dateFormatter.date(from: currentArticle.published_on!)
                     if newDate != nil{
-                        agoDate = try Helper().timeAgoSinceDate(newDate!)
+                        agoDate = Helper().timeAgoSinceDate(newDate!)
                         fullTxt = "\(agoDate)" + " via " + currentArticle.source!
                         let attributedWithTextColor: NSAttributedString = fullTxt.attributedStringWithColor([currentArticle.source!], color: UIColor.red)
                         cellOdd.lblSource.attributedText = attributedWithTextColor
@@ -564,7 +564,7 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
                     let newDate = dateFormatter.date(from: dateSubString
                     )
                     if newDate != nil{
-                        agoDate = try Helper().timeAgoSinceDate(newDate!)
+                        agoDate = Helper().timeAgoSinceDate(newDate!)
                         fullTxt = "\(agoDate)" + " via " + currentArticle.source!
                         let attributedWithTextColor: NSAttributedString = fullTxt.attributedStringWithColor([currentArticle.source!], color: UIColor.red)
                         cellOdd.lblSource.attributedText = attributedWithTextColor
@@ -626,7 +626,7 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
                 }
                 let newDate = dateFormatter.date(from: currentArticle.published_on!)
                 if newDate != nil{
-                    agoDate = try Helper().timeAgoSinceDate(newDate!)
+                    agoDate = Helper().timeAgoSinceDate(newDate!)
                     fullTxt = "\(agoDate)" + " via " + currentArticle.source!
                     let attributedWithTextColor: NSAttributedString = fullTxt.attributedStringWithColor([currentArticle.source!], color: UIColor.red)
                     cellCluster.lblSource.attributedText = attributedWithTextColor
@@ -640,7 +640,7 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
                 let newDate = dateFormatter.date(from: dateSubString
                 )
                 if newDate != nil{
-                    agoDate = try Helper().timeAgoSinceDate(newDate!)
+                    agoDate = Helper().timeAgoSinceDate(newDate!)
                     fullTxt = "\(agoDate)" + " via " + currentArticle.source!
                     let attributedWithTextColor: NSAttributedString = fullTxt.attributedStringWithColor([currentArticle.source!], color: UIColor.red)
                     cellCluster.lblSource.attributedText = attributedWithTextColor
@@ -682,7 +682,7 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDelega
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         if indexPath.row == tableView.numberOfRows(inSection: indexPath.section) - 1 {
             if isTrendingDetail == 0 &&  tabBarTitle != "Test"{
-                var submenu = UserDefaults.standard.value(forKey: "submenu") as! String
+                let submenu = UserDefaults.standard.value(forKey: "submenu") as! String
                 if ShowArticle.count >= 20{
                     if isAPICalled == false{
                         let result =  DBManager().FetchNextURL(category: submenu)

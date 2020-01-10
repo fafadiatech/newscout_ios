@@ -484,7 +484,7 @@ class DBManager{
                     for tag in tagData{
                         fetchRequest.predicate = NSPredicate(format: "article_id = %d ",tag.articleId )
                         do {
-                            var article =  try (managedContext?.fetch(fetchRequest))!
+                            let article =  try (managedContext?.fetch(fetchRequest))!
                             if article.count > 0{
                                 if !ShowArticle.contains(article[0]){
                                     ShowArticle.append(article[0])
@@ -1189,7 +1189,7 @@ class DBManager{
         let managedContext = appDelegate?.persistentContainer.viewContext
         
         let deleteFetch = NSFetchRequest<NSFetchRequestResult>(entityName: "NewsURL")
-        let result = try? managedContext?.fetch(deleteFetch)
+        let result = ((try? managedContext?.fetch(deleteFetch)) as [Any]??)
         let resultData = result as! [NewsURL]
         let lastRecord = resultData.last
         let search = UserDefaults.standard.value(forKey: "searchTxt") as! String

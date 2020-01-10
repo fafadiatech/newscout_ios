@@ -82,7 +82,7 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, WKNavigationDelegate
    
     override func viewDidLoad() {
         super.viewDidLoad()
-        btnReadMore.setTitleColor(.black, for: UIControlState.normal)
+        btnReadMore.setTitleColor(.black, for: UIControl.State.normal)
         suggestedView.isHidden = true
         WKWebView.navigationDelegate = self
         btnReadMore.backgroundColor = .clear
@@ -141,20 +141,20 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, WKNavigationDelegate
         }
 
         let swipeUp = UISwipeGestureRecognizer(target: self, action: #selector(self.respondToSwipeGesture))
-        swipeUp.direction = UISwipeGestureRecognizerDirection.up
+        swipeUp.direction = UISwipeGestureRecognizer.Direction.up
         self.newsView.addGestureRecognizer(swipeUp)
         
         let swipeRight = UISwipeGestureRecognizer(target: self, action: #selector(self.respondToSwipeGesture))
-        swipeRight.direction = UISwipeGestureRecognizerDirection.right
+        swipeRight.direction = UISwipeGestureRecognizer.Direction.right
         self.newsView.addGestureRecognizer(swipeRight)
         
         let swipeDown = UISwipeGestureRecognizer(target: self, action: #selector(self.respondToSwipeGesture))
-        swipeDown.direction = UISwipeGestureRecognizerDirection.down
+        swipeDown.direction = UISwipeGestureRecognizer.Direction.down
         self.newsView.addGestureRecognizer(swipeDown)
         
         let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapped(gestureRecognizer:)))
         viewNewsArea.addGestureRecognizer(tapRecognizer)
-        tapRecognizer.delegate = self as! UIGestureRecognizerDelegate
+        tapRecognizer.delegate = self as UIGestureRecognizerDelegate
     }
     
     func filterRecommendation(){
@@ -214,11 +214,11 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, WKNavigationDelegate
     func addipadPotraitConstraint(){
         if viewLikeDislikeBottom != nil {
             NSLayoutConstraint.deactivate([viewLikeDislikeBottom])
-            viewLikeDislikeBottom = NSLayoutConstraint (item: viewLikeDislike,
-                                                        attribute: NSLayoutAttribute.bottom,
-                                                        relatedBy: NSLayoutRelation.equal,
+            viewLikeDislikeBottom = NSLayoutConstraint (item: viewLikeDislike!,
+                                                        attribute: NSLayoutConstraint.Attribute.bottom,
+                                                        relatedBy: NSLayoutConstraint.Relation.equal,
                                                         toItem: suggestedView,
-                                                        attribute: NSLayoutAttribute.top,
+                                                        attribute: NSLayoutConstraint.Attribute.top,
                                                         multiplier: 1,
                                                         constant: 0)
             NSLayoutConstraint.activate([viewLikeDislikeBottom])
@@ -230,18 +230,18 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, WKNavigationDelegate
         if btnSourceBottomConstraint != nil && lblTimeAgoBottomConstraint != nil {
             NSLayoutConstraint.deactivate([btnSourceBottomConstraint])
             NSLayoutConstraint.deactivate([lblTimeAgoBottomConstraint])
-            btnSourceBottomConstraint = NSLayoutConstraint (item: btnSource,
-                                                            attribute: NSLayoutAttribute.bottom,
-                                                            relatedBy: NSLayoutRelation.equal,
+            btnSourceBottomConstraint = NSLayoutConstraint (item: btnSource!,
+                                                            attribute: NSLayoutConstraint.Attribute.bottom,
+                                                            relatedBy: NSLayoutConstraint.Relation.equal,
                                                             toItem: viewLikeDislike,
-                                                            attribute: NSLayoutAttribute.top,
+                                                            attribute: NSLayoutConstraint.Attribute.top,
                                                             multiplier: 1,
                                                             constant: -10)
-            lblTimeAgoBottomConstraint = NSLayoutConstraint (item:lblTimeAgo,
-                                                             attribute: NSLayoutAttribute.bottom,
-                                                             relatedBy: NSLayoutRelation.equal,
+            lblTimeAgoBottomConstraint = NSLayoutConstraint (item:lblTimeAgo!,
+                                                             attribute: NSLayoutConstraint.Attribute.bottom,
+                                                             relatedBy: NSLayoutConstraint.Relation.equal,
                                                              toItem: viewLikeDislike,
-                                                             attribute: NSLayoutAttribute.top,
+                                                             attribute: NSLayoutConstraint.Attribute.top,
                                                              multiplier: 1,
                                                              constant: -10)
             NSLayoutConstraint.activate([lblTimeAgoBottomConstraint])
@@ -252,11 +252,11 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, WKNavigationDelegate
     func addPotraitConstraint(){
         if viewLikeDislikeBottom != nil{
             NSLayoutConstraint.deactivate([viewLikeDislikeBottom])
-            viewLikeDislikeBottom = NSLayoutConstraint (item: viewLikeDislike,
-                                                        attribute: NSLayoutAttribute.bottom,
-                                                        relatedBy: NSLayoutRelation.equal,
+            viewLikeDislikeBottom = NSLayoutConstraint (item: viewLikeDislike!,
+                                                        attribute: NSLayoutConstraint.Attribute.bottom,
+                                                        relatedBy: NSLayoutConstraint.Relation.equal,
                                                         toItem: suggestedView,
-                                                        attribute: NSLayoutAttribute.bottom,
+                                                        attribute: NSLayoutConstraint.Attribute.bottom,
                                                         multiplier: 1,
                                                         constant: 0)
             NSLayoutConstraint.activate([viewLikeDislikeBottom])
@@ -269,11 +269,11 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, WKNavigationDelegate
     func addImageConstaints(){
         if viewImgContainerTop != nil{
             NSLayoutConstraint.deactivate([viewImgContainerTop])
-            viewImgContainerTop = NSLayoutConstraint (item:viewImgContainer,
-                                                      attribute: NSLayoutAttribute.top,
-                                                      relatedBy: NSLayoutRelation.equal,
+            viewImgContainerTop = NSLayoutConstraint (item:viewImgContainer!,
+                                                      attribute: NSLayoutConstraint.Attribute.top,
+                                                      relatedBy: NSLayoutConstraint.Relation.equal,
                                                       toItem: viewContainer,
-                                                      attribute: NSLayoutAttribute.top,
+                                                      attribute: NSLayoutConstraint.Attribute.top,
                                                       multiplier: 1,
                                                       constant: 0)
             NSLayoutConstraint.activate([viewImgContainerTop])
@@ -285,18 +285,18 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, WKNavigationDelegate
         if btnSourceBottomConstraint != nil && lblTimeAgoBottomConstraint != nil {
             NSLayoutConstraint.deactivate([btnSourceBottomConstraint])
             NSLayoutConstraint.deactivate([lblTimeAgoBottomConstraint])
-            btnSourceBottomConstraint = NSLayoutConstraint(item:btnSource,
-                                                           attribute: NSLayoutAttribute.bottom,
-                                                           relatedBy: NSLayoutRelation.equal,
+            btnSourceBottomConstraint = NSLayoutConstraint(item:btnSource!,
+                                                           attribute: NSLayoutConstraint.Attribute.bottom,
+                                                           relatedBy: NSLayoutConstraint.Relation.equal,
                                                            toItem: suggestedView,
-                                                           attribute: NSLayoutAttribute.top,
+                                                           attribute: NSLayoutConstraint.Attribute.top,
                                                            multiplier: 1,
                                                            constant: -10)
-            lblTimeAgoBottomConstraint = NSLayoutConstraint (item:lblTimeAgo,
-                                                             attribute: NSLayoutAttribute.bottom,
-                                                             relatedBy: NSLayoutRelation.equal,
+            lblTimeAgoBottomConstraint = NSLayoutConstraint (item:lblTimeAgo!,
+                                                             attribute: NSLayoutConstraint.Attribute.bottom,
+                                                             relatedBy: NSLayoutConstraint.Relation.equal,
                                                              toItem: suggestedView,
-                                                             attribute: NSLayoutAttribute.top,
+                                                             attribute: NSLayoutConstraint.Attribute.top,
                                                              multiplier: 1,
                                                              constant: -10)
             NSLayoutConstraint.activate([lblTimeAgoBottomConstraint])
@@ -304,11 +304,11 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, WKNavigationDelegate
         }
         if viewLikeDislikeBottom != nil{
             NSLayoutConstraint.deactivate([viewLikeDislikeBottom])
-            viewLikeDislikeBottom = NSLayoutConstraint(item:viewLikeDislike,
-                                                       attribute: NSLayoutAttribute.bottom,
-                                                       relatedBy: NSLayoutRelation.equal,
+            viewLikeDislikeBottom = NSLayoutConstraint(item:viewLikeDislike!,
+                                                       attribute: NSLayoutConstraint.Attribute.bottom,
+                                                       relatedBy: NSLayoutConstraint.Relation.equal,
                                                        toItem: suggestedView,
-                                                       attribute: NSLayoutAttribute.bottom,
+                                                       attribute: NSLayoutConstraint.Attribute.bottom,
                                                        multiplier: 1,
                                                        constant: 0)
             
@@ -362,11 +362,11 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, WKNavigationDelegate
     
     func changeTheme(){
         suggestedCV.backgroundColor = colorConstants.txtlightGrayColor
-        btnSource.setTitleColor(.white, for: UIControlState.normal)
+        btnSource.setTitleColor(.white, for: UIControl.State.normal)
         btnSource.tintColor = .white
-        btnMoreStories.setTitleColor(.white, for: UIControlState.normal)
+        btnMoreStories.setTitleColor(.white, for: UIControl.State.normal)
         viewReadMore.backgroundColor = colorConstants.grayBackground1
-        btnReadMore.setTitleColor(.white, for: UIControlState.normal)
+        btnReadMore.setTitleColor(.white, for: UIControl.State.normal)
         btnReadMore.backgroundColor = colorConstants.grayBackground1
         newsView.backgroundColor = colorConstants.grayBackground1
         viewContainer.backgroundColor = colorConstants.grayBackground1
@@ -446,18 +446,18 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, WKNavigationDelegate
         if let swipeGesture = gesture as? UISwipeGestureRecognizer {
             
             switch swipeGesture.direction {
-            case UISwipeGestureRecognizerDirection.right:
+            case UISwipeGestureRecognizer.Direction.right:
                 ViewWebContainer.isHidden = true
                 backNavigation()
                 
-            case UISwipeGestureRecognizerDirection.down:
+            case UISwipeGestureRecognizer.Direction.down:
                 if newsCurrentIndex > 0{
                     suggestedView.isHidden = true
                     newsCurrentIndex = newsCurrentIndex - 1
                     ShowNews(currentIndex : newsCurrentIndex)
                     RecommendationDBCall()
-                    transition.type = kCATransitionPush
-                    transition.subtype = kCATransitionFromBottom
+                    transition.type = CATransitionType.push
+                    transition.subtype = CATransitionSubtype.fromBottom
                     view.window!.layer.add(transition, forKey: kCATransition)
                     
                 }
@@ -465,14 +465,14 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, WKNavigationDelegate
                     self.view.makeToast("No more news to show", duration: 1.0, position: .center)
                 }
                 
-            case UISwipeGestureRecognizerDirection.up:
+            case UISwipeGestureRecognizer.Direction.up:
                 if newsCurrentIndex < indexCount - 1{
                     newsCurrentIndex = newsCurrentIndex + 1
                     suggestedView.isHidden = true
                     ShowNews(currentIndex : newsCurrentIndex)
                     RecommendationDBCall()
-                    transition.type = kCATransitionPush
-                    transition.subtype = kCATransitionFromTop
+                    transition.type = CATransitionType.push
+                    transition.subtype = CATransitionSubtype.fromTop
                     view.window!.layer.add(transition, forKey: kCATransition)
                 }
                 else{
@@ -966,7 +966,7 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, WKNavigationDelegate
             text = ShowArticle[newsCurrentIndex].title!
             if ShowArticle[newsCurrentIndex].imageURL != ""{
                 let url = URL(string:ShowArticle[newsCurrentIndex].imageURL!)
-                let image1 = UIImage(named: "\(url)")
+//                let image1 = UIImage(named: "\(url)")
                 var image = UIImage()
                 if let data = try? Data(contentsOf: url!)
                 {
@@ -975,20 +975,20 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, WKNavigationDelegate
                 if ShowArticle[newsCurrentIndex].source_url != ""{
                     sourceURL = URL(string: ShowArticle[newsCurrentIndex].source_url!)
                 }
-                shareAll = [ text , image,  sourceURL , webURL ] as [Any]
+                shareAll = [ text , image,  sourceURL! , webURL ] as [Any]
             }
             else{
                 if ShowArticle[newsCurrentIndex].source_url != ""{
                     sourceURL = URL(string: ShowArticle[newsCurrentIndex].source_url!)
                 }
-                shareAll = [ text , sourceURL , webURL ] as [Any]
+                shareAll = [ text , sourceURL! , webURL ] as [Any]
             }
         }
         else if currentEntity == "source"{
             text = sourceArticle[newsCurrentIndex].title!
             if sourceArticle[newsCurrentIndex].imageURL != ""{
                 let url = URL(string:sourceArticle[newsCurrentIndex].imageURL!)
-                let image1 = UIImage(named: "\(url)")
+//                let image1 = UIImage(named: "\(url)")
                 var image = UIImage()
                 if let data = try? Data(contentsOf: url!)
                 {
@@ -997,20 +997,20 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, WKNavigationDelegate
                 if sourceArticle[newsCurrentIndex].source != ""{
                     sourceURL = URL(string: sourceArticle[newsCurrentIndex].source!)
                 }
-                shareAll = [ text , image,  sourceURL , webURL ] as [Any]
+                shareAll = [ text , image,  sourceURL! , webURL ] as [Any]
             }
             else{
                 if sourceArticle[newsCurrentIndex].source! != ""{
                     sourceURL = URL(string: sourceArticle[newsCurrentIndex].source!)
                 }
-                shareAll = [ text , sourceURL , webURL ] as [Any]
+                shareAll = [ text , sourceURL! , webURL ] as [Any]
             }
         }
         else{
             if SearchArticle[newsCurrentIndex].imageURL != ""{
                 text = SearchArticle[newsCurrentIndex].title!
                 let url = URL(string:SearchArticle[newsCurrentIndex].imageURL!)
-                let image1 = UIImage(named: "\(url)")
+//                let image1 = UIImage(named: "\(url)")
                 var image = UIImage()
                 if let data = try? Data(contentsOf: url!)
                 {
@@ -1019,18 +1019,19 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, WKNavigationDelegate
                 if SearchArticle[newsCurrentIndex].source_url != ""{
                     sourceURL = URL(string: SearchArticle[newsCurrentIndex].source_url!)
                 }
-                shareAll = [ text , image,  sourceURL , webURL ] as [Any]
+                shareAll = [ text , image,  sourceURL! , webURL ] as [Any]
             }
             else{
                 if SearchArticle[newsCurrentIndex].source_url != ""{
                     sourceURL = URL(string: SearchArticle[newsCurrentIndex].source_url!)
                 }
-                shareAll = [ text , sourceURL , webURL ] as [Any]
+                shareAll = [ text , sourceURL! , webURL ] as [Any]
+                
             }
         }
         let activityViewController = UIActivityViewController(activityItems: shareAll, applicationActivities: nil)
-        activityViewController.excludedActivityTypes = [UIActivityType.airDrop]
-        activityViewController.popoverPresentationController?.sourceView = sender as! UIView
+        activityViewController.excludedActivityTypes = [UIActivity.ActivityType.airDrop]
+        activityViewController.popoverPresentationController?.sourceView = sender as? UIView
         self.present(activityViewController, animated: true, completion: nil)
         
     }

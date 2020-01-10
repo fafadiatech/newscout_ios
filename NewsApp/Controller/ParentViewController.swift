@@ -228,9 +228,9 @@ class ParentViewController: UIViewController {
     
     func resetTheme(){
         self.activityIndicator.startAnimating()
-        btnBookmark.setTitleColor(.black, for: UIControlState.normal)
-        btnNightMode.setTitleColor(.black, for: UIControlState.normal)
-        btnSettings.setTitleColor(.black, for: UIControlState.normal)
+        btnBookmark.setTitleColor(.black, for: UIControl.State.normal)
+        btnNightMode.setTitleColor(.black, for: UIControl.State.normal)
+        btnSettings.setTitleColor(.black, for: UIControl.State.normal)
         viewNightMode.backgroundColor = colorConstants.txtlightGrayColor
         viewSettings.backgroundColor = colorConstants.txtlightGrayColor
         viewMyBookmark.backgroundColor = colorConstants.txtlightGrayColor
@@ -251,9 +251,9 @@ class ParentViewController: UIViewController {
         viewNightMode.backgroundColor = colorConstants.grayBackground1
         viewMyBookmark.backgroundColor = colorConstants.grayBackground1
         viewSettings.backgroundColor = colorConstants.grayBackground1
-        btnBookmark.setTitleColor(.white, for: UIControlState.normal)
-        btnNightMode.setTitleColor(.white, for: UIControlState.normal)
-        btnSettings.setTitleColor(.white, for: UIControlState.normal)
+        btnBookmark.setTitleColor(.white, for: UIControl.State.normal)
+        btnNightMode.setTitleColor(.white, for: UIControl.State.normal)
+        btnSettings.setTitleColor(.white, for: UIControl.State.normal)
         btnImgNightMode.setImage(UIImage(named: AssetConstants.whiteMoon), for: .normal)
         btnImgBookmark.setImage(UIImage(named:AssetConstants.Bookmark_white), for: .normal)
         menuCV.backgroundColor = colorConstants.MenugrayBackground
@@ -285,7 +285,7 @@ class ParentViewController: UIViewController {
         submenuCV.isHidden = true
         if containerCVTop != nil{
             NSLayoutConstraint.deactivate([containerCVTop])
-            containerCVTop = NSLayoutConstraint (item: containerCV,
+            containerCVTop = NSLayoutConstraint (item: containerCV!,
                                                  attribute: NSLayoutConstraint.Attribute.top,
                                                  relatedBy: NSLayoutConstraint.Relation.equal,
                                                  toItem: menuCV,
@@ -300,7 +300,7 @@ class ParentViewController: UIViewController {
         submenuCV.isHidden = false
         if containerCVTop != nil{
             NSLayoutConstraint.deactivate([containerCVTop])
-            containerCVTop = NSLayoutConstraint (item: containerCV as Any,
+            containerCVTop = NSLayoutConstraint (item: containerCV!,
                                                  attribute: NSLayoutConstraint.Attribute.top,
                                                  relatedBy: NSLayoutConstraint.Relation.equal,
                                                  toItem: submenuCV,

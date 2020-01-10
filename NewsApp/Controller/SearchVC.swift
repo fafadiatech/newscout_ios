@@ -65,7 +65,7 @@ class SearchVC: UIViewController {
             searchResultTV.backgroundColor = .white
             searchResultCV.backgroundColor = .white
         }
-        txtSearch.addTarget(self, action: #selector(self.textFieldDidChange), for: UIControlEvents.editingChanged)
+        txtSearch.addTarget(self, action: #selector(self.textFieldDidChange), for: UIControl.Event.editingChanged)
         lblNoNews.isHidden = true
         NotificationCenter.default.addObserver(self, selector: #selector(darkModeEnabled(_:)), name: .darkModeEnabled, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(darkModeDisabled(_:)), name: .darkModeDisabled, object: nil)
@@ -124,7 +124,7 @@ class SearchVC: UIViewController {
         
         alertController.addAction(action1)
         
-        let action2 = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.default) { (action:UIAlertAction) in
+        let action2 = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.default) { (action:UIAlertAction) in
         }
         alertController.addAction(action2)
         
@@ -218,7 +218,7 @@ class SearchVC: UIViewController {
     
     func fecthSerchedKeywords(){
         if txtSearch.text!.count < 2{
-            var result = DBManager().fetchSearchHistory()
+            let result = DBManager().fetchSearchHistory()
             keywordArray.removeAll()
             switch result {
             case .Success(let DBData) :
@@ -288,7 +288,7 @@ extension SearchVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDele
         dateFormatter.timeZone = NSTimeZone.local
         let darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
         let textSizeSelected = UserDefaults.standard.value(forKey: "textSize") as! Int
-        var sourceColor = UIColor()
+//        var sourceColor = UIColor()
         var fullTxt = ""
         var dateSubString = ""
         var agoDate = ""
@@ -302,7 +302,7 @@ extension SearchVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDele
                 cell.viewCellContainer.layer.shadowRadius = 4.0
                 cell.imgNews.layer.cornerRadius = 10.0
                 cell.imgNews.clipsToBounds = true
-                cell.selectionStyle = UITableViewCellSelectionStyle.none
+                cell.selectionStyle = UITableViewCell.SelectionStyle.none
                 imgWidth = String(describing : Int(cell.imgNews.frame.width))
                 imgHeight = String(describing : Int(cell.imgNews.frame.height))
                 //display data from DB
@@ -379,7 +379,7 @@ extension SearchVC: UITableViewDelegate, UITableViewDataSource, UIScrollViewDele
                 cellOdd.viewCellContainer.layer.shadowOffset = CGSize(width: 3, height: 3)
                 cellOdd.viewCellContainer.layer.shadowOpacity = 0.7
                 cellOdd.viewCellContainer.layer.shadowRadius = 4.0
-                cellOdd.selectionStyle = UITableViewCellSelectionStyle.none
+                cellOdd.selectionStyle = UITableViewCell.SelectionStyle.none
                 //display data from DB
                 let currentArticle = Searchresults[indexPath.row]
                 cellOdd.lblNewsDescription.text = currentArticle.title

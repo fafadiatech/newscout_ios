@@ -257,7 +257,7 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
                         }
                         let newDate = dateFormatter.date(from: currentArticle.published_on!)
                         if newDate != nil{
-                            agoDate = try Helper().timeAgoSinceDate(newDate!)
+                            agoDate = Helper().timeAgoSinceDate(newDate!)
                             fullTxt = "\(agoDate)" + " via " + currentArticle.source!
                             let attributedWithTextColor: NSAttributedString = fullTxt.attributedStringWithColor([currentArticle.source!], color: UIColor.red)
                             cell.lblSource.attributedText = attributedWithTextColor
@@ -271,7 +271,7 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
                         let newDate = dateFormatter.date(from: dateSubString
                         )
                         if newDate != nil{
-                            agoDate = try Helper().timeAgoSinceDate(newDate!)
+                            agoDate = Helper().timeAgoSinceDate(newDate!)
                             fullTxt = "\(agoDate)" + " via " + currentArticle.source!
                             let attributedWithTextColor: NSAttributedString = fullTxt.attributedStringWithColor([currentArticle.source!], color: UIColor.red)
                             cell.lblSource.attributedText = attributedWithTextColor
@@ -337,7 +337,7 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
                         }
                         let newDate = dateFormatter.date(from: currentArticle.published_on!)
                         if newDate != nil{
-                            agoDate = try Helper().timeAgoSinceDate(newDate!)
+                            agoDate = Helper().timeAgoSinceDate(newDate!)
                             fullTxt = "\(agoDate)" + " via " + currentArticle.source!
                             let attributedWithTextColor: NSAttributedString = fullTxt.attributedStringWithColor([currentArticle.source!], color: UIColor.red)
                             cell.lblSource.attributedText = attributedWithTextColor
@@ -351,7 +351,7 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
                         let newDate = dateFormatter.date(from: dateSubString
                         )
                         if newDate != nil{
-                            agoDate = try Helper().timeAgoSinceDate(newDate!)
+                            agoDate = Helper().timeAgoSinceDate(newDate!)
                             fullTxt = "\(agoDate)" + " via " + currentArticle.source!
                             let attributedWithTextColor: NSAttributedString = fullTxt.attributedStringWithColor([currentArticle.source!], color: UIColor.red)
                             cell.lblSource.attributedText = attributedWithTextColor
@@ -425,7 +425,7 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
                 }
                 let newDate = dateFormatter.date(from: currentArticle.published_on!)
                 if newDate != nil{
-                    agoDate = try Helper().timeAgoSinceDate(newDate!)
+                    agoDate = Helper().timeAgoSinceDate(newDate!)
                     fullTxt = "\(agoDate)" + " via " + currentArticle.source!
                     let attributedWithTextColor: NSAttributedString = fullTxt.attributedStringWithColor([currentArticle.source!], color: UIColor.red)
                     cell.lblSource.attributedText = attributedWithTextColor
@@ -439,7 +439,7 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
                 let newDate = dateFormatter.date(from: dateSubString
                 )
                 if newDate != nil{
-                    agoDate = try Helper().timeAgoSinceDate(newDate!)
+                    agoDate = Helper().timeAgoSinceDate(newDate!)
                     fullTxt = "\(agoDate)" + " via " + currentArticle.source!
                     let attributedWithTextColor: NSAttributedString = fullTxt.attributedStringWithColor([currentArticle.source!], color: UIColor.red)
                     cell.lblSource.attributedText = attributedWithTextColor
@@ -492,7 +492,7 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
                 cellCluster.lblCount.text = String(count)
                 if lblSourceTrailing != nil{
                     NSLayoutConstraint.deactivate([lblSourceTrailing])
-                    lblSourceTrailing = NSLayoutConstraint (item: cellCluster.lblSource,
+                    lblSourceTrailing = NSLayoutConstraint (item: cellCluster.lblSource!,
                                                             attribute: NSLayoutConstraint.Attribute.trailing,
                                                             relatedBy: NSLayoutConstraint.Relation.equal,
                                                             toItem: cellCluster.imgCount,
@@ -509,7 +509,7 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
                 currentArticle = sortedData[indexPath.row]
                 cellCluster.lblCount.isHidden = true
                 cellCluster.imgCount.isHidden = true
-                lblSourceTrailing = NSLayoutConstraint (item: cellCluster.lblSource,
+                lblSourceTrailing = NSLayoutConstraint (item: cellCluster.lblSource!,
                                                         attribute: NSLayoutConstraint.Attribute.trailing,
                                                         relatedBy: NSLayoutConstraint.Relation.equal,
                                                         toItem: cellCluster.lblTitle,
@@ -542,7 +542,7 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
                 }
                 let newDate = dateFormatter.date(from: currentArticle.published_on!)
                 if newDate != nil{
-                    agoDate = try Helper().timeAgoSinceDate(newDate!)
+                    agoDate = Helper().timeAgoSinceDate(newDate!)
                     fullTxt = "\(agoDate)" + " via " + currentArticle.source!
                     let attributedWithTextColor: NSAttributedString = fullTxt.attributedStringWithColor([currentArticle.source!], color: UIColor.red)
                     cellCluster.lblSource.attributedText = attributedWithTextColor
@@ -556,7 +556,7 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
                 let newDate = dateFormatter.date(from: dateSubString
                 )
                 if newDate != nil{
-                    agoDate = try Helper().timeAgoSinceDate(newDate!)
+                    agoDate = Helper().timeAgoSinceDate(newDate!)
                     fullTxt = "\(agoDate)" + " via " + currentArticle.source!
                     let attributedWithTextColor: NSAttributedString = fullTxt.attributedStringWithColor([currentArticle.source!], color: UIColor.red)
                     cellCluster.lblSource.attributedText = attributedWithTextColor

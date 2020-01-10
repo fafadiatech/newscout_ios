@@ -36,11 +36,11 @@ class ProfileVC: UIViewController {
         btnChangePswd.layer.borderWidth = 0
         
         if UserDefaults.standard.value(forKey: "first_name") != nil{
-            lblNameVal.text = UserDefaults.standard.value(forKey: "first_name") as! String
+            lblNameVal.text = UserDefaults.standard.value(forKey: "first_name") as? String
         }
         
         if UserDefaults.standard.value(forKey: "email") != nil{
-            lblemailVal.text = UserDefaults.standard.value(forKey: "email") as! String
+            lblemailVal.text = UserDefaults.standard.value(forKey: "email") as? String
         }
         let darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
         if  darkModeStatus == true{
@@ -106,7 +106,7 @@ class ProfileVC: UIViewController {
         
         alertController.addAction(action1)
         
-        let action2 = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.default) { (action:UIAlertAction) in
+        let action2 = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.default) { (action:UIAlertAction) in
         }
         alertController.addAction(action2)
         

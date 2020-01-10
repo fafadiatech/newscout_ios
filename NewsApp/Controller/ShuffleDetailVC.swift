@@ -75,7 +75,7 @@ class ShuffleDetailVC: UIViewController , UIScrollViewDelegate, WKNavigationDele
         super.viewDidLoad()
         imgWidth = String(describing : Int(imgNews.frame.width))
         imgHeight = String(describing : Int(imgNews.frame.height))
-        btnReadMore.setTitleColor(.black, for: UIControlState.normal)
+        btnReadMore.setTitleColor(.black, for: UIControl.State.normal)
         suggestedView.isHidden = true
         WKWebView.navigationDelegate = self
         btnReadMore.backgroundColor = .clear
@@ -106,7 +106,7 @@ class ShuffleDetailVC: UIViewController , UIScrollViewDelegate, WKNavigationDele
             changeTheme()
         }
         let swipeRight = UISwipeGestureRecognizer(target: self, action: #selector(self.respondToSwipeGesture))
-        swipeRight.direction = UISwipeGestureRecognizerDirection.right
+        swipeRight.direction = UISwipeGestureRecognizer.Direction.right
         self.newsView.addGestureRecognizer(swipeRight)
     }
     
@@ -118,7 +118,7 @@ class ShuffleDetailVC: UIViewController , UIScrollViewDelegate, WKNavigationDele
         if let swipeGesture = gesture as? UISwipeGestureRecognizer {
             
             switch swipeGesture.direction {
-            case UISwipeGestureRecognizerDirection.right:
+            case UISwipeGestureRecognizer.Direction.right:
                 ViewWebContainer.isHidden = true
                 self.view.window!.rootViewController?.dismiss(animated: false, completion: nil)
             default:
@@ -165,7 +165,7 @@ class ShuffleDetailVC: UIViewController , UIScrollViewDelegate, WKNavigationDele
         let imageGenerator = AVAssetImageGenerator(asset: asset)
         
         do {
-            let thumbnailImage = try imageGenerator.copyCGImage(at: CMTimeMake(1, 60) , actualTime: nil)
+            let thumbnailImage = try imageGenerator.copyCGImage(at: CMTimeMake(value: 1, timescale: 60) , actualTime: nil)
             return UIImage(cgImage: thumbnailImage)
         } catch let error {
             print(error)
@@ -177,7 +177,7 @@ class ShuffleDetailVC: UIViewController , UIScrollViewDelegate, WKNavigationDele
         let asset = AVAsset(url: URL(string: url)!)
         let assetImgGenerate = AVAssetImageGenerator(asset: asset)
         assetImgGenerate.appliesPreferredTrackTransform = true
-        let time = CMTimeMakeWithSeconds(1.0, 600)
+        let time = CMTimeMakeWithSeconds(1.0, preferredTimescale: 600)
         do {
             let img = try assetImgGenerate.copyCGImage(at: time, actualTime: nil)
             let thumbnail = UIImage(cgImage: img)
@@ -189,11 +189,11 @@ class ShuffleDetailVC: UIViewController , UIScrollViewDelegate, WKNavigationDele
     
     func changeTheme(){
         suggestedCV.backgroundColor = colorConstants.txtlightGrayColor
-        btnSource.setTitleColor(.white, for: UIControlState.normal)
+        btnSource.setTitleColor(.white, for: UIControl.State.normal)
         btnSource.tintColor = .white
-        btnMoreStories.setTitleColor(.white, for: UIControlState.normal)
+        btnMoreStories.setTitleColor(.white, for: UIControl.State.normal)
         viewReadMore.backgroundColor = colorConstants.grayBackground1
-        btnReadMore.setTitleColor(.white, for: UIControlState.normal)
+        btnReadMore.setTitleColor(.white, for: UIControl.State.normal)
         btnReadMore.backgroundColor = colorConstants.grayBackground1
         newsView.backgroundColor = colorConstants.grayBackground1
         viewContainer.backgroundColor = colorConstants.grayBackground1
@@ -528,7 +528,7 @@ class ShuffleDetailVC: UIViewController , UIScrollViewDelegate, WKNavigationDele
         text = shuffleData[newsCurrentIndex].title!
         if shuffleData[newsCurrentIndex].imageURL != ""{
             let url = URL(string:shuffleData[newsCurrentIndex].imageURL!)
-            let image1 = UIImage(named: "\(url)")
+//            let image1 = UIImage(named: "\(url)")
             var image = UIImage()
             if let data = try? Data(contentsOf: url!)
             {
@@ -537,18 +537,18 @@ class ShuffleDetailVC: UIViewController , UIScrollViewDelegate, WKNavigationDele
             if shuffleData[newsCurrentIndex].source_url != ""{
                 sourceURL = URL(string: shuffleData[newsCurrentIndex].source_url!)
             }
-            shareAll = [ text , image,  sourceURL , webURL ] as [Any]
+            shareAll = [ text , image,  sourceURL! , webURL ] as [Any]
         }
         else{
             if shuffleData[newsCurrentIndex].source_url != ""{
                 sourceURL = URL(string: shuffleData[newsCurrentIndex].source_url!)
             }
-            shareAll = [ text , sourceURL , webURL ] as [Any]
+            shareAll = [ text , sourceURL! , webURL ] as [Any]
         }
         
         let activityViewController = UIActivityViewController(activityItems: shareAll, applicationActivities: nil)
-        activityViewController.excludedActivityTypes = [UIActivityType.airDrop]
-        activityViewController.popoverPresentationController?.sourceView = sender as! UIView
+        activityViewController.excludedActivityTypes = [UIActivity.ActivityType.airDrop]
+        activityViewController.popoverPresentationController!.sourceView = sender as? UIView
         self.present(activityViewController, animated: true, completion: nil)
         
     }

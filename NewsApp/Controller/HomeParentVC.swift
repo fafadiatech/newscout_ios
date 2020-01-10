@@ -137,9 +137,9 @@ class HomeParentVC: ButtonBarPagerTabStripViewController{
         viewNightMode.backgroundColor = colorConstants.grayBackground1
         viewBookmark.backgroundColor = colorConstants.grayBackground1
         viewSettings.backgroundColor = colorConstants.grayBackground1
-        btnBookmark.setTitleColor(.white, for: UIControlState.normal)
-        btnNightMode.setTitleColor(.white, for: UIControlState.normal)
-        btnSettingsNav.setTitleColor(.white, for: UIControlState.normal)
+        btnBookmark.setTitleColor(.white, for: UIControl.State.normal)
+        btnNightMode.setTitleColor(.white, for: UIControl.State.normal)
+        btnSettingsNav.setTitleColor(.white, for: UIControl.State.normal)
         btnNightModeImg.setImage(UIImage(named: AssetConstants.whiteMoon), for: .normal)
         btnBookmarkImg.setImage(UIImage(named:AssetConstants.Bookmark_white), for: .normal)
         menuCV.backgroundColor = colorConstants.subTVgrayBackground
@@ -195,8 +195,8 @@ class HomeParentVC: ButtonBarPagerTabStripViewController{
                         self.submenu.removeAll()
                         for sub in res.heading.submenu{
                             self.submenu.append(sub.name)
-                            var id = sub.category_id
-                            var url = APPURL.ArticleByIdURL + "\(id)"
+                            let id = sub.category_id
+                            let url = APPURL.ArticleByIdURL + "\(id)"
                             UserDefaults.standard.setValue(id, forKey: "subMenuId")
                             UserDefaults.standard.setValue(url, forKey: "submenuURL")
                         }
@@ -219,7 +219,7 @@ class HomeParentVC: ButtonBarPagerTabStripViewController{
     }
     
     func saveFetchMenu(){
-        var coredataRecordCount = DBManager().IsCoreDataEmpty(entity: "MenuHeadings")
+        let coredataRecordCount = DBManager().IsCoreDataEmpty(entity: "MenuHeadings")
         
         if coredataRecordCount > 0 {
             if Reachability.isConnectedToNetwork(){
@@ -285,7 +285,7 @@ class HomeParentVC: ButtonBarPagerTabStripViewController{
         let tagresult = DBManager().fetchsubmenuId(subMenuName: submenu)
         switch tagresult{
         case .Success(let id) :
-            var url = APPURL.ArticleByIdURL + "\(id)"
+            let url = APPURL.ArticleByIdURL + "\(id)"
             UserDefaults.standard.setValue(id, forKey: "subMenuId")
             UserDefaults.standard.setValue(url, forKey: "submenuURL")
         case .Failure(let error):
@@ -309,9 +309,9 @@ class HomeParentVC: ButtonBarPagerTabStripViewController{
         self.activityIndicator.startAnimating()
         NightNight.theme = .normal
         buttonBarView.selectedBar.backgroundColor = .red
-        btnBookmark.setTitleColor(.black, for: UIControlState.normal)
-        btnNightMode.setTitleColor(.black, for: UIControlState.normal)
-        btnSettingsNav.setTitleColor(.black, for: UIControlState.normal)
+        btnBookmark.setTitleColor(.black, for: UIControl.State.normal)
+        btnNightMode.setTitleColor(.black, for: UIControl.State.normal)
+        btnSettingsNav.setTitleColor(.black, for: UIControl.State.normal)
         viewNightMode.backgroundColor = colorConstants.txtlightGrayColor
         viewSettings.backgroundColor = colorConstants.txtlightGrayColor
         viewBookmark.backgroundColor = colorConstants.txtlightGrayColor
@@ -392,11 +392,11 @@ class HomeParentVC: ButtonBarPagerTabStripViewController{
     func HideButtonBarView(){
         if containerViewTopConstraint != nil{
             NSLayoutConstraint.deactivate([containerViewTopConstraint])
-            containerViewTopConstraint = NSLayoutConstraint (item: containerView,
-                                                             attribute: NSLayoutAttribute.top,
-                                                             relatedBy: NSLayoutRelation.equal,
+            containerViewTopConstraint = NSLayoutConstraint (item: containerView!,
+                                                             attribute: NSLayoutConstraint.Attribute.top,
+                                                             relatedBy: NSLayoutConstraint.Relation.equal,
                                                              toItem: menuCV,
-                                                             attribute: NSLayoutAttribute.bottom,
+                                                             attribute: NSLayoutConstraint.Attribute.bottom,
                                                              multiplier: 1,
                                                              constant: 10)
             NSLayoutConstraint.activate([containerViewTopConstraint])
@@ -406,11 +406,11 @@ class HomeParentVC: ButtonBarPagerTabStripViewController{
     func unhideButtonBarView(){
         if containerViewTopConstraint != nil{
             NSLayoutConstraint.deactivate([containerViewTopConstraint])
-            containerViewTopConstraint = NSLayoutConstraint (item: containerView,
-                                                             attribute: NSLayoutAttribute.top,
-                                                             relatedBy: NSLayoutRelation.equal,
+            containerViewTopConstraint = NSLayoutConstraint (item: containerView!,
+                                                             attribute: NSLayoutConstraint.Attribute.top,
+                                                             relatedBy: NSLayoutConstraint.Relation.equal,
                                                              toItem: buttonBarView,
-                                                             attribute: NSLayoutAttribute.bottom,
+                                                             attribute: NSLayoutConstraint.Attribute.bottom,
                                                              multiplier: 1,
                                                              constant: 10)
             NSLayoutConstraint.activate([containerViewTopConstraint])
@@ -445,7 +445,7 @@ class HomeParentVC: ButtonBarPagerTabStripViewController{
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         if collectionView ==  menuCV {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "subMenuID", for: indexPath) as! submenuCVCell
-            let darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
+//            let darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
             cell.lblMenu.text = headingArr[indexPath.row].localizedCapitalized
             cell.imgMenu.image =  UIImage(named: headingImg[indexPath.row])
             return cell

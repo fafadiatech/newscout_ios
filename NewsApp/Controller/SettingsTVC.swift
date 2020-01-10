@@ -30,7 +30,7 @@ class SettingsTVC: UITableViewController, GIDSignInUIDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let switchStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
+        _ = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
         let dailyStatus = UserDefaults.standard.value(forKey: "daily") as! Bool
         if dailyStatus == true{
             switchDaily.isOn = true
@@ -60,7 +60,7 @@ class SettingsTVC: UITableViewController, GIDSignInUIDelegate {
         segmentTextSize.tintColor = colorConstants.redColor
         segmentTextSize.selectedSegmentIndex = textSizeSelected
         let font = FontConstants.NormalFontContentMedium
-        segmentTextSize.setTitleTextAttributes([NSAttributedStringKey.font: font as Any],for: .normal)
+        segmentTextSize.setTitleTextAttributes([NSAttributedString.Key.font: font as Any],for: .normal)
         if (UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad){
             tableView.rowHeight = 70
             segmentTextSize.setWidth(120, forSegmentAt: 0)
@@ -268,12 +268,12 @@ class SettingsTVC: UITableViewController, GIDSignInUIDelegate {
         else if indexPath.section == 2 && indexPath.row == 2{
             let text = "checkout newScout app. I found it best for reading news."
             let url = URL(string: "http://www.fafadiatech.com/")
-            let shareAll = [ text, url] as [Any]
+            let shareAll = [ text, url as Any] as [Any]
             
             let activityViewController = UIActivityViewController(activityItems: shareAll, applicationActivities: nil)
             
             activityViewController.popoverPresentationController?.sourceRect = CGRect(x: settingsTV.center.x , y: settingsTV.center.y + 200, width: 0, height: 0)
-            activityViewController.popoverPresentationController?.sourceView = settingsTV as! UITableView
+            activityViewController.popoverPresentationController?.sourceView = settingsTV!
             popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection(rawValue: 0)
             self.present(activityViewController, animated: true, completion: nil)
         }
@@ -281,7 +281,7 @@ class SettingsTVC: UITableViewController, GIDSignInUIDelegate {
         else if indexPath.section == 2 && indexPath.row == 3{
             //  UIApplication.sharedApplication().openURL(NSURL(string : "itms-apps://itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?id=\(0)&onlyLatestVersion=true&pageNumber=0&sortOrdering=1)")!);
             let url = URL(string: "https://mail.google.com")!
-            UIApplication.shared.openURL(url)
+            UIApplication.shared.open(url)
         }
         else if indexPath.section == 2 && indexPath.row == 4{
             let storyboard = UIStoryboard(name: "Main", bundle: nil)

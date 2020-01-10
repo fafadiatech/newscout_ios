@@ -63,7 +63,7 @@ class SignUpVC: UIViewController {
         txtConfirmPswd.titleColor = colorConstants.grayBackground3
         view.backgroundColor = colorConstants.grayBackground3
         btnAlreadyMember.backgroundColor = colorConstants.grayBackground3
-        btnAlreadyMember.setTitleColor(.white, for: UIControlState.normal)
+        btnAlreadyMember.setTitleColor(.white, for: UIControl.State.normal)
         containerView.backgroundColor = colorConstants.grayBackground3
     }
     

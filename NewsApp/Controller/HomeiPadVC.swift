@@ -141,7 +141,7 @@ class HomeiPadVC: UIViewController {
         let tagresult = DBManager().fetchsubmenuId(subMenuName: submenu)
         switch tagresult{
         case .Success(let id) :
-            var url = APPURL.ArticleByIdURL + "\(id)"
+            let url = APPURL.ArticleByIdURL + "\(id)"
             UserDefaults.standard.setValue(id, forKey: "subMenuId")
             UserDefaults.standard.setValue(url, forKey: "submenuURL")
         case .Failure(let error):
@@ -171,7 +171,6 @@ class HomeiPadVC: UIViewController {
     }
     
     func scrollToFirstRow() {
-        let indexPath = NSIndexPath(row: 0, section: 0)
         self.HomeNewsCV?.scrollToItem(at: NSIndexPath(item: 0, section: 0) as IndexPath,
                                       at: .top,
                                       animated: true)
@@ -324,7 +323,7 @@ class HomeiPadVC: UIViewController {
             }
         }
         if isTrendingDetail == 1 {
-            var records = DBManager().IsCoreDataEmpty(entity: "TrendingCategory")
+            let records = DBManager().IsCoreDataEmpty(entity: "TrendingCategory")
             if records <= 0{
                 DBManager().saveTrending{response in
                     self.fetchTrending()
@@ -357,7 +356,7 @@ class HomeiPadVC: UIViewController {
         
         alertController.addAction(action1)
         
-        let action2 = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.default) { (action:UIAlertAction) in
+        let action2 = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.default) { (action:UIAlertAction) in
         }
         alertController.addAction(action2)
         
@@ -386,7 +385,7 @@ extension HomeiPadVC: UICollectionViewDelegate, UICollectionViewDataSource, UISc
         if isTrendingDetail == 0 || isTrendingDetail == 2{
             if sortedData.count > 0 {
                 newsDetailvc.newsCurrentIndex = indexPath.row
-                newsDetailvc.ShowArticle = sortedData as! [NewsArticle]
+                newsDetailvc.ShowArticle = sortedData 
                 newsDetailvc.articleId = Int(sortedData[indexPath.row].article_id)
                 present(newsDetailvc, animated: true, completion: nil)
             }
@@ -394,7 +393,7 @@ extension HomeiPadVC: UICollectionViewDelegate, UICollectionViewDataSource, UISc
         else{
             isTrendingDetail = 2
             trendingProtocol?.isTrendingTVLoaded(status: true)
-            var id = UserDefaults.standard.array(forKey: "trendingArray") as! [Int]
+            let id = UserDefaults.standard.array(forKey: "trendingArray") as! [Int]
             let selectedCluster = id[indexPath.row]
             fetchClusterIdArticles(clusterID: selectedCluster)
         }
@@ -409,7 +408,7 @@ extension HomeiPadVC: UICollectionViewDelegate, UICollectionViewDataSource, UISc
         let darkModeStatus = UserDefaults.standard.value(forKey: "darkModeEnabled") as! Bool
         
         let textSizeSelected = UserDefaults.standard.value(forKey: "textSize") as! Int
-        var sourceColor = UIColor()
+//        var sourceColor = UIColor()
         var fullTxt = ""
         var dateSubString = ""
         var agoDate = ""
@@ -438,7 +437,7 @@ extension HomeiPadVC: UICollectionViewDelegate, UICollectionViewDataSource, UISc
                 }
                 let newDate = dateFormatter.date(from: currentArticle.published_on!)
                 if newDate != nil{
-                    agoDate = try Helper().timeAgoSinceDate(newDate!)
+                    agoDate = Helper().timeAgoSinceDate(newDate!)
                     fullTxt = "\(agoDate)" + " via " + currentArticle.source!
                     let attributedWithTextColor: NSAttributedString = fullTxt.attributedStringWithColor([currentArticle.source!], color: UIColor.red)
                     cell.lblSource.attributedText = attributedWithTextColor
@@ -452,7 +451,7 @@ extension HomeiPadVC: UICollectionViewDelegate, UICollectionViewDataSource, UISc
                 let newDate = dateFormatter.date(from: dateSubString
                 )
                 if newDate != nil{
-                    agoDate = try Helper().timeAgoSinceDate(newDate!)
+                    agoDate = Helper().timeAgoSinceDate(newDate!)
                     fullTxt = "\(agoDate)" + " via " + currentArticle.source!
                     let attributedWithTextColor: NSAttributedString = fullTxt.attributedStringWithColor([currentArticle.source!], color: UIColor.red)
                     cell.lblSource.attributedText = attributedWithTextColor
@@ -505,7 +504,7 @@ extension HomeiPadVC: UICollectionViewDelegate, UICollectionViewDataSource, UISc
                 }
                 let newDate = dateFormatter.date(from: currentArticle.published_on!)
                 if newDate != nil{
-                    agoDate = try Helper().timeAgoSinceDate(newDate!)
+                    agoDate = Helper().timeAgoSinceDate(newDate!)
                     fullTxt = "\(agoDate)" + " via " + currentArticle.source!
                     let attributedWithTextColor: NSAttributedString = fullTxt.attributedStringWithColor([currentArticle.source!], color: UIColor.red)
                     cellCluster.lblSource.attributedText = attributedWithTextColor
@@ -519,7 +518,7 @@ extension HomeiPadVC: UICollectionViewDelegate, UICollectionViewDataSource, UISc
                 let newDate = dateFormatter.date(from: dateSubString
                 )
                 if newDate != nil{
-                    agoDate = try Helper().timeAgoSinceDate(newDate!)
+                    agoDate = Helper().timeAgoSinceDate(newDate!)
                     fullTxt = "\(agoDate)" + " via " + currentArticle.source!
                     let attributedWithTextColor: NSAttributedString = fullTxt.attributedStringWithColor([currentArticle.source!], color: UIColor.red)
                     cellCluster.lblSource.attributedText = attributedWithTextColor
@@ -556,7 +555,7 @@ extension HomeiPadVC: UICollectionViewDelegate, UICollectionViewDataSource, UISc
         if (scrollView.bounds.maxY) == scrollView.contentSize.height{
             activityIndicator.startAnimating()
             if isTrendingDetail == 0 &&  tabBarTitle != "Test"{
-                var submenu = UserDefaults.standard.value(forKey: "submenu") as! String
+                let submenu = UserDefaults.standard.value(forKey: "submenu") as! String
                 if ShowArticle.count >= 20{
                     if isAPICalled == false{
                         let result =  DBManager().FetchNextURL(category: submenu)

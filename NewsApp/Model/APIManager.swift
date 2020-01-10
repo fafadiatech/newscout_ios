@@ -79,7 +79,7 @@ class APICall{
                 }
                 else{
                     let err = response.result.error as? URLError
-                    print(err)
+                    print(err!)
                 }
             }
         }
@@ -150,7 +150,7 @@ class APICall{
                     }
                 }
                 else{
-                    completion(String((response.response?.statusCode)!), TrendingAPIResult.Failure("\(response.response?.statusCode)"))
+                    completion(String((response.response?.statusCode)!), TrendingAPIResult.Failure("\(String(describing: response.response?.statusCode))"))
                 }
             }
             else{
@@ -180,7 +180,7 @@ class APICall{
                     }
                 }
                 else{
-                    completion(String((response.response?.statusCode)!), ArticleAPIResult.Failure("\(response.response?.statusCode)"))
+                    completion(String((response.response?.statusCode)!), ArticleAPIResult.Failure("\(String(describing: response.response?.statusCode))"))
                 }
             }
             else{
