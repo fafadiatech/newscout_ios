@@ -173,74 +173,41 @@ struct themeColor{
 
 struct APPURL {
     private struct Domains {
-        static let Local = "http://www.newscout.in" // " // "http://192.168.2.204" //"http://192.168.2.151:8000"//
+        static let Local = "http://localhost:8000" // " // "http://192.168.2.204" //"http://192.168.2.151:8000"//
         static let searchServer = "http://www.newscout.in"
-        static let Server = ""
+        static let Server = "http://www.newscout.in"
         static let version = "/api/v1/"
         static let tracking = "http://t.fafadiatech.com"
     }
     
-    private  struct Routes {
-        static let Articles = Domains.version + "articles/?page="
-        static let ArticlesByCategory = Domains.version + "articles/?category="
-        static let ArticleDetail = Domains.version + "articles/"
-        static let Login = Domains.version + "login/"
-        static let SignUp = Domains.version + "signup/"
-        static let Logout = Domains.version + "logout/"
-        static let Search = Domains.version + "article/search/?q="
-        static let Source = Domains.version + "article/search/?source="
-        static let recommendation = Domains.version + "articles/?domain=newscout"
-        static let bookmark = Domains.version + "articles/bookmark/"
-        static let likeDislike =  Domains.version + "articles/vote/"
-        static let forgotPassword = Domains.version + "forgot-password/"
-        static let changePassword = Domains.version + "change-password/"
-        static let bookmarkedArticles = Domains.version + "bookmark-articles/"
-        static let saveRemoveCategory = Domains.version + "categories/save-remove/"
-        static let getLikeList = Domains.version + "articles/like-news-list/"
-        static let getBookmarkList = Domains.version + "bookmark-articles/bookmark-news-list/"
-        static let ArticlesBytags = Domains.version + "article/search?"
-        static let ArticleById = Domains.version + "article/search?category="
-        static let ArtilceByTags2 = Domains.version + "articles/?"
-        static let menu = Domains.version + "menus/?domain=newscout"
-        static let deviceDetails = Domains.version + "device/"
-        static let NotificationDetails = Domains.version + "notification/"
-        static let socialLogin = Domains.version + "social-login/"
-        static let trending = Domains.version + "trending/?domain=newscout"
-        static let latest = Domains.version + "trending/?domain=newscout"
-        static let dailyDigest = Domains.version + "daily-digest"
-        static let tracking = Domains.version + "track?"
-    }
-    
-    static let ArticlesURL = Domains.Local + Routes.Articles
-    static let ArticlesByCategoryURL = Domains.Local + Routes.ArticlesByCategory
-    static let ArticleDetailURL =  Domains.Local + Routes.ArticleDetail
-    static let LoginURL = Domains.Local + Routes.Login
-    static let SignUpURL =  Domains.Local + Routes.SignUp
-    static let LogoutURL =  Domains.Local + Routes.Logout
-    static let SearchURL =  Domains.Local + Routes.Search
-    static let SourceURL = Domains.Local + Routes.Source
-    static let recommendationURL = Domains.Local + Routes.recommendation
-    static let bookmarkURL = Domains.Local + Routes.bookmark
-    static let likeDislikeURL = Domains.Local + Routes.likeDislike
-    static let forgotPasswordURL = Domains.Local + Routes.forgotPassword
-    static let changePasswordURL = Domains.Local + Routes.changePassword
-    static let bookmarkedArticlesURL = Domains.Local + Routes.bookmarkedArticles
-    static let saveRemoveCategoryURL = Domains.Local + Routes.saveRemoveCategory
-    static let getLikeListURL = Domains.Local + Routes.getLikeList
-    static let getBookmarkListURL = Domains.Local + Routes.getBookmarkList
-    static let ArticlesByTagsURL = Domains.Local + Routes.ArticlesBytags
-    static let ArticlesByTagsURL2 = Domains.Local + Routes.ArtilceByTags2
-    static let getMenus = Domains.Local + Routes.menu
-    static let sendDeviceDetailsURL = Domains.Local + Routes.deviceDetails
-    static let sendNotificationDetails = Domains.Local + Routes.NotificationDetails
-    static let ArticleByIdURL = Domains.Local + Routes.ArticleById
-    static let socialLoginURL = Domains.Local + Routes.socialLogin
-    static let trendingURL = Domains.Local + Routes.trending
-    static let latestURL = Domains.Local + Routes.latest
-    static let dailyDigestURL = Domains.Local + Routes.dailyDigest
+    static let apiVer = "/api/v1/"
+    static let ArticlesURL = Domains.Server + apiVer + "articles/?page="
+    static let ArticlesByCategoryURL = Domains.Server + apiVer + "articles/?category="
+    static let ArticleDetailURL =  Domains.Server + apiVer + "articles/"
+    static let LoginURL = Domains.Server + apiVer + "login/"
+    static let SignUpURL =  Domains.Server + apiVer + "signup/"
+    static let LogoutURL =  Domains.Server + apiVer + "logout/"
+    static let SearchURL =  Domains.Server + apiVer + "article/search/?q="
+    static let SourceURL = Domains.Server + apiVer + "article/search/?source="
+    static let recommendationURL = Domains.Server + apiVer + "articles/"
+    static let bookmarkURL = Domains.Server + apiVer + "articles/bookmark/"
+    static let likeDislikeURL = Domains.Server + apiVer + "articles/vote/"
+    static let forgotPasswordURL = Domains.Server + apiVer + "forgot-password/"
+    static let changePasswordURL = Domains.Server + apiVer + "change-password/"
+    static let bookmarkedArticlesURL = Domains.Server + apiVer + "bookmark-articles/"
+    static let saveRemoveCategoryURL = Domains.Server + apiVer + "categories/save-remove/"
+    static let getLikeListURL = Domains.Server + apiVer + "articles/like-news-list/"
+    static let getBookmarkListURL = Domains.Server + apiVer + "bookmark-articles/bookmark-news-list/"
+    static let ArticlesByTagsURL = Domains.Server + apiVer + "article/search?"
+    static let ArticlesByTagsURL2 = Domains.Server + apiVer + "article/search?category="
+    static let getMenus = Domains.Server + apiVer + "menus/?domain=newscout"
+    static let sendDeviceDetailsURL = Domains.Server + apiVer + "menus/"
+    static let sendNotificationDetails = Domains.Server + apiVer + "device/"
+    static let ArticleByIdURL = Domains.Server + apiVer + "notification/"
+    static let socialLoginURL = Domains.Server + apiVer + "social-login/"
+    static let trendingURL = Domains.Server + apiVer + "trending/?domain=newscout"
+    static let dailyDigest = Domains.Server + apiVer + "daily-digest"
+    static let trackingURL = Domains.tracking + "track?"
     static let imageServer = "http://images.newscout.in/unsafe/"
-    static let trackingURL = Domains.tracking + Routes.tracking
-    
 }
-
 
