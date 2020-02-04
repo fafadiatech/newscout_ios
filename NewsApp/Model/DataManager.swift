@@ -342,6 +342,36 @@ class DBManager{
         return ArticleDBfetchResult.Success(trendingArticles)
     }
     
+    //fetch news of daily digest articles
+    func fetchDailyDigestArticle() -> ArticleDBfetchResult{
+        var trendingArticleIDs = [TrendingCategory]()
+        var trendingArticles = [NewsArticle]()
+        
+        let managedContext =
+            appDelegate?.persistentContainer.viewContext
+        let fetchRequest =
+            NSFetchRequest<NewsArticle>(entityName: "NewsArticle")
+        let result = DBManager().fetchTrendingNewsIDs()
+        switch result {
+        case .Success(let DBData) :
+            trendingArticleIDs = DBData
+        case .Failure(let errorMsg) :
+            print(errorMsg)
+        }
+        for article in trendingArticleIDs{
+            fetchRequest.predicate = NSPredicate(format: "article_id = %d", article.articleID)
+            do {
+                let article = try (managedContext?.fetch(fetchRequest))!
+                if article.count > 0{
+                    trendingArticles.append(article[0])
+                }
+            }catch let error as NSError {
+                return ArticleDBfetchResult.Failure(error.localizedDescription)
+            }
+        }
+        return ArticleDBfetchResult.Success(trendingArticles)
+    }
+    
     func fetchClusterArticlesCount() -> FetchTrendingFromDB {
         var  trendingData = [TrendingCategory]()
         var trendingIDs = [Int]()

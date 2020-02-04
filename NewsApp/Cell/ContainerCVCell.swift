@@ -64,6 +64,7 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
         newsCV.reloadData()
         activityIndicator.startAnimating()
     }
+    
     func saveTrending(){
         DBManager().saveTrending{response in
             if response == true{

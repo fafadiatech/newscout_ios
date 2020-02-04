@@ -107,7 +107,7 @@ class ParentViewController: UIViewController {
     var headingName = "Trending"
     var isSwipe = false
     var menuImgSize = CGFloat()
-    var headingImg = [AssetConstants.trending, AssetConstants.sector, AssetConstants.regional, AssetConstants.finance, AssetConstants.economy, AssetConstants.misc]
+    var headingImg = [AssetConstants.trending, AssetConstants.trending, AssetConstants.trending, AssetConstants.sector, AssetConstants.regional, AssetConstants.finance, AssetConstants.economy, AssetConstants.misc]
     var submenuImgArr = [[AssetConstants.banking, AssetConstants.retail,AssetConstants.retail, AssetConstants.tech, AssetConstants.transport, AssetConstants.energy, AssetConstants.food, AssetConstants.manufacturing, AssetConstants.fintech, AssetConstants.media],
                          [AssetConstants.us, AssetConstants.china, AssetConstants.asia, AssetConstants.japan, AssetConstants.india, AssetConstants.appLogo],
                          [AssetConstants.recession, AssetConstants.personal_finance, AssetConstants.funding, AssetConstants.ipo, AssetConstants.appLogo],
@@ -349,6 +349,30 @@ class ParentViewController: UIViewController {
         }
     }
     
+    func fetchDailyDigest(){
+        activityIndicator.startAnimating()
+        let result = DBManager().fetchDailyDigestArticle()
+        switch result {
+        case .Success(let DBData) :
+            self.ShowArticle.removeAll()
+//            dailyDigestData.removeAll()
+            SwipeIndex.shared.newShowArticle.removeAll()
+//            self.ShowArticle = DBData
+//            prevTrendingData = DBData
+            
+            if self.ShowArticle.count > 0{
+                SwipeIndex.shared.newShowArticle.append(ShowArticle)
+                self.lblNonews.isHidden = true
+                containerCV.reloadData()
+            }
+            else{
+                self.activityIndicator.stopAnimating()
+            }
+        case .Failure(let errorMsg) :
+            print(errorMsg)
+        }
+    }
+    
     //fetch articles of selected cluster
     func fetchClusterIdArticles(clusterID: Int){
         let result = DBManager().fetchClusterArticles(trendingId: clusterID)
@@ -403,6 +427,10 @@ class ParentViewController: UIViewController {
             }
             headingArr.insert("Trending", at: 0)
             headingIds.insert(00, at: 0)
+            headingArr.insert("Latest News", at: 1)
+            headingIds.insert(01, at: 1)
+            headingArr.insert("Daily Digest", at: 2)
+            headingIds.insert(02, at: 2)
 //            headingArr.insert("Latest News", at: 1)
 //            headingIds.insert(01, at: 1)
 //            headingArr.insert("Trending", at: 2)
@@ -746,11 +774,11 @@ extension ParentViewController : UICollectionViewDelegate, UICollectionViewDataS
         if collectionView == menuCV{
             index = 0
             headingName = headingArr[indexPath.row]
-            if headingArr[indexPath.row] != "Trending"{
+            if (headingArr[indexPath.row] != "Trending" && headingArr[indexPath.row] != "Daily Digest" && headingArr[indexPath.row] != "Latest News"){
                 //currentIndexPath = NSIndexPath(row: 0, section: 0) as IndexPath
                 //set first row selected by default
                 isTrendingDetail = 0
-                HeadingRow = indexPath.row - 1
+                HeadingRow = indexPath.row - 3
                 unhideButtonBarView()
                 submenuCV.reloadData()
                 subMenuRow = 0
@@ -764,7 +792,7 @@ extension ParentViewController : UICollectionViewDelegate, UICollectionViewDataS
                 containerCV.selectItem(at: IndexPath(row: 0 , section: 0), animated: false, scrollPosition: [])
                 containerCV.scrollToItem(at: IndexPath(row: 0 , section: 0), at: .centeredHorizontally, animated: true)
             }
-            else{
+            else if (headingArr[indexPath.row] == "Trending"){
                 HideButtonBarView()
                 index = subMenuRow
                 isTrendingDetail = 1
@@ -778,6 +806,13 @@ extension ParentViewController : UICollectionViewDelegate, UICollectionViewDataS
                 }else{
                     self.fetchTrending()
                 }
+            }
+            else if (headingArr[indexPath.row] == "Daily Digest"){
+                HideButtonBarView()
+                index = subMenuRow
+            }
+            else{
+                
             }
         }
         else if collectionView == submenuCV{
@@ -816,7 +851,7 @@ extension ParentViewController : UICollectionViewDelegate, UICollectionViewDataS
     }
     
     func SaveAllSubmenuNews(){
-        for head in 0...headingArr.count - 2 {
+        for head in 0...headingArr.count - 4 {
             var index = 0
             while index < subMenuArr[head].count {
                 UserDefaults.standard.set(subMenuArr[head][index], forKey: "submenu")

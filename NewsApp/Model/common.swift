@@ -189,7 +189,7 @@ struct APPURL {
         static let Logout = Domains.version + "logout/"
         static let Search = Domains.version + "article/search/?q="
         static let Source = Domains.version + "article/search/?source="
-        static let recommendation = Domains.version + "articles/"
+        static let recommendation = Domains.version + "articles/?domain=newscout"
         static let bookmark = Domains.version + "articles/bookmark/"
         static let likeDislike =  Domains.version + "articles/vote/"
         static let forgotPassword = Domains.version + "forgot-password/"
@@ -205,7 +205,9 @@ struct APPURL {
         static let deviceDetails = Domains.version + "device/"
         static let NotificationDetails = Domains.version + "notification/"
         static let socialLogin = Domains.version + "social-login/"
-        static let trending = Domains.version + "trending/"
+        static let trending = Domains.version + "trending/?domain=newscout"
+        static let latest = Domains.version + "trending/?domain=newscout"
+        static let dailyDigest = Domains.version + "daily-digest"
         static let tracking = Domains.version + "track?"
     }
     
@@ -234,6 +236,8 @@ struct APPURL {
     static let ArticleByIdURL = Domains.Local + Routes.ArticleById
     static let socialLoginURL = Domains.Local + Routes.socialLogin
     static let trendingURL = Domains.Local + Routes.trending
+    static let latestURL = Domains.Local + Routes.latest
+    static let dailyDigestURL = Domains.Local + Routes.dailyDigest
     static let imageServer = "http://images.newscout.in/unsafe/"
     static let trackingURL = Domains.tracking + Routes.tracking
     
