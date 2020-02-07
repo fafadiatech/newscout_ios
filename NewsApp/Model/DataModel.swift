@@ -365,6 +365,11 @@ enum ArticleDBfetchResult {
     case Failure(String)
 }
 
+enum DailyDigestDBfetchResult {
+    case Success([DailyDigest])
+    case Failure(String)
+}
+
 enum TrendingAPIResult {
     case Success([Trending])
     case Failure(String)

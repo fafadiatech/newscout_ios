@@ -342,34 +342,23 @@ class DBManager{
         return ArticleDBfetchResult.Success(trendingArticles)
     }
     
-    //fetch news of daily digest articles
-    func fetchDailyDigestArticle() -> ArticleDBfetchResult{
-        var trendingArticleIDs = [TrendingCategory]()
-        var trendingArticles = [NewsArticle]()
-        
+    //fetch newsArticle heading->submenu->category id
+    func fetchDailyDigestArticle() -> DailyDigestDBfetchResult{
+        var ShowArticle = [DailyDigest]()
         let managedContext =
             appDelegate?.persistentContainer.viewContext
         let fetchRequest =
-            NSFetchRequest<NewsArticle>(entityName: "NewsArticle")
-        let result = DBManager().fetchTrendingNewsIDs()
-        switch result {
-        case .Success(let DBData) :
-            trendingArticleIDs = DBData
-        case .Failure(let errorMsg) :
-            print(errorMsg)
+            NSFetchRequest<DailyDigest>(entityName: "DailyDigest")
+        if UserDefaults.standard.value(forKey: "subMenuId") != nil{
+            let subMenuId = UserDefaults.standard.value(forKey: "subMenuId") as! Int
+            fetchRequest.predicate = NSPredicate(format: "categoryId = %d ", subMenuId)
         }
-        for article in trendingArticleIDs{
-            fetchRequest.predicate = NSPredicate(format: "article_id = %d", article.articleID)
-            do {
-                let article = try (managedContext?.fetch(fetchRequest))!
-                if article.count > 0{
-                    trendingArticles.append(article[0])
-                }
-            }catch let error as NSError {
-                return ArticleDBfetchResult.Failure(error.localizedDescription)
-            }
+        do {
+            ShowArticle =  try (managedContext?.fetch(fetchRequest))!
+        }catch let error as NSError {
+            return DailyDigestDBfetchResult.Failure(error.localizedDescription)
         }
-        return ArticleDBfetchResult.Success(trendingArticles)
+        return DailyDigestDBfetchResult.Success(ShowArticle)
     }
     
     func fetchClusterArticlesCount() -> FetchTrendingFromDB {
@@ -897,15 +886,10 @@ class DBManager{
             } catch let error as NSError {
                 print("Could not fetch. \(error), \(error.userInfo)")
             }
-            do {
-                for article in likeDislike{
-                    if article.article_id == Int64(id){
-                        article.isLike = Int16(status)
-                    }
+            for article in likeDislike{
+                if article.article_id == Int64(id){
+                    article.isLike = Int16(status)
                 }
-                
-            } catch {
-                print("Failed")
             }
         }
         saveBlock()
@@ -932,7 +916,7 @@ class DBManager{
             try managedContext?.save()
             completion(true)
         }
-        catch let _ as NSError  {
+        catch _ as NSError  {
             completion(false)
         }
     }
@@ -1204,17 +1188,7 @@ class DBManager{
             print ("There was an error in deleting \(entity)")
         }
     }
-//    func deleteAllData(entity:String) {
-//        func enqueue(block: @escaping (_ context: NSManagedObjectContext) -> Void) {
-//
-//                let context: NSManagedObjectContext = self.persistentContainer.newBackgroundContext()
-//                context.performAndWait{
-//                    block(context)
-//                    try? context.save() //Don't just use '?' here look at the error and log it to your analytics service
-//                }
-//            }
-//        }
-//    }
+
     func deleteSearchNextURl(){
         let managedContext = appDelegate?.persistentContainer.viewContext
         

@@ -41,8 +41,13 @@ extension UIView {
 protocol CellDelegate {
     func colCategorySelected(_ indexPath : IndexPath, _ sortedData : [NewsArticle] )
 }
+
 protocol trendingDetailClicked {
     func isTrendingDetailedOpened(status: Bool)
+}
+
+protocol SelectCategory{
+    func selectMenuCategory(index: IndexPath)
 }
 
 class ParentViewController: UIViewController {
@@ -62,6 +67,7 @@ class ParentViewController: UIViewController {
     @IBOutlet var viewAppTitle: UIView!
     @IBOutlet var lblAppTitle: UILabel!
     @IBOutlet var btnBack: UIButton!
+    @IBOutlet weak var btnMenu: UIButton!
     @IBOutlet var btnOptionMenu: UIButton!
     @IBOutlet var btnSearch: UIButton!
     @IBOutlet var menuCV: UICollectionView!
@@ -107,7 +113,7 @@ class ParentViewController: UIViewController {
     var headingName = "Trending"
     var isSwipe = false
     var menuImgSize = CGFloat()
-    var headingImg = [AssetConstants.trending, AssetConstants.trending, AssetConstants.trending, AssetConstants.sector, AssetConstants.regional, AssetConstants.finance, AssetConstants.economy, AssetConstants.misc]
+    var headingImg = [AssetConstants.trending, AssetConstants.latest, AssetConstants.trending, AssetConstants.sector, AssetConstants.regional, AssetConstants.finance, AssetConstants.economy, AssetConstants.misc]
     var submenuImgArr = [[AssetConstants.banking, AssetConstants.retail,AssetConstants.retail, AssetConstants.tech, AssetConstants.transport, AssetConstants.energy, AssetConstants.food, AssetConstants.manufacturing, AssetConstants.fintech, AssetConstants.media],
                          [AssetConstants.us, AssetConstants.china, AssetConstants.asia, AssetConstants.japan, AssetConstants.india, AssetConstants.appLogo],
                          [AssetConstants.recession, AssetConstants.personal_finance, AssetConstants.funding, AssetConstants.ipo, AssetConstants.appLogo],
@@ -561,6 +567,10 @@ class ParentViewController: UIViewController {
         }
     }
     
+    @IBAction func openSideMenu(_ sender: Any) {
+        sideMenuController?.revealMenu()
+    }
+    
     @IBAction func btnSettingsActn(_ sender: Any) {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let settingvc:SettingsVC = storyboard.instantiateViewController(withIdentifier: "SettingsID") as! SettingsVC
@@ -604,6 +614,7 @@ class ParentViewController: UIViewController {
         ShowArticle = prevTrendingData
         containerCV.reloadData()
         btnBack.isHidden = true
+        btnMenu.isHidden = false
     }
 }
 
@@ -611,6 +622,7 @@ extension ParentViewController: trendingDetailClicked {
     func isTrendingDetailedOpened(status: Bool){
         if status == true{
             btnBack.isHidden = false
+            btnMenu.isHidden = true
         }
     }
 }
@@ -740,6 +752,7 @@ extension ParentViewController : UICollectionViewDelegate, UICollectionViewDataS
     func colCategorySelected(_ indexPath : IndexPath, _ sortedData : [NewsArticle]){
         viewOptions.isHidden = true
         btnBack.isHidden = false
+        btnMenu.isHidden = true
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let newsDetailvc:NewsDetailVC = storyboard.instantiateViewController(withIdentifier: "NewsDetailID") as! NewsDetailVC
         
@@ -764,8 +777,10 @@ extension ParentViewController : UICollectionViewDelegate, UICollectionViewDataS
         }
         if isTrendingDetail == 2 {
             btnBack.isHidden = false
+            btnMenu.isHidden = true
         }else{
             btnBack.isHidden = true
+            btnMenu.isHidden = false
         }
     }
     
@@ -787,6 +802,7 @@ extension ParentViewController : UICollectionViewDelegate, UICollectionViewDataS
                 submenuCV.selectItem(at: IndexPath(row: 0 , section: 0), animated: false, scrollPosition: [])
                 submenuCV.scrollToItem(at: IndexPath(row: 0 , section: 0), at: .centeredHorizontally, animated: true)
                 btnBack.isHidden = true
+                btnMenu.isHidden = false
                 SaveSubmenuNews()
                 containerCV.reloadData()
                 containerCV.selectItem(at: IndexPath(row: 0 , section: 0), animated: false, scrollPosition: [])
@@ -906,9 +922,17 @@ extension ParentViewController: TrendingBack{
     func isTrendingTVLoaded(status: Bool) {
         if status == true{
             btnBack.isHidden = false
+            btnMenu.isHidden = true
         }else{
             btnBack.isHidden = true
+            btnMenu.isHidden = false
         }
+    }
+}
+
+extension ParentViewController: SelectCategory{
+    func selectMenuCategory(index: IndexPath){
+        collectionView(menuCV, didSelectItemAt: index)
     }
 }
 

@@ -1,112 +1,128 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="14490.99" systemVersion="18D109" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="15702" systemVersion="19C57" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="BookmarkArticles" representedClassName="BookmarkArticles" syncable="YES">
-        <attribute name="article_id" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
-        <attribute name="isBookmark" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
-        <attribute name="row_id" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
-        <relationship name="article" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="NewsArticle" inverseName="bookmark" inverseEntity="NewsArticle" syncable="YES"/>
-        <relationship name="searchArticle" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="SearchArticles" inverseName="bookmark" inverseEntity="SearchArticles" syncable="YES"/>
+        <attribute name="article_id" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="isBookmark" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="row_id" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <relationship name="article" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="NewsArticle" inverseName="bookmark" inverseEntity="NewsArticle"/>
+        <relationship name="searchArticle" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="SearchArticles" inverseName="bookmark" inverseEntity="SearchArticles"/>
     </entity>
     <entity name="Category" representedClassName="Category" syncable="YES">
-        <attribute name="cat_id" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
-        <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="cat_id" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="title" optional="YES" attributeType="String"/>
+    </entity>
+    <entity name="DailyDigest" representedClassName="DailyDigest" syncable="YES" codeGenerationType="class">
+        <attribute name="article_id" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="blurb" optional="YES" attributeType="String"/>
+        <attribute name="category" optional="YES" attributeType="String"/>
+        <attribute name="categoryId" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="current_page" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="imageURL" optional="YES" attributeType="String"/>
+        <attribute name="published_on" optional="YES" attributeType="String"/>
+        <attribute name="source" optional="YES" attributeType="String"/>
+        <attribute name="source_url" optional="YES" attributeType="String"/>
+        <attribute name="title" optional="YES" attributeType="String"/>
+        <attribute name="total_pages" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <relationship name="hashTags" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="HashTag" inverseName="digestArticleTags" inverseEntity="HashTag"/>
     </entity>
     <entity name="HashTag" representedClassName="HashTag" syncable="YES">
-        <attribute name="articleId" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
-        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
-        <relationship name="articleTags" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="NewsArticle" inverseName="hashTags" inverseEntity="NewsArticle" syncable="YES"/>
+        <attribute name="articleId" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="name" optional="YES" attributeType="String"/>
+        <relationship name="articleTags" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="NewsArticle" inverseName="hashTags" inverseEntity="NewsArticle"/>
+        <relationship name="digestArticleTags" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="DailyDigest" inverseName="hashTags" inverseEntity="DailyDigest"/>
     </entity>
     <entity name="HeadingSubMenu" representedClassName="HeadingSubMenu" syncable="YES">
-        <attribute name="headingId" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
-        <attribute name="subMenuId" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
-        <attribute name="subMenuName" optional="YES" attributeType="String" syncable="YES"/>
-        <relationship name="tags" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="MenuHashTag" inverseName="submenu" inverseEntity="MenuHashTag" syncable="YES"/>
+        <attribute name="headingId" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="subMenuId" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="subMenuName" optional="YES" attributeType="String"/>
+        <relationship name="tags" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="MenuHashTag" inverseName="submenu" inverseEntity="MenuHashTag"/>
     </entity>
     <entity name="LikeDislike" representedClassName="LikeDislike" syncable="YES">
-        <attribute name="article_id" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
-        <attribute name="isLike" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
-        <attribute name="row_id" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
-        <relationship name="likedArticle" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="NewsArticle" inverseName="likeDislike" inverseEntity="NewsArticle" syncable="YES"/>
-        <relationship name="searchlikeArticles" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="SearchArticles" inverseName="likeDislike" inverseEntity="SearchArticles" syncable="YES"/>
+        <attribute name="article_id" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="isLike" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="row_id" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <relationship name="likedArticle" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="NewsArticle" inverseName="likeDislike" inverseEntity="NewsArticle"/>
+        <relationship name="searchlikeArticles" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="SearchArticles" inverseName="likeDislike" inverseEntity="SearchArticles"/>
     </entity>
     <entity name="Media" representedClassName="Media" syncable="YES">
-        <attribute name="articleId" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
-        <attribute name="imageURL" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="mediaId" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
-        <attribute name="type" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="videoURL" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="articleId" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="imageURL" optional="YES" attributeType="String"/>
+        <attribute name="mediaId" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="type" optional="YES" attributeType="String"/>
+        <attribute name="videoURL" optional="YES" attributeType="String"/>
     </entity>
     <entity name="MenuHashTag" representedClassName="MenuHashTag" syncable="YES">
-        <attribute name="hashTagId" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
-        <attribute name="hashTagName" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="subMenuId" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
-        <attribute name="subMenuName" optional="YES" attributeType="String" syncable="YES"/>
-        <relationship name="submenu" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="HeadingSubMenu" inverseName="tags" inverseEntity="HeadingSubMenu" syncable="YES"/>
+        <attribute name="hashTagId" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="hashTagName" optional="YES" attributeType="String"/>
+        <attribute name="subMenuId" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="subMenuName" optional="YES" attributeType="String"/>
+        <relationship name="submenu" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="HeadingSubMenu" inverseName="tags" inverseEntity="HeadingSubMenu"/>
     </entity>
     <entity name="MenuHeadings" representedClassName="MenuHeadings" syncable="YES">
-        <attribute name="headingId" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
-        <attribute name="headingName" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="headingId" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="headingName" optional="YES" attributeType="String"/>
     </entity>
     <entity name="NewsArticle" representedClassName="NewsArticle" syncable="YES">
-        <attribute name="article_id" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
-        <attribute name="blurb" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="category" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="categoryId" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
-        <attribute name="current_page" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
-        <attribute name="imageURL" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="published_on" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="source" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="source_url" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="total_pages" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
-        <relationship name="bookmark" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="BookmarkArticles" inverseName="article" inverseEntity="BookmarkArticles" syncable="YES"/>
-        <relationship name="hashTags" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="HashTag" inverseName="articleTags" inverseEntity="HashTag" syncable="YES"/>
-        <relationship name="likeDislike" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="LikeDislike" inverseName="likedArticle" inverseEntity="LikeDislike" syncable="YES"/>
+        <attribute name="article_id" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="blurb" optional="YES" attributeType="String"/>
+        <attribute name="category" optional="YES" attributeType="String"/>
+        <attribute name="categoryId" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="current_page" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="imageURL" optional="YES" attributeType="String"/>
+        <attribute name="published_on" optional="YES" attributeType="String"/>
+        <attribute name="source" optional="YES" attributeType="String"/>
+        <attribute name="source_url" optional="YES" attributeType="String"/>
+        <attribute name="title" optional="YES" attributeType="String"/>
+        <attribute name="total_pages" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <relationship name="bookmark" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="BookmarkArticles" inverseName="article" inverseEntity="BookmarkArticles"/>
+        <relationship name="hashTags" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="HashTag" inverseName="articleTags" inverseEntity="HashTag"/>
+        <relationship name="likeDislike" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="LikeDislike" inverseName="likedArticle" inverseEntity="LikeDislike"/>
     </entity>
     <entity name="NewsURL" representedClassName="NewsURL" syncable="YES">
-        <attribute name="category" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="nextURL" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="prevURL" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="category" optional="YES" attributeType="String"/>
+        <attribute name="nextURL" optional="YES" attributeType="String"/>
+        <attribute name="prevURL" optional="YES" attributeType="String"/>
     </entity>
     <entity name="RecommendationID" representedClassName="RecommendationID" syncable="YES">
-        <attribute name="articleID" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
-        <attribute name="recomArticleID" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="articleID" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="recomArticleID" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
     </entity>
     <entity name="SearchArticles" representedClassName="SearchArticles" syncable="YES">
-        <attribute name="article_id" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
-        <attribute name="blurb" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="category" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="imageURL" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="published_on" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="source" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="source_url" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
-        <relationship name="bookmark" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="BookmarkArticles" inverseName="searchArticle" inverseEntity="BookmarkArticles" syncable="YES"/>
-        <relationship name="likeDislike" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="LikeDislike" inverseName="searchlikeArticles" inverseEntity="LikeDislike" syncable="YES"/>
+        <attribute name="article_id" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="blurb" optional="YES" attributeType="String"/>
+        <attribute name="category" optional="YES" attributeType="String"/>
+        <attribute name="imageURL" optional="YES" attributeType="String"/>
+        <attribute name="published_on" optional="YES" attributeType="String"/>
+        <attribute name="source" optional="YES" attributeType="String"/>
+        <attribute name="source_url" optional="YES" attributeType="String"/>
+        <attribute name="title" optional="YES" attributeType="String"/>
+        <relationship name="bookmark" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="BookmarkArticles" inverseName="searchArticle" inverseEntity="BookmarkArticles"/>
+        <relationship name="likeDislike" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="LikeDislike" inverseName="searchlikeArticles" inverseEntity="LikeDislike"/>
     </entity>
     <entity name="SearchHistory" representedClassName="SearchHistory" syncable="YES">
-        <attribute name="keyword" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="keyword" optional="YES" attributeType="String"/>
     </entity>
     <entity name="TrendingCategory" representedClassName="TrendingCategory" syncable="YES">
-        <attribute name="articleID" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
-        <attribute name="count" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
-        <attribute name="publishedOn" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="trendingID" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="articleID" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="count" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="publishedOn" optional="YES" attributeType="String"/>
+        <attribute name="trendingID" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
     </entity>
     <elements>
-        <element name="BookmarkArticles" positionX="405" positionY="18" width="128" height="120"/>
-        <element name="Category" positionX="405" positionY="18" width="128" height="75"/>
-        <element name="HashTag" positionX="405" positionY="90" width="128" height="90"/>
-        <element name="HeadingSubMenu" positionX="414" positionY="99" width="128" height="105"/>
-        <element name="LikeDislike" positionX="405" positionY="36" width="128" height="120"/>
-        <element name="Media" positionX="414" positionY="99" width="128" height="120"/>
-        <element name="MenuHashTag" positionX="423" positionY="108" width="128" height="120"/>
-        <element name="MenuHeadings" positionX="405" positionY="90" width="128" height="75"/>
-        <element name="NewsArticle" positionX="407.63671875" positionY="-45.1953125" width="128" height="255"/>
-        <element name="NewsURL" positionX="405" positionY="63" width="128" height="90"/>
-        <element name="RecommendationID" positionX="414" positionY="99" width="128" height="75"/>
-        <element name="SearchArticles" positionX="405" positionY="54" width="128" height="195"/>
-        <element name="SearchHistory" positionX="405" positionY="90" width="128" height="60"/>
-        <element name="TrendingCategory" positionX="405" positionY="90" width="128" height="105"/>
+        <element name="BookmarkArticles" positionX="569.38671875" positionY="-31.43359375" width="128" height="120"/>
+        <element name="Category" positionX="732.74609375" positionY="-78.72265625" width="128" height="75"/>
+        <element name="DailyDigest" positionX="889.01953125" positionY="22.921875" width="128" height="223"/>
+        <element name="HashTag" positionX="405" positionY="90" width="128" height="103"/>
+        <element name="HeadingSubMenu" positionX="442.64453125" positionY="210.64453125" width="128" height="105"/>
+        <element name="LikeDislike" positionX="505.765625" positionY="380.5625" width="128" height="120"/>
+        <element name="Media" positionX="882.38671875" positionY="315.56640625" width="128" height="120"/>
+        <element name="MenuHashTag" positionX="240.4140625" positionY="250.53125" width="128" height="120"/>
+        <element name="MenuHeadings" positionX="883.9453125" positionY="446.96484375" width="128" height="75"/>
+        <element name="NewsArticle" positionX="734.35546875" positionY="19.359375" width="128" height="255"/>
+        <element name="NewsURL" positionX="739.56640625" positionY="467.5" width="128" height="90"/>
+        <element name="RecommendationID" positionX="734.60546875" positionY="385.53515625" width="128" height="75"/>
+        <element name="SearchArticles" positionX="721.33203125" positionY="588.69921875" width="128" height="195"/>
+        <element name="SearchHistory" positionX="737.3671875" positionY="315.03515625" width="128" height="60"/>
+        <element name="TrendingCategory" positionX="886.25" positionY="536.4765625" width="128" height="105"/>
     </elements>
 </model>

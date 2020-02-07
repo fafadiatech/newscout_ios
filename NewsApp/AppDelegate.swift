@@ -14,6 +14,7 @@ import FBSDKLoginKit
 import Fabric
 import Crashlytics
 import Sentry
+import SideMenuSwift
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
@@ -65,14 +66,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
             UserDefaults.standard.set(false, forKey: "isWalkthroughShown")
         }
         let isWalkthroughShown = UserDefaults.standard.value(forKey: "isWalkthroughShown") as! Bool
-        var initialViewController = UIViewController()
+        
         if isWalkthroughShown == true{
-            initialViewController = storyboard.instantiateViewController(withIdentifier: "parentID")
+//            initialViewController = storyboard.instantiateViewController(withIdentifier: "parentID")
+            let ContentVC = storyboard.instantiateViewController(withIdentifier: "parentID") as! ParentViewController
+            let MenuVC = storyboard.instantiateViewController(withIdentifier: "MenuViewController") as! MenuViewController
+            MenuVC.menuItemSelected = ContentVC
+            let initialViewController = SideMenuController(contentViewController: ContentVC, menuViewController: MenuVC)
+
+            
+            self.window?.rootViewController = initialViewController
         }else{
+            var initialViewController = UIViewController()
             initialViewController = storyboard.instantiateViewController(withIdentifier: "PageID")
+            self.window?.rootViewController = initialViewController
         }
         
-        self.window?.rootViewController = initialViewController
+        
         self.window?.makeKeyAndVisible()
         return true
     }

@@ -51,6 +51,7 @@ PODS:
   - Sentry (4.1.1):
     - Sentry/Core (= 4.1.1)
   - Sentry/Core (4.1.1)
+  - SideMenuSwift (2.0.3)
   - SkyFloatingLabelTextField (3.5.1)
   - SwiftDevice (0.3.0)
   - SwiftyJSON (4.1.0)
@@ -67,6 +68,7 @@ DEPENDENCIES:
   - NightNight
   - SDWebImage
   - Sentry
+  - SideMenuSwift
   - SkyFloatingLabelTextField
   - SwiftDevice
   - SwiftyJSON
@@ -97,6 +99,8 @@ SPEC REPOS:
     - SwiftyJSON
     - Toast-Swift
     - XLPagerTabStrip
+  trunk:
+    - SideMenuSwift
 
 SPEC CHECKSUMS:
   Alamofire: e4fa87002c137ba2d8d634d2c51fabcda0d5c223
@@ -116,12 +120,13 @@ SPEC CHECKSUMS:
   NightNight: 2a5550fdd9cf424b75ebaab022c26aaba35304c8
   SDWebImage: 624d6e296c69b244bcede364c72ae0430ac14681
   Sentry: c9d0543c7223ddec036027f4c7391ea057ba9856
+  SideMenuSwift: 5c2b1496544ce3f1f08f4dddf4810eaac49f543d
   SkyFloatingLabelTextField: 4cbeece9c3aae97c6019d8fae511cb5b755874f7
   SwiftDevice: ee6e7682db9a6d79aa9e922886b1a5a1ebeb7b3c
   SwiftyJSON: c29297daf073d2aa016295d5809cdd68045c39b3
   Toast-Swift: ba0b01b095aada709d915f9beb1d38184a2721c3
   XLPagerTabStrip: c908b17cbf42fcd2598ee1adfc49bae25444d88a
 
-PODFILE CHECKSUM: 74876b242802b6c3b4946561a5e54aba2d7da143
+PODFILE CHECKSUM: 251502fdd7f61845f464e973052669c69dacbc49
 
 COCOAPODS: 1.8.4
