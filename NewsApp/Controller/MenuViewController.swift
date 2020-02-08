@@ -15,7 +15,7 @@ class MenuViewController: UIViewController{
     var menuItemSelected : SelectCategory?
     
     var menuItems = ["Trending", "Latest News", "Daily Digest", "Sector Updates", "Regional Updates", "Finance", "Economics", "Misc"]
-    var headingImg = [AssetConstants.trending, AssetConstants.latest, AssetConstants.trending, AssetConstants.sector, AssetConstants.regional, AssetConstants.finance, AssetConstants.economy, AssetConstants.misc]
+    var headingImg = [AssetConstants.trending, AssetConstants.latest, AssetConstants.daily, AssetConstants.sector, AssetConstants.regional, AssetConstants.finance, AssetConstants.economy, AssetConstants.misc]
     override func viewDidLoad() {
         super.viewDidLoad()
     }

@@ -159,6 +159,7 @@ struct AssetConstants{
     static let media = "media"
     static let trending = "newspaper"
     static let latest = "latest_news"
+    static let daily = "daily_news"
 }
 
 struct AppFontName {
@@ -188,7 +189,7 @@ struct APPURL {
     static let LoginURL = Domains.Server + apiVer + "login/"
     static let SignUpURL =  Domains.Server + apiVer + "signup/"
     static let LogoutURL =  Domains.Server + apiVer + "logout/"
-    static let SearchURL =  Domains.Server + apiVer + "article/search/?q="
+    static let SearchURL =  Domains.Server + apiVer + "article/search/?domain=newscout&q="
     static let SourceURL = Domains.Server + apiVer + "article/search/?source="
     static let recommendationURL = Domains.Server + apiVer + "articles/"
     static let bookmarkURL = Domains.Server + apiVer + "articles/bookmark/"
@@ -207,7 +208,8 @@ struct APPURL {
     static let ArticleByIdURL = Domains.Server + apiVer + "notification/"
     static let socialLoginURL = Domains.Server + apiVer + "social-login/"
     static let trendingURL = Domains.Server + apiVer + "trending/?domain=newscout"
-    static let dailyDigest = Domains.Server + apiVer + "daily-digest"
+    static let dailyDigestURL = Domains.Server + apiVer + "daily-digest"
+    static let LatestNewsURL = Domains.Server + apiVer + "article/search/?domain=newscout"
     static let trackingURL = Domains.tracking + "track?"
     static let imageServer = "http://images.newscout.in/unsafe/"
 }

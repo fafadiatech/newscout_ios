@@ -361,6 +361,24 @@ class DBManager{
         return DailyDigestDBfetchResult.Success(ShowArticle)
     }
     
+    func fetchLatestArticles() -> DailyDigestDBfetchResult{
+        var ShowArticle = [DailyDigest]()
+        let managedContext =
+            appDelegate?.persistentContainer.viewContext
+        let fetchRequest =
+            NSFetchRequest<DailyDigest>(entityName: "DailyDigest")
+        if UserDefaults.standard.value(forKey: "subMenuId") != nil{
+            let subMenuId = UserDefaults.standard.value(forKey: "subMenuId") as! Int
+            fetchRequest.predicate = NSPredicate(format: "categoryId = %d ", subMenuId)
+        }
+        do {
+            ShowArticle =  try (managedContext?.fetch(fetchRequest))!
+        }catch let error as NSError {
+            return DailyDigestDBfetchResult.Failure(error.localizedDescription)
+        }
+        return DailyDigestDBfetchResult.Success(ShowArticle)
+    }
+    
     func fetchClusterArticlesCount() -> FetchTrendingFromDB {
         var  trendingData = [TrendingCategory]()
         var trendingIDs = [Int]()

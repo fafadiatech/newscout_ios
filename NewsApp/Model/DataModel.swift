@@ -370,6 +370,11 @@ enum DailyDigestDBfetchResult {
     case Failure(String)
 }
 
+enum LatestNewsfetchResult {
+    case Success([DailyDigest])
+    case Failure(String)
+}
+
 enum TrendingAPIResult {
     case Success([Trending])
     case Failure(String)

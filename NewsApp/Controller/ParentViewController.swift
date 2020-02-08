@@ -103,6 +103,7 @@ class ParentViewController: UIViewController {
     var imgHeight = ""
     var cellHeight:CGFloat = CGFloat()
     var isTrendingDetail = 0
+    var isDailyLatest = false
     var submenuName = ""
     var menuName = ""
     var isSwipeLeft = false
@@ -113,7 +114,7 @@ class ParentViewController: UIViewController {
     var headingName = "Trending"
     var isSwipe = false
     var menuImgSize = CGFloat()
-    var headingImg = [AssetConstants.trending, AssetConstants.latest, AssetConstants.trending, AssetConstants.sector, AssetConstants.regional, AssetConstants.finance, AssetConstants.economy, AssetConstants.misc]
+    var headingImg = [AssetConstants.trending, AssetConstants.latest, AssetConstants.daily, AssetConstants.sector, AssetConstants.regional, AssetConstants.finance, AssetConstants.economy, AssetConstants.misc]
     var submenuImgArr = [[AssetConstants.banking, AssetConstants.retail,AssetConstants.retail, AssetConstants.tech, AssetConstants.transport, AssetConstants.energy, AssetConstants.food, AssetConstants.manufacturing, AssetConstants.fintech, AssetConstants.media],
                          [AssetConstants.us, AssetConstants.china, AssetConstants.asia, AssetConstants.japan, AssetConstants.india, AssetConstants.appLogo],
                          [AssetConstants.recession, AssetConstants.personal_finance, AssetConstants.funding, AssetConstants.ipo, AssetConstants.appLogo],
@@ -379,6 +380,30 @@ class ParentViewController: UIViewController {
         }
     }
     
+    func fetchLatestNews(){
+            activityIndicator.startAnimating()
+            let result = DBManager().fetchLatestArticles()
+            switch result {
+            case .Success(let DBData) :
+                self.ShowArticle.removeAll()
+    //            dailyDigestData.removeAll()
+                SwipeIndex.shared.newShowArticle.removeAll()
+    //            self.ShowArticle = DBData
+    //            prevTrendingData = DBData
+                
+                if self.ShowArticle.count > 0{
+                    SwipeIndex.shared.newShowArticle.append(ShowArticle)
+                    self.lblNonews.isHidden = true
+                    containerCV.reloadData()
+                }
+                else{
+                    self.activityIndicator.stopAnimating()
+                }
+            case .Failure(let errorMsg) :
+                print(errorMsg)
+            }
+        }
+    
     //fetch articles of selected cluster
     func fetchClusterIdArticles(clusterID: Int){
         let result = DBManager().fetchClusterArticles(trendingId: clusterID)
@@ -468,9 +493,9 @@ class ParentViewController: UIViewController {
         case .Failure(let error) :
             print(error)
         }
-        DispatchQueue.global(qos: .userInitiated).async {
-            self.SaveAllSubmenuNews()
-        }
+//        DispatchQueue.global(qos: .userInitiated).async {
+//            self.SaveAllSubmenuNews()
+//        }
         HideButtonBarView()
     }
     
@@ -825,10 +850,13 @@ extension ParentViewController : UICollectionViewDelegate, UICollectionViewDataS
             }
             else if (headingArr[indexPath.row] == "Daily Digest"){
                 HideButtonBarView()
-                index = subMenuRow
+                isDailyLatest = true
+                fetchDailyDigest()
             }
-            else{
-                
+            else if (headingArr[indexPath.row] == "Latest News"){
+                HideButtonBarView()
+                isDailyLatest = true
+                fetchLatestNews()
             }
         }
         else if collectionView == submenuCV{

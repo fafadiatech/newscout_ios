@@ -26,7 +26,7 @@ class APICall{
     //API call to load all articles on HomeVC
     func loadNewsAPI(page: Int, _ completion : @escaping (ArticleAPIResult) -> ()){
         let url = APPURL.ArticlesURL + "\(page)"
-        print(url)
+        print("LoadNewsAPI", url)
         Alamofire.request(url,method: .get).responseString{
             response in
             if(response.result.isSuccess){
@@ -56,7 +56,7 @@ class APICall{
         }
         let _url = url + "&domain=newscout"
         let newurl = _url.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)!
-        print(newurl)
+        print("LoadNewsByCategoryAPI", newurl)
         Alamofire.request(newurl, method: .get, headers: headers).responseString{
             response in
             if(response.result.isSuccess){
@@ -96,7 +96,7 @@ class APICall{
     
     func loadRecommendationNewsAPI(articleId : Int,_ completion : @escaping (String, RecommendationAPIResult) -> ()){
         let url = APPURL.recommendationURL + "\(articleId)" + "/recommendations/"
-        print(url)
+        print("RecommendationNewsAPI", url)
         Alamofire.request(url,method: .get).responseJSON{
             response in
             if(response.result.isSuccess){
@@ -138,7 +138,7 @@ class APICall{
     }
     
     func loadTrendingArticles(completion : @escaping (String, TrendingAPIResult) -> ()){
-        print(APPURL.trendingURL)
+        print("TrendingArticles", APPURL.trendingURL)
         Alamofire.request(APPURL.trendingURL ,method: .get).responseJSON{
             response in
             if(response.result.isSuccess){
@@ -167,7 +167,7 @@ class APICall{
     }
     
     func loadSearchAPI(url: String,_ completion : @escaping (String, ArticleAPIResult) -> ()){
-        print(url)
+        print("SearchAPI", url)
         Alamofire.request(url,method: .get, encoding: URLEncoding.default).responseJSON{
             response in
             if(response.result.isSuccess){
@@ -231,7 +231,7 @@ class APICall{
     //send notification updates
     func notificationAPI(param : Dictionary<String, String>,_ completion : @escaping (Int , String) ->()) {
         let url = APPURL.sendNotificationDetails
-        print(url)
+        print("NotificationAPI", url)
         Alamofire.request(url,method: .post, parameters: param).responseString{
             response in
             if(response.result.isSuccess){
@@ -262,7 +262,7 @@ class APICall{
     //send device details
     func deviceAPI(param : Dictionary<String, String>,_ completion : @escaping (Int , String) ->()) {
         let url = APPURL.sendDeviceDetailsURL
-        print(url)
+        print("DeviceAPI", url)
         Alamofire.request(url,method: .post, parameters: param).responseString{
             response in
             if(response.result.isSuccess){
@@ -292,7 +292,7 @@ class APICall{
     //Login API
     func LoginAPI(param : Dictionary<String, String>,_ completion : @escaping (Int , String) ->()) {
         let url = APPURL.LoginURL
-        print(url)
+        print("Login", url)
         Alamofire.request(url,method: .post, parameters: param).responseString{
             response in
             if(response.result.isSuccess){
@@ -674,7 +674,7 @@ class APICall{
     }
     
     func getMenu(_ completion : @escaping (MenuAPIResult) ->()){
-        print(APPURL.getMenus)
+        print("Get Menu", APPURL.getMenus)
         Alamofire.request(APPURL.getMenus, method: .get).responseString{
             response in
             if(response.result.isSuccess){
