@@ -366,7 +366,7 @@ enum ArticleDBfetchResult {
 }
 
 enum DailyDigestDBfetchResult {
-    case Success([DailyDigest])
+    case Success([NewsArticle])
     case Failure(String)
 }
 

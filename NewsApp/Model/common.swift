@@ -208,7 +208,7 @@ struct APPURL {
     static let ArticleByIdURL = Domains.Server + apiVer + "notification/"
     static let socialLoginURL = Domains.Server + apiVer + "social-login/"
     static let trendingURL = Domains.Server + apiVer + "trending/?domain=newscout"
-    static let dailyDigestURL = Domains.Server + apiVer + "daily-digest"
+    static let dailyDigestURL = Domains.Server + apiVer + "daily-digest/"
     static let LatestNewsURL = Domains.Server + apiVer + "article/search/?domain=newscout"
     static let trackingURL = Domains.tracking + "track?"
     static let imageServer = "http://images.newscout.in/unsafe/"

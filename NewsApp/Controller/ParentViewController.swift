@@ -12,6 +12,13 @@ import MaterialComponents.MaterialActivityIndicator
 import SDWebImage
 import NightNight
 
+enum NewsCategory{
+    case trending
+    case daily
+    case latest
+    case others
+}
+
 extension UIView {
     func dropShadow(scale: Bool = true) {
         layer.masksToBounds = false
@@ -46,7 +53,7 @@ protocol trendingDetailClicked {
     func isTrendingDetailedOpened(status: Bool)
 }
 
-protocol SelectCategory{
+protocol SelectCategory: class{
     func selectMenuCategory(index: IndexPath)
 }
 
@@ -103,7 +110,7 @@ class ParentViewController: UIViewController {
     var imgHeight = ""
     var cellHeight:CGFloat = CGFloat()
     var isTrendingDetail = 0
-    var isDailyLatest = false
+    var newsCat = NewsCategory.trending
     var submenuName = ""
     var menuName = ""
     var isSwipeLeft = false
@@ -818,6 +825,7 @@ extension ParentViewController : UICollectionViewDelegate, UICollectionViewDataS
                 //currentIndexPath = NSIndexPath(row: 0, section: 0) as IndexPath
                 //set first row selected by default
                 isTrendingDetail = 0
+                newsCat = .others
                 HeadingRow = indexPath.row - 3
                 unhideButtonBarView()
                 submenuCV.reloadData()
@@ -837,6 +845,7 @@ extension ParentViewController : UICollectionViewDelegate, UICollectionViewDataS
                 HideButtonBarView()
                 index = subMenuRow
                 isTrendingDetail = 1
+                newsCat = .trending
                 if prevTrendingData.count > 0{
                     DispatchQueue.global(qos: .userInitiated).async {
                         self.ShowArticle = self.prevTrendingData
@@ -850,12 +859,12 @@ extension ParentViewController : UICollectionViewDelegate, UICollectionViewDataS
             }
             else if (headingArr[indexPath.row] == "Daily Digest"){
                 HideButtonBarView()
-                isDailyLatest = true
+                newsCat = .daily
                 fetchDailyDigest()
             }
             else if (headingArr[indexPath.row] == "Latest News"){
                 HideButtonBarView()
-                isDailyLatest = true
+                newsCat = .latest
                 fetchLatestNews()
             }
         }
@@ -865,6 +874,7 @@ extension ParentViewController : UICollectionViewDelegate, UICollectionViewDataS
             //            submenuCV.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
             //      SwipeIndex.shared.currentIndex = indexPath.row
             isSwipe = false
+            newsCat = .others
             self.currentIndexPath = indexPath
             subMenuRow = indexPath.row
             submenuName = subMenuArr[HeadingRow][subMenuRow]

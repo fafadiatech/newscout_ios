@@ -44,6 +44,29 @@ class APICall{
             }
         }
     }
+    
+    //API call for Daily Digest & Latest News
+    func loadDailyDigestNewsAPI(url: String, _ completion : @escaping (ArticleAPIResult) -> ()){
+        print("LoadDailyDigestNewsAPI", url)
+        Alamofire.request(url,method: .get).responseString{
+            response in
+            if(response.result.isSuccess){
+                if let data = response.data {
+                    let jsonDecoder = JSONDecoder()
+                    do {
+                        let jsonData = try jsonDecoder.decode(ArticleStatus.self, from: data)
+                        completion(ArticleAPIResult.Success([jsonData]))
+                    }
+                    catch {
+                        completion(ArticleAPIResult.Failure(error.localizedDescription
+                        ))
+                    }
+                }
+            }
+        }
+    }
+    
+    
     //load articles by category
     func loadNewsbyCategoryAPI(url: String, _ completion : @escaping (String, ArticleAPIResult) -> ()){
         var headers : [String: String]
@@ -54,8 +77,7 @@ class APICall{
         else{
             headers = ["Authorization": ""]
         }
-        let _url = url + "&domain=newscout"
-        let newurl = _url.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)!
+        let newurl = url.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)!
         print("LoadNewsByCategoryAPI", newurl)
         Alamofire.request(newurl, method: .get, headers: headers).responseString{
             response in

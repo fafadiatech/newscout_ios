@@ -344,39 +344,24 @@ class DBManager{
     
     //fetch newsArticle heading->submenu->category id
     func fetchDailyDigestArticle() -> DailyDigestDBfetchResult{
-        var ShowArticle = [DailyDigest]()
-        let managedContext =
-            appDelegate?.persistentContainer.viewContext
-        let fetchRequest =
-            NSFetchRequest<DailyDigest>(entityName: "DailyDigest")
-        if UserDefaults.standard.value(forKey: "subMenuId") != nil{
-            let subMenuId = UserDefaults.standard.value(forKey: "subMenuId") as! Int
-            fetchRequest.predicate = NSPredicate(format: "categoryId = %d ", subMenuId)
+        var articles = [NewsArticle]()
+        APICall().loadDailyDigestNewsAPI(url: APPURL.dailyDigestURL) { (response) in
+            switch response{
+            case .Success(let data):
+                self.ArticleData = data
+            case .Failure(let errormsg):
+                print(errormsg)
+            case .Change(let code):
+                print(code)
+            }
         }
-        do {
-            ShowArticle =  try (managedContext?.fetch(fetchRequest))!
-        }catch let error as NSError {
-            return DailyDigestDBfetchResult.Failure(error.localizedDescription)
-        }
-        return DailyDigestDBfetchResult.Success(ShowArticle)
+        
+        return DailyDigestDBfetchResult.Success(articles)
     }
     
     func fetchLatestArticles() -> DailyDigestDBfetchResult{
-        var ShowArticle = [DailyDigest]()
-        let managedContext =
-            appDelegate?.persistentContainer.viewContext
-        let fetchRequest =
-            NSFetchRequest<DailyDigest>(entityName: "DailyDigest")
-        if UserDefaults.standard.value(forKey: "subMenuId") != nil{
-            let subMenuId = UserDefaults.standard.value(forKey: "subMenuId") as! Int
-            fetchRequest.predicate = NSPredicate(format: "categoryId = %d ", subMenuId)
-        }
-        do {
-            ShowArticle =  try (managedContext?.fetch(fetchRequest))!
-        }catch let error as NSError {
-            return DailyDigestDBfetchResult.Failure(error.localizedDescription)
-        }
-        return DailyDigestDBfetchResult.Success(ShowArticle)
+        var articles = [NewsArticle]()
+        return DailyDigestDBfetchResult.Success(articles)
     }
     
     func fetchClusterArticlesCount() -> FetchTrendingFromDB {
@@ -1328,6 +1313,7 @@ class DBManager{
             return MenuHashTagDBFetchResult.Failure(error.localizedDescription)
         }
     }
+    
     func fetchsubmenuId(subMenuName : String) -> submenuIdDBFetchResult{
         let managedContext =
             appDelegate?.persistentContainer.viewContext

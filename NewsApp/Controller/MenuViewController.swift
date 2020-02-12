@@ -12,7 +12,7 @@ import UIKit
 
 class MenuViewController: UIViewController{
     @IBOutlet weak var menuTVC: UITableView!
-    var menuItemSelected : SelectCategory?
+    weak var menuItemSelected : SelectCategory?
     
     var menuItems = ["Trending", "Latest News", "Daily Digest", "Sector Updates", "Regional Updates", "Finance", "Economics", "Misc"]
     var headingImg = [AssetConstants.trending, AssetConstants.latest, AssetConstants.daily, AssetConstants.sector, AssetConstants.regional, AssetConstants.finance, AssetConstants.economy, AssetConstants.misc]
