@@ -367,21 +367,9 @@ class ParentViewController: UIViewController {
         activityIndicator.startAnimating()
         let result = DBManager().fetchDailyDigestArticle()
         switch result {
-        case .Success(let DBData) :
-            self.ShowArticle.removeAll()
-//            dailyDigestData.removeAll()
-            SwipeIndex.shared.newShowArticle.removeAll()
-//            self.ShowArticle = DBData
-//            prevTrendingData = DBData
-            
-            if self.ShowArticle.count > 0{
-                SwipeIndex.shared.newShowArticle.append(ShowArticle)
-                self.lblNonews.isHidden = true
-                containerCV.reloadData()
-            }
-            else{
-                self.activityIndicator.stopAnimating()
-            }
+        case .Success(let DBData):
+            self.activityIndicator.stopAnimating()
+            containerCV.reloadData()
         case .Failure(let errorMsg) :
             print(errorMsg)
         }
@@ -691,7 +679,7 @@ extension ParentViewController : UICollectionViewDelegate, UICollectionViewDataS
         if collectionView == menuCV{
             return headingArr.count
         }else if collectionView == containerCV{
-            if isTrendingDetail == 1{
+            if (isTrendingDetail == 1 || newsCat == .daily || newsCat == .latest || newsCat == .trending){
                 return 1
             }else{
                 return (subMenuArr.count > 0) ? subMenuArr[HeadingRow].count : 0
@@ -726,6 +714,12 @@ extension ParentViewController : UICollectionViewDelegate, UICollectionViewDataS
                 cell.isTrending = true
                 cell.newShowArticle.append(prevTrendingData)
                 cell.newsCV.reloadData()
+            }
+            else if(newsCat == .daily){
+                
+            }
+            else if(newsCat == .latest){
+                    
             }
             else{
                 if submenuCV.isHidden == false{

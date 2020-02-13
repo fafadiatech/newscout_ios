@@ -46,7 +46,7 @@ class APICall{
     }
     
     //API call for Daily Digest & Latest News
-    func loadDailyDigestNewsAPI(url: String, _ completion : @escaping (ArticleAPIResult) -> ()){
+    func loadDailyDigestNewsAPI(url: String, _ completion : @escaping (DailyDigestAPIResult) -> ()){
         print("LoadDailyDigestNewsAPI", url)
         Alamofire.request(url,method: .get).responseString{
             response in
@@ -54,11 +54,12 @@ class APICall{
                 if let data = response.data {
                     let jsonDecoder = JSONDecoder()
                     do {
-                        let jsonData = try jsonDecoder.decode(ArticleStatus.self, from: data)
-                        completion(ArticleAPIResult.Success([jsonData]))
+                        let jsonData = try jsonDecoder.decode(DailyDigestResponse.self, from: data)
+                        completion(DailyDigestAPIResult.Success([jsonData]))
                     }
                     catch {
-                        completion(ArticleAPIResult.Failure(error.localizedDescription
+                        print(error)
+                        completion(DailyDigestAPIResult.Failure(error.localizedDescription
                         ))
                     }
                 }

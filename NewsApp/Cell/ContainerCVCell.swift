@@ -34,6 +34,7 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
     var selectedObj : CellDelegate?
     var trendingClickedObj : trendingDetailClicked?
     var trendingTVProtocol : TrendingBack?
+    var newsCat = NewsCategory.trending
     var isAPICalled = false
     
     required init?(coder aDecoder: NSCoder) {

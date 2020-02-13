@@ -344,11 +344,12 @@ class DBManager{
     
     //fetch newsArticle heading->submenu->category id
     func fetchDailyDigestArticle() -> DailyDigestDBfetchResult{
-        var articles = [NewsArticle]()
+        var articles = [DailyDigestResult]()
+        var dailyDigestData = [DailyDigestResponse]()
         APICall().loadDailyDigestNewsAPI(url: APPURL.dailyDigestURL) { (response) in
             switch response{
             case .Success(let data):
-                self.ArticleData = data
+                dailyDigestData = data
             case .Failure(let errormsg):
                 print(errormsg)
             case .Change(let code):
@@ -356,11 +357,19 @@ class DBManager{
             }
         }
         
+        for item in dailyDigestData{
+            if item.header.status == "1" {
+                return DailyDigestDBfetchResult.Success(item.body.results)
+            }
+            else{
+                return DailyDigestDBfetchResult.Failure("Error in Daily Digest response")
+            }
+        }
         return DailyDigestDBfetchResult.Success(articles)
     }
     
     func fetchLatestArticles() -> DailyDigestDBfetchResult{
-        var articles = [NewsArticle]()
+        var articles = [DailyDigestResult]()
         return DailyDigestDBfetchResult.Success(articles)
     }
     

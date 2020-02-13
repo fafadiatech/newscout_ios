@@ -145,6 +145,35 @@ struct Article: Decodable{
     }
 }
 
+//// MARK: - Welcome
+struct DailyDigestResponse:Decodable {
+    let header: Header
+    let body: DailyDigestBody
+}
+
+// MARK: - Body
+struct DailyDigestBody:Decodable {
+    let results: [DailyDigestResult]
+}
+
+// MARK: - Result
+struct DailyDigestResult:Decodable {
+    let id: Int?
+    let title, source, category: String?
+    let hash_tags: [String]?
+    let source_url: String?
+    let cover_image: String?
+    let blurb, published_on: String?
+    let article_media: [ArticleMedia]?
+    let category_id: Int?
+    let domain: String?
+    let active: Bool?
+    let source_id: Int?
+    let article_format: String?
+    let author, slug: String?
+    let article_score: Double?
+}
+
 //for news detail
 struct ArticleDetails: Decodable{
     let header : Header
@@ -350,6 +379,11 @@ enum ArticleAPIResult {
     case Change(Int)
 }
 
+enum DailyDigestAPIResult {
+    case Success([DailyDigestResponse])
+    case Failure(String)
+    case Change(Int)
+}
 enum RecommendationAPIResult {
     case Success([Recommendation])
     case Failure(String)
@@ -366,7 +400,7 @@ enum ArticleDBfetchResult {
 }
 
 enum DailyDigestDBfetchResult {
-    case Success([NewsArticle])
+    case Success([DailyDigestResult])
     case Failure(String)
 }
 
