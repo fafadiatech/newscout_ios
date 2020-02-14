@@ -716,10 +716,10 @@ extension ParentViewController : UICollectionViewDelegate, UICollectionViewDataS
                 cell.newsCV.reloadData()
             }
             else if(newsCat == .daily){
-                
+                cell.newsCat = newsCat
             }
             else if(newsCat == .latest){
-                    
+                cell.newsCat = newsCat
             }
             else{
                 if submenuCV.isHidden == false{
