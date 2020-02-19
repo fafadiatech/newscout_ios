@@ -443,6 +443,8 @@ class DBManager{
         if UserDefaults.standard.value(forKey: "subMenuId") != nil{
             let subMenuId = 123
             fetchRequest.predicate = NSPredicate(format: "categoryId = %d ", subMenuId)
+            let sort = NSSortDescriptor(key: #keyPath(NewsArticle.published_on), ascending: false)
+            fetchRequest.sortDescriptors = [sort]
         }
         do {
             ShowArticle =  try (managedContext?.fetch(fetchRequest))!
