@@ -11,25 +11,14 @@
         <attribute name="cat_id" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="title" optional="YES" attributeType="String"/>
     </entity>
-    <entity name="DailyDigest" representedClassName="DailyDigest" syncable="YES" codeGenerationType="class">
+    <entity name="DailyDigestCategory" representedClassName="DailyDigestCategory" syncable="YES" codeGenerationType="class">
         <attribute name="article_id" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
-        <attribute name="blurb" optional="YES" attributeType="String"/>
-        <attribute name="category" optional="YES" attributeType="String"/>
-        <attribute name="categoryId" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
-        <attribute name="current_page" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
-        <attribute name="imageURL" optional="YES" attributeType="String"/>
         <attribute name="published_on" optional="YES" attributeType="String"/>
-        <attribute name="source" optional="YES" attributeType="String"/>
-        <attribute name="source_url" optional="YES" attributeType="String"/>
-        <attribute name="title" optional="YES" attributeType="String"/>
-        <attribute name="total_pages" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
-        <relationship name="hashTags" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="HashTag" inverseName="digestArticleTags" inverseEntity="HashTag"/>
     </entity>
     <entity name="HashTag" representedClassName="HashTag" syncable="YES">
         <attribute name="articleId" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="name" optional="YES" attributeType="String"/>
         <relationship name="articleTags" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="NewsArticle" inverseName="hashTags" inverseEntity="NewsArticle"/>
-        <relationship name="digestArticleTags" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="DailyDigest" inverseName="hashTags" inverseEntity="DailyDigest"/>
     </entity>
     <entity name="HeadingSubMenu" representedClassName="HeadingSubMenu" syncable="YES">
         <attribute name="headingId" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
@@ -111,8 +100,8 @@
     <elements>
         <element name="BookmarkArticles" positionX="569.38671875" positionY="-31.43359375" width="128" height="120"/>
         <element name="Category" positionX="732.74609375" positionY="-78.72265625" width="128" height="75"/>
-        <element name="DailyDigest" positionX="889.01953125" positionY="22.921875" width="128" height="223"/>
-        <element name="HashTag" positionX="405" positionY="90" width="128" height="103"/>
+        <element name="DailyDigestCategory" positionX="889.01953125" positionY="22.921875" width="128" height="73"/>
+        <element name="HashTag" positionX="405" positionY="90" width="128" height="88"/>
         <element name="HeadingSubMenu" positionX="442.64453125" positionY="210.64453125" width="128" height="105"/>
         <element name="LikeDislike" positionX="505.765625" positionY="380.5625" width="128" height="120"/>
         <element name="Media" positionX="882.38671875" positionY="315.56640625" width="128" height="120"/>

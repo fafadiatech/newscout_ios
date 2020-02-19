@@ -400,12 +400,12 @@ enum ArticleDBfetchResult {
 }
 
 enum DailyDigestDBfetchResult {
-    case Success([DailyDigestResult])
+    case Success([NewsArticle])
     case Failure(String)
 }
 
 enum LatestNewsfetchResult {
-    case Success([DailyDigest])
+    case Success([NewsArticle])
     case Failure(String)
 }
 
@@ -416,6 +416,12 @@ enum TrendingAPIResult {
 
 enum FetchTrendingFromDB{
     case Success([TrendingCategory])
+    case Failure(String)
+}
+
+
+enum FetchDDIDs{
+    case Success([DailyDigestCategory])
     case Failure(String)
 }
 

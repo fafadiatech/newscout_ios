@@ -148,7 +148,7 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if isTrending == false{
-            if (submenuCount == 0 || newShowArticle.count == 0){
+            if (newsCat == .others && (submenuCount == 0 || newShowArticle.count == 0)){
                 return 0
             }
             return (newShowArticle[submenuCount].count > 0) ? self.newShowArticle[submenuCount].count : 0
@@ -225,6 +225,14 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
             if isTrending == false{
                 sortedData = newShowArticle[submenuCount].sorted{ $0.published_on! > $1.published_on! }
                 currentArticle = sortedData[indexPath.row]
+                if newsCat == .others{
+                    sortedData = newShowArticle[submenuCount].sorted{ $0.published_on! > $1.published_on! }
+                    currentArticle = newShowArticle[submenuCount][indexPath.row]
+                }
+                if (newsCat == .latest || newsCat == .daily ){
+                    currentArticle = newShowArticle[0][indexPath.row]
+                }
+
                 if indexPath.row % 2 == 0{
                     //display data from DB
                     let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "HomeIphoneAlternateID", for:indexPath) as! HomeiPhoneAlternateCVCell

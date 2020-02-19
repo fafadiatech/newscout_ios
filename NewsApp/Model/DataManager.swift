@@ -56,11 +56,11 @@ class DBManager{
                                 if url.category == submenu {
                                     url.nextURL = self.ArticleData[0].body?.next
                                     if UserDefaults.standard.value(forKey: "homeNextURL") != nil{
-                                    let tempURL = UserDefaults.standard.value(forKey: "homeNextURL") as! String
-                                    if url.nextURL != tempURL{ UserDefaults.standard.set(self.ArticleData[0].body?.next, forKey: "homeNextURL")
-                                    }else{
-                                        UserDefaults.standard.removeObject(forKey: "homeNextURL")
-                                    }
+                                        let tempURL = UserDefaults.standard.value(forKey: "homeNextURL") as! String
+                                        if url.nextURL != tempURL{ UserDefaults.standard.set(self.ArticleData[0].body?.next, forKey: "homeNextURL")
+                                        }else{
+                                            UserDefaults.standard.removeObject(forKey: "homeNextURL")
+                                        }
                                     }
                             
                                 }
@@ -342,35 +342,115 @@ class DBManager{
         return ArticleDBfetchResult.Success(trendingArticles)
     }
     
-    //fetch newsArticle heading->submenu->category id
-    func fetchDailyDigestArticle() -> DailyDigestDBfetchResult{
-        var articles = [DailyDigestResult]()
-        var dailyDigestData = [DailyDigestResponse]()
+    func saveDailyDigestArticles(_ completion : @escaping (Bool) -> ()) {
+        let managedContext = appDelegate?.persistentContainer.viewContext
+        var DailyDigestData = [DailyDigestResponse]()
         APICall().loadDailyDigestNewsAPI(url: APPURL.dailyDigestURL) { (response) in
             switch response{
             case .Success(let data):
-                dailyDigestData = data
-            case .Failure(let errormsg):
-                print(errormsg)
-            case .Change(let code):
-                print(code)
-            }
+                    DailyDigestData = data
+                case .Failure(let errormsg):
+                    print(errormsg)
+                case .Change(let code):
+                    print(code)
+                }
+            
+            if DailyDigestData.count > 0{
+                if DailyDigestData[0].header.status == "1" {
+                    for news in DailyDigestData[0].body.results{
+                        let Article = NewsArticle(context: managedContext!)
+                        let newsDailyDigest  = DailyDigestCategory(context: managedContext!)
+                        newsDailyDigest.article_id = Int64(news.id!)
+                        newsDailyDigest.published_on = news.published_on!
+                        if  self.someEntityExists(id: Int(news.id!), entity: "NewsArticle", keyword: "") == false{
+                            Article.article_id = Int64(news.id!)
+                            Article.title = news.title
+                            Article.source = news.source!
+                            Article.imageURL = news.cover_image
+                            Article.source_url = news.source_url
+                            Article.published_on = news.published_on
+                            Article.blurb = news.blurb
+                            Article.categoryId = Int64(news.category_id!)
+                        }
+                        self.saveBlock()
+                    }
+                    completion(true)
+                }
+                else{
+                    completion(false)
+                }
+             }
+             else{
+               completion(false)
+           }
+       }
+   }
+
+    func fetchDailyDigestIds() -> FetchDDIDs{
+        var  ddData = [DailyDigestCategory]()
+        let managedContext =
+            appDelegate?.persistentContainer.viewContext
+        let ddRequest =  NSFetchRequest<DailyDigestCategory>(entityName: "DailyDigestCategory")
+        let sort = NSSortDescriptor(key: #keyPath(DailyDigestCategory.published_on), ascending: false)
+        ddRequest.sortDescriptors = [sort]
+        do {
+            ddData = try (managedContext?.fetch(ddRequest))!
+        }catch let error as NSError {
+            return FetchDDIDs.Failure(error.localizedDescription)
         }
-        
-        for item in dailyDigestData{
-            if item.header.status == "1" {
-                return DailyDigestDBfetchResult.Success(item.body.results)
-            }
-            else{
-                return DailyDigestDBfetchResult.Failure("Error in Daily Digest response")
-            }
-        }
-        return DailyDigestDBfetchResult.Success(articles)
+        return FetchDDIDs.Success(ddData)
     }
     
-    func fetchLatestArticles() -> DailyDigestDBfetchResult{
-        var articles = [DailyDigestResult]()
-        return DailyDigestDBfetchResult.Success(articles)
+    //fetch newsArticle heading->submenu->category id
+    func fetchDailyDigestArticles() -> DailyDigestDBfetchResult{
+        var ddArticleIDs = [DailyDigestCategory]()
+        var ddArticles = [NewsArticle]()
+        
+        let managedContext =
+            appDelegate?.persistentContainer.viewContext
+        let fetchRequest =
+            NSFetchRequest<NewsArticle>(entityName: "NewsArticle")
+        let result = DBManager().fetchDailyDigestIds()
+        switch result {
+        case .Success(let DBData) :
+            ddArticleIDs = DBData
+        case .Failure(let errorMsg) :
+            print(errorMsg)
+        }
+        for dd in ddArticleIDs{
+            fetchRequest.predicate = NSPredicate(format: "article_id = %d", dd.article_id)
+            do {
+                let article = try (managedContext?.fetch(fetchRequest))!
+                if article.count > 0{
+                    ddArticles.append(article[0])
+                }
+            }catch let error as NSError {
+                return DailyDigestDBfetchResult.Failure(error.localizedDescription)
+            }
+        }
+        return DailyDigestDBfetchResult.Success(ddArticles)
+    }
+        
+    
+    
+    //fetch newsArticle heading->submenu->category id
+    func fetchLatestArticles() -> ArticleDBfetchResult{
+        var ShowArticle = [NewsArticle]()
+        let managedContext =
+            appDelegate?.persistentContainer.viewContext
+        let fetchRequest =
+            NSFetchRequest<NewsArticle>(entityName: "NewsArticle")
+        if UserDefaults.standard.value(forKey: "subMenuId") != nil{
+            let subMenuId = 123
+            fetchRequest.predicate = NSPredicate(format: "categoryId = %d ", subMenuId)
+        }
+        do {
+            ShowArticle =  try (managedContext?.fetch(fetchRequest))!
+        }catch let error as NSError {
+            return ArticleDBfetchResult.Failure(error.localizedDescription)
+        }
+        return ArticleDBfetchResult.Success(ShowArticle)
+
     }
     
     func fetchClusterArticlesCount() -> FetchTrendingFromDB {

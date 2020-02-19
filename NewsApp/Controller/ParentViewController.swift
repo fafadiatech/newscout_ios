@@ -365,10 +365,11 @@ class ParentViewController: UIViewController {
     
     func fetchDailyDigest(){
         activityIndicator.startAnimating()
-        let result = DBManager().fetchDailyDigestArticle()
+        let result = DBManager().fetchDailyDigestArticles()
         switch result {
         case .Success(let DBData):
             self.activityIndicator.stopAnimating()
+            ShowArticle = DBData
             containerCV.reloadData()
         case .Failure(let errorMsg) :
             print(errorMsg)
@@ -376,28 +377,27 @@ class ParentViewController: UIViewController {
     }
     
     func fetchLatestNews(){
-            activityIndicator.startAnimating()
-            let result = DBManager().fetchLatestArticles()
-            switch result {
-            case .Success(let DBData) :
-                self.ShowArticle.removeAll()
-    //            dailyDigestData.removeAll()
-                SwipeIndex.shared.newShowArticle.removeAll()
-    //            self.ShowArticle = DBData
-    //            prevTrendingData = DBData
-                
-                if self.ShowArticle.count > 0{
-                    SwipeIndex.shared.newShowArticle.append(ShowArticle)
-                    self.lblNonews.isHidden = true
-                    containerCV.reloadData()
-                }
-                else{
-                    self.activityIndicator.stopAnimating()
-                }
-            case .Failure(let errorMsg) :
-                print(errorMsg)
+        activityIndicator.startAnimating()
+        let result = DBManager().fetchLatestArticles()
+        switch result {
+        case .Success(let DBData) :
+            self.ShowArticle.removeAll()
+            self.ShowArticle = DBData
+            SwipeIndex.shared.newShowArticle.removeAll()
+            
+            if self.ShowArticle.count > 0{
+                SwipeIndex.shared.newShowArticle.append(ShowArticle)
+                self.lblNonews.isHidden = true
+                containerCV.reloadData()
             }
+            else{
+                self.activityIndicator.stopAnimating()
+            }
+        case .Failure(let errorMsg) :
+            print(errorMsg)
         }
+    }
+
     
     //fetch articles of selected cluster
     func fetchClusterIdArticles(clusterID: Int){
@@ -457,10 +457,6 @@ class ParentViewController: UIViewController {
             headingIds.insert(01, at: 1)
             headingArr.insert("Daily Digest", at: 2)
             headingIds.insert(02, at: 2)
-//            headingArr.insert("Latest News", at: 1)
-//            headingIds.insert(01, at: 1)
-//            headingArr.insert("Trending", at: 2)
-//            headingIds.insert(02, at: 2)
             isTrendingDetail = 1
             
             self.menuCV.reloadData()
@@ -703,6 +699,7 @@ extension ParentViewController : UICollectionViewDelegate, UICollectionViewDataS
             cell.newShowArticle.removeAll()
             cell.selectedObj = self as CellDelegate
             cell.trendingClickedObj = self as trendingDetailClicked
+            cell.newsCat = newsCat
             if  darkModeStatus == true{
                 cell.newsCV.backgroundColor = colorConstants.txtlightGrayColor
                 cell.backgroundColor = colorConstants.grayBackground3
@@ -710,16 +707,20 @@ extension ParentViewController : UICollectionViewDelegate, UICollectionViewDataS
                 cell.newsCV.backgroundColor = .white
                 cell.backgroundColor = .white
             }
-            if isTrendingDetail == 1{
+            if (isTrendingDetail == 1 && newsCat == .trending){
                 cell.isTrending = true
                 cell.newShowArticle.append(prevTrendingData)
                 cell.newsCV.reloadData()
             }
             else if(newsCat == .daily){
-                cell.newsCat = newsCat
+                cell.isTrending = false
+                cell.newShowArticle = [ShowArticle]
+                cell.newsCV.reloadData()
             }
             else if(newsCat == .latest){
-                cell.newsCat = newsCat
+                cell.isTrending = false
+                cell.newShowArticle = [ShowArticle]
+                cell.newsCV.reloadData()
             }
             else{
                 if submenuCV.isHidden == false{
@@ -815,6 +816,7 @@ extension ParentViewController : UICollectionViewDelegate, UICollectionViewDataS
         if collectionView == menuCV{
             index = 0
             headingName = headingArr[indexPath.row]
+            collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
             if (headingArr[indexPath.row] != "Trending" && headingArr[indexPath.row] != "Daily Digest" && headingArr[indexPath.row] != "Latest News"){
                 //currentIndexPath = NSIndexPath(row: 0, section: 0) as IndexPath
                 //set first row selected by default
@@ -854,7 +856,14 @@ extension ParentViewController : UICollectionViewDelegate, UICollectionViewDataS
             else if (headingArr[indexPath.row] == "Daily Digest"){
                 HideButtonBarView()
                 newsCat = .daily
-                fetchDailyDigest()
+                DBManager().saveDailyDigestArticles(){ result in
+                    if result == true {
+                        self.fetchDailyDigest()
+                    }
+                    else{
+                        print("Error occured in fetching DD news and saving it to DB`")
+                    }
+                }
             }
             else if (headingArr[indexPath.row] == "Latest News"){
                 HideButtonBarView()
