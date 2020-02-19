@@ -148,7 +148,10 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if isTrending == false{
-            if (newsCat == .others && (submenuCount == 0 || newShowArticle.count == 0)){
+            if newsCat == .others && newShowArticle.count > 0{
+                return newShowArticle[submenuCount].count
+            }
+            else if (newsCat == .others && (submenuCount == 0 || newShowArticle.count == 0)){
                 return 0
             }
             return (newShowArticle[submenuCount].count > 0) ? self.newShowArticle[submenuCount].count : 0
@@ -224,7 +227,7 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
         if (UIDevice.current.userInterfaceIdiom != UIUserInterfaceIdiom.pad){
             if isTrending == false{
                 sortedData = newShowArticle[submenuCount].sorted{ $0.published_on! > $1.published_on! }
-                currentArticle = sortedData[indexPath.row]
+                currentArticle = newShowArticle[submenuCount][indexPath.row]
                 if newsCat == .others{
                     sortedData = newShowArticle[submenuCount].sorted{ $0.published_on! > $1.published_on! }
                     currentArticle = newShowArticle[submenuCount][indexPath.row]
