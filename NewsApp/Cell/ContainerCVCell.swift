@@ -169,6 +169,7 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
         if UserDefaults.standard.value(forKey: "submenuURL") != nil{
             subMenuURL =  UserDefaults.standard.value(forKey: "submenuURL") as! String
         }
+        subMenuURL = subMenuURL + "&domain=newscout"
         DBManager().SaveDataDB(nextUrl: subMenuURL ){response in
             if response == true{
                 let submenuArr = UserDefaults.standard.value(forKey: "submenuArr") as! [String]
@@ -771,7 +772,7 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
             if (scrollView.bounds.maxY) >= scrollView.contentSize.height{
                 if isTrending == false {
                     let submenuArr = UserDefaults.standard.value(forKey: "submenuArr") as! [String]
-                    
+
                     let submenu = submenuArr[submenuCount]
                     UserDefaults.standard.set(submenu ,forKey: "submenu")
                     if newShowArticle[submenuCount].count >= 20{
@@ -780,7 +781,7 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
                             switch result {
                             case .Success(let DBData) :
                                 let nextURL = DBData
-                                
+
                                 if nextURL.count != 0{
                                     isAPICalled = false
                                     if nextURL[0].category == submenu {
