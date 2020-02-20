@@ -95,32 +95,20 @@ class ParentViewController: UIViewController {
     var ShowArticle = [NewsArticle]()
     var prevTrendingData = [NewsArticle]()
     var clusterArticles = [NewsArticle]()
+    var newShowArticle = [[NewsArticle]]()
     let appDelegate = UIApplication.shared.delegate as? AppDelegate
     var pageNum = 0
     var coredataRecordCount = 0
-    var currentCategory = "All News"
     var nextURL = ""
-    var lastContentOffset: CGFloat = 0
-    var articlesArr = [Article]()
-    var selectedCategory = ""
-    var tagArr : [String] = []
     var sortedData = [NewsArticle]()
-    var isAPICalled = false
-    var imgWidth = ""
-    var imgHeight = ""
-    var cellHeight:CGFloat = CGFloat()
     var isTrendingDetail = 0
     var newsCat = NewsCategory.trending
     var submenuName = ""
     var menuName = ""
-    var isSwipeLeft = false
-    var currentIndexPath: IndexPath?
     var menuIndexPath: IndexPath?
     var index = 0
-    var newShowArticle = [[NewsArticle]]()
     var headingName = "Trending"
     var isSwipe = false
-    var menuImgSize = CGFloat()
     var headingImg = [AssetConstants.trending, AssetConstants.latest, AssetConstants.daily, AssetConstants.sector, AssetConstants.regional, AssetConstants.finance, AssetConstants.economy, AssetConstants.misc]
     var submenuImgArr = [[AssetConstants.banking, AssetConstants.retail,AssetConstants.retail, AssetConstants.tech, AssetConstants.transport, AssetConstants.energy, AssetConstants.food, AssetConstants.manufacturing, AssetConstants.fintech, AssetConstants.media],
                          [AssetConstants.us, AssetConstants.china, AssetConstants.asia, AssetConstants.japan, AssetConstants.india, AssetConstants.appLogo],
@@ -651,6 +639,7 @@ extension ParentViewController : UICollectionViewDelegate, UICollectionViewDataS
      menuBar.horizontalBarLeftAnchorConstraint?.constant = scrollView.contentOffset.x / 4
      }*/
     
+    
     func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
         if scrollView == containerCV{
             if headingName != "Trending"{
@@ -660,8 +649,6 @@ extension ParentViewController : UICollectionViewDelegate, UICollectionViewDataS
                 submenuCV.selectItem(at: indexPath, animated: true, scrollPosition: .centeredHorizontally)
                 /*  SwipeIndex.shared.currentIndex = subMenuRow + 1
                  containerCV.reloadData()
-                 self.currentIndexPath = indexPath
-                 
                  subMenuRow = indexPath.row
                  submenuName = subMenuArr[HeadingRow][subMenuRow]
                  UserDefaults.standard.set(subMenuArr[HeadingRow][subMenuRow], forKey: "submenu")
@@ -769,7 +756,7 @@ extension ParentViewController : UICollectionViewDelegate, UICollectionViewDataS
             else{
                 cell.backgroundColor = .white
             }
-            containerCV.reloadData()
+//            containerCV.reloadData()
             activityIndicator.stopAnimating()
             return cell
         }
@@ -818,8 +805,6 @@ extension ParentViewController : UICollectionViewDelegate, UICollectionViewDataS
             headingName = headingArr[indexPath.row]
             collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
             if (headingArr[indexPath.row] != "Trending" && headingArr[indexPath.row] != "Daily Digest" && headingArr[indexPath.row] != "Latest News"){
-                //currentIndexPath = NSIndexPath(row: 0, section: 0) as IndexPath
-                //set first row selected by default
                 isTrendingDetail = 0
                 newsCat = .others
                 HeadingRow = indexPath.row - 3
@@ -878,7 +863,6 @@ extension ParentViewController : UICollectionViewDelegate, UICollectionViewDataS
             //      SwipeIndex.shared.currentIndex = indexPath.row
             isSwipe = false
             newsCat = .others
-            self.currentIndexPath = indexPath
             subMenuRow = indexPath.row
             submenuName = subMenuArr[HeadingRow][subMenuRow]
             UserDefaults.standard.set(subMenuArr[HeadingRow][subMenuRow], forKey: "submenu")

@@ -23,9 +23,7 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
     var sortedData = [NewsArticle]()
     var clusterArticles = [NewsArticle]()
     var prevTrendingData = [NewsArticle]()
-    var ShowArticle = [NewsArticle]()
     var newShowArticle = [[NewsArticle]]()
-    var rowCount = [0,9,6,5,7,12]
     var imgWidth = ""
     var imgHeight = ""
     var submenuCount = 0
@@ -62,7 +60,7 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
         //submenuCOunt = submenuCOunt + 1
         newShowArticle = SwipeIndex.shared.newShowArticle
         btnTopNews.layer.cornerRadius = 0.5 * btnTopNews.bounds.size.width
-        newsCV.reloadData()
+//        newsCV.reloadData()
         activityIndicator.startAnimating()
     }
     
