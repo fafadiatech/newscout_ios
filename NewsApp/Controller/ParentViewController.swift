@@ -106,6 +106,7 @@ class ParentViewController: UIViewController {
     var submenuName = ""
     var menuName = ""
     var menuIndexPath: IndexPath?
+    var selectedIndex: Int = 0
     var index = 0
     var headingName = "Trending"
     var isSwipe = false
@@ -652,7 +653,7 @@ extension ParentViewController : UICollectionViewDelegate, UICollectionViewDataS
                  subMenuRow = indexPath.row
                  submenuName = subMenuArr[HeadingRow][subMenuRow]
                  UserDefaults.standard.set(subMenuArr[HeadingRow][subMenuRow], forKey: "submenu")
-                 
+
                  reloadSubmenuNews()*/
             }
         }
@@ -679,6 +680,14 @@ extension ParentViewController : UICollectionViewDelegate, UICollectionViewDataS
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "menuID", for:indexPath) as! menuCVCell
             cell.lblMenu.text = headingArr[indexPath.item]
             cell.imgMenu.image =  UIImage(named: headingImg[indexPath.row])
+            if selectedIndex == indexPath.row{
+                cell.lblMenu.textColor = colorConstants.redColor
+                cell.imgMenu.setImageColor(color: colorConstants.redColor)
+            }
+            else{
+                cell.lblMenu.textColor = .black
+                cell.imgMenu.setImageColor(color: .black)
+            }
             return cell
         }
         else if collectionView == containerCV{
@@ -718,10 +727,6 @@ extension ParentViewController : UICollectionViewDelegate, UICollectionViewDataS
                     else{
                         cell.submenuCount = subMenuRow
                     }
-                    fetchSubMenuNews()
-                    
-                    cell.newShowArticle = newShowArticle
-                    cell.newsCV.reloadData()
                     
                     if (cell.submenuCount > 0 && newShowArticle.count > 0 && newShowArticle[cell.submenuCount].count > 0){
                         cell.newsCV?.scrollToItem(at: NSIndexPath(row: 0, section: 0) as IndexPath,
@@ -731,13 +736,13 @@ extension ParentViewController : UICollectionViewDelegate, UICollectionViewDataS
                 }
                 else{
                     cell.isTrending = true
-                    fetchSubMenuNews()
-                    cell.newShowArticle = newShowArticle
-                    cell.newsCV.reloadData()
                     cell.newsCV?.scrollToItem(at: NSIndexPath(row: 0, section: 0) as IndexPath,
                                               at: .top,
                                               animated: false)
                 }
+                fetchSubMenuNews()
+                cell.newShowArticle = newShowArticle
+                cell.newsCV.reloadData()
             }
             activityIndicator.stopAnimating()
             return cell
@@ -780,6 +785,7 @@ extension ParentViewController : UICollectionViewDelegate, UICollectionViewDataS
                 newsDetailvc.newsCurrentIndex = indexPath.row
                 newsDetailvc.ShowArticle = sortedData
                 newsDetailvc.articleId = Int(sortedData[indexPath.row].article_id)
+                newsDetailvc.modalPresentationStyle = .fullScreen
                 present(newsDetailvc, animated: true, completion: nil)
             }
         }
@@ -802,6 +808,7 @@ extension ParentViewController : UICollectionViewDelegate, UICollectionViewDataS
         viewOptions.isHidden = true
         if collectionView == menuCV{
             index = 0
+            selectedIndex = indexPath.row
             headingName = headingArr[indexPath.row]
             collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
             if (headingArr[indexPath.row] != "Trending" && headingArr[indexPath.row] != "Daily Digest" && headingArr[indexPath.row] != "Latest News"){
@@ -855,6 +862,7 @@ extension ParentViewController : UICollectionViewDelegate, UICollectionViewDataS
                 newsCat = .latest
                 fetchLatestNews()
             }
+            menuCV.reloadData()
         }
         else if collectionView == submenuCV{
             //            let indexPath = IndexPath(item: index, section: 0)
