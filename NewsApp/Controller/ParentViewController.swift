@@ -109,7 +109,8 @@ class ParentViewController: UIViewController {
     var selectedIndex: Int = 0
     var index = 0
     var headingName = "Trending"
-    var isSwipe = false
+    var isSwipe:Bool = false
+    var hasChangedMenu:Bool = true
     var headingImg = [AssetConstants.trending, AssetConstants.latest, AssetConstants.daily, AssetConstants.sector, AssetConstants.regional, AssetConstants.finance, AssetConstants.economy, AssetConstants.misc]
     var submenuImgArr = [[AssetConstants.banking, AssetConstants.retail,AssetConstants.retail, AssetConstants.tech, AssetConstants.transport, AssetConstants.energy, AssetConstants.food, AssetConstants.manufacturing, AssetConstants.fintech, AssetConstants.media],
                          [AssetConstants.us, AssetConstants.china, AssetConstants.asia, AssetConstants.japan, AssetConstants.india, AssetConstants.appLogo],
@@ -740,7 +741,10 @@ extension ParentViewController : UICollectionViewDelegate, UICollectionViewDataS
                                               at: .top,
                                               animated: false)
                 }
-                fetchSubMenuNews()
+                if hasChangedMenu{
+                    fetchSubMenuNews()
+                    hasChangedMenu = false
+                }
                 cell.newShowArticle = newShowArticle
                 cell.newsCV.reloadData()
             }
@@ -808,7 +812,9 @@ extension ParentViewController : UICollectionViewDelegate, UICollectionViewDataS
         viewOptions.isHidden = true
         if collectionView == menuCV{
             index = 0
+            hasChangedMenu = (selectedIndex != indexPath.row) ? true : false
             selectedIndex = indexPath.row
+            
             headingName = headingArr[indexPath.row]
             collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
             if (headingArr[indexPath.row] != "Trending" && headingArr[indexPath.row] != "Daily Digest" && headingArr[indexPath.row] != "Latest News"){
