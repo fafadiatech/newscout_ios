@@ -5347,6 +5347,9 @@
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="W7F-9N-4OS">
                                 <rect key="frame" x="75" y="139" width="300" height="653"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="300" id="IEe-zv-YIz"/>
+                                </constraints>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="MenuItemCell" id="Qnz-PP-Hei" customClass="MenuItemTVCell" customModule="NewsApp" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="300" height="44.333332061767578"/>
@@ -5401,16 +5404,16 @@
                                 </connections>
                             </tableView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Okv-Cc-QdH">
-                                <rect key="frame" x="75" y="44" width="252" height="76"/>
+                                <rect key="frame" x="77" y="44" width="250" height="76"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="NewScout" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SBG-Dw-i0S">
-                                        <rect key="frame" x="116" y="20" width="131" height="21"/>
+                                        <rect key="frame" x="116" y="20" width="129" height="21"/>
                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="www.fafadiatech.com" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" adjustsFontForContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="lMW-qc-E7G">
-                                        <rect key="frame" x="116" y="51" width="135" height="21"/>
+                                        <rect key="frame" x="116" y="51" width="133" height="21"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
@@ -5427,6 +5430,7 @@
                                     <constraint firstAttribute="trailing" secondItem="lMW-qc-E7G" secondAttribute="trailing" constant="1" id="Mdm-rF-2Cg"/>
                                     <constraint firstItem="lMW-qc-E7G" firstAttribute="top" secondItem="SBG-Dw-i0S" secondAttribute="bottom" constant="10" id="Rmp-sc-2Sm"/>
                                     <constraint firstItem="SBG-Dw-i0S" firstAttribute="top" secondItem="Okv-Cc-QdH" secondAttribute="top" constant="20" symbolic="YES" id="SA0-jk-61c"/>
+                                    <constraint firstAttribute="width" constant="250" id="cOm-1a-Gzh"/>
                                     <constraint firstItem="Eql-uU-yeA" firstAttribute="top" secondItem="Okv-Cc-QdH" secondAttribute="top" id="cqA-er-jaG"/>
                                     <constraint firstItem="lMW-qc-E7G" firstAttribute="leading" secondItem="Eql-uU-yeA" secondAttribute="trailing" constant="15" id="fS5-3I-Ksf"/>
                                     <constraint firstItem="Eql-uU-yeA" firstAttribute="leading" secondItem="Okv-Cc-QdH" secondAttribute="leading" constant="21" id="iHG-wB-0Q4"/>
@@ -5438,10 +5442,8 @@
                         </subviews>
                         <color key="backgroundColor" red="0.92941176470588238" green="0.10980392156862745" blue="0.14117647058823529" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
-                            <constraint firstItem="Okv-Cc-QdH" firstAttribute="leading" secondItem="4F5-qq-Nu3" secondAttribute="leading" constant="75" id="6o7-c7-4wu"/>
                             <constraint firstItem="Okv-Cc-QdH" firstAttribute="top" secondItem="4F5-qq-Nu3" secondAttribute="top" id="7u7-1V-gSJ"/>
                             <constraint firstAttribute="bottom" secondItem="W7F-9N-4OS" secondAttribute="bottom" constant="20" symbolic="YES" id="I3V-x2-1dD"/>
-                            <constraint firstItem="W7F-9N-4OS" firstAttribute="leading" secondItem="4F5-qq-Nu3" secondAttribute="leading" constant="75" id="IzM-m1-Oou"/>
                             <constraint firstItem="4F5-qq-Nu3" firstAttribute="trailing" secondItem="Okv-Cc-QdH" secondAttribute="trailing" constant="48" id="cde-1o-lE2"/>
                             <constraint firstItem="W7F-9N-4OS" firstAttribute="top" secondItem="Okv-Cc-QdH" secondAttribute="bottom" constant="19" id="emC-fA-PPf"/>
                             <constraint firstItem="W7F-9N-4OS" firstAttribute="trailing" secondItem="4F5-qq-Nu3" secondAttribute="trailing" id="zP5-BT-xfB"/>
@@ -6058,7 +6060,7 @@
                                                         <constraint firstAttribute="height" constant="30" id="WaZ-QW-xQj"/>
                                                     </constraints>
                                                 </imageView>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="No news found" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5qk-pL-5kC">
+                                                <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="No news found" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5qk-pL-5kC">
                                                     <rect key="frame" x="317" y="390" width="131" height="24"/>
                                                     <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="20"/>
                                                     <nil key="textColor"/>
@@ -6341,7 +6343,7 @@
         <image name="settings" width="512" height="512"/>
         <image name="share" width="512" height="512"/>
         <image name="shuffled" width="512" height="512"/>
-        <image name="sidemenu" width="100" height="100"/>
+        <image name="sidemenu" width="60" height="60"/>
         <image name="top1" width="128" height="128"/>
         <image name="upward" width="54" height="54"/>
         <image name="upward_white" width="54" height="54"/>

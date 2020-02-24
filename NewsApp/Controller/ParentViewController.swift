@@ -101,7 +101,7 @@ class ParentViewController: UIViewController {
     var coredataRecordCount = 0
     var nextURL = ""
     var sortedData = [NewsArticle]()
-    var isTrendingDetail = 0
+    var isTrendingDetail = 1
     var newsCat = NewsCategory.trending
     var submenuName = ""
     var menuName = ""
