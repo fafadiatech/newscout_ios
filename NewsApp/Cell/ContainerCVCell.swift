@@ -228,8 +228,7 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
                 sortedData = newShowArticle[submenuCount].sorted{ $0.published_on! > $1.published_on! }
                 currentArticle = newShowArticle[submenuCount][indexPath.row]
                 if newsCat == .others{
-                    sortedData = newShowArticle[submenuCount].sorted{ $0.published_on! > $1.published_on! }
-                    currentArticle = newShowArticle[submenuCount][indexPath.row]
+                    currentArticle = sortedData[indexPath.row]
                 }
                 if (newsCat == .latest || newsCat == .daily ){
                     currentArticle = newShowArticle[0][indexPath.row]
@@ -768,36 +767,31 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        if scrollView == newsCV{
-            if (scrollView.bounds.maxY) >= scrollView.contentSize.height{
-                if isTrending == false {
-                    let submenuArr = UserDefaults.standard.value(forKey: "submenuArr") as! [String]
+        if scrollView == newsCV && newShowArticle.count > 0 && isTrending == false{
+            let submenuArr = UserDefaults.standard.value(forKey: "submenuArr") as! [String]
+            let submenu = submenuArr[submenuCount]
+            UserDefaults.standard.set(submenu ,forKey: "submenu")
+            if newShowArticle[submenuCount].count >= 20{
+                if isAPICalled == false{
+                    let result =  DBManager().FetchNextURL(category: submenu)
+                    switch result {
+                    case .Success(let DBData) :
+                        let nextURL = DBData
 
-                    let submenu = submenuArr[submenuCount]
-                    UserDefaults.standard.set(submenu ,forKey: "submenu")
-                    if newShowArticle[submenuCount].count >= 20{
-                        if isAPICalled == false{
-                            let result =  DBManager().FetchNextURL(category: submenu)
-                            switch result {
-                            case .Success(let DBData) :
-                                let nextURL = DBData
-
-                                if nextURL.count != 0{
-                                    isAPICalled = false
-                                    if nextURL[0].category == submenu {
-                                        let nexturl = nextURL[0].nextURL
-                                        UserDefaults.standard.set(nexturl, forKey: "submenuURL")
-                                        self.saveArticlesInDB()
-                                    }
-                                }
-                                else{
-                                    isAPICalled = true
-                                    activityIndicator.stopAnimating()
-                                }
-                            case .Failure(let errorMsg) :
-                                print(errorMsg)
+                        if nextURL.count != 0{
+                            isAPICalled = false
+                            if nextURL[0].category == submenu {
+                                let nexturl = nextURL[0].nextURL
+                                UserDefaults.standard.set(nexturl, forKey: "submenuURL")
+                                self.saveArticlesInDB()
                             }
                         }
+                        else{
+                            isAPICalled = true
+                            activityIndicator.stopAnimating()
+                        }
+                    case .Failure(let errorMsg) :
+                        print(errorMsg)
                     }
                 }
             }

@@ -480,26 +480,6 @@ class ParentViewController: UIViewController {
         HideButtonBarView()
     }
     
-    func loadFirstNews(){
-        if submenuName == ""{
-            coredataRecordCount = DBManager().IsCoreDataEmpty(entity: "NewsArticle")
-            if self.coredataRecordCount > 0 {
-                self.fetchArticlesFromDB()
-            }
-            else{
-                if Reachability.isConnectedToNetwork(){
-                    activityIndicator.startAnimating()
-                    if UserDefaults.standard.value(forKey: "submenuURL") != nil{
-                        self.saveArticlesInDB()
-                    }
-                }else{
-                    activityIndicator.stopAnimating()
-                    lblNonews.isHidden = true
-                }
-            }
-        }
-    }
-    
     func fetchSubmenuId(submenu : String){
         let tagresult = DBManager().fetchsubmenuId(subMenuName: submenu)
         switch tagresult{
@@ -531,6 +511,12 @@ class ParentViewController: UIViewController {
             }
         case .Failure(let errorMsg) :
             print(errorMsg)
+        }
+    }
+    
+    func saveArticlesInDB(subMenuURL: String){
+        DBManager().SaveDataDB(nextUrl: subMenuURL ){
+            response in
         }
     }
     
@@ -914,9 +900,8 @@ extension ParentViewController : UICollectionViewDelegate, UICollectionViewDataS
                 coredataRecordCount = DBManager().IsCoreDataEmpty(entity: "NewsArticle")
                 if Reachability.isConnectedToNetwork(){
                     activityIndicator.startAnimating()
-                    if UserDefaults.standard.value(forKey: "submenuURL") != nil{
-                        self.saveArticlesInDB()
-                    }
+                    let subMenuURL = APPURL.ArticlesByTagsURL2 + subMenuArr[HeadingRow][index]
+                    saveArticlesInDB(subMenuURL: subMenuURL)
                 }else{
                     lblNonews.isHidden = true
                 }
@@ -928,13 +913,12 @@ extension ParentViewController : UICollectionViewDelegate, UICollectionViewDataS
     func SaveSubmenuNews(){
         while index < subMenuArr[HeadingRow].count {
             UserDefaults.standard.set(subMenuArr[HeadingRow][index], forKey: "submenu")
-            fetchSubmenuId(submenu: subMenuArr[HeadingRow][index])
-            coredataRecordCount = DBManager().IsCoreDataEmpty(entity: "NewsArticle")
+//            fetchSubmenuId(submenu: subMenuArr[HeadingRow][index])
+//            coredataRecordCount = DBManager().IsCoreDataEmpty(entity: "NewsArticle")
             if Reachability.isConnectedToNetwork(){
                 activityIndicator.startAnimating()
-                if UserDefaults.standard.value(forKey: "submenuURL") != nil{
-                    self.saveArticlesInDB()
-                }
+                let subMenuURL = APPURL.ArticlesByTagsURL2 + subMenuArr[HeadingRow][index]
+                saveArticlesInDB(subMenuURL: subMenuURL)
             }else{
                 lblNonews.isHidden = true
             }
@@ -948,9 +932,9 @@ extension ParentViewController : UICollectionViewDelegate, UICollectionViewDataS
         fetchSubmenuId(submenu: subMenuArr[HeadingRow][subMenuRow])
         coredataRecordCount = DBManager().IsCoreDataEmpty(entity: "NewsArticle")
         if Reachability.isConnectedToNetwork(){
-            if UserDefaults.standard.value(forKey: "submenuURL") != nil{
-                self.saveArticlesInDB()
-            }
+//            let subMenuURL = APPURL.ArticlesByTagsURL2 + subMenuArr[HeadingRow][index]
+//            saveArticlesInDB(subMenuURL: subMenuURL)
+            saveArticlesInDB()
         }else{
             lblNonews.isHidden = true
         }

@@ -201,7 +201,7 @@ struct APPURL {
     static let getLikeListURL = Domains.Server + apiVer + "articles/like-news-list/"
     static let getBookmarkListURL = Domains.Server + apiVer + "bookmark-articles/bookmark-news-list/"
     static let ArticlesByTagsURL = Domains.Server + apiVer + "article/search?"
-    static let ArticlesByTagsURL2 = Domains.Server + apiVer + "article/search?category="
+    static let ArticlesByTagsURL2 = Domains.Server + apiVer + "article/search?domain=newscout&category="
     static let getMenus = Domains.Server + apiVer + "menus/?domain=newscout"
     static let sendDeviceDetailsURL = Domains.Server + apiVer + "menus/"
     static let sendNotificationDetails = Domains.Server + apiVer + "device/"
