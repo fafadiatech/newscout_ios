@@ -692,16 +692,19 @@ extension ParentViewController : UICollectionViewDelegate, UICollectionViewDataS
             }
             if (isTrendingDetail == 1 && newsCat == .trending){
                 cell.isTrending = true
+                cell.submenuCount = 0
                 cell.newShowArticle.append(prevTrendingData)
                 cell.newsCV.reloadData()
             }
             else if(newsCat == .daily){
                 cell.isTrending = false
+                cell.submenuCount = 0
                 cell.newShowArticle = [ShowArticle]
                 cell.newsCV.reloadData()
             }
             else if(newsCat == .latest){
                 cell.isTrending = false
+                cell.submenuCount = 0
                 cell.newShowArticle = [ShowArticle]
                 cell.newsCV.reloadData()
             }
