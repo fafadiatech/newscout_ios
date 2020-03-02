@@ -226,7 +226,7 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
         if (UIDevice.current.userInterfaceIdiom != UIUserInterfaceIdiom.pad){
             if isTrending == false{
                 sortedData = newShowArticle[submenuCount].sorted{ $0.published_on! > $1.published_on! }
-                currentArticle = newShowArticle[submenuCount][indexPath.row]
+                currentArticle = sortedData[indexPath.row]
                 if newsCat == .others{
                     currentArticle = sortedData[indexPath.row]
                 }
