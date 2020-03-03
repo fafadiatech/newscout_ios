@@ -358,21 +358,23 @@ class DBManager{
             if DailyDigestData.count > 0{
                 if DailyDigestData[0].header.status == "1" {
                     for news in DailyDigestData[0].body.results{
-                        let Article = NewsArticle(context: managedContext!)
-                        let newsDailyDigest  = DailyDigestCategory(context: managedContext!)
-                        newsDailyDigest.article_id = Int64(news.id!)
-                        newsDailyDigest.published_on = news.published_on!
-                        if  self.someEntityExists(id: Int(news.id!), entity: "NewsArticle", keyword: "") == false{
-                            Article.article_id = Int64(news.id!)
-                            Article.title = news.title
-                            Article.source = news.source!
-                            Article.imageURL = news.cover_image
-                            Article.source_url = news.source_url
-                            Article.published_on = news.published_on
-                            Article.blurb = news.blurb
-                            Article.categoryId = Int64(news.category_id!)
+                        if  self.someEntityExists(id: Int(news.id!), entity: "DailyDigestCategory", keyword: "") == false{
+                            let Article = NewsArticle(context: managedContext!)
+                            let newsDailyDigest  = DailyDigestCategory(context: managedContext!)
+                            newsDailyDigest.article_id = Int64(news.id!)
+                            newsDailyDigest.published_on = news.published_on!
+                            if  self.someEntityExists(id: Int(news.id!), entity: "NewsArticle", keyword: "") == false{
+                                Article.article_id = Int64(news.id!)
+                                Article.title = news.title
+                                Article.source = news.source!
+                                Article.imageURL = news.cover_image
+                                Article.source_url = news.source_url
+                                Article.published_on = news.published_on
+                                Article.blurb = news.blurb
+                                Article.categoryId = Int64(news.category_id!)
+                            }
+                            self.saveBlock()
                         }
-                        self.saveBlock()
                     }
                     completion(true)
                 }
@@ -658,7 +660,7 @@ class DBManager{
     //check for existing entry in DB
     func someEntityExists(id: Int, entity : String, keyword: String) -> Bool {
         let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: entity)
-        if entity == "NewsArticle" || entity == "BookmarkArticles" || entity == "LikeDislike" || entity == "SearchArticles" {
+        if entity == "NewsArticle" || entity == "BookmarkArticles" || entity == "LikeDislike" || entity == "SearchArticles" || entity == "DailyDigestCategory" {
             fetchRequest.predicate = NSPredicate(format: "article_id == \(id)")
         }
         else if entity == "NewsURL" || entity == "Category" || entity == "Media" || entity == "MenuHeadings" || entity == "HeadingSubMenu" || entity == "MenuHashTag"{
