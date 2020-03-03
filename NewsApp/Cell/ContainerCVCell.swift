@@ -767,35 +767,35 @@ class ContainerCVCell: UICollectionViewCell,UICollectionViewDataSource, UICollec
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        if scrollView == newsCV && newShowArticle.count > 0 && isTrending == false{
-            let submenuArr = UserDefaults.standard.value(forKey: "submenuArr") as! [String]
-            let submenu = submenuArr[submenuCount]
-            UserDefaults.standard.set(submenu ,forKey: "submenu")
-            if newShowArticle[submenuCount].count >= 20{
-                if isAPICalled == false{
-                    let result =  DBManager().FetchNextURL(category: submenu)
-                    switch result {
-                    case .Success(let DBData) :
-                        let nextURL = DBData
-
-                        if nextURL.count != 0{
-                            isAPICalled = false
-                            if nextURL[0].category == submenu {
-                                let nexturl = nextURL[0].nextURL
-                                UserDefaults.standard.set(nexturl, forKey: "submenuURL")
-                                self.saveArticlesInDB()
-                            }
-                        }
-                        else{
-                            isAPICalled = true
-                            activityIndicator.stopAnimating()
-                        }
-                    case .Failure(let errorMsg) :
-                        print(errorMsg)
-                    }
-                }
-            }
-        }
+//        if scrollView == newsCV && newShowArticle.count > 0 && isTrending == false{
+//            let submenuArr = UserDefaults.standard.value(forKey: "submenuArr") as! [String]
+//            let submenu = submenuArr[submenuCount]
+//            UserDefaults.standard.set(submenu ,forKey: "submenu")
+//            if newShowArticle[submenuCount].count >= 20{
+//                if isAPICalled == false{
+//                    let result =  DBManager().FetchNextURL(category: submenu)
+//                    switch result {
+//                    case .Success(let DBData) :
+//                        let nextURL = DBData
+//
+//                        if nextURL.count != 0{
+//                            isAPICalled = false
+//                            if nextURL[0].category == submenu {
+//                                let nexturl = nextURL[0].nextURL
+//                                UserDefaults.standard.set(nexturl, forKey: "submenuURL")
+//                                self.saveArticlesInDB()
+//                            }
+//                        }
+//                        else{
+//                            isAPICalled = true
+//                            activityIndicator.stopAnimating()
+//                        }
+//                    case .Failure(let errorMsg) :
+//                        print(errorMsg)
+//                    }
+//                }
+//            }
+//        }
     }
     
 }
