@@ -635,6 +635,7 @@ extension ParentViewController : UICollectionViewDelegate, UICollectionViewDataS
                 let index = Int(targetContentOffset.pointee.x / submenuCV.frame.width)
                 let indexPath = IndexPath(item: index, section: 0)
                 submenuCV.selectItem(at: indexPath, animated: true, scrollPosition: .centeredHorizontally)
+                selectedIndex = indexPath.row
                 /*  SwipeIndex.shared.currentIndex = subMenuRow + 1
                  containerCV.reloadData()
                  subMenuRow = indexPath.row
@@ -711,12 +712,7 @@ extension ParentViewController : UICollectionViewDelegate, UICollectionViewDataS
             else{
                 if submenuCV.isHidden == false{
                     cell.isTrending = false
-                    if isSwipe == true{
-                        cell.submenuCount = indexPath.row
-                    }
-                    else{
-                        cell.submenuCount = subMenuRow
-                    }
+                    cell.submenuCount = indexPath.row
                     
                     if (cell.submenuCount > 0 && newShowArticle.count > 0 && newShowArticle[cell.submenuCount].count > 0){
                         cell.newsCV?.scrollToItem(at: NSIndexPath(row: 0, section: 0) as IndexPath,
