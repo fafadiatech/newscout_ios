@@ -684,6 +684,7 @@ extension ParentViewController : UICollectionViewDelegate, UICollectionViewDataS
             cell.selectedObj = self as CellDelegate
             cell.trendingClickedObj = self as trendingDetailClicked
             cell.newsCat = newsCat
+            let topIndexPath = IndexPath(row:0, section:0)
             if  darkModeStatus == true{
                 cell.newsCV.backgroundColor = colorConstants.txtlightGrayColor
                 cell.backgroundColor = colorConstants.grayBackground3
@@ -713,7 +714,12 @@ extension ParentViewController : UICollectionViewDelegate, UICollectionViewDataS
                 if submenuCV.isHidden == false{
                     cell.isTrending = false
                     cell.submenuCount = indexPath.row
-                    
+                    if isSwipe == true{
+                        cell.submenuCount = indexPath.row
+                    }
+                    else{
+                        cell.submenuCount = subMenuRow
+                    }
                     if (cell.submenuCount > 0 && newShowArticle.count > 0 && newShowArticle[cell.submenuCount].count > 0){
                         cell.newsCV?.scrollToItem(at: NSIndexPath(row: 0, section: 0) as IndexPath,
                                                   at: .top,
@@ -733,6 +739,7 @@ extension ParentViewController : UICollectionViewDelegate, UICollectionViewDataS
                 cell.newShowArticle = newShowArticle
                 cell.newsCV.reloadData()
             }
+            cell.newsCV.scrollToItem(at: topIndexPath, at: .top, animated: false)
             activityIndicator.stopAnimating()
             return cell
         }
