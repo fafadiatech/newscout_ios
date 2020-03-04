@@ -441,7 +441,7 @@ class NewsDetailVC: UIViewController, UIScrollViewDelegate, WKNavigationDelegate
     @objc func respondToSwipeGesture(gesture: UIGestureRecognizer) {
         
         let transition = CATransition()
-        transition.duration = 0.6
+        transition.duration = 0.1
         
         if let swipeGesture = gesture as? UISwipeGestureRecognizer {
             
