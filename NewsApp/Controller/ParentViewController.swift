@@ -209,6 +209,14 @@ class ParentViewController: UIViewController {
         }
     }
     
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
+        guard let flowLayout = containerCV.collectionViewLayout as? UICollectionViewFlowLayout else {
+            return
+        }
+        flowLayout.invalidateLayout()
+    }
+    
     func sendDeviceDetails(){
         if UserDefaults.standard.value(forKey: "deviceToken") != nil{
             let id = UserDefaults.standard.value(forKey: "deviceToken") as! String
